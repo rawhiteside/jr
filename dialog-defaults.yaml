@@ -1,0 +1,76 @@
+---
+flax-seeds:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    head.x: '685'
+    head.y: '394'
+    stash.x: '136'
+    stash.y: '178'
+    repeat: '2'
+    max_wait_secs: '100'
+    harvest_reps: '3'
+    row_len: '5'
+    start_location: 4577, -5787
+    stash_location: 4577, -5784
+Barley:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    head.x: '175'
+    head.y: '155'
+    wh.x: '308'
+    wh.y: '182'
+    count: ''
+Loom:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    loom.x: '162'
+    loom.y: '179'
+Slate:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    coords: ''
+Trees:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    path: |
+      4576, -5783
+      Harvest
+      4577, -5782
+      Harvest
+      4577, -5783
+    bonfire.x: '392'
+    bonfire.y: '647'
+    win-stack.x: '1116'
+    win-stack.y: '708'
+?
+: 2: Parameter set 1
+  1: false
+  Parameter set 1:
+    help: "Planes wood into boards using a wood plane.\n---------------------------------------------------------------\n\
+      \nHold a bunch of wood and a bunch of slate blades. \n\nMake a stack of the\
+      \ wood plane menus somewhere (I use the lower right corner,\n\nIn the setup\
+      \ dialog drag to a point of the stack that will catch every menu. \n\nEnjoy\
+      \ the boards!\n"
+Wood Planes:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    stack.x: '907'
+    stack.y: '357'
+Flimsy Bricks:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '101'
+    g.top-left.y: '294'
+    g.bottom-right.x: '749'
+    g.bottom-right.y: '495'
+    g.num-cols: '5'
+    g.num-rows: '5'
+    repeat: '10'
+    delay: '32'

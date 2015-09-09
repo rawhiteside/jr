@@ -1,0 +1,50 @@
+---
+Tree run: |+
+  Run around gathering wood from trees.
+
+  Setup the first time
+  -----------------------------
+  The "World Path" you specify will be a mixture of corrdinates to run to, and lines that say, "Gather."  These are processed in order.  If it's a coordinate, you'll run to that place.  If it says "Gather", you'll it'll gather wood from the "next" pinned tree menu (more on that in a min.)  Sometimes, you'll need several waypoints in the path to get across a bridge, or around an obstacle before the next "Gather."
+
+  For the first setup, then, go to the first tree.  Add the coordinates.  Then pick up the tree menu, and pin it somewhere.  I use the bottom left corner.  You're going to stack up all of these menus in the same spot.  Now, press "Gather" to add that to the path.
+
+  Continue on along your path, adding waypoints and "Gathers" as appropriate.  Continue stacking up the tree menus all atop each other.
+
+  You'll need to pin the bonfire menu somewhere along the bottom of the screen, too.  Wood gets stashed at the *end* of the route, so you must be near the bonfire at the end of the path.
+
+  Start the macro.  It'll tile the tree menus and run around gathering.
+
+  Subsequent setups.
+  -----------------------------
+  The path is already set up, so all you need do this time is to run around picking up the tree menus.  These MUST be in the same order you set up originally!
+
+Grow flax: |
+  Pin plant just below ---Jaby---
+Grass: "lkjsd \nslkdjf \n\n\n- lkjsdf \n"
+Clay: ''
+Barley: |
+  weach round takes 90 water/fert.
+
+  Currently, doidn 10 rounds
+  900 water, 900 fert.
+  20 barley to start.
+Walkto: |
+  Test that has
+Inverval tabs: |
+  Emits <tab> characters with the specified interval.
+Endurance click: |-
+  sdf
+  sdf
+Background Get: |-
+  Stretch an empty Main chatwindow out to full screen.
+  Drag a rectangle holding only background pixels.
+Flax Seeds: "Start with 50 seeds.\nPin plant upper left corner.\nF8F8 view. \nMinize\
+  \ chat.\n"
+Dig Stones: "hi let's \ndig some stones. \n"
+flax-seeds: sdfsdf
+Constitution click: |
+  Clicks on the provided screen location every second, unless the Constitution stat is rendered in red.
+Wood planes: "Planes wood into boards using a wood plane.\n---------------------------------------------------------------\n\
+  \nHold a bunch of wood and a bunch of slate blades. \n\nMake a stack of the wood\
+  \ plane menus somewhere (I use the lower right corner,\n\nIn the setup dialog drag\
+  \ to a point of the stack that will catch every menu. \n\nEnjoy the boards!\n"
