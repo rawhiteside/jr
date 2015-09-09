@@ -1,6 +1,5 @@
 require 'rake/clean'
 CLEAN.include('**/*.class')
-CLEAN.include('**/*~')
 
 EJARS='.;platform.jar;jna.jar;snakeyaml-1.9.jar;'
 
