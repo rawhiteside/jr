@@ -1,6 +1,13 @@
 require 'java'
 
+import javax.swing.JFrame
+import javax.swing.WindowConstants
+import javax.swing.SwingUtilities
+import java.awt.GraphicsEnvironment
+import java.awt.GraphicsDevice
+import java.awt.Cursor
 import javax.swing.JDialog
+import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.JLabel
 import javax.swing.JCheckBox
@@ -171,43 +178,60 @@ class DialogDefaults
   end
 end
 
+# A full-screen transparent frame.  This is used to make the mouse
+# cursor look like crosshairs during screen point acquisition.
+class TransparentFrame < JFrame
+  def initialize
+    super
+    setUndecorated(true)
+    setOpacity(0.01)  # Aparently, can't be 0.0
+    setCursor(Cursor.getPredefinedCursor(Cursor::CROSSHAIR_CURSOR))
+    tk = java.awt.Toolkit.getDefaultToolkit
+    
+    setAlwaysOnTop(true)
+    setSize(tk.screen_size.width, tk.screen_size.height)
+    setDefaultCloseOperation(WindowConstants::DISPOSE_ON_CLOSE)
+  end
+end
 
 
 class MouseDragListener
   include MouseMotionListener
   include MouseListener
-
+  
   def initialize(&block)
     @block = block
+    @tframe = TransparentFrame.new
   end
 
   def mouseDragged(me)
     pt = me.get_location_on_screen
     @block.call(pt.x, pt.y)
-
-    def mouseMoved(me)
-      nil
-    end
-
-    def mouseClicked(e)
-      nil
-    end
-    def mouseEntered(e)
-      nil
-    end
-    def mouseExited(e)
-      nil
-    end
-
-    def mousePressed(e)
-      e.component.cursor = Cursor.getPredefinedCursor(Cursor::CROSSHAIR_CURSOR)
-    end
-
-    def mouseReleased(e)
-      nil
-    end
-
   end
+
+  def mouseMoved(me)
+    nil
+  end
+
+  def mouseClicked(e)
+    nil
+  end
+  def mouseEntered(e)
+    nil
+  end
+  def mouseExited(e)
+    nil
+  end
+
+  def mousePressed(e)
+    @tframe.visible = true
+  end
+
+  def mouseReleased(e)
+    nil
+    @tframe.visible = false
+  end
+
 end
 
 
@@ -267,6 +291,7 @@ class SetupScreenPointGadget < Box
     super(BoxLayout::X_AXIS)
     label = SetupLabel.new(h[:label], true)
     label.tool_tip_text = 'L-Drag from this label to the screen point.'
+    label.cursor = Cursor.getPredefinedCursor(Cursor::CROSSHAIR_CURSOR)
     add(label)
     add(Box.create_horizontal_strut(SetupDialog::LABEL_SPACING))
     add(Box.create_horizontal_glue)
