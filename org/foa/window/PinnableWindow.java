@@ -27,7 +27,8 @@ public class PinnableWindow extends AWindow {
     }
 
     public void unpin() {
-	dialogClick(new Point(getRect().width - 20, 20));
+	// Wasn't reliable with default delay for the "Flax seeds" macro.
+	dialogClick(new Point(getRect().width - 20, 20), 0.1);
     }
 
     public boolean isDialogAt(Point p) {
