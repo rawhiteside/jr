@@ -47,12 +47,13 @@ class HowMuch < Window
 
       raise(Exception.new("The How Much dialg didn't appear")) unless win
 
-      win.dialog_click(Point.new(124, 85)) if quant == :max
-      win.dialog_click(Point.new(169, 73)) if quant == :ok
+      rect = win.rect
+      win.dialog_click(Point.new(124, rect.height - 30)) if quant == :max
+      win.dialog_click(Point.new(169, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
         robot = ARobot.new
 	robot.send_string(quant.to_i.to_s)
-	win.dialog_click(Point.new(169, 73))
+	win.dialog_click(Point.new(169, rect.height - 45))
       end
 
       # Give it time to go away.
