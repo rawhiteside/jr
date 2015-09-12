@@ -2,16 +2,6 @@ require 'action'
 require 'walker'
 require 'user-io'
 
-# Nile Green
-# Plant: 35 W / 50 H
-# W1: 15 W / 35 H
-# W2: 20 Harvest
-
-# Old Egypt
-# Plant: 40 W / 55 H
-# W1:  15 W / 35 H
-# W2: 13 Harvest
-
 # Plant centered aligned with --Jaby-- lines in name.
 class FlaxGrow < Action
   def initialize
@@ -258,18 +248,29 @@ class FlaxPlantWindow < PinnableWindow
 
 end
 
+FLAX_DATA = {
+  'Constitution Peak' => {},
+  "Jacob's Field" => {},
+  "Nile Green" => {},
+  "Old Dog" => {},
+  "Old Egypt" => {},
+  "Sunset Pond" => {},
+  "Symphony Ridge Gold" => {},
+}
+
 class FlaxSeeds < Action
   HARVEST_DELAY = 0.2
 
   def initialize
     super('Flax Seeds', 'Plants')
     @walker = Walker.new
-    @flax_type = "Jacob's Field"
   end
 
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
+      {:type => :combo, :label => 'What type of flax?', :name => 'flax-type', 
+       :vals => FLAX_DATA.keys.sort},
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
       {:type => :point, :label => 'Drag onto warehouse menu', :name => 'stash'},
       {:type => :number, :label => 'How many major loops? (3 for carry 500)', :name => 'repeat'},
@@ -286,6 +287,7 @@ class FlaxSeeds < Action
   def act
     head = [@vals['head.x'].to_i, @vals['head.y'].to_i]
     repeat = @vals['repeat'].to_i
+    @flax_type = @vals['flax-type']
     @harvest_reps = @vals['harvest_reps'].to_i
     @row_len = @vals['row_len'].to_i
     @start_location = WorldLocUtils.parse_world_location(@vals['start_location'])
@@ -335,6 +337,7 @@ class FlaxSeeds < Action
     @windows.each do |w|
       harvest_one(w)
       rip_out(w)
+      w.refresh
       w.unpin
     end
     
