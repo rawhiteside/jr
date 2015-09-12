@@ -1,0 +1,4 @@
+#!/bin/sh
+
+jruby -J-classpath "foa.jar" main.rb
+

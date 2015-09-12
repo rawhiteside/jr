@@ -1,0 +1,159 @@
+require 'action'
+
+class Firepits < Action
+  def initialize
+    super('Firepits', 'Buildings')
+    @threads = []
+  end
+
+  def get_grid(parent)
+    gadgets = [
+      {:type => :grid, :name => 'g', :label => 'Show me the grid of firepits.'},
+    ]
+
+    UserIO.prompt(parent, 'Firepits', 'Firepits', gadgets)
+  end
+
+  def stop
+    @threads.each {|t| t.kill} if @threads
+    super
+  end
+
+  def setup(swing_component)
+    @vals = get_grid(swing_component)
+  end
+
+  def act
+
+    # TMP
+    Firepit.new({:x => 0, :y => 0})
+    
+    # Fill up each firepit
+    GridHelper.new(@vals, 'g').each_point do |p|
+      w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+      w.pin
+      while w.click_on('Add')
+	HowMuch.new(:max)
+	w.refresh
+      end
+      while w.click_on('Grill')
+	HowMuch.new(:max)
+	w.refresh
+      end
+      w.refresh while w.click_on('Place')
+
+      w.unpin
+    end
+
+    # Now, light the fires.
+    GridHelper.new(@vals, 'g').each_point do |p|
+      w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+      w.click_on('Strike')
+    end    
+
+    # Watch the burning pits and stoke as appropriate
+    GridHelper.new(@vals, 'g').each_point do |p|
+
+      f = Firepit.new(p)
+
+      @threads << ControllableThread.new {f.tend}
+    end
+    @threads.each {|t| t.join}
+  end
+end
+
+class Firepit < ARobot
+  def initialize(p)
+    super()
+    @x = p['x'].to_i
+    @y = p['y'].to_i
+    @ix = p['ix']
+    @iy = p['iy']
+    @state = nil
+    @hot_count = 0
+    @normal_count = 0
+  end
+
+  def tend
+    @tick = 0
+    loop do
+      @tick += 1
+      ControllableThread.check_for_pause
+      new_state = get_new_firepit_state
+      if new_state == HOT
+	with_robot_lock do
+	  mm(@x, @y)
+	  sleep_sec 0.2
+	  send_string('s')
+	end
+      end
+      sleep_sec 0.5
+    end
+  end
+
+  BRIGHT = 450
+  def get_white_fraction
+    x = @x - 10
+    y = @y - 10
+    size = 20
+    pixels = nil
+    with_robot_lock {
+      pixels = screen_rectangle(x, y, size, size)
+    }
+    bright_count = 0
+    white_count = 0
+    pixels.height.times do |y|
+      pixels.width.times do |x|
+	color = pixels.color(x, y)
+	r, g, b = color.red, color.green, color.blue
+	bright_count += 1 if r + g + b >= BRIGHT
+	white_count += 1 if r == 0xFF && g == 0xFF && b == 0xFF
+      end
+    end
+    frac = nil
+    frac = white_count.to_f / bright_count.to_f unless bright_count == 0
+    # puts "#{@ix},#{@iy}: tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n"
+    return frac
+  end
+
+  
+  HOT_THRESH = 0.15
+  NORMAL_THRESH = 0.05
+  NORMAL = 'normal'
+  HOT = 'hot'
+  # 
+  # Returns a new firepit state: one of "hot", "normal"
+  # Returns nil if state did not change
+  def get_new_firepit_state
+    frac = get_white_fraction
+    # During startup.
+    if frac == nil || @state == nil
+      if @state == NORMAL
+	return nil
+      else
+	return @state = NORMAL
+      end
+    end
+    # We enter "hot", it we're in "normal" and this is the
+    # second consecutive tick of high fraction
+    if frac >= HOT_THRESH
+      @hot_count += 1
+      @normal_count = 0
+      return @state = HOT if @state != HOT && @hot_count > 1
+      return nil
+    elsif frac < NORMAL_THRESH
+      @normal_count += 1
+      @hot_count = 0
+      return @state = NORMAL if @state != NORMAL && @normal_count > 1
+      return nil
+    else
+      @normal_count = @hot_count = 0
+      return nil
+    end
+    
+    
+  end
+
+end
+
+Action.add_action(Firepits.new)
