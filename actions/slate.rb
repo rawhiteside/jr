@@ -7,8 +7,8 @@ class CasualSlate < Action
   end
 
   def act
-    pixel = 0x767676
-    xy = [219, 103]
+    pixel = 0xFCFCFA
+    xy = [164, 50]
     loop do
       if pixel == get_pixel(*xy)
 	rclick_at_restore(xy[0], xy[1])
