@@ -103,6 +103,7 @@ class Action  < ARobot
   def stat_ok?(skill_name)
     sw = SkillsWindow.new
     color = sw.text_color(skill_name)
+
     if color.nil? || color == :red || color == 'red'
       return false
     else
@@ -151,13 +152,10 @@ class GridAction < Action
     repeat = @user_vals['repeat'].to_i
     repeat.times do
       start = Time.now.to_f
-      p @user_vals
       GridHelper.new(@user_vals, 'g').each_point do |g|
-        p g
 	act_at(g)
       end
 
-      p 'sleepoing now'
       wait_more = delay - (Time.now.to_f - start)
       sleep_sec wait_more if wait_more > 0
     end
