@@ -3,16 +3,16 @@ flax-seeds:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    head.x: '685'
-    head.y: '394'
-    stash.x: '136'
-    stash.y: '178'
+    head.x: '960'
+    head.y: '550'
+    stash.x: '165'
+    stash.y: '216'
+    stash_location: 3186, -6263
     repeat: '2'
-    max_wait_secs: '100'
+    max_wait_secs: '30'
     harvest_reps: '3'
-    row_len: '5'
-    start_location: 4577, -5787
-    stash_location: 4577, -5784
+    row_len: '15'
+    start_location: 3191, -6263
 Barley:
   2: Parameter set 1
   1: false
@@ -65,11 +65,8 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    help: "Planes wood into boards using a wood plane.\n---------------------------------------------------------------\n\
-      \nHold a bunch of wood and a bunch of slate blades. \n\nMake a stack of the\
-      \ wood plane menus somewhere (I use the lower right corner,\n\nIn the setup\
-      \ dialog drag to a point of the stack that will catch every menu. \n\nEnjoy\
-      \ the boards!\n"
+    p.x: '42'
+    p.y: '75'
 Wood Planes:
   2: Parameter set 1
   1: false
