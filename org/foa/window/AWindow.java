@@ -65,7 +65,11 @@ public abstract class AWindow extends ARobot  {
 	    throw new RuntimeException("Bad refresh arg: " + where);
 	}
 	flushTextReader();
-	sleepSec(0.2);
+	// This delay is a magic number.  Tuned to that after a
+	// refresh, there's enough time for the window to resize
+	// itself before another click happens.
+	// Increased from 0.2 to 0.3
+	sleepSec(0.3);
     }
 
     public String readText() { return textReader().readText(); }
