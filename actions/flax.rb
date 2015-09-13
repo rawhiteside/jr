@@ -300,13 +300,13 @@ class FlaxSeeds < Action
     walker = Walker.new
     loop do
       # 
-      # Go stash whatever you have, and pick up 50 seeds.
+      # Go stash whatever you have, and pick up seeds.
       walker.walk_to(@stash_location)
       stash_chest.click_on('Stash./Flax/All')
       stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
-      HowMuch.new(50)
+      HowMuch.new(2*@row_len + 1)
 
-      # Plant and parvest. 
+      # Plant and harvest. 
       repeat.times do
 	walker.walk_to(@start_location)
 	sleep_sec 0.5
@@ -326,9 +326,8 @@ class FlaxSeeds < Action
       sleep_sec 0.2
     end
     # try 3 times to rip
-    3.times do 
+    3.times do
       break if w.click_on('Util/Rip')
-      sleep_sec 0.2
     end
   end
 
@@ -362,8 +361,8 @@ class FlaxSeeds < Action
   end
 
   def plant(head)
-    @tiler = Tiler.new(0, 77)
-    @tiler.y_offset = 20
+    @tiler = Tiler.new(0, 77, 0.45)
+    @tiler.y_offset = 17
     @windows = []
     # 
     # Plant a row to the right.
@@ -372,14 +371,16 @@ class FlaxSeeds < Action
     (@row_len-1).times {
       plant_and_pin(loc)
       @walker.right
+      sleep_sec(0.1)
     }
 
     # Plant one more and step down
     plant_and_pin(loc)
     @walker.down
+    @walker.down
 
     # Now, plant the lower row
-    loc = [head[0] - 100, head[1]]
+    loc = [head[0] - 100, head[1] + 100]
     @row_len.times {
       plant_and_pin(loc)
       @walker.left
