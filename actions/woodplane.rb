@@ -23,11 +23,9 @@ class WoodPlane < Action
   
   def plane(w)
     loop do
-      sleep_sec 0.5
       w.refresh
       w.refresh if w.click_on('Repair')
       break if w.click_on('Plane')
-      sleep_sec 0.5
     end
   end
 

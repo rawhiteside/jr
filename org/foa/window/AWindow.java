@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public abstract class AWindow extends ARobot  {
+    private static double MAGIC_DELAY = 0.1;
     protected Rectangle m_rect;
     private boolean m_stable;
     private TextReader m_textReader = null;
@@ -19,6 +20,11 @@ public abstract class AWindow extends ARobot  {
     public AWindow(Rectangle rect) {
 	this();
 	setRect(rect);
+    }
+
+    public void reconfirmHeight() {
+	sleepSec(MAGIC_DELAY);
+	new WindowGeom().confirmHeight(m_rect);
     }
 
     public abstract Insets textInsets();
@@ -46,8 +52,7 @@ public abstract class AWindow extends ARobot  {
 		// MAGIC_DELAY
 		// I really think this is necessary to give the
 		// windows time to resize before we look.
-		sleepSec(0.1);
-		new WindowGeom().confirmHeight(m_rect);
+		reconfirmHeight();
 	    }
 	}
 	finally {releaseRobotLock();}
@@ -172,6 +177,7 @@ public abstract class AWindow extends ARobot  {
 		}
 		if (i >= path.length - 1) { 
 		    rclickAt(pt);
+		    if (path.length == 1) { w.reconfirmHeight(); }
 		}
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);

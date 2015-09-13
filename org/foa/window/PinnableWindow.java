@@ -6,6 +6,8 @@ import org.foa.robot.*;
 import java.awt.*;
 
 public class PinnableWindow extends AWindow {
+    private boolean m_pinned = false;
+    
     public PinnableWindow(Rectangle rect) {
 	super(rect);
     }
@@ -13,6 +15,8 @@ public class PinnableWindow extends AWindow {
     public Insets textInsets() {
 	return new Insets(4, 4, 5, 32);
     }
+
+    public boolean getPinned() {return m_pinned;}
 
     public PinnableWindow pin() {
 	Rectangle r = getRect();
@@ -23,11 +27,13 @@ public class PinnableWindow extends AWindow {
 	if(!isDialogAt(r.x, r.y)) {
 	    throw new RuntimeException("No dialog after pin at (" + r.x + ", " + r.y + ")");
 	}
+	m_pinned = true;
 	return this;
     }
 
     public void unpin() {
 	dialogClick(new Point(getRect().width - 20, 20));
+	m_pinned = false;
     }
 
     public boolean isDialogAt(Point p) {
@@ -102,9 +108,7 @@ public class PinnableWindow extends AWindow {
 	Rectangle r = getRect();
 	r.x = p.x;
 	r.y = p.y;
-	if (!getStable()) {
-	    new WindowGeom().confirmHeight(r);
-	}
+	if (!getStable()) { reconfirmHeight(); }
 	setRect(r);
 	return this;
     }

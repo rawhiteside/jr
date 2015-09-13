@@ -1,9 +1,6 @@
 
-Singleton transparent frame
-
 Lock to pause casual grass wile run to chest.
 
-Tiling out-of range windows.
+Tiling out-of range windows. (trees.  Maybe just don't do this? )
 
-Rip menu at the right edge.
 
