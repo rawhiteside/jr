@@ -5,3 +5,5 @@ Carving 1			Jaby
 Carving 2			Jaby
 Agriculture			Jaby
 Animal Husband			Jaby
+Arthropodology			Jaby
+Foraging			Jaby
