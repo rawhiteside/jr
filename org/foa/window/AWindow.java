@@ -8,11 +8,13 @@ import java.awt.*;
 import java.awt.event.*;
 
 public abstract class AWindow extends ARobot  {
-    private Rectangle m_rect;
+    protected Rectangle m_rect;
+    private boolean m_stable;
     private TextReader m_textReader = null;
 
     public AWindow() {
 	super();
+	m_stable = false;
     }
     public AWindow(Rectangle rect) {
 	this();
@@ -29,11 +31,25 @@ public abstract class AWindow extends ARobot  {
 	return new Point(p.x + m_rect.x, p.y + m_rect.y);
     }
 
+    // "Stable" means that you know that, at least for the moment, the
+    // window will not change size upon click.
+    public void setStable(boolean b) { m_stable = b; }
+    public boolean getStable() { return m_stable; }
+
     public void dialogClick(Point p) { dialogClick(p, 0.01); }
     public void dialogClick(Point p, double delay) {
-	new WindowGeom().confirmHeight(m_rect);
 	Point point = toScreenCoords(p);
-	rclickAt(point, delay);
+	claimRobotLock();
+	try {
+	    rclickAt(point, delay);
+	    if (!getStable()) {
+		// I really think this is necessary to give the
+		// windows time to resize before we look.
+		sleepSec(0.05);
+		new WindowGeom().confirmHeight(m_rect);
+	    }
+	}
+	finally {releaseRobotLock();}
     }
 
 
@@ -65,11 +81,6 @@ public abstract class AWindow extends ARobot  {
 	    throw new RuntimeException("Bad refresh arg: " + where);
 	}
 	flushTextReader();
-	// This delay is a magic number.  Tuned to that after a
-	// refresh, there's enough time for the window to resize
-	// itself before another click happens.
-	// Increased from 0.2 to 0.3
-	sleepSec(0.3);
     }
 
     public String readText() { return textReader().readText(); }
@@ -157,7 +168,9 @@ public abstract class AWindow extends ARobot  {
 		    w = null;
 		    break;
 		}
-		if (i >= path.length - 1) { rclickAt(pt); }
+		if (i >= path.length - 1) { 
+		    rclickAt(pt);
+		}
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);
 		}

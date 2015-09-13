@@ -283,7 +283,9 @@ class Tiler < ARobot
     # anticipate a reversion to the current height.
 
     prev_height = pinnable.rect.height
-    pinnable.refresh('tl')
+    if (!pinnable.stable) 
+      pinnable.refresh('tl')
+    end
     curr_height = pinnable.rect.height
     fudge = 0
     fudge = (prev_height - curr_height)/2 if prev_height > curr_height

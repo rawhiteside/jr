@@ -391,10 +391,12 @@ class FlaxSeeds < Action
   # Also, uses the @tiler, and appends the window to @windows
   def plant_and_pin(loc)
     @w_plant.click_on(@flax_type)
-    start = Time.now
-    w = PinnableWindow.from_screen_click(Point.new(loc[0], loc[1])).pin
+    w = PinnableWindow.from_screen_click(Point.new(loc[0], loc[1]))
+    w.stable = true
+    w.pin
     @tiler.tile(w)
     @windows << w
+    w.stable = false
   end
 
   def get_plant_window

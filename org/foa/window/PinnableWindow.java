@@ -27,8 +27,7 @@ public class PinnableWindow extends AWindow {
     }
 
     public void unpin() {
-	// Wasn't reliable with default delay for the "Flax seeds" macro.
-	dialogClick(new Point(getRect().width - 20, 20), 0.1);
+	dialogClick(new Point(getRect().width - 20, 20));
     }
 
     public boolean isDialogAt(Point p) {
@@ -74,7 +73,7 @@ public class PinnableWindow extends AWindow {
     private void attemptDrag(Point p) {
 	Rectangle r = getRect();
 
-	double delay = 0.1;
+	double delay = 0.05;
 	claimRobotLock();
 	try {
 	    mm(r.x, r.y);
@@ -86,12 +85,12 @@ public class PinnableWindow extends AWindow {
 	    rbu();
 	    // Sometimes it moves slowly?
 	    sleepSec(delay);
-	    sleepSec(delay);
 	}
 	finally {releaseRobotLock();}
     }
 
     public PinnableWindow dragTo(Point p) {
+
 	while(true) {
 	    attemptDrag(p);
 	    if(isDialogAt(p)) {
@@ -103,7 +102,9 @@ public class PinnableWindow extends AWindow {
 	Rectangle r = getRect();
 	r.x = p.x;
 	r.y = p.y;
-	new WindowGeom().confirmHeight(r);
+	if (!getStable()) {
+	    new WindowGeom().confirmHeight(r);
+	}
 	setRect(r);
 	return this;
     }
