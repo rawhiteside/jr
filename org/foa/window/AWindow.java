@@ -145,6 +145,7 @@ public abstract class AWindow extends ARobot  {
 		    // Now, look to see if the pixel turned black.
 		    // This happens when there wasn't anything to dismiss, so the
 		    // self menu appeared.  If so, dismiss that.
+		    robot.mm(p, 0.1);
 		    if (robot.getPixel(p) == 0) {
 			robot.sendVk(KeyEvent.VK_ESCAPE);
 		    }
@@ -174,6 +175,11 @@ public abstract class AWindow extends ARobot  {
 		}
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);
+		    // Move the mouse out of the way. 
+		    if (pt.x > w.getRect().x) {
+			mm(w.getRect().x, w.getRect().y);
+			sleepSec(0.1);
+		    }
 		}
 		windowPopped = true;
 	    }
