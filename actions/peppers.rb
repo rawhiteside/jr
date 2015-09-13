@@ -149,4 +149,4 @@ class PepperTender < ARobot
     end
   end
 end
-Action.add_action(Peppers.new)
+# Action.add_action(Peppers.new)

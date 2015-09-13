@@ -231,4 +231,4 @@ class BarleyWindow < PinnableWindow
     return nil
   end
 end
-Action.add_action(Barley.new)
+# Action.add_action(Barley.new)

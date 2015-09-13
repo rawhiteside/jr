@@ -12,5 +12,5 @@ class Wheat < GridAction
     send_string('hw')
   end
 end
-Action.add_action(Wheat.new)
+# Action.add_action(Wheat.new)
 

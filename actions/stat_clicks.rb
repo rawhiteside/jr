@@ -43,7 +43,7 @@ class DigStones < Action
       stat_wait('End')
       w.refresh
       w.click_on('Dig')
-      sleep_sec 1
+      sleep_sec(3.0)  # MAGIC.  Dig happens server side and lag.
     end
   end
 end
@@ -153,7 +153,7 @@ class Eat < Action
     text = SkillsWindow.new.read_text
     # 
     # Make sure we can see all the stats
-    [ 'Strength', 'Dexterity', 'Perception', ].each do |s|
+    [ 'Strength', 'Dexterity', 'Endurance', ].each do |s|
       return false unless text =~ Regexp.new("^#{s}")
     end
     return false if text.index('[')

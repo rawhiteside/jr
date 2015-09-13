@@ -41,7 +41,7 @@ public class PinnableWindow extends AWindow {
     }
     public boolean isDialogAt(int x, int y) {
 	Rectangle r = getRect();
-	// Left over from when pixels were expensive.  Fix this.
+	// XXX Left over from when pixels were expensive.  Fix this.
 	Point[] probes = new Point[] {
 	    new Point(x, y),
 	    new Point(x + r.width, y),
@@ -99,6 +99,7 @@ public class PinnableWindow extends AWindow {
 
 	while(true) {
 	    attemptDrag(p);
+	    sleepSec(0.1); // MAGIC NUMBER.  On rare occasions, this is needed.
 	    if(isDialogAt(p)) {
 		break;
 	    }

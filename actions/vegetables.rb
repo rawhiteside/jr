@@ -297,7 +297,7 @@ class Cabbages < VeggieAction
     end
   end
 end
-Action.add_action(Cabbages.new)
+# Action.add_action(Cabbages.new)
 
 class Leeks < VeggieAction
   def initialize()
@@ -340,7 +340,7 @@ class Leeks < VeggieAction
     end
   end
 end
-Action.add_action(Leeks.new)
+# Action.add_action(Leeks.new)
 
 class Carrot < Vegetable
   def vegetable?(pb, x, y)
@@ -396,7 +396,7 @@ class Carrots < VeggieAction
     end
   end
 end
-Action.add_action(Carrots.new)
+# Action.add_action(Carrots.new)
 
 class Garlic < VeggieAction
   def initialize()
@@ -437,4 +437,4 @@ class Garlic < VeggieAction
     end
   end
 end
-Action.add_action(Garlic.new)
+#Action.add_action(Garlic.new)
