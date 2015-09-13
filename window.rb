@@ -75,6 +75,23 @@ class PopupWindow < Window
     # { :right => 32, :left => 14, :top => 14, :bottom => 5 }
     Insets.new(14, 14, 5, 32)
   end
+
+  # try to dismiss the popup thing.  Click on the last glyph from the
+  # text.  This is hopefully the "OK" button, which the text can't
+  # handle.
+  def dismiss
+
+    # This is an array glyphs[letters][lines]
+    glyphs = text_reader.glyphs
+    return if glyphs.size == 0
+
+    # last glyph on the last line.
+    last_line = glyphs[glyphs.size - 1]
+    glyph = last_line[last_line.size - 1]
+    x = glyph.origin[0] + glyph.width / 2;
+    y = glyph.origin[1] + glyph.height / 2;
+    rclick_at(x, y)
+  end
   
 end
 

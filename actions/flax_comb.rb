@@ -28,6 +28,8 @@ class FlaxComb < Action
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
       loop { break unless process(w) }
+      p = PopupWindow.find
+      p.dismiss if p
       w.unpin
     end
   end
