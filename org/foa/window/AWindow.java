@@ -43,9 +43,10 @@ public abstract class AWindow extends ARobot  {
 	try {
 	    rclickAt(point, delay);
 	    if (!getStable()) {
+		// MAGIC_DELAY
 		// I really think this is necessary to give the
 		// windows time to resize before we look.
-		sleepSec(0.05);
+		sleepSec(0.1);
 		new WindowGeom().confirmHeight(m_rect);
 	    }
 	}
@@ -177,7 +178,7 @@ public abstract class AWindow extends ARobot  {
 		windowPopped = true;
 	    }
 	    // Is there a dangling window up still?
-	    // That happens when we've popped a submenu, but then didn't fine
+	    // That happens when we've popped a submenu, but then didn't find
 	    // the thing to click on there.
 	    if(w == null && windowPopped) { AWindow.dismissAll(); }
 
