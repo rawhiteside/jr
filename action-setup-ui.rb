@@ -1,6 +1,7 @@
 require 'java'
 
 import javax.swing.JFrame
+import java.awt.event.WindowListener
 import javax.swing.WindowConstants
 import javax.swing.SwingUtilities
 import java.awt.GraphicsEnvironment
@@ -184,7 +185,7 @@ class TransparentFrame < JFrame
   def initialize
     super
     setUndecorated(true)
-    setOpacity(0.01)  # Aparently, can't be 0.0
+    setOpacity(0.1)  # Aparently, can't be 0.0
     setCursor(Cursor.getPredefinedCursor(Cursor::CROSSHAIR_CURSOR))
     tk = java.awt.Toolkit.getDefaultToolkit
     
@@ -198,10 +199,10 @@ end
 class MouseDragListener
   include MouseMotionListener
   include MouseListener
+  TFRAME = TransparentFrame.new
   
   def initialize(&block)
     @block = block
-    @tframe = TransparentFrame.new
   end
 
   def mouseDragged(me)
@@ -224,12 +225,19 @@ class MouseDragListener
   end
 
   def mousePressed(e)
-    @tframe.visible = true
+    TFRAME.visible = true
+    @other_frame = SwingUtilities.getWindowAncestor(e.source)
+    @was_on_top = @other_frame.always_on_top
+    @other_frame.always_on_top = false
+    TFRAME.always_on_top = true
+    nil
   end
 
   def mouseReleased(e)
+    TFRAME.visible = false
+    TFRAME.always_on_top = false
+    @other_frame.always_on_top = @was_on_top
     nil
-    @tframe.visible = false
   end
 
 end
