@@ -6,12 +6,15 @@ class Firepits < Action
     @threads = []
   end
 
-  def get_grid(parent)
+  def setup(parent)
     gadgets = [
       {:type => :grid, :name => 'g', :label => 'Show me the grid of firepits.'},
+      {:type => :combo, :name => 'task', :label => 'What should I do?',
+       :vals => ['Load', 'Burn', 'Load and Burn']
+      }
     ]
 
-    UserIO.prompt(parent, 'Firepits', 'Firepits', gadgets)
+    @vals = UserIO.prompt(parent, 'Firepits', 'Firepits', gadgets)
   end
 
   def stop
@@ -19,15 +22,7 @@ class Firepits < Action
     super
   end
 
-  def setup(swing_component)
-    @vals = get_grid(swing_component)
-  end
-
-  def act
-
-    # TMP
-    Firepit.new({:x => 0, :y => 0})
-    
+  def load_firepits
     # Fill up each firepit
     GridHelper.new(@vals, 'g').each_point do |p|
       w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
@@ -44,11 +39,24 @@ class Firepits < Action
 
       w.unpin
     end
+  end
 
-    # Now, light the fires.
+  def act
+    task = @vals['task']
+    load_firepits if task =~ /Load/
+    burn_firepits if task =~ /Burn/
+  end
+
+  def burn_firepits
+    # Light the fires.
     GridHelper.new(@vals, 'g').each_point do |p|
       w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
-      w.click_on('Strike')
+      w.pin
+      while w.click_on('Strike')
+        w.refresh
+        w.refresh if w.click_on('Place Tinder')
+      end
+      w.unpin
     end    
 
     # Watch the burning pits and stoke as appropriate
