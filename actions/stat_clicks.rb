@@ -11,7 +11,7 @@ class DigDirt < Action
   end
 
   def act
-    xy = [225, 65]
+    xy = [92, 65]
     stat = 'End'
     loop do
       stat_wait('End')
