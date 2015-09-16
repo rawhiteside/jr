@@ -109,6 +109,28 @@ public abstract class AWindow extends ARobot  {
 	}
     }
 
+    /**
+     * Wait (for the provided duration) for the supplied text to
+     * appear in a window. Refresh until it does.  Returns whether it
+     * appeared.
+     */
+    public boolean waitForText(String text)  {
+	return waitForText(text, 1.0);
+    }
+    public boolean waitForText(String text, double maxSeconds) {
+	long start = System.currentTimeMillis();
+	while(true) {
+	    refresh("tc");
+	    if(readText().indexOf(text) != -1) {
+		return true;
+	    }
+	    sleepSec(0.1);
+	    if(maxSeconds < (System.currentTimeMillis() - start) * 1000) {
+		return false;
+	    }
+	}
+    }
+
     public InkSpots[] findMatchingLine(String start) {
 	TextReader tr = textReader();
 	for(int i = 0; i < tr.lineText.length; i++) {
