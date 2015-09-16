@@ -102,7 +102,7 @@ public class PinnableWindow extends AWindow {
     }
 
     private void attemptDrag(Point p) {
-	double delay = 0.05;
+	double delay = 0.075;
 	claimRobotLock();
 	try {
 
@@ -142,9 +142,9 @@ public class PinnableWindow extends AWindow {
 	try {
 	    // May need to try several times.
 	    while (true) {
-		robot.mm(pt, 0.1);
+		robot.mm(pt, 0.05);
 		robot.rclickAt(pt, 0.05);
-		robot.sleepSec(0.1);
+		robot.sleepSec(0.05);
 		// Now, give it at most a half-second to appear.
 		Rectangle rectangle = null;
 		long startMillis = System.currentTimeMillis();

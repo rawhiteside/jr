@@ -170,3 +170,13 @@ Interval tab:
   1: false
   Parameter set 1:
     interval: '5'
+onions:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    grow: 3052, -6182
+    water: 3052, -6182
+    head.x: '956'
+    head.y: '550'
+    plant.x: '528'
+    plant.y: '628'
