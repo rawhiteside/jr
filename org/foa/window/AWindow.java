@@ -120,7 +120,7 @@ public abstract class AWindow extends ARobot  {
     public boolean waitForText(String text, double maxSeconds) {
 	long start = System.currentTimeMillis();
 	while(true) {
-	    refresh("tc");
+	    refresh("tl");
 	    if(readText().indexOf(text) != -1) {
 		return true;
 	    }
