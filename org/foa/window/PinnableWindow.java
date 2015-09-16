@@ -57,8 +57,9 @@ public class PinnableWindow extends AWindow {
 	    new Point(x, y+8), 
 	    new Point(x, y+9), 
 	};
-	r = new Rectangle(x, y, r.width + 1, r.height + 1);
-	PixelBlock pb = new PixelBlock(r);
+	Rectangle screenRect = new Rectangle(x, y, r.width + 1, r.height + 1);
+	PixelBlock pb = new PixelBlock(screenRect);
+
 	for(Point p : probes) {
 	    if (pb.pixelFromScreen(p) != 0) {
 		return false;
@@ -76,16 +77,39 @@ public class PinnableWindow extends AWindow {
 	}
     }
 
-    private void attemptDrag(Point p) {
-	Rectangle r = getRect();
-
-	double delay = 0.05;
-	claimRobotLock();
-	try {
-	    mm(r.x, r.y);
+    /**
+     * Handle the fact that the window might change height upon button down. 
+     */
+    private void startDragging(double delay) {
+	while(true) {
+	    mm(m_rect.x, m_rect.y);
 	    sleepSec(delay);
 	    rbd();
 	    sleepSec(delay);
+	    Rectangle r = new Rectangle(m_rect);
+	    new WindowGeom().confirmHeight(r);
+	    // If it changed size, release button, and
+	    if(m_rect.equals(r)) {
+		return;
+	    } else {
+		// Release the button, update the rect, and try again.
+		System.out.println("startDragging:  retrying.");
+		rbu();
+		m_rect = r;
+	    }
+	}
+	
+    }
+
+    private void attemptDrag(Point p) {
+	double delay = 0.05;
+	claimRobotLock();
+	try {
+
+	    // Method here, because the window might resize on button
+	    // down.
+	    startDragging(delay);
+
 	    mm(p);
 	    sleepSec(delay);
 	    rbu();
@@ -97,15 +121,8 @@ public class PinnableWindow extends AWindow {
 
     public PinnableWindow dragTo(Point p) {
 
-	while(true) {
-	    attemptDrag(p);
-	    sleepSec(0.1); // MAGIC NUMBER.  On rare occasions, this is needed.
-	    if(isDialogAt(p)) {
-		break;
-	    }
-	    // I've found this print to be helpful.
-	    System.out.println("Trying again to drag");
-	}
+	attemptDrag(p);
+	sleepSec(0.1); // MAGIC NUMBER.  On rare occasions, this is needed.
 	Rectangle r = getRect();
 	r.x = p.x;
 	r.y = p.y;
