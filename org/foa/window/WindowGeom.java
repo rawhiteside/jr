@@ -115,7 +115,7 @@ public class WindowGeom extends ARobot {
 	    ymax = iy + 3;
 	    break;
 	}
-	rect.height = ymax - ymin + 1;
+	rect.height = ymax - ymin;
 	rect.y = ymin;
     }
 
