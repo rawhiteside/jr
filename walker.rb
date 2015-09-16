@@ -28,28 +28,25 @@ class Walker < ARobot
   # Time necessary for the walk animation to complete.
   STEP_DELAY = 0.2
 
-  # Not pauseable.  Do necessary synchronization outside here.
+
   def left(delay = KEY_DELAY)
     send_vk(VK_LEFT, delay); sleep_sec STEP_DELAY
     send_vk(VK_LEFT, delay); sleep_sec STEP_DELAY
   end
   alias west left
 
-  # Not pauseable.  Do necessary synchronization outside here.
   def right(delay = KEY_DELAY)
     send_vk(VK_RIGHT, delay); sleep_sec STEP_DELAY
     send_vk(VK_RIGHT, delay); sleep_sec STEP_DELAY
   end
   alias east right
 
-  # Not pauseable.  Do necessary synchronization outside here.
   def up(delay = KEY_DELAY)
     send_vk(VK_UP, delay); sleep_sec STEP_DELAY
     send_vk(VK_UP, delay); sleep_sec STEP_DELAY
   end
   alias north up
 
-  # Not pauseable.  Do necessary synchronization outside here.
   def down(delay = KEY_DELAY)
     send_vk(VK_DOWN, delay); sleep_sec STEP_DELAY
     send_vk(VK_DOWN, delay); sleep_sec STEP_DELAY
@@ -57,7 +54,6 @@ class Walker < ARobot
   alias south down
 
   # An array whose elements are :left, :right, :up, or :down
-  # Not pauseable.  Do necessary synchronization outside here.
   def steps(recipe, delay = KEY_DELAY)
     recipe.each {|dir| step(dir, delay) }
   end
@@ -65,6 +61,7 @@ class Walker < ARobot
   def step(dir, delay = KEY_DELAY)
     self.send dir
   end
+
 
   DIR_KEYS = {
     :n => [VK_UP],
