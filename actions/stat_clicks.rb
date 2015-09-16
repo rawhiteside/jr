@@ -123,23 +123,6 @@ class StrengthClick < Action
 end
 Action.add_action(StrengthClick.new)
 
-class Limestone < Action
-  def initialize
-    super('Limestone', 'Gather')
-  end
-
-  def act
-    xy = [225, 65]
-    loop do
-      stat_wait('End')
-      rclick_at(*xy)
-      sleep_sec 1
-    end
-  end
-end
-Action.add_action(Limestone.new)
-
-
 class Eat < Action
   def initialize
     super('Eat', 'Misc')
@@ -173,7 +156,7 @@ class Eat < Action
     loop do
       if should_eat?
 	rclick_at(x, y)
-	sleep_sec 2
+	sleep_sec 5
 	# If still not boosted, we're out of food.
 	if should_eat?
 	  puts "Out of food"
