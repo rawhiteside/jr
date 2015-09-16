@@ -185,7 +185,7 @@ class TransparentFrame < JFrame
   def initialize
     super
     setUndecorated(true)
-    setOpacity(0.1)  # Aparently, can't be 0.0
+    setOpacity(0.01)  # Aparently, can't be 0.0
     setCursor(Cursor.getPredefinedCursor(Cursor::CROSSHAIR_CURSOR))
     tk = java.awt.Toolkit.getDefaultToolkit
     
