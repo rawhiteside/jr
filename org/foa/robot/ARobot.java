@@ -143,6 +143,24 @@ public class ARobot {
 	}
 	finally {releaseRobotLock();}
     }
+
+    public void lclickAt(Point p) { lclickAt(p.x, p.y); }
+    public void lclickAt(Point p, double delaySec) { lclickAt(p.x, p.y, delaySec); }
+
+    public void lclickAt(int x, int y) { lclickAt(x, y, 0.01); }
+    public void lclickAt(int x, int y, double delaySec) {
+	claimRobotLock();
+	try {
+	    mm(x, y, delaySec);
+	    lbd();
+	    sleepSec(delaySec);
+	    lbu();
+	    sleepSec(delaySec);
+	}
+	finally {releaseRobotLock();}
+    }
+
+
     public void sleepSec(int secs) {sleepSec((double) secs);}
     public void sleepSec(float secs) {sleepSec((double) secs);}
     public void sleepSec(double secs) { ControllableThread.sleepSec(secs); }
