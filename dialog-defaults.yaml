@@ -128,8 +128,7 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    p.x: '95'
-    p.y: '95'
+    help: ''
 Wood Planes:
   2: Parameter set 1
   1: false

@@ -18,13 +18,18 @@ import javax.swing.BoxLayout
 
 STDOUT.sync = true
 
+# Here's the top-level interface.
 class TopFrame < JFrame
   def initialize
     super
+    @@last_created = self
     self.setDefaultCloseOperation(JFrame::EXIT_ON_CLOSE)
     ToolTipManager.shared_instance.initial_delay = 200
     content_panel = JPanel.new(BorderLayout.new)
     self.get_content_pane.add(content_panel)
+
+
+    content_panel.add(make_show_hide_button, BorderLayout::NORTH)
 
     @action_panel = JPanel.new
     box_layout = BoxLayout.new(@action_panel, BoxLayout::X_AXIS)
@@ -34,19 +39,39 @@ class TopFrame < JFrame
     @groups = {}
   end
 
+  
+  SHOW_ALL = 'Show all'
+  HIDE_SOME = 'Show only favorites'
+  def make_show_hide_button
+    box = Box.create_horizontal_box()
+    button = JButton.new(SHOW_ALL)
+    box.add(button)
+    button.add_action_listener do |event|
+      if button.text == SHOW_ALL
+        button.text = HIDE_SOME
+      else
+        button.text = SHOW_ALL
+      end
+      pack
+    end
+
+    box
+  end
+
   def add_action(action)
     group = group_for(action.group)
     group.add(button_for(action))
   end
 
   def run
-    # Didn't really put the groups into the action_panel.  
+    # Didn't really put the groups into the action_panel yet, as they
+     # needed to be sorted.
     @groups.keys.sort.each do |name|
       @action_panel.add(@groups[name])
     end
 
-    self.pack
-    self.set_visible(true)
+    pack
+    set_visible(true)
   end
 
   def group_for(gname)
@@ -61,6 +86,9 @@ class TopFrame < JFrame
   end
 
   def button_for(action)
+    return ActionButton.new(action)
+
+
     panel = JPanel.new
     panel.set_layout(BoxLayout.new(panel, BoxLayout::X_AXIS))
     panel.set_alignment_x(Component::LEFT_ALIGNMENT)
@@ -84,6 +112,59 @@ class TopFrame < JFrame
     panel
   end
 end
+
+
+# A UI thingy that represents an action.
+class ActionButton < JPanel
+  
+  # Favorite checkbox as a key pointing to action button.  
+  @@fav_to_action = {}
+  
+  def initialize(action)
+    super()
+    set_layout(BoxLayout.new(self, BoxLayout::X_AXIS))
+    set_alignment_x(Component::LEFT_ALIGNMENT)
+
+    add(make_favorites_checkbox)
+
+    add(make_help_button(action))
+    check_box = JCheckBox.new(action.name)
+
+    check_box.tool_tip_text = 'Run the macro.'
+    check_box.add_item_listener(ActionController.new(action, check_box))
+    add(check_box)
+  end
+
+  def make_favorites_checkbox()
+    check_box = JCheckBox.new('')
+    @@fav_to_action[check_box] = self
+    check_box
+  end
+
+  def make_help_button(action)
+    help = JButton.new('?')
+    help_text = HelpForTopic.help_text_for(action.name)
+    if help_text && help_text.strip.size > 0
+      help.tool_tip_text = 'View or edit the setup instructions.'
+    else
+      help.set_foreground(Color::PINK) 
+      help.tool_tip_text = 'Edit the setup instructions.  They are empty!'
+    end
+    help.add_action_listener do |e|
+      UserIO.show_help(action.name, self)
+    end
+    help.set_margin(Insets.new(0,0,0,0))
+
+    help
+  end
+
+  def self.show_all
+  end
+
+  def self.hide_some_stuff
+  end
+end
+
 
 class ActionController
 

@@ -1,5 +1,4 @@
 require 'java'
-require 'refactor-tmp'
 require 'atitd'
 require 'action'
 require 'robot'

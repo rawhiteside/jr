@@ -40,7 +40,7 @@ Background Get: |-
   Drag a rectangle holding only background pixels.
 Flax Seeds: "Start with 50 seeds.\nPin plant upper left corner.\nF8F8 view. \nMinize\
   \ chat.\n"
-Dig Stones: "hi let's \ndig some stones. \n"
+Dig Stones: ''
 flax-seeds: sdfsdf
 Constitution click: |
   Clicks on the provided screen location every second, unless the Constitution stat is rendered in red.
