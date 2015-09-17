@@ -1,6 +1,8 @@
 
-Lock to pause casual grass wile run to chest.
+Write an Icon class.  It' embarassing. 
 
-Tiling out-of range windows. (trees.  Maybe just don't do this? )
+Lock to pause casual grass while run to chest.
+
+Check Tiling out-of range windows. (trees.  Maybe just don't do this? )
 
 

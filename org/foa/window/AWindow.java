@@ -7,6 +7,14 @@ import org.foa.*;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * Yes.  I know that the proper relationship of AWindow and ARobot is not *is-a*.
+ *
+ * But I wanted convenient access to the robot methods, and this was
+ * easy.  Maybe I'll turn it into a static import someday.
+ *
+ */
+
 public abstract class AWindow extends ARobot  {
     private static double MAGIC_DELAY = 0.1;
     protected Rectangle m_rect;

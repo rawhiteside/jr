@@ -22,7 +22,7 @@ STDOUT.sync = true
 class TopFrame < JFrame
   def initialize
     super
-    @@last_created = self
+
     self.setDefaultCloseOperation(JFrame::EXIT_ON_CLOSE)
     ToolTipManager.shared_instance.initial_delay = 200
     content_panel = JPanel.new(BorderLayout.new)
@@ -49,8 +49,10 @@ class TopFrame < JFrame
     button.add_action_listener do |event|
       if button.text == SHOW_ALL
         button.text = HIDE_SOME
+        ActionButton.show_all
       else
         button.text = SHOW_ALL
+        ActionButton.hide_some
       end
       pack
     end
@@ -70,6 +72,7 @@ class TopFrame < JFrame
       @action_panel.add(@groups[name])
     end
 
+    ActionButton.hide_some
     pack
     set_visible(true)
   end
@@ -117,15 +120,17 @@ end
 # A UI thingy that represents an action.
 class ActionButton < JPanel
   
-  # Favorite checkbox as a key pointing to action button.  
+  # Favorite checkbox as a key pointing to action button.
+  # These tables don't really belong here...
   @@fav_to_action = {}
+  @@favorites = PersistentHash.new('favorites.yaml')
   
   def initialize(action)
     super()
     set_layout(BoxLayout.new(self, BoxLayout::X_AXIS))
     set_alignment_x(Component::LEFT_ALIGNMENT)
 
-    add(make_favorites_checkbox)
+    add(make_favorites_checkbox(action))
 
     add(make_help_button(action))
     check_box = JCheckBox.new(action.name)
@@ -135,8 +140,17 @@ class ActionButton < JPanel
     add(check_box)
   end
 
-  def make_favorites_checkbox()
+  def make_favorites_checkbox(action)
     check_box = JCheckBox.new('')
+    check_box.add_action_listener do |event|
+      if check_box.selected
+        @@favorites[action.name] = 1
+      else
+        @@favorites[action.name] = 0
+      end
+    end
+    check_box.selected = (@@favorites[action.name] == 1)
+    check_box.tool_tip_text = 'Mark this action as a favorite.'
     @@fav_to_action[check_box] = self
     check_box
   end
@@ -159,9 +173,21 @@ class ActionButton < JPanel
   end
 
   def self.show_all
+    @@fav_to_action.each do |key, value|
+      key.visible = true
+      value.visible = true
+    end
   end
 
-  def self.hide_some_stuff
+  def self.hide_some
+    @@fav_to_action.each do |key, value|
+      key.visible = false
+      if key.selected
+        value.visible = true
+      else
+        value.visible = false
+      end
+    end
   end
 end
 

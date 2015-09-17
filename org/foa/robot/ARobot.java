@@ -29,7 +29,6 @@ public class ARobot {
     }
 
     public BufferedImage createScreenCapture(Rectangle rect) {
-	//return Win32ScreenCapture.getScreenshot(rect);
 	return m_robot.createScreenCapture(rect);
     }
 
