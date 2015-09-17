@@ -118,10 +118,10 @@ public class ImageUtils {
      *
      * Just uses pixel valies directly, and looks for zero.  
      */
-    public static PixelBlock insides(PixelBlock pb) {
-	return new PixelBlock(pb.origin(), insides(pb.bufferedImage()));
+    public static PixelBlock shrink(PixelBlock pb) {
+	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage()));
     }
-    public static BufferedImage insides(BufferedImage bi) {
+    public static BufferedImage shrink(BufferedImage bi) {
         BufferedImage biOut =
             new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 	WritableRaster raster = biOut.getRaster();
@@ -142,24 +142,67 @@ public class ImageUtils {
 	boolean flag = false;
         for(int x = 1; x < bi.getWidth()-1; x++) {
             for(int y = 1; y < bi.getHeight()-1; y++) {
-		if (flag) {
-		    raster.setPixel(x, y, ones);
-		} else {
-		    if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  != 0 &&
-			(bi.getRGB(x-0, y-1) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x+1, y-1) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x-1, y-0) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x-0, y-0) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x+1, y-0) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x-1, y+1) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x-0, y+1) & 0xFFFFFF) != 0 &&
-			(bi.getRGB(x+1, y+1) & 0xFFFFFF) != 0) {
+		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  != 0 &&
+		    (bi.getRGB(x-0, y-1) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x+1, y-1) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x-1, y-0) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x-0, y-0) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x+1, y-0) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) != 0 &&
+		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) != 0) {
 
-			raster.setPixel(x, y, ones);
-		    }
-		    else {
-			raster.setPixel(x, y, zeros); 
-		    }
+		    raster.setPixel(x, y, ones);
+		}
+		else {
+		    raster.setPixel(x, y, zeros); 
+		}
+	    }
+	}
+	return biOut;
+    }
+
+    /**
+     * Output image finds every zero pixel in the input that has a
+     * non-zero pixel as a neighbor and turns it into a one.
+     */
+    public static PixelBlock expand(PixelBlock pb) {
+	return new PixelBlock(pb.origin(), expand(pb.bufferedImage()));
+    }
+    public static BufferedImage expand(BufferedImage bi) {
+        BufferedImage biOut =
+            new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
+	WritableRaster raster = biOut.getRaster();
+	int[] zeros = {0, 0, 0};
+	int[] ones = {255, 255, 255};
+
+	// First and last output columns are zero.
+	for(int y = 0; y < bi.getHeight(); y++) {
+	    raster.setPixel(0, y, zeros);
+	    raster.setPixel(bi.getWidth()-1, y, zeros);
+	}
+	// First and last output rows are zero.
+	for(int x = 0; x < bi.getWidth(); x++) {
+	    raster.setPixel(x, 0, zeros);
+	    raster.setPixel(x, bi.getHeight() - 1, zeros);
+	}
+
+        for(int x = 1; x < bi.getWidth()-1; x++) {
+            for(int y = 1; y < bi.getHeight()-1; y++) {
+		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  == 0 &&
+		    (bi.getRGB(x-0, y-1) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x+1, y-1) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x-1, y-0) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x-0, y-0) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x+1, y-0) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) == 0 &&
+		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) == 0) {
+
+		    raster.setPixel(x, y, zeros);
+		}
+		else {
+		    raster.setPixel(x, y, ones); 
 		}
 	    }
 	}

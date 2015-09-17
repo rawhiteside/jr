@@ -18,6 +18,7 @@ require 'controllable_thread'
 #
 class RobotPauser
 
+
   def initialize
     @thread = nil
     @running = nil
@@ -65,7 +66,7 @@ class RobotPauser
 	end
 	puts 'Resume...'
       end
-      sleep_sec 1
+      ControllableThread.sleep_sec 1
     end
   end
 
@@ -73,7 +74,7 @@ class RobotPauser
   # toggled on.
   def wait_until_running
     until @running
-      sleep_sec 1
+      ControllableThread.sleep_sec 1
       check_key
     end
   end    

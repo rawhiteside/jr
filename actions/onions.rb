@@ -57,7 +57,12 @@ class Onions < Action
     yhead = @vals['head.y'].to_i
 
     tiler = Tiler.new(0, 77, 0)
-    offsets = [[100, 0], [0, -60], [-80, 0], [-80, 0], [-30, 80]]
+    offsets = [[100, 0], 
+               [0, -60],
+               [-80, 0],
+               [-80, 0],
+#               [-30, 80],
+              ]
     
     plant_time = Time.new
     w = plant_and_pin
@@ -83,7 +88,7 @@ class Onions < Action
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.xor(before, after)
-    insides = ImageUtils.insides(x)
+    insides = ImageUtils.shrink(x)
     point = ImageUtils.first_non_zero(insides, 'top')
 
     spoint = insides.to_screen(point)

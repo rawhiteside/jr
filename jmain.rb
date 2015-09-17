@@ -16,6 +16,8 @@ import java.awt.BorderLayout
 import java.awt.Insets
 import javax.swing.BoxLayout
 
+STDOUT.sync = true
+
 class TopFrame < JFrame
   def initialize
     super

@@ -1,1 +1,1 @@
-jruby -J-classpath "jna.jar;platform.jar;foa.jar" main.rb
+jruby -J-classpath "foa.jar" jmain.rb
