@@ -28,10 +28,6 @@ class Grass < Action
     @walker = Walker.new
     @pause = false
     @stash_window = nil
-    @path = [
-      [4563, -5827], 
-      [4561, -5827], 
-    ]
   end
 
   def start_grass_watcher
@@ -69,7 +65,6 @@ class Grass < Action
   end
 
   def stop
-    puts 'Stop called'
     @threads.each {|t| t.kill}
     super
   end

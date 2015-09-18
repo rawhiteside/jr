@@ -20,13 +20,7 @@ public class PinnableWindow extends AWindow {
 
     public PinnableWindow pin() {
 	Rectangle r = getRect();
-	if(!isDialogAt(r.x, r.y)) {
-	    throw new RuntimeException("No dialog to pin at (" + r.x + ", " + r.y + ")");
-	}
 	dialogClick(new Point(r.width - 20, 20));
-	if(!isDialogAt(r.x, r.y)) {
-	    throw new RuntimeException("No dialog after pin at (" + r.x + ", " + r.y + ")");
-	}
 	m_pinned = true;
 	return this;
     }

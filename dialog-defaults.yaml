@@ -173,9 +173,10 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    grow: 3389, -6116
-    water: 3389, -6119
+    grow: 3237, -6299
+    water: 3159, -6291
     head.x: '686'
     head.y: '394'
-    plant.x: '310'
-    plant.y: '511'
+    plant.x: '38'
+    plant.y: '471'
+    repeat: '3'

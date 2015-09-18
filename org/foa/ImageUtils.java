@@ -9,7 +9,6 @@ import org.foa.PixelBlock;
 public class ImageUtils {
     /**
      * Return an image constructed from the xor of the two input images.
-     * TODO:  Just use the DataBuffer for performance
      */
     public static BufferedImage xor(BufferedImage bi1, BufferedImage bi2) {
         BufferedImage biOut =
@@ -48,14 +47,14 @@ public class ImageUtils {
 	switch(which) {
 	case "top":
 	    xouter = false;
-	    yfirst = 0;
-	    yend = bi.getHeight();
+	    yfirst = 2;
+	    yend = bi.getHeight() - 2;
 	    yoff = 1;
 	    break;
 	case "bottom":
 	    xouter = false;
-	    yfirst = bi.getHeight() - 1;
-	    yend = -1;
+	    yfirst = bi.getHeight() - 2;
+	    yend = 1;
 	    yoff = -1;
 	    break;
 	case "left":
@@ -116,12 +115,13 @@ public class ImageUtils {
      * Computes an output image that has removed every pixel that has
      * a zero-value neighbor pixel. Looks at all eight.
      *
-     * Just uses pixel valies directly, and looks for zero.  
+     * Just uses pixel valies directly, and looks for zero, where zero
+     * is defined by threshold.  Pass this a brightness image.
      */
-    public static PixelBlock shrink(PixelBlock pb) {
-	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage()));
+    public static PixelBlock shrink(PixelBlock pb, int threshold) {
+	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold));
     }
-    public static BufferedImage shrink(BufferedImage bi) {
+    public static BufferedImage shrink(BufferedImage bi, int threshold) {
         BufferedImage biOut =
             new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 	WritableRaster raster = biOut.getRaster();
@@ -142,15 +142,15 @@ public class ImageUtils {
 	boolean flag = false;
         for(int x = 1; x < bi.getWidth()-1; x++) {
             for(int y = 1; y < bi.getHeight()-1; y++) {
-		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  != 0 &&
-		    (bi.getRGB(x-0, y-1) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x+1, y-1) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x-1, y-0) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x-0, y-0) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x+1, y-0) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) != 0 &&
-		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) != 0) {
+		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  > threshold &&
+		    (bi.getRGB(x-0, y-1) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x+1, y-1) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x-1, y-0) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x-0, y-0) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x+1, y-0) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) > threshold &&
+		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) > threshold) {
 
 		    raster.setPixel(x, y, ones);
 		}

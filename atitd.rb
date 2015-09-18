@@ -1,5 +1,7 @@
 require 'robot'
 
+# XXX This sucks, Bob.
+
 # Definitions for the layout of the Atitd screen. 
 # Current limitations:
 # - Full screen
@@ -7,7 +9,6 @@ require 'robot'
 # Works the build menu
 class BuildMenu < ARobot
 
-  PLANT = [44, 44]
   BUTTONS = {
     :n => [59, 77],
     :w => [36, 101],
@@ -37,10 +38,6 @@ class BuildMenu < ARobot
     :build => [34, 164]
   }
   REVOLVERS = [:r, :l, :R, :L, ]
-  def plant(move = [], plant = PLANT)
-    rclick_at(*plant)
-    build(move)
-  end
 
   def build(move)
     sleep_sec 0.1
@@ -83,22 +80,22 @@ class BuildMenu < ARobot
       # :r * 6 --> :R
       if m[:r] >= 6
 	m[:r] -= 6
-	m[:R] += l
+	m[:R] += 1
       end
       # :l * 6 --> :L
       if m[:l] >= 6
 	m[:l] -= 6
-	m[:L] += l
+	m[:L] += 1
       end
       # [:r, :r, :r, :r] --> [:R, :l, :l]
       if m[:r] > 3
-	m[:r] -= 3
+	m[:r] -= 4
 	m[:R] += 1
 	m[:l] += 2
       end
       # [:l, :l, :l, :l] --> [:L, :r, :r]
       if m[:l] > 3
-	m[:l] -= 3
+	m[:l] -= 4
 	m[:L] += 1
 	m[:r] += 2
       end

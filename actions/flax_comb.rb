@@ -18,7 +18,7 @@ class FlaxComb < Action
   
   def setup(parent)
     gadgets = [
-      {:type => :point, :label => 'Drag to comb window\n(or stack of such).', :name => 'w'},
+      {:type => :point, :label => 'Drag to comb window (or stack of such).', :name => 'w'},
     ]
     @vals = UserIO.prompt(parent, @name, @name, gadgets)
   end
