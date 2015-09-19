@@ -16,7 +16,6 @@ import java.awt.event.*;
  */
 
 public abstract class AWindow extends ARobot  {
-    private static double MAGIC_DELAY = 0.1;
     protected Rectangle m_rect;
     private boolean m_stable;
     private TextReader m_textReader = null;
@@ -30,8 +29,10 @@ public abstract class AWindow extends ARobot  {
 	setRect(rect);
     }
 
+    // TRIED 0.01.  Too low
+    private static double MAGIC_RECONFIRM_DELAY = 0.1;
     public void reconfirmHeight() {
-	sleepSec(MAGIC_DELAY);
+	sleepSec(MAGIC_RECONFIRM_DELAY);
 	new WindowGeom().confirmHeight(m_rect);
     }
 
@@ -57,9 +58,6 @@ public abstract class AWindow extends ARobot  {
 	try {
 	    rclickAt(point, delay);
 	    if (!getStable()) {
-		// MAGIC_DELAY
-		// I really think this is necessary to give the
-		// windows time to resize before we look.
 		reconfirmHeight();
 	    }
 	}

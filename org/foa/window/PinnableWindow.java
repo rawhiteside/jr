@@ -20,8 +20,12 @@ public class PinnableWindow extends AWindow {
 
     public PinnableWindow pin() {
 	Rectangle r = getRect();
+	// Pinning doesn't trigger a resize.
+	boolean prev = getStable();
+	setStable(true);
 	dialogClick(new Point(r.width - 20, 20));
-	m_pinned = true;
+	m_pinned = prev;
+	setStable(false);
 	return this;
     }
 

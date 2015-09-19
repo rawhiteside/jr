@@ -7,13 +7,31 @@ class Onions < Action
     super(name, category)
   end
 
+  VEGETABLE_DATA = {
+    "Cabbage/Mut's Fruition" => {:water => 1},
+    "Cabbage/Bastet's Rielding" => {:water => 2},
+
+    "Carrots/Osiris's Orange" => {:water => 1},
+    "Carrots/Osiris'Green Leaf" => {:water => 2},
+
+    "Garlic/Apep's Crop" => {:water => 1},
+    "Garlic/Heket's Reaping" => {:water => 2},
+
+    "Leeks/Horus' Grain" => {:water => 1},
+    "Leeks/Mapi's Harvest" => {:water => 2},
+
+    "Onions/Amun's Bounty" => {:water => 1},
+    'Onions/Tears of Sinai' => {:water => 2},
+  }
 
   # Size of a side of the square we look at to detect plants. Square
   # will be centered on your head.
-  SQUARE_SIZE = 150
+  SQUARE_SIZE = 450
 
   def setup(parent)
     gadgets = [
+      {:type => :combo, :label => 'What to grow?:', :name => 'veggie', 
+       :vals => VEGETABLE_DATA.keys.sort},
       {:type => :world_loc, :label => 'Growing spot', :name => 'grow'},
       {:type => :world_loc, :label => 'Location of water', :name => 'water'},
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
@@ -31,6 +49,8 @@ class Onions < Action
 
   def act
     walker = Walker.new
+    @vegi_name = @vals['veggie'].split('/')[1].strip
+    @vegi_data = VEGETABLE_DATA[@vals['veggie']]
     @repeat = @vals['repeat'].to_i
     @grow_location = WorldLocUtils.parse_world_location(@vals['grow'])
     @water_location = WorldLocUtils.parse_world_location(@vals['water'])
@@ -59,14 +79,14 @@ class Onions < Action
     xhead = @vals['head.x'].to_i
     yhead = @vals['head.y'].to_i
 
-    tiler = Tiler.new(0, 177)
+    # Needs to be down below the build menu.
+    tiler = Tiler.new(0, 190)
     
-    build_recipe = [:n, :n]
-    6.times do 
-      plant_time = Time.new
-      w = plant_and_pin(build_recipe)
+    build_recipe = [:w, :w]
+    6.times do |plant_number|
+      w, plant_time = plant_and_pin(build_recipe)
       tiler.tile(w)
-      @threads << ControllableThread.new { tend(w, plant_time) }
+      @threads << ControllableThread.new { tend(w, plant_number, plant_time) }
       build_recipe << :r
     end
     
@@ -74,16 +94,19 @@ class Onions < Action
     @threads.each {|t| t.join}
   end
 
+  MAGIC_THRESHOLD = 40
   def plant_and_pin(build_recipe)
 
     builder = BuildMenu.new
     before = PixelBlock.new(@head_rect)
     @plant_win.dialog_click(@plant_point)
     builder.build(build_recipe)
+    plant_time = Time.new
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    insides = ImageUtils.shrink(x, 30)
+    
+    insides = ImageUtils.shrink(x, MAGIC_THRESHOLD)
     point = ImageUtils.first_non_zero(insides, 'left')
 
     spoint = insides.to_screen(point)
@@ -91,34 +114,37 @@ class Onions < Action
     w = PinnableWindow.from_screen_click(spoint)
     w.pin
 
-    w
+    return w, plant_time
   end
   
-  def tend(w, plant_time)
-    recipe = [
-      10, 'Water', 'Water',
-      10, 'Water', 'Water',
-      12, 'Water', 'Water',
-      15, 'Harvest',
-    ]
-    now = Time.new
-    delay = now - plant_time
-    sleep_sec(10 - delay)
-    with_robot_lock do 
-      w.refresh
-      2.times { w.click_on('Water') }
+  def tend(w, plant_number, plant_time)
+    # Times in sec (relative to plant time) at which to water.
+    # 
+    # Fiddling with these.  Added 3 sec to what I actualy measured.  I
+    # think I was watering too soon, for some reason.
+    # grow_times = [0, 15, 30, 45]
+    grow_times = [0, 18, 33, 45]
+    harvest_time = 45
+
+    3.times do |index|
+      target_secs = grow_times[index] + (grow_times[index+1] - grow_times[index])/2
+      delta = (Time.new - plant_time)
+      delay = target_secs - delta
+      # puts "plant #{plant_number} delay is #{delay} for watering #{index} (Target secs: #{target_secs}, current secs #{delta})"
+      sleep_sec(delay)
+      with_robot_lock do 
+        # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
+        w.refresh
+        @vegi_data[:water].times do
+          unless w.click_on('Water')
+            puts "plant #{plant_number} watering #{index} failed."
+          end
+        end
+      end
     end
-    sleep_sec(10)
-    with_robot_lock do 
-      w.refresh
-      2.times { w.click_on('Water') }
-    end
-    sleep_sec(12)
-    with_robot_lock do 
-      w.refresh
-      2.times { w.click_on('Water') }
-    end
-    sleep_sec(10)
+
+    sleep_sec(harvest_time - (Time.new - plant_time))
+
     harvest(w)
     w.unpin
   end

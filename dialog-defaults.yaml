@@ -173,10 +173,11 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    grow: 3237, -6299
-    water: 3159, -6291
-    head.x: '686'
-    head.y: '394'
-    plant.x: '38'
-    plant.y: '471'
-    repeat: '3'
+    veggie: Onions/Tears of Sinai
+    grow: 3173, -6202
+    water: 3172, -6220
+    head.x: '954'
+    head.y: '550'
+    plant.x: '170'
+    plant.y: '423'
+    repeat: '2'

@@ -83,7 +83,7 @@ class RobotPauser
   # NUMLOCK is toggled on, or to +false+ if it's toggled off.
   GetKeyState = Win32::API.new("GetKeyState", 'I', 'I', 'user32')
   VK_NUMLOCK  = 0x90
-  def self.check_key
+  def check_key
     key = GetKeyState.call(VK_NUMLOCK)
     @running = ((1 & key) == 1)
   end
