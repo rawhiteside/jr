@@ -61,7 +61,7 @@ class Onions < Action
 
     tiler = Tiler.new(0, 177)
     
-    build_recipe = []
+    build_recipe = [:n, :n]
     6.times do 
       plant_time = Time.new
       w = plant_and_pin(build_recipe)
