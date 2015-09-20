@@ -51,15 +51,25 @@ public abstract class AWindow extends ARobot  {
     public void setStable(boolean b) { m_stable = b; }
     public boolean getStable() { return m_stable; }
 
-    public void dialogClick(Point p) { dialogClick(p, 0.01); }
-    public void dialogClick(Point p, double delay) {
+    public void dialogClick(Point p) { dialogClick(p, null); }
+    public void dialogClick(Point p, String refreshLoc) { dialogClick(p, refreshLoc, 0.01); }
+    public void dialogClick(Point p, String refreshLoc, double delay) {
 	Point point = toScreenCoords(p);
 	claimRobotLock();
 	try {
+	    if (refreshLoc != null) {
+		refresh(refreshLoc);
+	    }
 	    rclickAt(point, delay);
 	    if (!getStable()) {
 		reconfirmHeight();
 	    }
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in dialogClick" + e.toString());
+	    e.printStackTrace();
+	    throw e;
 	}
 	finally {releaseRobotLock();}
     }
@@ -190,11 +200,15 @@ public abstract class AWindow extends ARobot  {
      * Click on the first line that matches.
      * Returns the last window manipulated on success, nil on failure
      */
-    public AWindow clickOn(String menuPath) {
+    public AWindow clickOn(String menuPath) { return clickOn(menuPath, null); }
+    public AWindow clickOn(String menuPath, String refreshLoc) {
 	boolean windowPopped = false;
 	AWindow w = this;
 	String[] path = menuPath.split("/");
 	claimRobotLock();
+	if(refreshLoc != null) {
+	    w.refresh(refreshLoc);
+	}
 	try {
 	    for(int i = 0; i < path.length; i++) {
 		String menu = path[i];
@@ -222,7 +236,14 @@ public abstract class AWindow extends ARobot  {
 	    // the thing to click on there.
 	    if(w == null && windowPopped) { AWindow.dismissAll(); }
 
-	} finally {releaseRobotLock();}
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in clickOn" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
+	finally {releaseRobotLock();}
 	return w;
     }
 }

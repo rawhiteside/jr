@@ -18,6 +18,11 @@ public class AFont {
 	FileReader r = new FileReader(FONT_FILE);
 	Yaml yaml = new Yaml();
 	try { m_map = (Map) yaml.load(r); }
+	catch(Exception e) {
+	    System.out.println("Exception: in AFont" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
 	finally { r.close(); }
     }
 

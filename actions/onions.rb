@@ -8,20 +8,20 @@ class Onions < Action
   end
 
   VEGETABLE_DATA = {
-    "Cabbage/Mut's Fruition" => {:water => 1},
-    "Cabbage/Bastet's Rielding" => {:water => 2},
+    "Cabbage/Mut's Fruition/(1)" => {:water => 1},
+    "Cabbage/Bastet's Yielding/(2)" => {:water => 2},
 
-    "Carrots/Osiris's Orange" => {:water => 1},
-    "Carrots/Osiris'Green Leaf" => {:water => 2},
+    "Carrots/Osiris's Orange/(1)" => {:water => 1},
+    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2},
 
-    "Garlic/Apep's Crop" => {:water => 1},
-    "Garlic/Heket's Reaping" => {:water => 2},
+    "Garlic/Apep's Crop/(2)" => {:water => 2},
+    "Garlic/Heket's Reaping/(1)" => {:water => 1},
 
-    "Leeks/Horus' Grain" => {:water => 1},
-    "Leeks/Mapi's Harvest" => {:water => 2},
+    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3, :max_plant => 6},
+    "Leeks/Hapi's Harvest/(1)" => {:water => 1},
 
-    "Onions/Amun's Bounty" => {:water => 1},
-    'Onions/Tears of Sinai' => {:water => 2},
+    "Onions/Amun's Bounty/(1)" => {:water => 1},
+    'Onions/Tears of Sinai/(2)' => {:water => 2},
   }
 
   # Size of a side of the square we look at to detect plants. Square
@@ -59,11 +59,14 @@ class Onions < Action
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
     @plant_point = Point.new(@plant_win.rect.width/2, @plant_win.rect.height/2)
 
+    max_plants = @vegi_data[:max_plant] || 20
+    puts "Max plants : #{max_plants}"
+
     loop do
       walker.walk_to(@grow_location)
       sleep_sec(3)
       repeat.times do
-        one_pass
+        one_pass(max_plants)
       end
       walker.walk_to(@water_location)
       sleep_sec(1)
@@ -74,17 +77,30 @@ class Onions < Action
 
   end
 
-  def one_pass
+  def one_pass(max_plants)
 
     xhead = @vals['head.x'].to_i
     yhead = @vals['head.y'].to_i
 
     # Needs to be down below the build menu.
     tiler = Tiler.new(0, 190)
+    plant_count = 0
     
     build_recipe = [:w, :w]
-    6.times do |plant_number|
-      w, plant_time = plant_and_pin(build_recipe)
+    5.times do |plant_number|
+      break if plant_count >= max_plants
+      plant_count += 1
+      w, plant_time = plant_and_pin(build_recipe, 'left')
+      tiler.tile(w)
+      @threads << ControllableThread.new { tend(w, plant_number, plant_time) }
+      build_recipe << :r
+    end
+
+    build_recipe = [:e, :e]
+    5.times do |plant_number|
+      break if plant_count >= max_plants
+      plant_count += 1
+      w, plant_time = plant_and_pin(build_recipe, 'right')
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_number, plant_time) }
       build_recipe << :r
@@ -95,7 +111,7 @@ class Onions < Action
   end
 
   MAGIC_THRESHOLD = 40
-  def plant_and_pin(build_recipe)
+  def plant_and_pin(build_recipe, search_dir)
 
     builder = BuildMenu.new
     before = PixelBlock.new(@head_rect)
@@ -107,7 +123,7 @@ class Onions < Action
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
     
     insides = ImageUtils.shrink(x, MAGIC_THRESHOLD)
-    point = ImageUtils.first_non_zero(insides, 'left')
+    point = ImageUtils.first_non_zero(insides, search_dir)
 
     spoint = insides.to_screen(point)
 
@@ -122,15 +138,13 @@ class Onions < Action
     # 
     # Fiddling with these.  Added 3 sec to what I actualy measured.  I
     # think I was watering too soon, for some reason.
-    # grow_times = [0, 15, 30, 45]
+    # grow_times = [0, 15, 30, 45] # measured.
     grow_times = [0, 18, 33, 45]
     harvest_time = 45
-
     3.times do |index|
       target_secs = grow_times[index] + (grow_times[index+1] - grow_times[index])/2
       delta = (Time.new - plant_time)
       delay = target_secs - delta
-      # puts "plant #{plant_number} delay is #{delay} for watering #{index} (Target secs: #{target_secs}, current secs #{delta})"
       sleep_sec(delay)
       with_robot_lock do 
         # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
@@ -139,26 +153,31 @@ class Onions < Action
           unless w.click_on('Water')
             puts "plant #{plant_number} watering #{index} failed."
           end
+          sleep_sec(0.075) # Magic!!  Added when leeks failed.
         end
       end
     end
-
     sleep_sec(harvest_time - (Time.new - plant_time))
 
-    harvest(w)
-    w.unpin
+    harvest_and_unpin(w)
   end
 
   # Harvest is weird.  takes a long time to happen.  Sometimes not at
   # all the first click. Keep trying until the menu becomes empty. 
-  def harvest(w)
+  def harvest_and_unpin(w)
     loop do
-      w.refresh
-      # Click on harvest if it's there, but don't stop.
-      w.click_on('Harvest')
+      with_robot_lock do
+        w.refresh
 
-      # If the menu goes empty, then w're done.
-      break if w.read_text.size == 0
+        # Click on harvest if it's there, but don't stop.
+        w.click_on('Harvest')
+
+        # If the menu goes empty, then w're done.
+        if w.read_text.size == 0
+          w.unpin
+          break
+        end
+      end
 
       sleep_sec(3)
     end
@@ -169,3 +188,4 @@ end
 
 Action.add_action(Onions.new)
 
+                 

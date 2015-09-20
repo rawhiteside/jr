@@ -24,7 +24,7 @@ class IronMine < Action
   end
   
   def act
-    mine_pts = point_from_hash(@vals, 'mine')
+    mine_pt = point_from_hash(@vals, 'mine')
     field_rect = Rectangle.new(@vals['area.ul.x'].to_i, @vals['area.ul.y'].to_i,
 			       @vals['area.lr.x'].to_i - @vals['area.ul.x'].to_i,
 			       @vals['area.lr.y'].to_i - @vals['area.ul.y'].to_i)

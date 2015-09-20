@@ -53,11 +53,9 @@ public class ARobot {
 	checkForPause();
 	claimRobotLock();
 
-	// Run the runnable, amd make sure to release the lock
+	// Run the runnable, and make sure to release the lock
 	try { r.run(); }
 	catch (Exception e) {
-	    System.out.println("Exception: " + e.toString());
-	    e.printStackTrace();
 	    throw new ThreadKilledException();
 	}
 	finally {releaseRobotLock();}
@@ -140,6 +138,12 @@ public class ARobot {
 	    rbu();
 	    sleepSec(delaySec);
 	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in rclickAt" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
 	finally {releaseRobotLock();}
     }
 
@@ -155,6 +159,12 @@ public class ARobot {
 	    sleepSec(delaySec);
 	    lbu();
 	    sleepSec(delaySec);
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in lclickAt" + e.toString());
+	    e.printStackTrace();
+	    throw e;
 	}
 	finally {releaseRobotLock();}
     }

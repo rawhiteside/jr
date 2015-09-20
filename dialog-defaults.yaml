@@ -173,11 +173,22 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Onions/Tears of Sinai
-    grow: 3173, -6202
-    water: 3172, -6220
+    veggie: Leeks/Horus' Grain/(2- 3 waters!)
+    grow: 3371, -6183
+    water: 3378, -6174
     head.x: '954'
     head.y: '550'
-    plant.x: '170'
-    plant.y: '423'
+    plant.x: '404'
+    plant.y: '745'
     repeat: '2'
+iron_mine:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    area.ul.x: '379'
+    area.ul.y: '392'
+    area.lr.x: '1519'
+    area.lr.y: '770'
+    mine.x: '130'
+    mine.y: '154'
+    debug: y

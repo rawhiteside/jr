@@ -1,0 +1,2 @@
+jruby.rewrite.java.trace=true
+jruby.compile.mode=FORCE

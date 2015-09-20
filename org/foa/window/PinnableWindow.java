@@ -114,6 +114,12 @@ public class PinnableWindow extends AWindow {
 	    // Sometimes it moves slowly?
 	    sleepSec(delay);
 	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in attemptDrag" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
 	finally {releaseRobotLock();}
     }
 
@@ -170,7 +176,14 @@ public class PinnableWindow extends AWindow {
 		robot.sleepSec(0.1);
 		System.out.println("Trying agin to pop a window.");
 	    }
-	} finally { robot.releaseRobotLock(); }
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in clickOn" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
+	finally { robot.releaseRobotLock(); }
 
 	return win;
     }

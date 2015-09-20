@@ -36,6 +36,7 @@ class RobotPauser
       begin
 	watch_num_lock
       rescue Exception => e
+        puts "Exception in enable_robot_pause"
 	puts e.to_s
 	puts e.backtrace.join("\n")
       end
