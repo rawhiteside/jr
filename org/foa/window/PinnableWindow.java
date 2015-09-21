@@ -43,7 +43,6 @@ public class PinnableWindow extends AWindow {
 	Point[] probes = new Point[] {
 	    new Point(x, y),
 	    new Point(x + r.width, y),
-	    new Point(x, y + r.height),
 	    new Point(x+1, y),
 	    new Point(x+2, y), 
 	    new Point(x+3, y), 
@@ -136,14 +135,16 @@ public class PinnableWindow extends AWindow {
 	while(true) {
 	    attemptDrag(p, delay);
 	    sleepSec(Math.max(delay, 0.1)); // MAGIC NUMBER.  On rare occasions, this is needed.
-	    if(isDialogAt(p)) {
-	    	break;
-	    }
+	    break;
+	    //if(isDialogAt(p)) {
+	    //	    	break;
+	    //	    }
 	    // I've found this print to be helpful.
-	    System.out.println("Trying again to drag");
+	    //	    System.out.println("Trying again to drag");
 	}
 
 	if (!getStable()) { reconfirmHeight(); }
+	//System.out.println("dragto() : to point " + p.toString() + ", new rect is " + m_rect.toString());
 
 	return this;
     }

@@ -57,7 +57,12 @@ public class PixelBlock extends ARobot {
      * returns an int with RRGGBB encoded.
      */
     public int pixel(int x, int y) {
-	return m_bufferedImage.getRGB(x, y) & 0xFFFFFF;
+	try {
+	    return m_bufferedImage.getRGB(x, y) & 0xFFFFFF;
+	}
+	catch(Exception e) {
+	    throw new ArrayIndexOutOfBoundsException("Coordinate (" + x + ", " + y + ") is out of range.");
+	}
     }
     /*
      * return screen coords for the provided image coords.

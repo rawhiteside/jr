@@ -43,13 +43,20 @@ public class WindowGeom extends ARobot {
 	int y = pt.y;
 	Rectangle edgeRect = new Rectangle(x, 0, 1, y+1);
 	waitForEdge(edgeRect);
+	//
+	// The edge itself is black.  To the right are two pixels of
+	// brownish, then another black.  To the right of *that* is
+	// the window itself, which is non-black.  We'll search
+	// upwards to find the next black pixel, which is the inner
+	// border at the top.
+	edgeRect.x += 4;
+	x += 4;
 	PixelBlock pb = new PixelBlock(edgeRect);
 	// Search up for the corner.
-	while(pb.pixelFromScreen(x, y) == 0) {
-	    y -= 1;
-	}
+	while(pb.pixelFromScreen(x, y) != 0) { y -= 1; }
 	// Skip the little gap.
-	y -= 2;
+	y -= 3;
+	x -=4;
 	return new Point(x, y);
     }
 
@@ -69,9 +76,7 @@ public class WindowGeom extends ARobot {
 	PixelBlock pb = new PixelBlock(new Rectangle(x, y, screenWidth - x, 1));
 	while(pb.pixelFromScreen(x, y) != 0) {
 	    x += 1;
-	    if (x >= screenWidth) {
-		break;
-	    }
+	    if (x >= screenWidth) { break; }
 	}
 	x += 3;
 	return x - xOrig;
@@ -124,14 +129,13 @@ public class WindowGeom extends ARobot {
     public int findHeight(int x, int y) {
 	int yStart = y;
 	int screenHeight = screenSize().height;
+	// Search along the window proper for the black border pixel at the bottom.
+	y += 4;
+	x += 4;
 	PixelBlock pb = new PixelBlock(new Rectangle(x, y, 1, screenHeight - y + 1));
-	// Skip past the little gap.
+	while (pb.pixelFromScreen(x, y) != 0) { y += 1; }
+	// Skip past bottom border
 	y += 3;
-	while (pb.pixelFromScreen(x, y) == 0) {
-	    y += 1;
-	}
-	// Skip past the little gap at the other end.
-	y += 2;
 	return y - yStart;
     }
 

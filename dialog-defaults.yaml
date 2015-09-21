@@ -102,7 +102,7 @@ Slate:
       3652, -5275
       3644, -5275
 Trees:
-  2: In camp
+  2: Test in camp
   1: true
   Parameter set 1:
     path: |
@@ -178,10 +178,22 @@ Trees:
       Gather Wood
       Gather Wood
       3202, -6234
-    bonfire.x: '424'
-    bonfire.y: '918'
-    win-stack.x: '47'
-    win-stack.y: '313'
+    bonfire.x: '439'
+    bonfire.y: '952'
+    win-stack.x: '868'
+    win-stack.y: '802'
+  Test in camp:
+    path: |
+      3202, -6233
+      Gather Wood
+      Gather Wood
+      3207, -6232
+      Gather Wood
+      3201, -6233
+    bonfire.x: '463'
+    bonfire.y: '863'
+    win-stack.x: '925'
+    win-stack.y: '746'
 ?
 : 2: Parameter set 1
   1: false
@@ -232,15 +244,15 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Carrots/Osiris'Green Leaf/(2)
-    grow: 3189, -6301
-    water: 3187, -6263
+    veggie: Garlic/Apep's Crop/(2)
+    grow: 3049, -6045
+    water: 3049, -6045
     head.x: '954'
     head.y: '550'
-    plant.x: '332'
-    plant.y: '775'
-    repeat: '2'
-    beds: '9'
+    plant.x: '489'
+    plant.y: '950'
+    repeat: '3'
+    beds: '10'
 iron_mine:
   2: Parameter set 1
   1: false
