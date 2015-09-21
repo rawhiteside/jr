@@ -115,6 +115,7 @@ class SetupDialog
   # Add the bottom stuff.  There's more than just OK and Cancel, now.
   def add_ok_cancel(parent)
     panel = JPanel.new
+    panel.border = LineBorder.createBlackLineBorder
     @result = nil
     # 
     # OK button.
@@ -642,6 +643,7 @@ class DialogDefaultsManager < Box
 
   def initialize(parent_dialog, action_name, dialog_defaults, data_gets, data_puts)
     super(BoxLayout::Y_AXIS)
+    setBorder(LineBorder.createBlackLineBorder)
     @dialog = parent_dialog
     @action_name = action_name
     @dialog_defaults = dialog_defaults
