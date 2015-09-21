@@ -37,6 +37,7 @@ class Onions < Action
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
       {:type => :point, :label => 'Drag onto plant button', :name => 'plant'},
       {:type => :number, :label => 'Rounds until water needed', :name => 'repeat'},
+      {:type => :number, :label => 'Number of beds.', :name => 'beds'},
     ]
     @vals =  UserIO.prompt(parent, 'onions', 'onions', gadgets)
     @threads = []
@@ -60,13 +61,14 @@ class Onions < Action
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
     @plant_point = Point.new(@plant_win.rect.width/2, @plant_win.rect.height/2)
 
-    max_plants = @vegi_data[:max_plant] || 20
+    max_plants = @vegi_data[:max_plant] || 10
+    beds = [@vals['beds'].to_i, max_plants].min
 
     loop do
       walker.walk_to(@grow_location)
       sleep_sec(3)
       repeat.times do
-        one_pass(max_plants)
+        one_pass(beds)
       end
       walker.walk_to(@water_location)
       sleep_sec(1)
@@ -87,22 +89,26 @@ class Onions < Action
     plant_count = 0
     
     build_recipe = [:w, :w]
-    5.times do |plant_number|
+    5.times do 
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'left')
       tiler.tile(w)
-      @threads << ControllableThread.new { tend(w, plant_number, plant_time) }
+      @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
+      build_recipe << :r
+      build_recipe << :r
       build_recipe << :r
     end
 
     build_recipe = [:e, :e]
-    5.times do |plant_number|
+    5.times do 
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'right')
       tiler.tile(w)
-      @threads << ControllableThread.new { tend(w, plant_number, plant_time) }
+      @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
+      build_recipe << :r
+      build_recipe << :r
       build_recipe << :r
     end
     
@@ -110,7 +116,7 @@ class Onions < Action
     @threads.each {|t| t.join}
   end
 
-  MAGIC_THRESHOLD = 40
+  MAGIC_THRESHOLD = 70
   def plant_and_pin(build_recipe, search_dir)
 
     builder = BuildMenu.new
@@ -122,10 +128,10 @@ class Onions < Action
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
     
-    insides = ImageUtils.shrink(x, MAGIC_THRESHOLD)
-    point = ImageUtils.first_non_zero(insides, search_dir)
+    x = ImageUtils.shrink(x, MAGIC_THRESHOLD)
+    point = ImageUtils.first_non_zero(x, search_dir)
 
-    spoint = insides.to_screen(point)
+    spoint = x.to_screen(point)
 
     w = PinnableWindow.from_screen_click(spoint)
     w.pin
@@ -136,24 +142,23 @@ class Onions < Action
   def tend(w, plant_number, plant_time)
     # Times in sec (relative to plant time) at which to water.
     # 
-    # Fiddling with these.  Added 3 sec to what I actualy measured.  I
-    # think I was watering too soon, for some reason.
     # grow_times = [0, 15, 30, 45] # measured.
-    grow_times = [0, 18, 33, 45]
-    harvest_time = 45
+    water_times = [4, 20, 35]
+    harvest_time = 46
     3.times do |index|
-      target_secs = grow_times[index] + (grow_times[index+1] - grow_times[index])/2
+      target_secs = water_times[index]
       delta = (Time.new - plant_time)
       delay = target_secs - delta
+      start = Time.new
       sleep_sec(delay)
+      got = Time.new - start
+      # puts "Plant #{plant_number} / #{index}.  Requested sleep(#{delay}).  Got #{got}"
       with_robot_lock do 
-        # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
         w.refresh
-        @vegi_data[:water].times do
-          unless w.click_on('Water')
-            puts "plant #{plant_number} watering #{index} failed."
-          end
-          sleep_sec(0.075) # Magic!!  Added when leeks failed.
+        if w.read_text =~ /Water/
+          p = w.coordsFor('Water')
+          # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
+          @vegi_data[:water].times { rclick_at(p) }
         end
       end
     end
