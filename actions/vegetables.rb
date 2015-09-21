@@ -17,7 +17,7 @@ class Onions < Action
     "Garlic/Apep's Crop/(2)" => {:water => 2},
     "Garlic/Heket's Reaping/(1)" => {:water => 1},
 
-    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3, :max_plant => 6},
+    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3},
     "Leeks/Hapi's Harvest/(1)" => {:water => 1},
 
     "Onions/Amun's Bounty/(1)" => {:water => 1},
@@ -61,12 +61,11 @@ class Onions < Action
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
     @plant_point = Point.new(@plant_win.rect.width/2, @plant_win.rect.height/2)
 
-    max_plants = @vegi_data[:max_plant] || 10
-    beds = [@vals['beds'].to_i, max_plants].min
+    beds = @vals['beds'].to_i
 
     loop do
       walker.walk_to(@grow_location)
-      sleep_sec(3)
+      sleep_sec(1)
       repeat.times do
         one_pass(beds)
       end
@@ -74,7 +73,7 @@ class Onions < Action
       sleep_sec(1)
       rclick_at(225, 61) #TEMP!  Sort out ICONS
       HowMuch.new(:max)
-      sleep_sec(4)
+      sleep_sec(3)
     end
 
   end
@@ -143,7 +142,7 @@ class Onions < Action
     # Times in sec (relative to plant time) at which to water.
     # 
     # grow_times = [0, 15, 30, 45] # measured.
-    water_times = [4, 20, 35]
+    water_times = [4, 20, 31]
     harvest_time = 46
     3.times do |index|
       target_secs = water_times[index]
