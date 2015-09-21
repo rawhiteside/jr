@@ -99,8 +99,8 @@ public class PinnableWindow extends AWindow {
 	
     }
 
-    private void attemptDrag(Point p) {
-	double delay = 0.075;
+    private void attemptDrag(Point p, double requested_delay) {
+	double delay = Math.max(requested_delay,0.075);
 	claimRobotLock();
 	try {
 
@@ -113,6 +113,11 @@ public class PinnableWindow extends AWindow {
 	    rbu();
 	    // Sometimes it moves slowly?
 	    sleepSec(delay);
+	    Rectangle r = getRect();
+	    r.x = p.x;
+	    r.y = p.y;
+	    setRect(r);
+	    reconfirmHeight();
 	}
 	catch(ThreadKilledException e) { throw e; }
 	catch(Exception e) {
@@ -124,14 +129,22 @@ public class PinnableWindow extends AWindow {
     }
 
     public PinnableWindow dragTo(Point p) {
+	return dragTo(p, 0.0);
+    }
 
-	attemptDrag(p);
-	sleepSec(0.1); // MAGIC NUMBER.  On rare occasions, this is needed.
-	Rectangle r = getRect();
-	r.x = p.x;
-	r.y = p.y;
+    public PinnableWindow dragTo(Point p, double delay) {
+	while(true) {
+	    attemptDrag(p, delay);
+	    sleepSec(Math.max(delay, 0.1)); // MAGIC NUMBER.  On rare occasions, this is needed.
+	    if(isDialogAt(p)) {
+	    	break;
+	    }
+	    // I've found this print to be helpful.
+	    System.out.println("Trying again to drag");
+	}
+
 	if (!getStable()) { reconfirmHeight(); }
-	setRect(r);
+
 	return this;
     }
 
@@ -174,7 +187,7 @@ public class PinnableWindow extends AWindow {
 		// Dismiss all, and try again.
 		AWindow.dismissAll();
 		robot.sleepSec(0.1);
-		System.out.println("Trying agin to pop a window.");
+		System.out.println("Trying again to pop a window.");
 	    }
 	}
 	catch(ThreadKilledException e) { throw e; }

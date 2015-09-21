@@ -18,9 +18,9 @@ class TreeRun < Action
   def tile_windows
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
-    tiler = Tiler.new(2, 70, 0)
+    tiler = Tiler.new(2, 77)
     tiler.y_offset = 20
-    @windows = tiler.tile_stack(x, y)
+    @windows = tiler.tile_stack(x, y, 0.2)
   end
 
   def init_stuff

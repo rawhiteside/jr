@@ -85,7 +85,6 @@ public class WindowGeom extends ARobot {
 	int y = rect.y;
 	int screenHeight = screenSize().height;
 	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, screenSize().height));
-
 	if (pb.pixelFromScreen(x, y) == 0 &&
 	    pb.pixelFromScreen(x, y + 3) == 0 &&
 	    pb.pixelFromScreen(x, y + rect.height) == 0 &&

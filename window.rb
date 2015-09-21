@@ -274,19 +274,19 @@ class Tiler < ARobot
 
   # There is a stack of windows a [x, y].  We'll tile them, and return
   # the window list.
-  def tile_stack(x, y)
+  def tile_stack(x, y, delay = 0)
     point = Point.new(x, y)
     windows = []
     loop do
       w = PinnableWindow.from_point(point)
       break unless w
       windows << w
-      tile(w)
+      tile(w, delay)
     end
     windows
   end
 
-  def tile(pinnable)
+  def tile(pinnable, delay = 0)
     s_width = screen_size.width
     if (@xtile + pinnable.rect.width) >= s_width
       @xtile = 2
@@ -301,6 +301,10 @@ class Tiler < ARobot
     prev_height = pinnable.rect.height
     if (!pinnable.stable) 
       pinnable.refresh('tl')
+      if delay
+        sleep_sec(delay)
+        pinnable.refresh('tl')
+      end
     end
     curr_height = pinnable.rect.height
     fudge = 0

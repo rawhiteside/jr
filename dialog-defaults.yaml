@@ -30,7 +30,7 @@ Loom:
     loom.x: '162'
     loom.y: '179'
 Slate:
-  2: T7 camp
+  2: Near UArch
   1: true
   Parameter set 1:
     coords: |
@@ -87,28 +87,23 @@ Slate:
       3188, -6260
   T7 camp:
     coords: |
-      3188, -6262
-      3194, -6259
-      3197, -6257
-      3197, -6255
-      3200, -6252
-      3199, -6248
-      3202, -6245
-      3201, -6238
-      3198, -6236
-      3198, -6234
-      3195, -6232
-      3195, -6234
-      3200, -6236
-      3201, -6249
-      3198, -6251
-      3198, -6254
-      3192, -6259
-      3192, -6261
-      3188, -6260
+      3639, -5274
+      3651, -5274
+      3651, -5273
+      3654, -5273
+      3656, -5274
+      3656, -5273
+      3658, -5274
+      3659, -5274
+  Near UArch:
+    coords: |
+      3638, -5273
+      3653, -5273
+      3652, -5275
+      3644, -5275
 Trees:
-  2: Parameter set 1
-  1: false
+  2: In camp
+  1: true
   Parameter set 1:
     path: |
       4470, -5902
@@ -124,17 +119,81 @@ Trees:
     bonfire.y: '647'
     win-stack.x: '1255'
     win-stack.y: '454'
+  Near UArch:
+    path: |
+      3202, -6234
+      Gather Wood
+      3203, -6234
+      Gather Wood
+      3205, -6233
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      3191, -6220
+      Gather Wood
+      3191, -6224
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      3192, -6226
+      Gather Wood
+      3193, -6227
+      Gather Wood
+      3189, -6227
+      Gather Wood
+      3191, -6229
+      Gather Wood
+      Gather Wood
+      3194, -6231
+      Gather Wood
+      3196, -6230
+      Gather Wood
+      3201, -6234
+    bonfire.x: '988'
+    bonfire.y: '912'
+    win-stack.x: '611'
+    win-stack.y: '971'
+  In camp:
+    path: |
+      3202, -6234
+      Gather Wood
+      Gather Wood
+      3205, -6233
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      3191, -6220
+      Gather Wood
+      3191, -6224
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      3191, -6229
+      Gather Wood
+      Gather Wood
+      3194, -6231
+      Gather Wood
+      Gather Wood
+      3202, -6234
+    bonfire.x: '424'
+    bonfire.y: '918'
+    win-stack.x: '47'
+    win-stack.y: '313'
 ?
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    help: ''
+    p.x: '90'
+    p.y: '356'
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '109'
-    stack.y: '487'
+    stack.x: '645'
+    stack.y: '838'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
@@ -173,14 +232,15 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Leeks/Horus' Grain/(2- 3 waters!)
-    grow: 3371, -6183
-    water: 3378, -6174
+    veggie: Carrots/Osiris'Green Leaf/(2)
+    grow: 3189, -6301
+    water: 3187, -6263
     head.x: '954'
     head.y: '550'
-    plant.x: '404'
-    plant.y: '745'
+    plant.x: '332'
+    plant.y: '775'
     repeat: '2'
+    beds: '9'
 iron_mine:
   2: Parameter set 1
   1: false
