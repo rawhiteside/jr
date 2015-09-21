@@ -413,10 +413,13 @@ class WorldLocUtils
     butt = JButton.new("Current Loc")
     butt.add_action_listener do |e|
       add_this = "Could not get coordinates."
-      win = ClockLocWindow.instance
-      if win 
-        coords = win.coords
-        add_this = "#{coords[0]}, #{coords[1]}"
+      begin
+        win = ClockLocWindow.instance
+        if win 
+          coords = win.coords
+          add_this = "#{coords[0]}, #{coords[1]}"
+        end
+      rescue Exception => e
       end
 
       if append
