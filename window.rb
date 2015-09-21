@@ -277,12 +277,16 @@ class Tiler < ARobot
   def tile_stack(x, y, delay = 0)
     point = Point.new(x, y)
     windows = []
+    puts "Tiling a stack"
     loop do
+      # XXX
       w = PinnableWindow.from_point(point)
       break unless w
+      puts "window #{windows.size}: #{w.rect.toString()}"
       windows << w
       tile(w, delay)
     end
+    puts "Final size is #{windows.size}"
     windows
   end
 

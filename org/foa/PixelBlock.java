@@ -61,7 +61,10 @@ public class PixelBlock extends ARobot {
 	    return m_bufferedImage.getRGB(x, y) & 0xFFFFFF;
 	}
 	catch(Exception e) {
-	    throw new ArrayIndexOutOfBoundsException("Coordinate (" + x + ", " + y + ") is out of range.");
+	    int scr[] = toScreen(x, y);
+	    String msg = "Coordinate out of range. \nLocal coords: (" + x + ", " + y + ")\n" +
+		"\n Screen coords: (" + scr[0] + ", " + scr[1] + ")";
+	    throw new ArrayIndexOutOfBoundsException(msg);
 	}
     }
     /*

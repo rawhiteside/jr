@@ -102,7 +102,7 @@ Slate:
       3652, -5275
       3644, -5275
 Trees:
-  2: Test in camp
+  2: In camp
   1: true
   Parameter set 1:
     path: |
@@ -180,8 +180,8 @@ Trees:
       3202, -6234
     bonfire.x: '439'
     bonfire.y: '952'
-    win-stack.x: '868'
-    win-stack.y: '802'
+    win-stack.x: '920'
+    win-stack.y: '529'
   Test in camp:
     path: |
       3202, -6233
@@ -190,10 +190,10 @@ Trees:
       3207, -6232
       Gather Wood
       3201, -6233
-    bonfire.x: '463'
-    bonfire.y: '863'
-    win-stack.x: '925'
-    win-stack.y: '746'
+    bonfire.x: '562'
+    bonfire.y: '810'
+    win-stack.x: '926'
+    win-stack.y: '568'
 ?
 : 2: Parameter set 1
   1: false
