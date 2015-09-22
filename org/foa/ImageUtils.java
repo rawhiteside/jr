@@ -70,7 +70,6 @@ public class ImageUtils {
 	    xoff = -1;
 	    break;
 	default:
-	    System.out.println("Parts of ImageUtils.firstNonZero not implemented");
 	    return null;
 	}
 	if(xouter) {

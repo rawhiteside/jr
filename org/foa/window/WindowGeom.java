@@ -103,8 +103,8 @@ public class WindowGeom extends ARobot {
 	for (int iy = y + rect.height/2; iy > 3; iy--){
 	    if (pb.pixelFromScreen(x, iy) != 0 ||
 		pb.pixelFromScreen(x, iy - 3) != 0 ) continue;
-	    if (!isBorderBrown(pb.pixelFromScreen(x, iy - 1)) ||
-		!isBorderBrown(pb.pixelFromScreen(x, iy - 2))) continue;
+	    if (INNER_BROWN != pb.pixelFromScreen(x, iy - 1) ||
+		OUTER_BROWN != pb.pixelFromScreen(x, iy - 2)) continue;
 	    ymin = iy - 3;
 	    break;
 	}
@@ -114,8 +114,8 @@ public class WindowGeom extends ARobot {
 	for (int iy = y + rect.height/2; iy < screenHeight - 3; iy++){
 	    if (pb.pixelFromScreen(x, iy) != 0 ||
 		pb.pixelFromScreen(x, iy + 3) != 0 ) continue;
-	    if (!isBorderBrown(pb.pixelFromScreen(x, iy + 1)) ||
-		!isBorderBrown(pb.pixelFromScreen(x, iy + 2))) continue;
+	    if (INNER_BROWN != pb.pixelFromScreen(x, iy + 1) ||
+		OUTER_BROWN != pb.pixelFromScreen(x, iy + 2)) continue;
 	    ymax = iy + 3;
 	    break;
 	}
@@ -154,28 +154,31 @@ public class WindowGeom extends ARobot {
 	int xStart = x;
 	PixelBlock pb = new PixelBlock(new Rectangle(0, y, x+2, 1));
 	while (x >= 0 && !isLeftEdgeBorder(pb, x, y)) {
+	    // If we encounter a *right* border, the there was no
+	    // window there, and we've bumped into another.
+	    if (isRightEdgeBorder(pb, x, y)) {return -1;}
 	    x -= 1;
-	    // XXX Deal with this better.  Don't want to search all across the screen
-	    // and pick up some other window.  I need to have a itsNotAWindowPixel() method.
-	    if ((xStart - x) > 500) {
-		return -1;
-	    }
 	}
 	return x;
     }
     
-    private static int BROWN1 = new Color(148, 108, 70).getRGB() & 0xFFFFFF;
-    private static int BROWN2 = new Color(114, 80, 46).getRGB() & 0xFFFFFF;
-    private boolean isBorderBrown(int pixel) {
-	return (pixel == BROWN1 || pixel == BROWN2);
-    }
+    private static int INNER_BROWN = new Color(148, 108, 70).getRGB() & 0xFFFFFF;
+    private static int OUTER_BROWN = new Color(114, 80, 46).getRGB() & 0xFFFFFF;
 
     private boolean isLeftEdgeBorder(PixelBlock pb, int x, int y) {
 	int pixel = pb.pixelFromScreen(x, y);
 	if (pixel != 0) {
 	    return false;
 	}
-	return isBorderBrown(pb.pixelFromScreen(x+1, y));
+	return pb.pixelFromScreen(x+1, y) == OUTER_BROWN;
+    }
+
+    private boolean isRightEdgeBorder(PixelBlock pb, int x, int y) {
+	int pixel = pb.pixelFromScreen(x, y);
+	if (pixel != 0) {
+	    return false;
+	}
+	return pb.pixelFromScreen(x+1, y) == INNER_BROWN;
     }
     
 }
