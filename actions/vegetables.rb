@@ -11,8 +11,13 @@ class Onions < Action
     "Cabbage/Mut's Fruition/(1)" => {:water => 1},
     "Cabbage/Bastet's Yielding/(2)" => {:water => 2},
 
-    "Carrots/Osiris's Orange/(1)" => {:water => 1},
-    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2},
+    "Carrots/Osiris's Orange/(1)" => {:water => 1, :left_build_init => [:R],
+                                      :right_build_init => [:L, :L, :L, :L],
+                                      :num_left => 4, :num_right => 4},
+    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2, :left_build_init => [:R], 
+                                        :right_build_init => [:L, :L, :L, :L],
+                                        :num_left => 4, :num_right => 4},
+
 
     "Garlic/Apep's Crop/(2)" => {:water => 2},
     "Garlic/Heket's Reaping/(1)" => {:water => 1},
@@ -87,28 +92,39 @@ class Onions < Action
     tiler = Tiler.new(0, 190)
     plant_count = 0
     
-    build_recipe = [:w, :w]
-    5.times do 
+    build_base = [:w, :w]
+    extra = @vegi_data[:left_build_init]
+    if extra
+      extra.each {|elt| build_base << elt }
+    end
+    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
+    num_left = @vegi_data[:num_left] || 6
+
+    build_recipe = ([] << build_base).flatten
+    num_left.times do |index|
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'left')
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe << :r
-      build_recipe << :r
-      build_recipe << :r
+      build_recipe = ([] << build_base << build_incr_list[index]).flatten
     end
 
-    build_recipe = [:e, :e]
-    5.times do 
+    build_base = [:e, :e]
+    extra = @vegi_data[:right_build_init]
+    if extra
+      extra.each {|elt| build_base << elt }
+    end
+
+    num_right = @vegi_data[:num_right] || 6
+    build_recipe = ([] << build_base).flatten
+    num_right.times do |index|
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'right')
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe << :r
-      build_recipe << :r
-      build_recipe << :r
+      build_recipe = ([] << build_base << build_incr_list[index]).flatten
     end
     
 
