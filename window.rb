@@ -295,22 +295,23 @@ class Tiler < ARobot
       @ymax = 0
     end
 
-    # Grab the window height now, before we refresh.  The window may
-    # shrink when we refresh.  If so, position the window to
-    # anticipate a reversion to the current height.
+#XX    # Grab the window height now, before we refresh.  The window may
+#XX    # shrink when we refresh.  If so, position the window to
+#XX    # anticipate a reversion to the current height.
+#XX
+#XX    prev_height = pinnable.rect.height
+#XX    if (!pinnable.stable) 
+#XX      pinnable.refresh('tl')
+#XX      if delay
+#XX        sleep_sec(delay)
+#XX        pinnable.refresh('tl')
+#XX      end
+#XX    end
+#XX    curr_height = pinnable.rect.height
+#XX    fudge = 0
+#XX    fudge = (prev_height - curr_height)/2 if prev_height > curr_height
 
-    prev_height = pinnable.rect.height
-    if (!pinnable.stable) 
-      pinnable.refresh('tl')
-      if delay
-        sleep_sec(delay)
-        pinnable.refresh('tl')
-      end
-    end
-    curr_height = pinnable.rect.height
     fudge = 0
-    fudge = (prev_height - curr_height)/2 if prev_height > curr_height
-
     pinnable.drag_to(Point.new(@xtile, @ytile + fudge))
 
     @xtile += ((1.0 - @ovlp) * pinnable.rect.width ).to_i
