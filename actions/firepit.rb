@@ -37,6 +37,11 @@ class Firepits < Action
       end
       w.refresh while w.click_on('Place')
 
+      w.refresh
+      if w.click_on('Take./Limestone')
+        HowMuch.new(4)
+      end
+
       w.unpin
     end
   end
