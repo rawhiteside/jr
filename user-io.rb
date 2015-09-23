@@ -39,7 +39,11 @@ class UserIO
   end
 
   def self.show_image(buffered_image, title = "An Image")
-    ImagePanel.displayImage(buffered_image, title)
+    img = buffered_image
+    if buffered_image.kind_of?(PixelBlock)
+      img = buffered_image.buffered_image
+    end
+    ImagePanel.displayImage(img, title)
   end
 
   def self.warn(text, title = 'Warning')
