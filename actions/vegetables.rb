@@ -8,8 +8,10 @@ class Onions < Action
   end
 
   VEGETABLE_DATA = {
-    "Cabbage/Mut's Fruition/(1)" => {:water => 1},
-    "Cabbage/Bastet's Yielding/(2)" => {:water => 2},
+    "Cabbage/Mut's Fruition/(1)" => {:water => 1,
+                                    },
+    "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
+                                       },
 
     "Carrots/Osiris's Orange/(1)" => {:water => 1, :left_build_init => [:R],
                                       :right_build_init => [:L, :L, :L, :L],
@@ -19,14 +21,24 @@ class Onions < Action
                                         :num_left => 4, :num_right => 4},
 
 
-    "Garlic/Apep's Crop/(2)" => {:water => 2},
-    "Garlic/Heket's Reaping/(1)" => {:water => 1},
+    "Garlic/Apep's Crop/(2)" => {:water => 2,
+                                },
+    "Garlic/Heket's Reaping/(1)" => {:water => 1,
+                                    },
 
-    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3},
-    "Leeks/Hapi's Harvest/(1)" => {:water => 1},
 
-    "Onions/Amun's Bounty/(1)" => {:water => 1},
-    'Onions/Tears of Sinai/(2)' => {:water => 2},
+    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3, 
+                                            :build_incr_fac => 2,
+                                            :left_build_init => [:l]*4,
+                                           },
+    "Leeks/Hapi's Harvest/(1)" => {:water => 1, 
+                                   :build_incr_fac => 2,
+                                  },
+
+    "Onions/Amun's Bounty/(1)" => {:water => 1,
+                                  },
+    'Onions/Tears of Sinai/(2)' => {:water => 2,
+                                   },
   }
 
   # Size of a side of the square we look at to detect plants. Square
@@ -99,6 +111,7 @@ class Onions < Action
     end
     build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
     num_left = @vegi_data[:num_left] || 6
+    build_incr_fac = @vegi_data[:build_incr_fac] || 1
 
     build_recipe = ([] << build_base).flatten
     num_left.times do |index|
@@ -107,7 +120,7 @@ class Onions < Action
       w, plant_time = plant_and_pin(build_recipe, 'left')
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe = ([] << build_base << build_incr_list[index]).flatten
+      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
     end
 
     build_base = [:e, :e]
@@ -124,7 +137,7 @@ class Onions < Action
       w, plant_time = plant_and_pin(build_recipe, 'right')
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe = ([] << build_base << build_incr_list[index]).flatten
+      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
     end
     
 
@@ -142,7 +155,6 @@ class Onions < Action
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    
     x = ImageUtils.shrink(x, MAGIC_THRESHOLD)
     point = ImageUtils.first_non_zero(x, search_dir)
 
