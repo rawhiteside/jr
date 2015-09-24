@@ -115,7 +115,7 @@ class GlazierWindow < PinnableWindow
     # Move in this far from left and right. 
     off = 20
 
-    Rectangle.new(rect.x + off,rect.y + rect.height + 1,
+    Rectangle.new(rect.x + off, rect.y + rect.height + 1,
 		  rect.width - (2 * off), DATA_HEIGHT)
   end
 
