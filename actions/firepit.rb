@@ -59,6 +59,7 @@ class Firepits < Action
       w.pin
       while w.click_on('Strike')
         w.refresh
+        w.refresh if w.click_on('Remove Tinder')
         w.refresh if w.click_on('Place Tinder')
       end
       w.unpin
