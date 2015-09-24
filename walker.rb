@@ -2,6 +2,9 @@ require 'action'
 require 'window'
 
 class Walker < ARobot
+
+  @@listener_added = nil
+
   # Key here is [targetx <=> currx, targety <=> currx]
   # Corresponding value is a direction, as in :nw
   DIRECTION_MAP = {
@@ -20,7 +23,16 @@ class Walker < ARobot
     @center_y = 502
     @center_x = 641
     @offset = 100
+    
+    # So we stop walking on pause. 
+    unless @@listener_added
+      # Button up is not guarded by the lock.
+      l = Proc.new { |running| if !running then all_up end }
+      RobotPauser.instance.add_pause_listener(l)
+      @@listener_added = true
+    end
   end
+
   
   # Time for the key to be down for a good "step"
   KEY_DELAY=0.075

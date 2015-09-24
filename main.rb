@@ -7,6 +7,7 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ToolTipManager
 import javax.swing.border.TitledBorder
+import javax.swing.border.LineBorder
 import java.awt.event.ActionListener
 import java.awt.event.ItemListener
 import java.awt.event.ItemEvent
@@ -56,6 +57,24 @@ class TopFrame < JFrame
       end
       pack
     end
+
+    # Refactor this.  Adding the numlock status, too.
+    label = JLabel.new
+    label.border = LineBorder.create_black_line_border
+    label.background = Color::YELLOW
+    box.add(Box.create_horizontal_glue)
+    box.add(label)
+    listener = Proc.new do |running|
+      if running
+        label.opaque = true
+        label.text = 'Running'
+      else
+        label.opaque = false
+        label.text = 'Paused'
+      end
+    end
+    listener.call(RobotPauser.instance.active?)
+    RobotPauser.instance.add_pause_listener(listener)
 
     box
   end

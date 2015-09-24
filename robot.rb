@@ -11,4 +11,4 @@ import java.util.concurrent.locks.ReentrantLock
 import Java::org.foa.robot.RobotLock
 import Java::org.foa.robot.ARobot
 
-RobotPauser.new
+RobotPauser.instance

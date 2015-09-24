@@ -18,10 +18,33 @@ require 'controllable_thread'
 #
 class RobotPauser
 
+  POLL_INTERVAL = 0.3
+  
+  @@instance = nil
 
+  # We don't need no steenkin' locks!
+  def self.instance
+    @@instance = @@instance || RobotPauser.new
+  end
+
+  def add_pause_listener(proc)
+    @listeners << proc
+  end
+
+  def active?
+    @running
+  end
+
+  private
+  def notify_listeners
+    @listeners.each { |proc| proc.call(@running) }
+  end
+
+  
   def initialize
     @thread = nil
     @running = nil
+    @listeners = []
     enable_robot_pause
   end
 
@@ -63,11 +86,13 @@ class RobotPauser
 	# Claim the lock, so others will block
 	with_pause_lock do
 	  puts 'Pause...'
+          notify_listeners
 	  wait_until_running
 	end
 	puts 'Resume...'
+        notify_listeners
       end
-      ControllableThread.sleep_sec 1
+      ControllableThread.sleep_sec POLL_INTERVAL
     end
   end
 
@@ -75,7 +100,7 @@ class RobotPauser
   # toggled on.
   def wait_until_running
     until @running
-      ControllableThread.sleep_sec 1
+      ControllableThread.sleep_sec POLL_INTERVAL
       check_key
     end
   end    
