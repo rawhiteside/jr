@@ -220,5 +220,3 @@ end
 
 
 Action.add_action(Onions.new)
-
-                 
