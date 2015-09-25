@@ -41,12 +41,12 @@ class BuildMenu < ARobot
 
   def build(move)
     sleep_sec 0.1
+    move = [move] unless move.kind_of?(Array)
     move = optimize_moves(move)
     delay = 0.1
     # Rotations take longer than translations .. the animation on the
     # screen, that is. 
     rdelay = 0.2
-    move = [move] unless move.kind_of?(Array)
     # wait for the dialog
     until (get_pixel(3, 138) == 0 &&
 	   get_pixel(3, 137) == 0 &&

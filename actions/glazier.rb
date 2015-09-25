@@ -1,4 +1,5 @@
 require 'action'
+import org.foa.text.TextReader
 
 class GlazierWindow < PinnableWindow
   
@@ -26,11 +27,6 @@ class GlazierWindow < PinnableWindow
     end
   end
 
-  def log_cycle
-    click_on('Add 2')
-    watch
-  end
-
   # The other main method, called in a separate thread from the one
   # running 'tend'.
   # This one:
@@ -38,7 +34,7 @@ class GlazierWindow < PinnableWindow
   # - Waits for the temperature to get into the working range
   #   (1600-2400)
   # - Makes 'what' items until the amount of glass is 19.
-  # - Sets the :done variable to true.
+  # - Sets the @done variable to true.
   def make_glass(what)
     wait_to_start_making
 
@@ -99,7 +95,7 @@ class GlazierWindow < PinnableWindow
     rect = super
     rect.height -= DATA_HEIGHT
 
-    return rect
+    rect
   end
 
   def data_text_reader
@@ -121,6 +117,7 @@ class GlazierWindow < PinnableWindow
 
   def data_vals
     text = read_data
+    
     vals = {}
     # Temp
     match = Regexp.new('Temperature: ([0-9]+)').match(text)
@@ -158,7 +155,7 @@ class GlazierWindow < PinnableWindow
 	  'Time' => Time.now - start,
 	}
 	@last_delta = current - orig
-	log "Tick y=#{@rect.y}, curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
+        # XXX log "Tick curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
 	return status
       end
     end
@@ -207,14 +204,14 @@ class GlazierWindow < PinnableWindow
   
   def rise
     loop do
-      log "Rise y=#{@rect.y}, done=#{@done}"
+      log "Rise done=#{@done}"
       return if @done
       with_robot_lock {
 	refresh
 	click_on('Add 2')
       }
       sleep_sec 100
-      log "Rise checking stop. y=#{@rect.y}, done=#{@done}, temp=#{temperature}"
+      log "Rise checking stop. done=#{@done}, temp=#{temperature}"
       break if temperature > 2150
     end
   end
@@ -222,7 +219,7 @@ class GlazierWindow < PinnableWindow
   # Let temp drop till round 1750--1800
   def drop
     each_tick do |s|
-      log "Drop y=#{@rect.y}, temperature=@{s['Temperature']}, delta=#{@last_delta}"
+      log "Drop  temperature=@{s['Temperature']}, delta=#{@last_delta}"
       break if s['Temperature'] < 1800
       break if (s['Temperature'] + @last_delta) < 1750
     end

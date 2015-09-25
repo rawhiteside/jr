@@ -37,32 +37,27 @@ public class PinnableWindow extends AWindow {
     public boolean isDialogAt(Point p) {
 	return isDialogAt(p.x, p.y);
     }
+    /**
+     * The dialog may have changed height, so don't use top or bottom
+     * pixels to decide if the dialog is present.
+     * 
+     * Check the right and left borders along the center of the
+     * dialog.  That's presereved under resize.
+     */
     public boolean isDialogAt(int x, int y) {
 	Rectangle r = getRect();
-	// XXX Left over from when pixels were expensive.  Fix this.
-	Point[] probes = new Point[] {
-	    new Point(x, y),
-	    new Point(x + r.width, y),
-	    new Point(x+1, y),
-	    new Point(x+2, y), 
-	    new Point(x+3, y), 
-	    new Point(x+4, y), 
-	    new Point(x+5, y), 
-	    new Point(x, y+5), 
-	    new Point(x, y+6), 
-	    new Point(x, y+7), 
-	    new Point(x, y+8), 
-	    new Point(x, y+9), 
-	};
-	Rectangle screenRect = new Rectangle(x, y, r.width + 1, r.height + 1);
+	// Set y to the central line of the dialog, and grab that line
+	// from the screen.
+	y +=  r.height/2;
+	Rectangle screenRect = new Rectangle(x, y, r.width + 1, 1);
 	PixelBlock pb = new PixelBlock(screenRect);
-
-	for(Point p : probes) {
-	    if (pb.pixelFromScreen(p) != 0) {
-		return false;
-	    }
-	}
-	return true;
+	
+	return (pb.pixelFromScreen(x, y) == 0 &&
+		pb.pixelFromScreen(x + 3, y) == 0 &&
+		pb.pixelFromScreen(x + r.width, y) == 0 &&
+		pb.pixelFromScreen(x + r.width - 3, y) == 0 &&
+		pb.pixelFromScreen(x + r.width - 1, y) == WindowGeom.OUTER_BROWN &&
+		pb.pixelFromScreen(x + 1, y) == WindowGeom.OUTER_BROWN);
     }
 
     public static PinnableWindow fromPoint(Point p) {
@@ -102,12 +97,11 @@ public class PinnableWindow extends AWindow {
     }
 
     public PinnableWindow dragTo(Point p, double delay) {
-	while(true) {
+	for(int i = 0; i < 5; i++) {
 	    attemptDrag(p, delay);
-	    break;
-	    //if(isDialogAt(p)) { break; }
+	    if(isDialogAt(p)) { break; }
 	    // I've found this print to be helpful.
-	    //	    System.out.println("Trying again to drag");
+	    System.out.println("Trying again to drag");
 	}
 
 	// Update to the new origin.
@@ -132,7 +126,7 @@ public class PinnableWindow extends AWindow {
 	robot.claimRobotLock();
 	try {
 	    // May need to try several times.
-	    while (true) {
+	    for(int kk = 0; kk < 5; kk++) {
 		robot.mm(pt, 0.05);
 		robot.rclickAt(pt, 0.05);
 		robot.sleepSec(0.05);

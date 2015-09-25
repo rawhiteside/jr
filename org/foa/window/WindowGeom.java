@@ -162,8 +162,8 @@ public class WindowGeom extends ARobot {
 	return x;
     }
     
-    private static int INNER_BROWN = new Color(148, 108, 70).getRGB() & 0xFFFFFF;
-    private static int OUTER_BROWN = new Color(114, 80, 46).getRGB() & 0xFFFFFF;
+    public static int INNER_BROWN = new Color(148, 108, 70).getRGB() & 0xFFFFFF;
+    public static int OUTER_BROWN = new Color(114, 80, 46).getRGB() & 0xFFFFFF;
 
     private boolean isLeftEdgeBorder(PixelBlock pb, int x, int y) {
 	int pixel = pb.pixelFromScreen(x, y);
