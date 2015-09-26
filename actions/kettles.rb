@@ -167,23 +167,30 @@ class Potash < KettleAction
 
   def act
 
-    grid = GridHelper.new(@user_vals, 'g')
+    repeat = @user_vals['repeat'].to_i
 
-    # Start them all cooking.
-    done = {}
-    grid.each_point do |p|
-      sleep_sec(1)
-      start_potash(p)
-      done[p] = false
-    end
+    repeat.times do 
+      grid = GridHelper.new(@user_vals, 'g')
 
-    while done.values.include?(false)
+      # Start them all cooking.
+      done = {}
       grid.each_point do |p|
-        w = pinned_kettle_window(p)
-        done[p] = tend_potash(w) unless done[p]
-        w.unpin
-        sleep 1
+        sleep_sec(1)
+        start_potash(p)
+        done[p] = false
       end
+
+      while done.values.include?(false)
+        grid.each_point do |p|
+          w = pinned_kettle_window(p)
+          done[p] = tend_potash(w) unless done[p]
+          w.unpin
+          sleep 1
+        end
+      end
+      # fill jugs
+      click_at(224, 60)
+      HowMuch.new(:max)
     end
   end
 
