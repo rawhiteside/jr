@@ -59,21 +59,20 @@ class GlazierWindow < PinnableWindow
     count = 0
     loop_done = false
     until loop_done do
+
+      sleep_sec 6
+
       with_robot_lock do
 	refresh
-	sleep_sec 3
 	text = read_text
-	if text.index(what)
-	  count += 1
-	  if count >= 2
-	    loop_done = true
-	    break
-	  end
-	else
-	  count = 0
-	end
-	sleep_sec 3
       end
+
+      if text.index(what)
+	count += 1
+      else
+	count = 0
+      end
+      loop_done = (count >= 2)
     end
     @done = true
   end
