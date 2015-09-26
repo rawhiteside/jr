@@ -189,7 +189,7 @@ class Potash < KettleAction
         end
       end
       # fill jugs
-      click_at(224, 60)
+      rclick_at(224, 60)
       HowMuch.new(:max)
     end
   end
