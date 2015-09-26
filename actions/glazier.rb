@@ -272,7 +272,7 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 30, .45)
+    tiler = Tiler.new(0, 30, 0.45)
     @threads = []
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
