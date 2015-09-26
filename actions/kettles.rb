@@ -89,7 +89,8 @@ class KettleWindow < PinnableWindow
   end
 
   def click_button(which)
-    dialog_click(*@locs[which.downcase])
+    xy = @locs[which.downcase]
+    dialog_click(Point.new(xy[0], xy[1]), 'tc')
   end
 
   # Area holding menu text
@@ -100,27 +101,32 @@ class KettleWindow < PinnableWindow
     rect
   end
 
-  def data_text_reader
-    TextReader.new(data_rect)
-  end
-
   def read_data
-    data_text_reader.read_text
+    text = nil
+    with_robot_lock do
+      refresh
+      data_text_reader = TextReader.new(data_rect)
+      text = data_text_reader.read_text
+    end
+    text
   end
 
   def data_rect
     tr = text_rectangle
-    data_area_border_thickness = 4
+    data_area_border_thickness = 10
     # Measured on the screen.
     data_area_height = 93
     # Move in this far from left and right. 
     off = 13
   
-    Rectangle.new(@rect.x + off,
+    r = Rectangle.new(tr.x + off,
 		  tr.y + tr.height + data_area_border_thickness,
-		  @rect.width - (2 * off),
+		  tr.width,  # No offset here, as the pin exclusion.
 		  data_area_height)
+    return r
   end
+
+
 end
 
 class Potash < KettleAction
@@ -128,6 +134,74 @@ class Potash < KettleAction
     super('Potash')
   end
 
-  def act_at(g)
+  # The useful numbers in the data area.
+  # vals[:water] and vals[:wood]
+  def kettle_data(w)
+    vals = {}
+    text = w.read_data
+    match = Regexp.new('Wood: ([0-9]+)').match(text)
+    vals[:wood] = match[1].to_i if match
+    match = Regexp.new('Water: ([0-9]+)').match(text)
+    vals[:water] = match[1].to_i if match
+    vals[:done] = (text =~ /The recipe is complete/)
+    
+    vals
   end
+
+  def pinned_kettle_window(p)
+    w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+    w = KettleWindow.new(w.rect)
+    w.pin
+    w
+  end
+
+  def start_potash(p)
+    w = pinned_kettle_window(p)
+    w.click_button('potash')
+    w.click_button('begin')
+    w.click_button('ignite')
+    HowMuch.new(:max)
+    w.unpin
+  end
+
+
+  def act
+
+    grid = GridHelper.new(@user_vals, 'g')
+
+    # Start them all cooking.
+    done = {}
+    grid.each_point do |p|
+      sleep_sec(1)
+      start_potash(p)
+      done[p] = false
+    end
+
+    while done.values.include?(false)
+      grid.each_point do |p|
+        w = pinned_kettle_window(p)
+        done[p] = tend_potash(w) unless done[p]
+        w.unpin
+        sleep 1
+      end
+    end
+  end
+
+  # Look at the potash window and decide what, if anything, needs to
+  # be done. Return a true if the potash is complete, false otherwise.
+  def tend_potash(w)
+    v = kettle_data(w)
+    
+    if v[:done]
+      w.click_button('take')
+      return true
+    end
+    if v[:wood] < 5 && v[:wood] < v[:water]
+      w.click_on('Stoke')
+    end
+    return false
+  end
+  
+
 end
+Action.add_action(Potash.new)
