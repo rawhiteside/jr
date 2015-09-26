@@ -103,7 +103,12 @@ class GlazierWindow < PinnableWindow
   end
 
   def read_data
-    data_text_reader.read_text
+    text = nil
+    with_robot_lock do
+      refresh
+      text = data_text_reader.read_text
+    end
+    text
   end
 
   def data_rect
@@ -267,7 +272,7 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 30, 0)
+    tiler = Tiler.new(0, 30, .45)
     @threads = []
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
