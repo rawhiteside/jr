@@ -47,6 +47,10 @@ class Onions < Action
   # will be centered on your head.
   SQUARE_SIZE = 450
 
+  # The distance out that Jaby's arm reaches from the center of her
+  # head.  Actually, picking up is larger.  Using this value for now. 
+  REACH_RADIUS = 100
+
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'What to grow?:', :name => 'veggie', 
@@ -57,6 +61,8 @@ class Onions < Action
       {:type => :point, :label => 'Drag onto plant button', :name => 'plant'},
       {:type => :number, :label => 'Rounds until water needed', :name => 'repeat'},
       {:type => :number, :label => 'Number of beds.', :name => 'beds'},
+      {:type => :number, :label => 'Second water (~15-30).', :name => 'second'},
+      {:type => :number, :label => 'Third water (~30-45).', :name => 'third'},
     ]
     @vals =  UserIO.prompt(parent, 'onions', 'onions', gadgets)
     @threads = []
@@ -84,6 +90,8 @@ class Onions < Action
 
     loop do
       walker.walk_to(@grow_location)
+      walker.up
+      walker.down
       sleep_sec(1)
       repeat.times do
         one_pass(beds)
@@ -120,9 +128,12 @@ class Onions < Action
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'left')
+      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
+
+      # If we missed it, plow ahead.
+      next unless w
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
     end
 
     build_base = [:e, :e]
@@ -157,9 +168,11 @@ class Onions < Action
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    x = ImageUtils.shrink(x, MAGIC_THRESHOLD)
-    point = ImageUtils.first_non_zero(x, search_dir)
+    x = ImageUtils.shrink(x, 1)
+    point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS)
 
+    return nil, nil unless point
+    
     spoint = x.to_screen(point)
 
     w = PinnableWindow.from_screen_click(spoint)
@@ -172,7 +185,7 @@ class Onions < Action
     # Times in sec (relative to plant time) at which to water.
     # 
     # grow_times = [0, 15, 30, 45] # measured.
-    water_times = [4, 22, 31]
+    water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
     harvest_time = 46
     3.times do |index|
       target_secs = water_times[index]
@@ -204,17 +217,16 @@ class Onions < Action
       with_robot_lock do
         w.refresh
 
-        # Click on harvest if it's there, but don't stop.
+        # Click on harvest if it's there, but we may not be done.
         w.click_on('Harvest')
 
-        # If the menu goes empty, then w're done.
+        # If the menu is empty, then we're done.
         if w.read_text.size == 0
           w.unpin
           done = true
-        else
-          sleep_sec(2)
         end
       end
+      sleep_sec(2)
     end
   end
 end
