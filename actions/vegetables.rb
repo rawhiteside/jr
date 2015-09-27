@@ -9,10 +9,12 @@ class Onions < Action
 
   VEGETABLE_DATA = {
     "Cabbage/Mut's Fruition/(1)" => {:water => 1,
+                                     :left_build_init => [:l,:l],
                                     },
     "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
+                                        :left_build_init => [:l,:l],
                                        },
-
+    
     "Carrots/Osiris's Orange/(1)" => {:water => 1, :left_build_init => [:R],
                                       :right_build_init => [:L, :L, :L, :L],
                                       :num_left => 4, :num_right => 4},
@@ -144,7 +146,7 @@ class Onions < Action
     @threads.each {|t| t.join}
   end
 
-  MAGIC_THRESHOLD = 70
+  MAGIC_THRESHOLD = 40
   def plant_and_pin(build_recipe, search_dir)
 
     builder = BuildMenu.new
@@ -170,7 +172,7 @@ class Onions < Action
     # Times in sec (relative to plant time) at which to water.
     # 
     # grow_times = [0, 15, 30, 45] # measured.
-    water_times = [4, 20, 31]
+    water_times = [4, 22, 31]
     harvest_time = 46
     3.times do |index|
       target_secs = water_times[index]
