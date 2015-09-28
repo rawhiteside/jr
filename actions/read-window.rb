@@ -7,25 +7,31 @@ class ReadWindow < Action
     super(name, 'Test/Dev')
   end
 
-  def get_window(parent)
-    gadgets = [{:type => :point, :label => 'Drag to location', :name => 'xy'}]
-    h = UserIO.prompt(parent, nil, 'Read a pinnable', gadgets)
-    return nil unless h
-    ControllableThread.check_for_pause
-    KettleWindow.from_point(point_from_hash(h, 'xy'))
-    # PinnableWindow.from_point(point_from_hash(h, 'xy'))
-  end
 
   def setup(parent)
-    @window = get_window(parent)
+    gadgets = [{:type => :point, :label => 'Drag to location', :name => 'xy'}]
+    @vals = UserIO.prompt(parent, nil, 'Read a pinnable', gadgets)
   end
 
   def act
+
+    w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
+    @window = KettleWindow.new(w.rect)
+
     text = @window.read_text
     comps = [
-      {:type => :big_text, :value => text, :name => 'text'}
+      {:type => :big_text, :value => text, :name => 'text', :label => 'Text'}
     ]
-    UserIO.prompt(nil, 'Show results', 'Read this text', comps)
+    UserIO.prompt(nil, nil, 'Read this text', comps)
+
+    if @window.respond_to?(:read_data)
+      data = @window.read_data
+
+      comps = [
+        {:type => :big_text, :value => data, :name => 'text', :label => 'Data'}
+      ]
+      UserIO.prompt(nil, nil, 'Read this data', comps)
+    end
 
     puts ClockLocWindow.instance.read_text
     puts SkillsWindow.new.read_text

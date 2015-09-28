@@ -62,6 +62,7 @@ class GlazierWindow < PinnableWindow
 
       sleep_sec 6
 
+      text = nil
       with_robot_lock do
 	refresh
 	text = read_text
@@ -224,7 +225,7 @@ class GlazierWindow < PinnableWindow
       }
       sleep_sec 100
       log "Rise checking stop. done=#{@done}, temp=#{temperature}"
-      break if temperature > 2150
+      break if temperature > 2050
     end
   end
 

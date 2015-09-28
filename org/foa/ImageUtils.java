@@ -2,6 +2,7 @@ package org.foa;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.image.*;
 
 import org.foa.PixelBlock;
@@ -29,17 +30,22 @@ public class ImageUtils {
 
 
     /**
-     * Find the first pixel that's non-zero.  I can start its search
+     * Find the pixel that's largest.  I can start its search
      * at the top, bottom, right, or left.  specify one of those
      * strings, as in, "top"
      *
+     * The image should probably be a brightness image.
+     *
+     * Search stops when it his the excluded radius, which is at the
+     * center of the block.
+     *
      * returns a Point.
      */
-    public static Point firstNonZero(PixelBlock pb, String which) {
-	return firstNonZero(pb.bufferedImage(), which);
+    public static Point findLargest(PixelBlock pb, String which, int excluded) {
+	return findLargest(pb.bufferedImage(), which, excluded);
     }
 
-    public static Point firstNonZero(BufferedImage bi, String which) {
+    public static Point findLargest(BufferedImage bi, String which, int excluded) {
 	int xfirst=0, xend=0, xoff=0;
 	int yfirst=0, yend=0, yoff=0;
 	boolean xouter = false;
@@ -48,44 +54,55 @@ public class ImageUtils {
 	case "top":
 	    xouter = false;
 	    yfirst = 2;
-	    yend = bi.getHeight() - 2;
+	    yend = bi.getHeight()/2 - excluded;
 	    yoff = 1;
 	    break;
 	case "bottom":
 	    xouter = false;
 	    yfirst = bi.getHeight() - 2;
-	    yend = 1;
+	    yend = bi.getHeight()/2 -+excluded;
 	    yoff = -1;
 	    break;
 	case "left":
 	    xouter = true;
 	    xfirst = 0;
-	    xend = bi.getWidth();
+	    xend = bi.getWidth()/2 - excluded;
 	    xoff = 1;
 	    break;
 	case "right":
 	    xouter = true;
 	    xfirst = bi.getWidth() - 1;
-	    xend = -1;
+	    xend = bi.getWidth()/2 + excluded;
 	    xoff = -1;
 	    break;
 	default:
 	    return null;
 	}
+	int bestColor = 0;
+	Point bestPoint = null;
 	if(xouter) {
 	    for(int x = xfirst; x != xend; x += xoff) {
 		for(int y = 0; y < bi.getHeight(); y++) {
-		    if((bi.getRGB(x, y) & 0xFFFFFF) != 0) { return new Point(x, y); }
+		    int color = bi.getRGB(x, y) & 0xFFFFFF;
+		    if(color  > bestColor) {
+			bestColor = color;
+			bestPoint = new Point(x, y);
+		    }
 		}
 	    }
-	    return null;
+	    return bestPoint;
 	} else {
 	    for(int y = yfirst; y != yend; y += yoff) {
 		for(int x = 0; x < bi.getWidth(); x++) {
+		    int color = bi.getRGB(x, y) & 0xFFFFFF;
+		    if(color  > bestColor) {
+			bestColor = color;
+			bestPoint = new Point(x, y);
+		    }
 		    if((bi.getRGB(x, y) & 0xFFFFFF) != 0) { return new Point(x, y); }
 		}
 	    }
-	    return null;
+	    return bestPoint;
 	}
     }
     
@@ -125,7 +142,6 @@ public class ImageUtils {
             new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 	WritableRaster raster = biOut.getRaster();
 	int[] zeros = {0, 0, 0};
-	int[] ones = {255, 255, 255};
 
 	// First and last output columns are zero.
 	for(int y = 0; y < bi.getHeight(); y++) {
@@ -150,11 +166,12 @@ public class ImageUtils {
 		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) > threshold &&
 		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) > threshold &&
 		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) > threshold) {
-
-		    raster.setPixel(x, y, ones);
+		    Color c = new Color(bi.getRGB(x, y));
+		    int[] cvec = {c.getRed(), c.getGreen(), c.getBlue()};
+		    raster.setPixel(x, y, cvec); 
 		}
 		else {
-		    raster.setPixel(x, y, zeros); 
+		    raster.setPixel(x, y, zeros);
 		}
 	    }
 	}
