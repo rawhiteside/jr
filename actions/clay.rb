@@ -35,13 +35,12 @@ class CasualClay < Action
     pixel = 0x4f0503
     xy = [95, 102]
     loop do
-      got_pixel = get_pixel(xy[0], xy[1])
-      if pixel == got_pixel
+      if pixel == get_pixel(xy[0], xy[1])
 	rclick_at(*xy)
 	@jug_count.used_one if @jug_count
 	sleep_sec 0.5
       else
-	sleep_sec 0.01
+	Thread.pass
       end
     end
   end
@@ -51,10 +50,6 @@ class Clay < Action
   def initialize(name = 'Clay', group = 'Gather')
     super(name, group)
     @threads = []
-    @loop = [
-      [4523, -5872], 
-      [4518, -5872], 
-    ]
   end
 
   def start_clay_watcher
