@@ -1,5 +1,28 @@
 require 'action'
 require 'walker'
+require 'jmonitor'
+
+class JugCount
+  attr_reader :count
+  attr_reader :lock
+  def initialize(num)
+    @count = @max = num
+    @lock = JMonitor.new
+  end
+
+  def used_one
+    @lock.synchronize {@count -= 1}
+  end
+
+  def used(n)
+    @lock.synchronize {@count -= n}
+  end
+
+  def refill
+    @lock.synchronize {@count = @max}
+  end
+
+end
 
 class CasualClay < Action
   attr_accessor :jug_count
@@ -9,8 +32,8 @@ class CasualClay < Action
   end
 
   def act
-    pixel = 0xda7f65
-    xy = [230, 108]
+    pixel = 0x4f0503
+    xy = [95, 102]
     loop do
       got_pixel = get_pixel(xy[0], xy[1])
       if pixel == got_pixel
@@ -28,9 +51,6 @@ class Clay < Action
   def initialize(name = 'Clay', group = 'Gather')
     super(name, group)
     @threads = []
-    @walker = Walker.new
-    @stash_window = nil
-
     @loop = [
       [4523, -5872], 
       [4518, -5872], 
@@ -43,35 +63,38 @@ class Clay < Action
     @threads << ControllableThread.new { gatherer.act }
   end
 
-  def get_stash_window(parent)
+
+  def setup(parent)
     comps = [
       {:type => :point, :name => 'chest', :label => 'Stash chest window'},
+      {:type => :world_loc, :name => 'chest-coords', :label => 'Coordinates within reach of the chest.'},
+      {:type => :world_loc, :name => 'water-coords', :label => 'Coordinates with water.'},
       {:type => :number, :name => 'jug_count', :label => 'How many jugs? '},
+      {:type => :world_path, :label => 'Path to walk', :name => 'path'}
     ]
-    vals = UserIO.prompt(parent, 'Grass', 'Grass', comps)
-    return nil unless vals
-    @stash_window = PinnableWindow.from_point(point_from_hash(vals, 'chest'))
-    count = vals['jug_count'].to_i
-    @jug_count = JugCount.new(count)
-    return @stash_window
-  end
+    @vals = UserIO.prompt(parent, 'Clay', 'Clay', comps)
 
-  def setup(comp)
-    get_stash_window(comp)
+    @vals
   end
   
-  STASH_WORLD_COORDS=[4523, -5866]
-  WATER_WORLD_COORDS=[4523, -5866]
   def act
-    @walker.walk_to(@loop[0])
+    stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'chest'))
+    count = @vals['jug_count'].to_i
+    @jug_count = JugCount.new(count)
+    path = WorldLocUtils.parse_world_path(@vals['path'])
+    chest_coords = WorldLocUtils.parse_world_location(@vals['chest-coords'])
+    water_coords = WorldLocUtils.parse_world_location(@vals['water-coords'])
+
+    walker = Walker.new
+    walker.walk_to(path[0])
     start_clay_watcher
     loop do
-      @walker.walk_loop(@loop, 99999999) do
+      walker.walk_loop(path, 99999999) do
 	if @jug_count.count < 25
-	  @walker.walk_to(STASH_WORLD_COORDS)
-	  HowMuch.new(:max) if @stash_window.click_on('Stash/Clay')
-	  HowMuch.new(:max) if @stash_window.click_on('Stash/Flint')
-	  @walker.walk_to(WATER_WORLD_COORDS)
+	  walker.walk_to(chest_coords)
+	  HowMuch.new(:max) if stash_window.click_on('Stash/Clay')
+	  HowMuch.new(:max) if stash_window.click_on('Stash/Flint')
+	  walker.walk_to(water_coords)
 	  refill
 	end
       end
@@ -83,7 +106,7 @@ class Clay < Action
     with_robot_lock do
       @jug_count.lock.synchronize do
 	sleep_sec 0.5
-	rclick_at(345, 69)
+	rclick_at(144, 98)
 	sleep_sec 0.2
 	HowMuch.new(:max)
 	@jug_count.refill
@@ -97,6 +120,7 @@ class Clay < Action
     super
   end
 end
+
 class BackAndForthClay < Clay
   def initialize
     super('Clay (Back and forth)', 'Gather')
