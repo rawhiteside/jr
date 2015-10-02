@@ -20,6 +20,13 @@ public class ARobot {
 	catch(Exception e) { }
     }
 
+    public void tone(int hz, int msecs) {
+	try { SoundUtils.tone(hz, msecs); }
+	catch(javax.sound.sampled.LineUnavailableException e) { beep(); }
+    }
+
+    public void beep() { m_toolkit.beep(); }
+
     public PixelBlock screenRectangle(int x, int y, int width, int height) {
 	return screenRectangle(new Rectangle(x, y, width, height));
     }
