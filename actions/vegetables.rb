@@ -49,7 +49,7 @@ class Onions < Action
 
   # The distance out that Jaby's arm reaches from the center of her
   # head.  Actually, picking up is larger.  Using this value for now. 
-  REACH_RADIUS = 100
+  REACH_RADIUS = 50
 
   def setup(parent)
     gadgets = [
@@ -148,9 +148,12 @@ class Onions < Action
       break if plant_count >= max_plants
       plant_count += 1
       w, plant_time = plant_and_pin(build_recipe, 'right')
+      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
+
+      # If we missed it, plow ahead.
+      next unless w
       tiler.tile(w)
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
     end
     
 
@@ -169,6 +172,7 @@ class Onions < Action
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
     x = ImageUtils.shrink(x, 1)
+
     point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS)
 
     return nil, nil unless point
