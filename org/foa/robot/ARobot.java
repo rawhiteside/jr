@@ -65,9 +65,6 @@ public class ARobot {
 
 	// Run the runnable, and make sure to release the lock
 	try { r.run(); }
-	catch (Exception e) {
-	    throw new ThreadKilledException();
-	}
 	finally {releaseRobotLock();}
     }
 

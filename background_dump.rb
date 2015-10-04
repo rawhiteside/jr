@@ -4,7 +4,7 @@ import java.awt.Rectangle
 import java.awt.Color
 
 def dump_rect(rect) 
-  img = ARobot.new.create_screen_capture(rect)
+  img = ARobot.sharedInstance.create_screen_capture(rect)
   colors = {}
   rect.height.times do |y|
     rect.width.times do |x|

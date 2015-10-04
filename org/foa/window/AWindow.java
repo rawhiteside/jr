@@ -16,54 +16,46 @@ import java.awt.event.*;
  */
 
 public abstract class AWindow extends ARobot  {
-    protected Rectangle m_rect;
-    private boolean m_stable;
+    private Rectangle m_rect;
     private TextReader m_textReader = null;
 
     public AWindow() {
 	super();
-	m_stable = false;
     }
     public AWindow(Rectangle rect) {
 	this();
 	setRect(rect);
     }
 
-    // TRIED 0.01.  Too low
-    private static double MAGIC_RECONFIRM_DELAY = 0.1;
-    public void reconfirmHeight() {
-	sleepSec(MAGIC_RECONFIRM_DELAY);
-	WindowGeom.confirmHeight(m_rect);
+    // A default one. You will prolly want to over-ride this.
+    public Insets textInsets(){
+	return new Insets(4, 4, 5, 5);
     }
-
-    public abstract Insets textInsets();
 
     public void setRect(Rectangle rect) { m_rect = rect; }
     public Rectangle getRect() { return new Rectangle(m_rect); }
 
 
     public Point toScreenCoords(Point p) {
-	return new Point(p.x + m_rect.x, p.y + m_rect.y);
+	Rectangle rect = getRect();
+	return new Point(p.x + rect.x, p.y + rect.y);
     }
 
-    // "Stable" means that you know that, at least for the moment, the
-    // window will not change size upon click.
-    public void setStable(boolean b) { m_stable = b; }
-    public boolean getStable() { return m_stable; }
+    public Point toDialogCoords(Point p) {
+	Rectangle rect = getRect();
+	return new Point(p.x - rect.x, p.y - rect.y);
+    }
+
 
     public void dialogClick(Point p) { dialogClick(p, null); }
     public void dialogClick(Point p, String refreshLoc) { dialogClick(p, refreshLoc, 0.01); }
     public void dialogClick(Point p, String refreshLoc, double delay) {
-	Point point = toScreenCoords(p);
 	claimRobotLock();
 	try {
 	    if (refreshLoc != null) {
 		refresh(refreshLoc);
 	    }
-	    rclickAt(point, delay);
-	    if (!getStable()) {
-		reconfirmHeight();
-	    }
+	    rclickAt(toScreenCoords(p), delay);
 	}
 	catch(ThreadKilledException e) { throw e; }
 	catch(Exception e) {
@@ -77,32 +69,34 @@ public abstract class AWindow extends ARobot  {
 
     public int dialogPixel(Point p){ return getPixel(toScreenCoords(p)); }
 
-    public Color dialogColor(Point p) {
-	Point point = toScreenCoords(p);
-	return getColor(point);
-    }
+    public Color dialogColor(Point p) { return getColor(toScreenCoords(p)); }
 
     public Rectangle textRectangle() {
 	Insets margin = textInsets();
-	return new Rectangle(m_rect.x + margin.left,
-			     m_rect.y + margin.top,
-			     m_rect.width - margin.left - margin.right,
-			     m_rect.height - margin.top - margin.bottom);
+	Rectangle rect = getRect();
+	return new Rectangle(rect.x + margin.left,
+			     rect.y + margin.top,
+			     rect.width - margin.left - margin.right,
+			     rect.height - margin.top - margin.bottom);
     }
 
 
     public void refresh(){ refresh("tc"); }
     public void refresh(String where) {
+	Rectangle rect = getRect();
 	if (where.equals("tc")) {
-	    dialogClick(new Point(m_rect.width / 2, 2));
+	    dialogClick(new Point(rect.width / 2, 2));
 	} else if (where.equals("tl")) {
 	    dialogClick(new Point(0, 2));
 	} else if (where.equals("tr")) {
-	    dialogClick(new Point(m_rect.width, 2));
+	    dialogClick(new Point(rect.width, 2));
 	} else {
 	    throw new RuntimeException("Bad refresh arg: " + where);
 	}
 	flushTextReader();
+	// Needs at least a little time to redisplay.  Thread.yield was not enough.
+	// This may be longer than necessary?
+	sleepSec(0.05);
     }
 
     public String readText() { return textReader().readText(); }
@@ -155,6 +149,12 @@ public abstract class AWindow extends ARobot  {
 	    }
 	}
 	return null;
+    }
+
+    public Point dialogCoordsFor(String menu) {
+	Point p = coordsFor(menu);
+	if (p == null) { return null; }
+	return toDialogCoords(p);
     }
 
     public Point coordsFor(String menu) {
@@ -219,7 +219,6 @@ public abstract class AWindow extends ARobot  {
 		}
 		if (i >= path.length - 1) { 
 		    rclickAt(pt);
-		    if (path.length == 1) { w.reconfirmHeight(); }
 		}
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);

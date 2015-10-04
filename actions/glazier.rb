@@ -239,7 +239,7 @@ class GlazierWindow < PinnableWindow
   end
 
   def log(s)
-    # puts s
+    puts s
   end
 end
 

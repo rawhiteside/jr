@@ -237,7 +237,6 @@ end
 class MacroMain
   
   def initialize
-    # pauseable_robot
     @groups = {}
     @frame = TopFrame.new
     get_actions.each {|a| @frame.add_action(a)}

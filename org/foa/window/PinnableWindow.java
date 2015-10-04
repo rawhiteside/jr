@@ -7,30 +7,73 @@ import java.awt.*;
 
 public class PinnableWindow extends AWindow {
     private boolean m_pinned = false;
+    // Timestamp of a click.
+    private long m_invalidHeightMillis = 0;
     
     public PinnableWindow(Rectangle rect) {
 	super(rect);
+	invalidateHeight();
+    }
+
+    private void validateHeight() {
+	m_invalidHeightMillis = 0;
+    }
+
+    private void invalidateHeight() {
+	m_invalidHeightMillis = System.currentTimeMillis();
+    }
+
+    private long INVALID_DELAY = 100;
+    // For a while after a click, we re-check the height.
+    private boolean isHeightValid() {
+	boolean rv = true;
+	if(m_invalidHeightMillis != 0 &&
+	   (System.currentTimeMillis() - m_invalidHeightMillis) < INVALID_DELAY) {
+	    rv = false;
+	} else {
+	    validateHeight();
+	}
+	return rv;
+    }
+
+    public Rectangle getRect() {
+	Rectangle rect = super.getRect();
+	//
+	if(!isHeightValid()) {
+	    Rectangle newRect = WindowGeom.confirmHeight(rect);
+	    // It only changes once.
+	    if (newRect.height != rect.height) {
+		rect = newRect;
+		setRect(rect);
+		validateHeight();
+	    }
+	}
+	return rect;
     }
 
     public Insets textInsets() {
 	return new Insets(4, 4, 5, 32);
     }
 
+    // Override to invalidate the height on pinnables. 
+    public void dialogClick(Point p, String refreshLoc, double delay) {
+	super.dialogClick(p, refreshLoc, delay);
+	invalidateHeight();
+    }
+    
     public boolean getPinned() {return m_pinned;}
 
     public PinnableWindow pin() {
 	Rectangle r = getRect();
-	// Pinning doesn't trigger a resize.
-	boolean prev = getStable();
-	setStable(true);
-	dialogClick(new Point(r.width - 20, 20));
-	m_pinned = prev;
-	setStable(false);
+	// Pin/unpin don't invalidate height. Thus the super.
+	super.dialogClick(new Point(r.width - 20, 20));
+	m_pinned = true;
 	return this;
     }
 
     public void unpin() {
-	dialogClick(new Point(getRect().width - 20, 20));
+	// Pin/unpin don't invalidate height. Thus the super.
+	super.dialogClick(new Point(getRect().width - 20, 20));
 	m_pinned = false;
     }
 
@@ -74,7 +117,8 @@ public class PinnableWindow extends AWindow {
 	double delay = Math.max(requested_delay,0.075);
 	claimRobotLock();
 	try {
-	    mm(m_rect.x, m_rect.y);
+	    Rectangle rect = getRect();
+	    mm(rect.x, rect.y);
 	    sleepSec(delay);
 	    rbd();
 	    sleepSec(delay);
@@ -109,9 +153,6 @@ public class PinnableWindow extends AWindow {
 	r.x = p.x;
 	r.y = p.y;
 	setRect(r);
-
-	// See if the window changed height. 
-	if (!getStable()) { reconfirmHeight(); }
 
 	return this;
     }

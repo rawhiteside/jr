@@ -295,7 +295,7 @@ class IronOreStone
   # We do this by looking at the top of the stone.
   GEM_SIZE = 30
   def gem_shape(pb)
-    robot = ARobot.new
+    robot = ARobot.sharedInstance
     return :wart if wart?
     return spike_or_finger
   end

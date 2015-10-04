@@ -175,9 +175,12 @@ class Onions < Action
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    x = ImageUtils.shrink(x, 1)
+    # Try to shrink twice.
+    x1 = ImageUtils.shrink(x, 1)
+    x2 = ImageUtils.shrink(x1, 1)
 
-    point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS)
+    point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS)
+    point = ImageUtils.find_largest(x1, search_dir, REACH_RADIUS) unless point
 
     return nil, nil unless point
     
@@ -202,14 +205,11 @@ class Onions < Action
       start = Time.new
       sleep_sec(delay)
       got = Time.new - start
-      # puts "Plant #{plant_number} / #{index}.  Requested sleep(#{delay}).  Got #{got}"
-      with_robot_lock do 
+      # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
+      with_robot_lock do
         w.refresh
-        if w.read_text =~ /Water/
-          p = w.coordsFor('Water')
-          # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
-          @vegi_data[:water].times { rclick_at(p) }
-        end
+        point = w.dialogCoordsFor('Water')
+        @vegi_data[:water].times { w.dialogClick(point) } if point
       end
     end
     sleep_sec(harvest_time - (Time.new - plant_time))

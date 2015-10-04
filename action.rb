@@ -44,7 +44,6 @@ class Action  < ARobot
   def start(check)
     if @action_thread
       puts "Start called for action already running!"
-      puts Exception.new.backtrace.join("\n")
       return
     end
 
@@ -88,7 +87,9 @@ class Action  < ARobot
       # Don't need to do anything.
     rescue Exception => e
       puts e.to_s
-      puts e.backtrace.join("\n")
+      UserIO.error(e.to_s)
+    rescue java.lang.Exception => e
+      puts e.to_s
       UserIO.error(e.to_s)
     end
   end
@@ -218,7 +219,7 @@ class GridHelper
   # these values as the arg
   #  'x', 'y', 'ix', 'iy', 'num-rows', 'num-cols'
   def each_point
-    @points.each {|p| yield p}
+    @points.each {|pt| yield pt }
   end
     
 end

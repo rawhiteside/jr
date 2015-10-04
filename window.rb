@@ -37,9 +37,10 @@ class HowMuch < Window
       dim = screen_size
       wid, height = dim.width, dim.height
       win = nil
+      sleep_sec(0.1)
       5.times do 
 	win = Window.from_point(Point.new(wid/2, height/2))
-	break if win
+	break if win 
 	sleep_sec 0.1
       end
 
@@ -49,11 +50,12 @@ class HowMuch < Window
       win.dialog_click(Point.new(110, rect.height - 30)) if quant == :max
       win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
-        robot = ARobot.new
+        robot = ARobot.sharedInstance
 	robot.send_string(quant.to_i.to_s)
 	win.dialog_click(Point.new(170, rect.height - 45))
       end
     end
+    sleep_sec 0.1
   end
 end
 
@@ -61,7 +63,7 @@ end
 # A window with a message that pops up in the middle of the screen
 class PopupWindow < Window
   def self.find
-    dim = ARobot.new.screen_size
+    dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
     PopupWindow.from_point(Point.new(wid/2, height/2))
   end
