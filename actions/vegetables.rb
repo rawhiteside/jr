@@ -5,6 +5,7 @@ require 'pixel_block'
 class Onions < Action
   def initialize(name = "Grow vegetables", category = 'Plants')
     super(name, category)
+    @threads = []
   end
 
   VEGETABLE_DATA = {
@@ -15,12 +16,16 @@ class Onions < Action
                                         :left_build_init => [:l,:l],
                                        },
     
-    "Carrots/Osiris's Orange/(1)" => {:water => 1, :left_build_init => [:R],
-                                      :right_build_init => [:L, :L, :L, :L],
-                                      :num_left => 4, :num_right => 4},
-    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2, :left_build_init => [:R], 
-                                        :right_build_init => [:L, :L, :L, :L],
-                                        :num_left => 4, :num_right => 4},
+    "Carrots/Osiris's Orange/(1)" => {:water => 1,
+                                      :build_incr_fac => 2,
+                                      :right_build_init => [:L,]*2
+#                                      :num_right => 4,
+                                     },
+    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
+                                        :build_incr_fac => 2,
+                                        :right_build_init => [:L,]*2
+#                                        :num_right => 4,
+                                       },
 
 
     "Garlic/Apep's Crop/(2)" => {:water => 2,
@@ -65,7 +70,6 @@ class Onions < Action
       {:type => :number, :label => 'Third water (~30-45).', :name => 'third'},
     ]
     @vals =  UserIO.prompt(parent, 'onions', 'onions', gadgets)
-    @threads = []
   end
 
   def stop
