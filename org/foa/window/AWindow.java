@@ -33,7 +33,7 @@ public abstract class AWindow extends ARobot  {
     private static double MAGIC_RECONFIRM_DELAY = 0.1;
     public void reconfirmHeight() {
 	sleepSec(MAGIC_RECONFIRM_DELAY);
-	new WindowGeom().confirmHeight(m_rect);
+	WindowGeom.confirmHeight(m_rect);
     }
 
     public abstract Insets textInsets();

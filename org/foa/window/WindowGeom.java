@@ -7,21 +7,16 @@ import java.awt.*;
 
 public class WindowGeom extends ARobot {
 
-    public WindowGeom() {
-	super();
-    }
-
     public static Rectangle rectFromPoint(Point p) {
-	WindowGeom w = new WindowGeom();
-	int x = w.findLeftEdge(p.x, p.y);
+	int x = findLeftEdge(p.x, p.y);
 	if (x < 0) {
 	    return null;
 	}
-	return w.rectFromLeftEdge(x, p.y);
+	return rectFromLeftEdge(x, p.y);
     }
 
     // Wait a while for the edge to appear, if it has not yet.
-    private void waitForEdge(Rectangle r) {
+    private static void waitForEdge(Rectangle r) {
 	for(int i = 0; i < 10; i++) {
 	    PixelBlock pb = new PixelBlock(r);
 	    Boolean allBlack = true;
@@ -32,13 +27,13 @@ public class WindowGeom extends ARobot {
 		}
 	    }
 	    if (allBlack) { break; }
-	    sleepSec(0.01);
+	    ARobot.sharedInstance().sleepSec(0.01);
 	}
     }
 
     
     // From a point on the left edge. 
-    public Point findOrigin(Point pt) {
+    public static Point findOrigin(Point pt) {
 	int x = pt.x;
 	int y = pt.y;
 	Rectangle edgeRect = new Rectangle(x, 0, 1, y+1);
@@ -63,8 +58,8 @@ public class WindowGeom extends ARobot {
     /**
      * Find and return teh width of the window, given the window origin.
      */
-    public int findWidth(Point pt) {
-	int screenWidth = screenSize().width;
+    public static int findWidth(Point pt) {
+	int screenWidth = ARobot.sharedInstance().screenSize().width;
 	int xOrig = pt.x;
 	int y = pt.y;
 	int x = xOrig;
@@ -85,11 +80,11 @@ public class WindowGeom extends ARobot {
     // Make sure the height hasn't changed since the last time we
     // looked at the window.  If it has, then recompute it by looking
     // at the vertical line through the center of the window.
-    public void confirmHeight(Rectangle rect) {
+    public static void confirmHeight(Rectangle rect) {
 	int x = rect.x + rect.width/2;
 	int y = rect.y;
-	int screenHeight = screenSize().height;
-	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, screenSize().height));
+	int screenHeight = ARobot.sharedInstance().screenSize().height;
+	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, ARobot.sharedInstance().screenSize().height));
 	if (pb.pixelFromScreen(x, y) == 0 &&
 	    pb.pixelFromScreen(x, y + 3) == 0 &&
 	    pb.pixelFromScreen(x, y + rect.height) == 0 &&
@@ -126,9 +121,9 @@ public class WindowGeom extends ARobot {
     /**
      * Find the height, given the origin of the window.
      */
-    public int findHeight(int x, int y) {
+    public static int findHeight(int x, int y) {
 	int yStart = y;
-	int screenHeight = screenSize().height;
+	int screenHeight = ARobot.sharedInstance().screenSize().height;
 	// Search along the window proper for the black border pixel at the bottom.
 	y += 4;
 	x += 4;
@@ -140,7 +135,7 @@ public class WindowGeom extends ARobot {
     }
 
 
-    public Rectangle rectFromLeftEdge(int x, int y) {
+    public static Rectangle rectFromLeftEdge(int x, int y) {
 	Point origin = findOrigin(new Point(x, y));
 	int width = findWidth(origin);
 	int height = findHeight(origin.x, origin.y);
@@ -150,7 +145,7 @@ public class WindowGeom extends ARobot {
     /**
      * Find the left edge. 
      */
-    public int findLeftEdge(int x, int y) {
+    public static int findLeftEdge(int x, int y) {
 	int xStart = x;
 	PixelBlock pb = new PixelBlock(new Rectangle(0, y, x+2, 1));
 	while (x >= 0 && !isLeftEdgeBorder(pb, x, y)) {
@@ -165,7 +160,7 @@ public class WindowGeom extends ARobot {
     public static int INNER_BROWN = new Color(148, 108, 70).getRGB() & 0xFFFFFF;
     public static int OUTER_BROWN = new Color(114, 80, 46).getRGB() & 0xFFFFFF;
 
-    private boolean isLeftEdgeBorder(PixelBlock pb, int x, int y) {
+    private static boolean isLeftEdgeBorder(PixelBlock pb, int x, int y) {
 	int pixel = pb.pixelFromScreen(x, y);
 	if (pixel != 0) {
 	    return false;
@@ -173,7 +168,7 @@ public class WindowGeom extends ARobot {
 	return pb.pixelFromScreen(x+1, y) == OUTER_BROWN;
     }
 
-    private boolean isRightEdgeBorder(PixelBlock pb, int x, int y) {
+    private static boolean isRightEdgeBorder(PixelBlock pb, int x, int y) {
 	int pixel = pb.pixelFromScreen(x, y);
 	if (pixel != 0) {
 	    return false;
