@@ -13,12 +13,15 @@ import org.foa.*;
 public class ARobot {
     private Robot m_robot = null;
     private Toolkit m_toolkit = Toolkit.getDefaultToolkit();
+    private static ARobot s_sharedInstance = new ARobot();
 
     public ARobot() {
 	// Checked exceptions suck.
 	try { m_robot = new Robot(); }
 	catch(Exception e) { }
     }
+
+    public static ARobot sharedInstance() { return s_sharedInstance; }
 
     public void tone(int hz, int msecs) {
 	try { SoundUtils.tone(hz, msecs); }
