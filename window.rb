@@ -34,14 +34,13 @@ class HowMuch < Window
   def initialize(quant)
     super(Rectangle.new(0,0,0,0))
     with_robot_lock do
-      sleep_sec 0.2
       dim = screen_size
       wid, height = dim.width, dim.height
       win = nil
       5.times do 
 	win = Window.from_point(Point.new(wid/2, height/2))
 	break if win
-	sleep_sec 0.2
+	sleep_sec 0.1
       end
 
       raise(Exception.new("The How Much dialg didn't appear")) unless win
@@ -54,9 +53,6 @@ class HowMuch < Window
 	robot.send_string(quant.to_i.to_s)
 	win.dialog_click(Point.new(170, rect.height - 45))
       end
-
-      # Give it time to go away.
-      sleep_sec 0.2
     end
   end
 end
