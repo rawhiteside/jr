@@ -81,7 +81,6 @@ public class ImageUtils {
 	int bestColor = 0;
 	Point bestPoint = null;
 	if(xouter) {
-	    // System.out.println(" findLargest: xfirst = " + xfirst + ", xend = " + xend);
 	    for(int x = xfirst; x != xend; x += xoff) {
 		for(int y = 0; y < bi.getHeight(); y++) {
 		    int color = bi.getRGB(x, y) & 0xFFFFFF;
@@ -92,7 +91,6 @@ public class ImageUtils {
 		}
 	    }
 	} else {
-	    // System.out.println(" findLargest: yfirst = " + yfirst + ", yend = " + yend);
 	    for(int y = yfirst; y != yend; y += yoff) {
 		for(int x = 0; x < bi.getWidth(); x++) {
 		    int color = bi.getRGB(x, y) & 0xFFFFFF;
@@ -100,11 +98,9 @@ public class ImageUtils {
 			bestColor = color;
 			bestPoint = new Point(x, y);
 		    }
-		    if((bi.getRGB(x, y) & 0xFFFFFF) != 0) { return new Point(x, y); }
 		}
 	    }
 	}
-	System.out.println("FindLargest returning: " + bestPoint);
 	return bestPoint;
     }
     
