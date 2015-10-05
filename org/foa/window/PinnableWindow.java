@@ -25,7 +25,7 @@ public class PinnableWindow extends AWindow {
 	if (m_invalidHeightMillis == 0) {
 	    return true;
 	}
-	if((System.currentTimeMillis() - m_invalidHeightMillis) > INVALID_DURATION {
+	if((System.currentTimeMillis() - m_invalidHeightMillis) > INVALID_DURATION) {
 	    m_invalidHeightMillis = 0;
 	}
 	return false;
