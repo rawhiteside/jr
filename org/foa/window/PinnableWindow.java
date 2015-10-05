@@ -26,14 +26,13 @@ public class PinnableWindow extends AWindow {
     private long INVALID_DELAY = 100;
     // For a while after a click, we re-check the height.
     private boolean isHeightValid() {
-	boolean rv = true;
-	if(m_invalidHeightMillis != 0 &&
-	   (System.currentTimeMillis() - m_invalidHeightMillis) < INVALID_DELAY) {
-	    rv = false;
-	} else {
+	if (m_invalidHeightMillis == 0) {
+	    return true;
+	}
+	if((System.currentTimeMillis() - m_invalidHeightMillis) > INVALID_DELAY) {
 	    validateHeight();
 	}
-	return rv;
+	return false;
     }
 
     public Rectangle getRect() {
