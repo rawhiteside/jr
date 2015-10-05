@@ -139,9 +139,9 @@ public class ARobot {
     public void rclickAt(int x, int y, double delaySec) {
 	claimRobotLock();
 	try {
-	    mm(x, y, delaySec);
+	    //mm(x, y, delaySec);
+	    mm(x, y, 0.01);
 	    rbd();
-	    sleepSec(delaySec);
 	    rbu();
 	    sleepSec(delaySec);
 	}
@@ -161,9 +161,8 @@ public class ARobot {
     public void lclickAt(int x, int y, double delaySec) {
 	claimRobotLock();
 	try {
-	    mm(x, y, delaySec);
+	    mm(x, y, 0.01);
 	    lbd();
-	    sleepSec(delaySec);
 	    lbu();
 	    sleepSec(delaySec);
 	}

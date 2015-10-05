@@ -20,7 +20,7 @@ public class PinnableWindow extends AWindow {
     }
 
     // For a while after a click, we re-check the height.
-    private long INVALID_DURATION = 150;
+    private long INVALID_DURATION = 100;
     private boolean isHeightValid() {
 	if (m_invalidHeightMillis == 0) {
 	    return true;
@@ -49,9 +49,11 @@ public class PinnableWindow extends AWindow {
 	return new Insets(4, 4, 5, 32);
     }
 
+    private static double MIN_DELAY = 0.05;
+
     // Override to invalidate the height on pinnables. 
     public void dialogClick(Point p, String refreshLoc, double delay) {
-	super.dialogClick(p, refreshLoc, delay);
+	super.dialogClick(p, refreshLoc, Math.max(delay, MIN_DELAY));
 	invalidateHeight();
     }
     

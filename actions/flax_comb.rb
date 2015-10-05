@@ -8,12 +8,13 @@ class FlaxComb < Action
 
 
   def process(w)
-    w.refresh
     stat_wait('End')
-    w.refresh
     # Clean only if there's nothing else. 
     # Nil if nothing to click on.  The comb crashed.
-    w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
+    with_robot_lock do
+      w.refresh
+      w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
+    end
   end
   
   def setup(parent)
