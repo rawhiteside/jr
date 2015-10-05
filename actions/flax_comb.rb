@@ -11,10 +11,12 @@ class FlaxComb < Action
     stat_wait('End')
     # Clean only if there's nothing else. 
     # Nil if nothing to click on.  The comb crashed.
+    rv = nil
     with_robot_lock do
       w.refresh
-      w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
+      rv = w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
     end
+    rv
   end
   
   def setup(parent)
