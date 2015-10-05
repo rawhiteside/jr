@@ -15,22 +15,18 @@ public class PinnableWindow extends AWindow {
 	invalidateHeight();
     }
 
-    private void validateHeight() {
-	m_invalidHeightMillis = 0;
-    }
-
     private void invalidateHeight() {
 	m_invalidHeightMillis = System.currentTimeMillis();
     }
 
-    private long INVALID_DELAY = 100;
     // For a while after a click, we re-check the height.
+    private long INVALID_DURATION = 150;
     private boolean isHeightValid() {
 	if (m_invalidHeightMillis == 0) {
 	    return true;
 	}
-	if((System.currentTimeMillis() - m_invalidHeightMillis) > INVALID_DELAY) {
-	    validateHeight();
+	if((System.currentTimeMillis() - m_invalidHeightMillis) > INVALID_DURATION {
+	    m_invalidHeightMillis = 0;
 	}
 	return false;
     }
