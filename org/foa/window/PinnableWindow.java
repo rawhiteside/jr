@@ -44,7 +44,6 @@ public class PinnableWindow extends AWindow {
 	    if (newRect.height != rect.height) {
 		rect = newRect;
 		setRect(rect);
-		validateHeight();
 	    }
 	}
 	return rect;
