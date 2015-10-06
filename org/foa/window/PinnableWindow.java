@@ -53,7 +53,8 @@ public class PinnableWindow extends AWindow {
 
     // Override to invalidate the height on pinnables. 
     public void dialogClick(Point p, String refreshLoc, double delay) {
-	super.dialogClick(p, refreshLoc, Math.max(delay, MIN_DELAY));
+	//super.dialogClick(p, refreshLoc, Math.max(delay, MIN_DELAY));
+	super.dialogClick(p, refreshLoc, delay);
 	invalidateHeight();
     }
     
@@ -109,19 +110,18 @@ public class PinnableWindow extends AWindow {
     }
 
 
-    private void attemptDrag(Point p, double requested_delay) {
+    private boolean attemptDrag(Point p, double requested_delay) {
 	double delay = Math.max(requested_delay,0.075);
 	claimRobotLock();
 	try {
 	    Rectangle rect = getRect();
-	    mm(rect.x, rect.y);
-	    sleepSec(delay);
+	    mm(rect.x, rect.y, delay);
 	    rbd();
-	    sleepSec(delay);
-	    mm(p);
-	    sleepSec(delay);
+	    // sleepSec(delay);
+	    mm(p, delay);
 	    rbu();
-	    sleepSec(delay);
+	    // sleepSec(delay);
+	    return isDialogAt(p);
 	}
 	catch(ThreadKilledException e) { throw e; }
 	catch(Exception e) {
@@ -138,8 +138,7 @@ public class PinnableWindow extends AWindow {
 
     public PinnableWindow dragTo(Point p, double delay) {
 	for(int i = 0; i < 5; i++) {
-	    attemptDrag(p, delay);
-	    if(isDialogAt(p)) { break; }
+	    if(attemptDrag(p, delay)) {break;}
 	    // I've found this print to be helpful.
 	    System.out.println("Trying again to drag");
 	}

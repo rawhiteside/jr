@@ -11,6 +11,7 @@ import org.foa.ControllableThread;
 import org.foa.*;
 
 public class ARobot {
+    private static final double MOUSE_MOVE_DELAY = 0.01;
     private Robot m_robot = null;
     private Toolkit m_toolkit = Toolkit.getDefaultToolkit();
     private static ARobot s_sharedInstance = new ARobot();
@@ -48,7 +49,6 @@ public class ARobot {
 
     public void withRobotLock(Runnable r) {robotSync(r);}
 
-
     public void claimRobotLock() {
 	// Claim the lock.  If we get interrupted, we DID NOT get the lock.
 	try {RobotLock.instance().lockInterruptibly();}
@@ -81,7 +81,7 @@ public class ARobot {
     }
 
     /**
-     * Get an color holding the rgb values for screen coordinates [x, y]
+     * Get a Color holding the rgb values for screen coordinates [x, y]
      */
     public Color getColor(int x, int y) {return getColor(new Point(x, y));}
     public Color getColor(Point p) {
@@ -92,9 +92,9 @@ public class ARobot {
     /**
      * Move the mouse to the provided screen coordinates.
      */
-    public void mm(int x, int y) {mm(x, y, 0.0);}
+    public void mm(int x, int y) {mm(x, y, MOUSE_MOVE_DELAY);}
     public void mm(Point p, double delaySecs) {mm(p.x, p.y, delaySecs);}
-    public void mm(Point p) {mm(p, 0.0);}
+    public void mm(Point p) {mm(p, MOUSE_MOVE_DELAY);}
     public void mm(int x, int y, double delaySecs) {
 	checkForPause();
 	m_robot.mouseMove(x, y);
@@ -132,49 +132,33 @@ public class ARobot {
 	mm(prevPos.x, prevPos.y);
     }
 
-    public void rclickAt(Point p) { rclickAt(p.x, p.y); }
+    public void rclickAt(Point p) { rclickAt(p.x, p.y, MOUSE_MOVE_DELAY); }
     public void rclickAt(Point p, double delaySec) { rclickAt(p.x, p.y, delaySec); }
 
-    public void rclickAt(int x, int y) { rclickAt(x, y, 0.01); }
+    public void rclickAt(int x, int y) { rclickAt(x, y, MOUSE_MOVE_DELAY); }
     public void rclickAt(int x, int y, double delaySec) {
 	claimRobotLock();
 	try {
-	    //mm(x, y, delaySec);
-	    mm(x, y, 0.01);
+	    mm(x, y, delaySec);
 	    rbd();
 	    rbu();
-	    sleepSec(delaySec);
-	}
-	catch(ThreadKilledException e) { throw e; }
-	catch(Exception e) {
-	    System.out.println("Exception: in rclickAt" + e.toString());
-	    e.printStackTrace();
-	    throw e;
 	}
 	finally {releaseRobotLock();}
     }
 
-    public void lclickAt(Point p) { lclickAt(p.x, p.y); }
+    public void lclickAt(Point p) { lclickAt(p.x, p.y, MOUSE_MOVE_DELAY); }
     public void lclickAt(Point p, double delaySec) { lclickAt(p.x, p.y, delaySec); }
 
-    public void lclickAt(int x, int y) { lclickAt(x, y, 0.01); }
+    public void lclickAt(int x, int y) { lclickAt(x, y, MOUSE_MOVE_DELAY); }
     public void lclickAt(int x, int y, double delaySec) {
 	claimRobotLock();
 	try {
-	    mm(x, y, 0.01);
+	    mm(x, y, delaySec);
 	    lbd();
 	    lbu();
-	    sleepSec(delaySec);
-	}
-	catch(ThreadKilledException e) { throw e; }
-	catch(Exception e) {
-	    System.out.println("Exception: in lclickAt" + e.toString());
-	    e.printStackTrace();
-	    throw e;
 	}
 	finally {releaseRobotLock();}
     }
-
 
     public void sleepSec(int secs) {sleepSec((double) secs);}
     public void sleepSec(float secs) {sleepSec((double) secs);}
