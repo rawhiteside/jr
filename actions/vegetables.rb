@@ -34,12 +34,9 @@ class Onions < Action
                                     },
 
 
-    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3, 
-                                            :build_incr_fac => 2,
-                                            :left_build_init => [:l]*4,
+    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3,
                                            },
     "Leeks/Hapi's Harvest/(1)" => {:water => 1, 
-                                   :build_incr_fac => 2,
                                   },
 
     "Onions/Amun's Bounty/(1)" => {:water => 1,
@@ -209,7 +206,7 @@ class Onions < Action
       with_robot_lock do
         w.refresh
         point = w.dialogCoordsFor('Water')
-        @vegi_data[:water].times { w.dialogClick(point) } if point
+        @vegi_data[:water].times { w.dialogClick(point, nil, 0.0) } if point
       end
     end
     sleep_sec(harvest_time - (Time.new - plant_time))
