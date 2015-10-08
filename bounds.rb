@@ -12,6 +12,10 @@ class Bounds
     add(xy2) if xy2
   end
 
+  def rect
+    Rectangle.new(xmin, ymin, xmax - xmin, ymax - ymin)
+  end
+
   def add(xy)
     @xmin = xy[0] if xy[0] < @xmin
     @ymin = xy[1] if xy[1] < @ymin

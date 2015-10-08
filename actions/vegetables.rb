@@ -1,6 +1,5 @@
 require 'action.rb'
 require 'window'
-require 'pixel_block'
 
 class Onions < Action
   def initialize(name = "Grow vegetables", category = 'Plants')

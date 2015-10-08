@@ -4,10 +4,98 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.image.*;
+import java.util.*;
 
 import org.foa.PixelBlock;
 
 public class ImageUtils {
+
+    public static HashMap[] globify(PixelBlock m, int threshold) {
+	return globify(m.bufferedImage(), threshold);
+    }
+
+    public static HashMap[] globify(BufferedImage bi, int threshold) {
+	ArrayList<HashMap> globs = new ArrayList<HashMap>();
+
+	for(int y = 0; y < bi.getHeight() - 1; y++) {
+	    for(int x = 0; x < bi.getWidth() - 1; x++)  {
+		Point p = new Point(x, y);
+
+		// is it a hit or a miss?
+		if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) {
+
+		    // The list of globs we can add this point to. 
+		    ArrayList<HashMap> addedTo = new ArrayList<HashMap>();
+
+		    // Which globs can we add this point to? 
+		    for(HashMap glob : globs) {
+			if(maybeAdd(glob, p)) { addedTo.add(glob); }
+		    }
+
+		    // How many did we add the point to?
+		    if(addedTo.size() == 0) {
+			// None.  Create a new glob
+			HashMap glob = new HashMap();
+			addPointToGlob(p, glob);
+			globs.add(glob);
+		    } else if (addedTo.size() > 1) {
+			// Multiple globs.  We must merge them.
+			HashMap keep = addedTo.get(0);
+			ArrayList<HashMap> removals = new ArrayList<HashMap>();
+			for(int i = 1; i < addedTo.size(); i++) {
+			    mergeGlobs(keep, addedTo.get(i));
+			    removals.add(addedTo.get(i));
+			}
+			for(HashMap hm : removals) { globs.remove(hm); }
+		    }
+		}
+	    }
+	}
+	return globs.toArray(new HashMap[globs.size()]);
+    }
+
+    private static Integer POINT_VAL = new Integer(1);
+    private static Integer NEIGH_VAL = new Integer(0);
+    
+    private static void addPointToGlob(Point p, HashMap glob) {
+	putPoint(glob, p, POINT_VAL);
+	putPoint(glob, new Point(p.x + 1, p.y + 1), NEIGH_VAL);
+	putPoint(glob, new Point(p.x + 1, p.y + 0), NEIGH_VAL);
+	putPoint(glob, new Point(p.x + 1, p.y - 1), NEIGH_VAL);
+
+	putPoint(glob, new Point(p.x + 0, p.y + 1), NEIGH_VAL);
+	putPoint(glob, new Point(p.x + 0, p.y - 1), NEIGH_VAL);
+
+	putPoint(glob, new Point(p.x - 1, p.y + 1), NEIGH_VAL);
+	putPoint(glob, new Point(p.x - 1, p.y + 0), NEIGH_VAL);
+	putPoint(glob, new Point(p.x - 1, p.y - 1), NEIGH_VAL);
+    }
+
+    private static void putPoint(HashMap glob, Point p, Integer val) {
+	// Values of nil, 0, or 1. 0 is "neighbor", 1 is "point".
+	// A "neighbor" won't overwrite a "point"
+	Integer current = (Integer) glob.get(p);
+	if ((current == null) || (current < val)) { glob.put(p, val); }
+    }
+
+    private static void mergeGlobs(HashMap dest, HashMap source) {
+	Iterator itr = source.keySet().iterator();
+	while(itr.hasNext()) {
+	    Point p = (Point) itr.next();
+	    putPoint(dest, p, (Integer) source.get(p));
+	}
+    }
+
+    private static boolean maybeAdd(HashMap glob, Point p) {
+	Integer current = (Integer) glob.get(p);
+	if (current == null) {
+	    return false;
+	} else {
+	    addPointToGlob(p, glob);
+	    return true;
+	}
+	
+    }
     /**
      * Return an image constructed from the xor of the two input images.
      */
