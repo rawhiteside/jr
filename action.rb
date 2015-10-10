@@ -85,11 +85,14 @@ class Action  < ARobot
       # Don't need to do anything.
     rescue ThreadKilledException => e
       # Don't need to do anything.
+    rescue java.lang.Exception => e
+      puts e.to_string
+      puts e.to_s
+      puts e.backtrace.join("\n")
+      UserIO.error(e.to_string)
     rescue Exception => e
       puts e.to_s
-      UserIO.error(e.to_s)
-    rescue java.lang.Exception => e
-      puts e.to_s
+      puts e.backtrace.join("\n")
       UserIO.error(e.to_s)
     end
   end
