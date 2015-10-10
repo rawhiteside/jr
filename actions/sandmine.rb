@@ -24,6 +24,8 @@ class SandMine < AbstractMine
 
       {:type => :text, :label => 'Base/stone denom', :name => 'base-denom',},
 
+      {:type => :text, :label => 'How many stones?', :name => 'stone-count',},
+
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
 	:vals => ['y', 'n']},
     ]
@@ -31,6 +33,7 @@ class SandMine < AbstractMine
   end
 
   def act
+    
     ul = [@vals['field.ul.x'].to_i, @vals['field.ul.y'].to_i]
     lr = [@vals['field.lr.x'].to_i, @vals['field.lr.y'].to_i]
     field = Bounds.new(ul, lr)
@@ -38,44 +41,69 @@ class SandMine < AbstractMine
     debug = @vals['debug'] == 'y'
     delay = @vals['delay'].to_f
     denom = @vals['base-denom'].to_f
-
     want_larges = @vals['large'] == 'y'
 
+    @stone_count = @vals['stone-count'].to_i
+    
     w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
     @debug = @vals['debug'] == 'y'
-    rect = field.rect
+    @field_rect = field.rect
     ControllableThread.check_for_pause
+    stones = mine_get_stones(w)
+  end
+
+  def wait_and_mine(w)
+    loop do
+      w.refresh
+      break unless w.read_text =~ /This mine can be/
+      sleep_sec(1)
+    end
+    w.click_on('Work this Mine', 'tc')
+  end
+  
+  def mine_get_stones(w)
     w.click_on('Stop Working', 'tc')
     sleep_sec(5.0)
-    before = PixelBlock.new(rect)
-    w.click_on('Work this Mine', 'tc')
+    before = PixelBlock.new(@field_rect)
+    wait_and_mine(w)
     sleep_sec(5.0)
-    after = PixelBlock.new(rect)
+    after = PixelBlock.new(@field_rect)
     diff = ImageUtils.xor(before, after)
     brightness = ImageUtils.brightness(diff)
-    globs = ImageUtils.globify(brightness, 1)
-    p globs.size
+    globs = get_globs(brightness, 1)
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
+    globs = globs.slice(0, @stone_count)
     globs.each { |g| puts g.size }
     stones = []
     globs.each { |g| stones << points_to_stone(g) }
-    stones.each {|s| p s}
     stones.each do |s|
-      p = Point.new(s['x'], s['y'])
-
-      mm(after.to_screen(p))
+      mm(after.to_screen(s.centroid))
       sleep 2
     end
   end
 
+  def get_globs(brightness, threshold)
+    got = ImageUtils.globify(brightness, threshold)
+    # Convert from java land to ruby land.
+    globs = []
+    got.each do |hash_map|
+      points = []
+      hash_map.key_set.each {|k| points << k}
+      globs << points
+    end
+
+    globs
+
+  end
+
+
   # Input here is a hash with Points as a key.
-  # We look at the points, and return a hash with keys:
-  # xmin, xmax, ymin, ymax, x, y.  x and y are for the centroid
-  def points_to_stone(glob)
+  # Returns an OreStone, which just has a bunch of attrs.
+  def points_to_stone(points)
     xmin = ymin = 99999999
     xmax = ymax = 0
     xsum = ysum = 0
-    glob.keys.each do |p|
+    points.each do |p|
       x, y = p.x, p.y
       xmin = x if x < xmin 
       ymin = y if y < ymin 
@@ -87,14 +115,14 @@ class SandMine < AbstractMine
       ysum += y
     end
 
-    {
-      'xmin' => xmin,
-      'ymin' => ymin,
-      'xmax' => xmax,
-      'ymax' => ymax,
-      'x' => xsum / glob.keys.size, 
-      'y' => ysum / glob.keys.size, 
-    }
+    stone = OreStone.new
+    stone.points = points
+    stone.min_point = Point.new(xmin, ymin)
+    stone.max_point = Point.new(xmax, ymax)
+    stone.centroid = Point.new(xsum / points.size, ysum / points.size)
+
+    stone
+
   end
 
   def old_act
@@ -256,6 +284,11 @@ class SandMine < AbstractMine
 end
 
 Action.add_action(SandMine.new)
+
+class OreStone
+  attr_accessor :points, :min_point, :max_point, :centroid
+  attr_accessor :color_symbol, :gem_type
+end
 
 
 class BadWorkloadException < Exception
