@@ -91,6 +91,7 @@ class SandMine < AbstractMine
   end
   
   def mine_get_stones(w)
+    puts "---Mining"
     wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
     sleep_sec(5.0)
@@ -281,26 +282,31 @@ class SandMine < AbstractMine
       sleep_sec 0.5
       break if (Time.new - start) > 6
     end
+    sleep_sec @delay
   end
 
   def highlight_blue?(color)
     r, g, b = color.red, color.green, color.blue
-    return b > 100 && (b - r) > 40 && (b - g) > 5 && (g - r) > 30
+    return b > 100 && (b - r) > 40 && (g - r) > 30
   end
 
   def find_highlight_point(stone)
     y = stone.centroid.y
     x = stone.centroid.x
+    colors = []
     stone.rectangle.width.times do |offset|
       # Examine only points NOT on the stone.
       local_point = Point.new(x + offset, y)
       if !stone.points.include?(local_point)
         point = @stones_image.to_screen(local_point)
         color = getColor(point)
+        colors << color
         return point if highlight_blue?(color)
       end
     end
 
+    puts "didn't find highlights in this list:"
+    colors.each { |c| puts c.toString() }
     nil
 
   end
@@ -344,7 +350,7 @@ class OreStone
   end
 
   def to_s
-    puts "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}"
+    "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}, rectangle: #{rectangle.toString()}"
   end
 
   def rectangle
