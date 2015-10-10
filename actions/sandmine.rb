@@ -10,76 +10,117 @@ class SandMine < AbstractMine
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Ore field', :name => 'field',
-	:gadgets =>
-	[
-	  {:type => :point, :label => 'UL corner', :name => 'ul'},
-	  {:type => :point, :label => 'LR corner', :name => 'lr'},
-	]
+       :gadgets =>
+       [
+	 {:type => :point, :label => 'UL corner', :name => 'ul'},
+	 {:type => :point, :label => 'LR corner', :name => 'lr'},
+       ]
       },
       {:type => :point, :label => 'Drag to pinned mine menu', :name => 'mine'},
-      {:type => :combo, :label => 'Large gems?', :name => 'large',
-	:vals => ['y', 'n']},
-
-      {:type => :text, :label => 'Work delay(sec)', :name => 'delay',},
-
-      {:type => :text, :label => 'Base/stone denom', :name => 'base-denom',},
 
       {:type => :text, :label => 'How many stones?', :name => 'stone-count',},
 
+      {:type => :text, :label => 'Key delay?', :name => 'delay',},
+
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
-	:vals => ['y', 'n']},
+       :vals => ['y', 'n']},
     ]
     @vals = UserIO.prompt(parent, 'sand_mine', 'Mine sand', gadgets)
   end
 
   def act
-    
-    ul = [@vals['field.ul.x'].to_i, @vals['field.ul.y'].to_i]
-    lr = [@vals['field.lr.x'].to_i, @vals['field.lr.y'].to_i]
-    field = Bounds.new(ul, lr)
-
-    debug = @vals['debug'] == 'y'
-    delay = @vals['delay'].to_f
-    denom = @vals['base-denom'].to_f
-    want_larges = @vals['large'] == 'y'
-
+    origin = point_from_hash(@vals, 'field.ul')
+    width = @vals['field.lr.x'].to_i - origin.x
+    height = @vals['field.lr.y'].to_i - origin.y
+    @field_rect = Rectangle.new(origin.x, origin.y, width, height)
+    @debug = @vals['debug'] == 'y'
     @stone_count = @vals['stone-count'].to_i
+    @delay = @vals['delay'].to_f
     
     w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
-    @debug = @vals['debug'] == 'y'
-    @field_rect = field.rect
-    ControllableThread.check_for_pause
-    stones = mine_get_stones(w)
+
+    loop do
+      begin
+        ControllableThread.check_for_pause
+        stones = mine_get_stones(w)
+        assign_colors_to_stones(stones)
+        stones.each {|s| puts s.to_s}
+        mine_stones(stones, true, @delay)
+      rescue BadWorkloadException => e
+	puts 'Bad workload exception.'
+	# No need for anything.  Just mine again.
+      end
+      sleep_sec 1 while dismiss_strange_windows
+    end
   end
 
-  def wait_and_mine(w)
+  SEARCH_FRACTION = 0.4
+  def assign_colors_to_stones(stones)
+    stones.each do |ore_stone|
+      # Bounds is a weird, old, class, but has that "spiral" method.
+      # We'll search in the central portion of the stone.
+      # Compute the central search Bounds from the two ul/lr points
+      stone_rect = ore_stone.rectangle
+      fract = (1.0 - SEARCH_FRACTION) / 2.0
+      xoff = (stone_rect.width * fract).to_i
+      yoff = (stone_rect.height * fract).to_i
+      x1 = stone_rect.x + xoff
+      y1 = stone_rect.y + yoff
+      x2 = stone_rect.x + stone_rect.width - xoff
+      y2 = stone_rect.y + stone_rect.height - xoff
+      bounds = Bounds.new([x1, y1], [x2, y2])
+      bounds.spiral.each do |xy|
+        color = @stones_image.color(xy[0], xy[1])
+        sym = Clr.color_symbol(color)
+        if (sym)
+          ore_stone.color_symbol = sym
+          break
+        end
+      end
+      ore_stone.color_symbol ||= :black
+    end
+  end
+
+  
+  def wait_for_mine(w)
     loop do
       w.refresh
       break unless w.read_text =~ /This mine can be/
       sleep_sec(1)
     end
-    w.click_on('Work this Mine', 'tc')
   end
   
   def mine_get_stones(w)
+    wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
     sleep_sec(5.0)
-    before = PixelBlock.new(@field_rect)
-    wait_and_mine(w)
+
+    @empty_image = PixelBlock.new(@field_rect)
+    w.click_on('Work this Mine', 'tc')
     sleep_sec(5.0)
-    after = PixelBlock.new(@field_rect)
-    diff = ImageUtils.xor(before, after)
-    brightness = ImageUtils.brightness(diff)
+    @stones_image = PixelBlock.new(@field_rect)
+
+    @diff_image = ImageUtils.xor(@empty_image, @stones_image)
+    brightness = ImageUtils.shrink(ImageUtils.brightness(@diff_image), 40)
     globs = get_globs(brightness, 1)
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     globs = globs.slice(0, @stone_count)
-    globs.each { |g| puts g.size }
     stones = []
-    globs.each { |g| stones << points_to_stone(g) }
-    stones.each do |s|
-      mm(after.to_screen(s.centroid))
-      sleep 2
+    if @debug
+      if globs.size == @stone_count && globs[0].size > 2 * globs[@stone_count-1].size
+        UserIO.show_image(@empty_image)
+        UserIO.show_image(@stones_image)
+        UserIO.show_image(@diff_image)
+      end
     end
+    globs.each { |g| stones << points_to_stone(g) }
+
+    if (@debug)
+      mouse_over_stones(stones)
+    end
+
+    stones
+    
   end
 
   def get_globs(brightness, threshold)
@@ -115,7 +156,7 @@ class SandMine < AbstractMine
       ysum += y
     end
 
-    stone = OreStone.new
+    stone = OreStone.new(@stones_image)
     stone.points = points
     stone.min_point = Point.new(xmin, ymin)
     stone.max_point = Point.new(xmax, ymax)
@@ -125,60 +166,12 @@ class SandMine < AbstractMine
 
   end
 
-  def old_act
-    ul = [@vals['field.ul.x'].to_i, @vals['field.ul.y'].to_i]
-    lr = [@vals['field.lr.x'].to_i, @vals['field.lr.y'].to_i]
-    bb_field = Bounds.new(ul, lr)
-
-    debug = @vals['debug'] == 'y'
-    delay = @vals['delay'].to_f
-    denom = @vals['base-denom'].to_f
-
-    want_larges = @vals['large'] == 'y'
-
-    w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
-    @debug = @vals['debug'] == 'y'
-    ControllableThread.check_for_pause
-    loop do
-      begin
-	ControllableThread.check_for_pause
-        
-	if debug
-	  mouse_over_stones(scene.stones)
-	end
-	mine_stones(scene.stones, want_larges, delay)
-      rescue BadWorkloadException => e
-	puts 'Bad workload exception.'
-	# No need for anything.  Just mine again.
-      end
-      sleep_sec 1 while dismiss_strange_windows
-      loop do
-	work_mine(w)
-	sleep_sec 1
-	break unless dismiss_strange_windows
-	puts 'looping again in dissmis_strange'
-      end
-    end
-  end
 
   def mouse_over_stones(stones)
     stones.each do |s|
       mm(s.x, s.y)
-      sleep_sec 3
+      sleep_sec @delay
     end
-  end
-
-  def work_mine(w)
-    puts 'working mine'
-    loop do
-      w.refresh
-      break unless w.read_text =~ /This mine can be/
-      sleep_sec 6
-    end
-
-    sleep_sec 4
-    w.click_on('Work this Mine')
-    sleep_sec 4
   end
 
   def dismiss_strange_windows
@@ -194,13 +187,12 @@ class SandMine < AbstractMine
 
   def mine_stones(stones, want_larges, delay)
 
-
     ControllableThread.check_for_pause
 
     # OK, put them into a {color => [stone, stone, ...]} hash.
     by_color = {}
     stones.each do |stone|
-      color = stone.color
+      color = stone.color_symbol
       if by_color[color].nil?
 	by_color[color] = [stone]
       else
@@ -215,9 +207,9 @@ class SandMine < AbstractMine
     color_count = color_count.sort {|a,b| b[1] <=> a[1] }
     recipe_key = color_count.collect{|elt| elt[1]}
     recipe =  (want_larges ?
-	       GemMineRecipes.new.recipe(recipe_key) :
-	       SmallGemMineRecipes.new.recipe(recipe_key)
-	       )
+	         GemMineRecipes.new.recipe(recipe_key) :
+	         SmallGemMineRecipes.new.recipe(recipe_key)
+	      )
     
     #
     # Now, make a new hash of {name => stone}.
@@ -256,14 +248,61 @@ class SandMine < AbstractMine
 
   def run_recipe(recipes, stones_by_name, delay)
     recipes.each do |recipe|
-      recipe.each_index do |i|
-	name = recipe[i]
-	stone = stones_by_name[name]
-	key = 'A'
-	key = 'S' if i == (recipe.size - 1)
-	send_string_at(stone.x, stone.y, key, delay)
+      run_one_workload(recipe, stones_by_name, delay)
+    end
+  end
+
+  def run_one_workload(recipe, stones_by_name, delay)
+    blue_point = nil
+    recipe.each_index do |i|
+      name = recipe[i]
+      stone = stones_by_name[name]
+      
+      key = 'A'
+      key = 'S' if i == (recipe.size - 1)
+      break unless send_string_at(stone.x, stone.y, key, delay)
+
+      # If this was the first stone, find a resulting blue pixel
+      # from the highlight circle.
+      blue_point = find_highlight_point(stone) if i == 0
+
+    end
+    wait_for_highlight_gone(blue_point)
+  end
+
+
+  def wait_for_highlight_gone(p)
+    if p.nil?
+      sleep 3
+      return
+    end
+    start = Time.new
+    until !highlight_blue?(getColor(p))
+      sleep_sec 0.5
+      break if (Time.new - start) > 6
+    end
+  end
+
+  def highlight_blue?(color)
+    r, g, b = color.red, color.green, color.blue
+    return b > 100 && (b - r) > 40 && (b - g) > 5 && (g - r) > 30
+  end
+
+  def find_highlight_point(stone)
+    y = stone.centroid.y
+    x = stone.centroid.x
+    stone.rectangle.width.times do |offset|
+      # Examine only points NOT on the stone.
+      local_point = Point.new(x + offset, y)
+      if !stone.points.include?(local_point)
+        point = @stones_image.to_screen(local_point)
+        color = getColor(point)
+        return point if highlight_blue?(color)
       end
     end
+
+    nil
+
   end
 
   def send_string_at(x, y, str, delay)
@@ -273,14 +312,18 @@ class SandMine < AbstractMine
     sleep_sec delay
     if win = PopupWindow.find
       log_strange_window(win)
+      win.dismiss
+      sleep_sec(0.1)
       raise BadWorkloadException.new(win)
     end
+
+    true
+    
   end
 
   def log_strange_window(w)
     log_result(w.read_text)
   end
-
 end
 
 Action.add_action(SandMine.new)
@@ -288,6 +331,27 @@ Action.add_action(SandMine.new)
 class OreStone
   attr_accessor :points, :min_point, :max_point, :centroid
   attr_accessor :color_symbol, :gem_type
+
+  def initialize(pb)
+    @pb = pb
+  end
+
+  def x
+    @pb.to_screen(@centroid).x
+  end
+  def y
+    @pb.to_screen(@centroid).y
+  end
+
+  def to_s
+    puts "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}"
+  end
+
+  def rectangle
+    Rectangle.new(@min_point.x, @min_point.y,
+                  @max_point.x - @min_point.x, 
+                  @max_point.y - @min_point.y)
+  end
 end
 
 
@@ -304,134 +368,134 @@ end
 class GemMineRecipes
   RECIPES =
     {[2, 1, 1, 1, 1, 1] => [
-      ['A-1', 'B', 'C', 'F',],
-      ['A-1', 'D', 'E',],
-      ['A-1', 'C', 'D', 'E',],
-      ['A-1', 'B', 'F',],
-      ['A-1', 'D', 'E', 'F',],
-      ['A-1', 'B', 'C',],
-      ['A-1', 'B', 'E', 'F',],
-      ['A-2', 'C', 'D',],
-      ['A-2', 'D', 'E',],
-      ['A-2', 'B', 'C', 'F',],
-      ['A-2', 'C', 'F',],
-      ['A-2', 'B', 'E', 'D',],
-      ['A-2', 'B', 'E',],
-      ['A-2', 'C', 'D', 'F',],
-    ],
-    [2, 2, 1, 1, 1] => [
-      ['C', 'D', 'E',],
-      ['C', 'A-1', 'B-1',],
-      ['C', 'A-1', 'B-2',],
-      ['C', 'A-2', 'B-1',],
-      ['C', 'A-2', 'B-2',],
-      ['D', 'A-1', 'B-1',],
-      ['D', 'A-1', 'B-2',],
-      ['D', 'A-2', 'B-1',],
-      ['D', 'A-2', 'B-2',],
-      ['E', 'A-1', 'B-1',],
-      ['E', 'A-1', 'B-2',],
-      ['E', 'A-2', 'B-1',],
-      ['E', 'A-2', 'B-2',],
-      ['A-1', 'B-1', 'C', 'D', 'E',],
-      ['A-2', 'B-2', 'C', 'D',],
-    ],
-    [3, 1, 1, 1, 1] => [
-      ['A-1', 'B', 'C',],
-      ['A-1', 'B', 'D',],
-      ['A-1', 'B', 'E',],
-      ['A-1', 'C', 'D',],
-      ['A-1', 'C', 'E',],
-      ['A-1', 'D', 'E',],
-      ['A-2', 'B', 'C',],
-      ['A-2', 'B', 'D',],
-      ['A-2', 'B', 'E',],
-      ['A-2', 'C', 'D',],
-      ['A-2', 'C', 'E',],
-      ['A-2', 'D', 'E',],
-      ['A-1', 'B', 'C', 'D', 'E',],
-    ],
-    [2, 2, 2, 1] => [
-      ['A-1', 'B-1', 'C-1',],
-      ['A-2', 'B-2', 'C-2', 'D',],
-      ['A-1', 'B-1', 'C-2',],
-      ['A-2', 'B-2', 'C-1', 'D',],
-      ['A-1', 'B-2', 'C-1',],
-      ['A-2', 'B-1', 'C-2', 'D',],
-      ['A-1', 'B-2', 'C-2',],
-      ['A-2', 'B-1', 'C-1', 'D',],
-      ['A-2', 'B-1', 'C-1',],
-      ['A-1', 'B-2', 'C-2', 'D',],
-      ['A-2', 'B-1', 'C-2',],
-      ['A-1', 'B-2', 'C-1', 'D',],
-      ['A-2', 'B-2', 'C-1',],
-      ['A-1', 'B-1', 'C-2', 'D',],
-    ],
-    [3, 2, 1, 1] => [
-      ['A-1', 'A-2', 'A-3',],
-      ['A-1', 'B-1', 'C',],
-      ['A-1', 'B-1', 'D',],
-      ['A-1', 'B-2', 'C',],
-      ['A-1', 'B-2', 'D',],
-      ['A-1', 'C', 'D',],
-      ['A-2', 'B-1', 'C',],
-      ['A-2', 'B-1', 'D',],
-      ['A-3', 'B-1', 'C',],
-      ['A-3', 'B-1', 'D',],
-      ['A-2', 'C', 'D',],
-      ['A-1', 'B-1', 'C', 'D',],
-    ],
-    [4, 1, 1, 1] => [
-      ['A-1', 'B', 'C',],
-      ['A-1', 'B', 'D',],
-      ['A-1', 'C', 'D',],
-      ['A-2', 'B', 'C',],
-      ['A-2', 'B', 'D',],
-      ['A-2', 'C', 'D',],
-      ['A-3', 'B', 'C',],
-      ['A-3', 'B', 'D',],
-      ['A-3', 'C', 'D',],
-      ['A-4', 'B', 'C', 'D',],
-      ['A-1', 'A-2', 'A-3',],
-      ['A-1', 'A-2', 'A-4',],
-      ['A-1', 'A-3', 'A-4',],
-      ['A-2', 'A-3', 'A-4',],
-      ['A-1', 'A-2', 'A-3', 'A-4',],
-    ],
+       ['A-1', 'B', 'C', 'F',],
+       ['A-1', 'D', 'E',],
+       ['A-1', 'C', 'D', 'E',],
+       ['A-1', 'B', 'F',],
+       ['A-1', 'D', 'E', 'F',],
+       ['A-1', 'B', 'C',],
+       ['A-1', 'B', 'E', 'F',],
+       ['A-2', 'C', 'D',],
+       ['A-2', 'D', 'E',],
+       ['A-2', 'B', 'C', 'F',],
+       ['A-2', 'C', 'F',],
+       ['A-2', 'B', 'E', 'D',],
+       ['A-2', 'B', 'E',],
+       ['A-2', 'C', 'D', 'F',],
+     ],
+     [2, 2, 1, 1, 1] => [
+       ['C', 'D', 'E',],
+       ['C', 'A-1', 'B-1',],
+       ['C', 'A-1', 'B-2',],
+       ['C', 'A-2', 'B-1',],
+       ['C', 'A-2', 'B-2',],
+       ['D', 'A-1', 'B-1',],
+       ['D', 'A-1', 'B-2',],
+       ['D', 'A-2', 'B-1',],
+       ['D', 'A-2', 'B-2',],
+       ['E', 'A-1', 'B-1',],
+       ['E', 'A-1', 'B-2',],
+       ['E', 'A-2', 'B-1',],
+       ['E', 'A-2', 'B-2',],
+       ['A-1', 'B-1', 'C', 'D', 'E',],
+       ['A-2', 'B-2', 'C', 'D',],
+     ],
+     [3, 1, 1, 1, 1] => [
+       ['A-1', 'B', 'C',],
+       ['A-1', 'B', 'D',],
+       ['A-1', 'B', 'E',],
+       ['A-1', 'C', 'D',],
+       ['A-1', 'C', 'E',],
+       ['A-1', 'D', 'E',],
+       ['A-2', 'B', 'C',],
+       ['A-2', 'B', 'D',],
+       ['A-2', 'B', 'E',],
+       ['A-2', 'C', 'D',],
+       ['A-2', 'C', 'E',],
+       ['A-2', 'D', 'E',],
+       ['A-1', 'B', 'C', 'D', 'E',],
+     ],
+     [2, 2, 2, 1] => [
+       ['A-1', 'B-1', 'C-1',],
+       ['A-2', 'B-2', 'C-2', 'D',],
+       ['A-1', 'B-1', 'C-2',],
+       ['A-2', 'B-2', 'C-1', 'D',],
+       ['A-1', 'B-2', 'C-1',],
+       ['A-2', 'B-1', 'C-2', 'D',],
+       ['A-1', 'B-2', 'C-2',],
+       ['A-2', 'B-1', 'C-1', 'D',],
+       ['A-2', 'B-1', 'C-1',],
+       ['A-1', 'B-2', 'C-2', 'D',],
+       ['A-2', 'B-1', 'C-2',],
+       ['A-1', 'B-2', 'C-1', 'D',],
+       ['A-2', 'B-2', 'C-1',],
+       ['A-1', 'B-1', 'C-2', 'D',],
+     ],
+     [3, 2, 1, 1] => [
+       ['A-1', 'A-2', 'A-3',],
+       ['A-1', 'B-1', 'C',],
+       ['A-1', 'B-1', 'D',],
+       ['A-1', 'B-2', 'C',],
+       ['A-1', 'B-2', 'D',],
+       ['A-1', 'C', 'D',],
+       ['A-2', 'B-1', 'C',],
+       ['A-2', 'B-1', 'D',],
+       ['A-3', 'B-1', 'C',],
+       ['A-3', 'B-1', 'D',],
+       ['A-2', 'C', 'D',],
+       ['A-1', 'B-1', 'C', 'D',],
+     ],
+     [4, 1, 1, 1] => [
+       ['A-1', 'B', 'C',],
+       ['A-1', 'B', 'D',],
+       ['A-1', 'C', 'D',],
+       ['A-2', 'B', 'C',],
+       ['A-2', 'B', 'D',],
+       ['A-2', 'C', 'D',],
+       ['A-3', 'B', 'C',],
+       ['A-3', 'B', 'D',],
+       ['A-3', 'C', 'D',],
+       ['A-4', 'B', 'C', 'D',],
+       ['A-1', 'A-2', 'A-3',],
+       ['A-1', 'A-2', 'A-4',],
+       ['A-1', 'A-3', 'A-4',],
+       ['A-2', 'A-3', 'A-4',],
+       ['A-1', 'A-2', 'A-3', 'A-4',],
+     ],
 
-    # Made up recipe, just to reduce the timer
-    [3, 2, 2] => [
-      ['A-1', 'A-2', 'A-3',],
-      ['A-1', 'B-1', 'C-1',],
-      ['A-1', 'B-1', 'C-2',],
-      ['A-1', 'B-2', 'C-1',],
-      ['A-1', 'B-2', 'C-2',],
+     # Made up recipe, just to reduce the timer
+     [3, 2, 2] => [
+       ['A-1', 'A-2', 'A-3',],
+       ['A-1', 'B-1', 'C-1',],
+       ['A-1', 'B-1', 'C-2',],
+       ['A-1', 'B-2', 'C-1',],
+       ['A-1', 'B-2', 'C-2',],
 
-      ['A-2', 'B-1', 'C-1',],
-      ['A-2', 'B-1', 'C-2',],
-      ['A-2', 'B-2', 'C-1',],
-      ['A-2', 'B-2', 'C-2',],
-      
-    ],
-    [4, 2, 1] => [
-      ['A-1', 'B-1', 'C',],
-      ['A-1', 'B-2', 'C',],
-      ['A-2', 'B-1', 'C',],
-      ['A-2', 'B-2', 'C',],
-      ['A-3', 'B-1', 'C',],
-      ['A-3', 'B-2', 'C',],
-      ['A-4', 'B-1', 'C',],
-    ],
-    [3, 3, 1] => [
-      ['A-1', 'B-1', 'C',],
-      ['A-1', 'B-2', 'C',],
-      ['A-1', 'B-3', 'C',],
-      ['A-2', 'B-1', 'C',],
-      ['A-2', 'B-2', 'C',],
-      ['A-2', 'B-3', 'C',],
-      ['A-3', 'B-1', 'C',],
-    ],
-  }
+       ['A-2', 'B-1', 'C-1',],
+       ['A-2', 'B-1', 'C-2',],
+       ['A-2', 'B-2', 'C-1',],
+       ['A-2', 'B-2', 'C-2',],
+       
+     ],
+     [4, 2, 1] => [
+       ['A-1', 'B-1', 'C',],
+       ['A-1', 'B-2', 'C',],
+       ['A-2', 'B-1', 'C',],
+       ['A-2', 'B-2', 'C',],
+       ['A-3', 'B-1', 'C',],
+       ['A-3', 'B-2', 'C',],
+       ['A-4', 'B-1', 'C',],
+     ],
+     [3, 3, 1] => [
+       ['A-1', 'B-1', 'C',],
+       ['A-1', 'B-2', 'C',],
+       ['A-1', 'B-3', 'C',],
+       ['A-2', 'B-1', 'C',],
+       ['A-2', 'B-2', 'C',],
+       ['A-2', 'B-3', 'C',],
+       ['A-3', 'B-1', 'C',],
+     ],
+    }
 
 
   def recipe(recipe_key)
@@ -517,15 +581,8 @@ class SmallGemMineRecipes
     end
     return {
       :name => name,
-	:color => letter,
-	:used => 0,
+      :color => letter,
+      :used => 0,
     }
   end
 end
-
-
-
-
-
-
-

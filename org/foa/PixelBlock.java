@@ -8,22 +8,32 @@ import org.foa.robot.ARobot;
 public class PixelBlock extends ARobot {
     private BufferedImage m_bufferedImage;
     private Point m_origin;
+    private Rectangle m_rect;
+
     public PixelBlock(Rectangle rect) {
 	m_bufferedImage = createScreenCapture(rect);
 	m_origin = new Point( rect.x, rect.y);
+	m_rect = rect;
     }
 
     public PixelBlock(Point origin, BufferedImage img) {
 	m_bufferedImage = img;
 	m_origin = origin;
+	m_rect = new Rectangle(m_origin.x, m_origin.y, img.getWidth(), img.getHeight());
     }
 
-    public Point origin() {
-	return m_origin;
+    public Rectangle rect() {
+	return new Rectangle(m_rect);
     }
+    
+    public Point origin() {
+	return new Point(m_origin);
+    }
+
     public BufferedImage bufferedImage() {
 	return m_bufferedImage;
     }
+
     /**
      * Coordinates are image coords, not screen coords.
      */
@@ -80,10 +90,11 @@ public class PixelBlock extends ARobot {
     }
 
     public int getWidth() {
-	return m_bufferedImage.getWidth();
+	return m_rect.width;
     }
+
     public int getHeight() {
-	return m_bufferedImage.getHeight();
+	return m_rect.height;
     }
 
 }
