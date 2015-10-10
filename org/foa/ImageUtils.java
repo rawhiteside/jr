@@ -14,9 +14,40 @@ public class ImageUtils {
 	return globify(m.bufferedImage(), threshold);
     }
 
+    /**
+     * The scheme is this.  Each point gets put into a "glob" as a key
+     * a hash.  
+     *
+     * Adding a point to a glob: When we put one in, we put that point
+     * into the hash with a value of "1".  Then, we put all 8
+     * neighbors in with a value of "0".  (Unless that neighbor point
+     * is already there with a "1" value.)  This "neighbor" stuff is
+     * so we know that a point is adnacent to another.
+     *
+     * To find which glob the next point belongs to, look into each of
+     * the existing globs, to see if that point is already there.
+     * Here are the possibilities:
+     *
+     * - Note: Point is NOT in any existing glob with value 1. Each
+     * point only gets added once.
+     *
+     * - Point is exactly one existing as a neighbor (value = 0): 
+     * Put the new point into that glob as outlined above.
+     *
+     * - Point is in multiple globs:  Put the point into one of the
+     * globs, and merge all of the other matching ones together.
+     *
+     * - Point is in no existing glob.  Create a new, empty glob, and
+     * add the point as outlined above.
+     *
+     * At the end, remove all the stoff about neighbors. It was only
+     * there for locating the contiguous regions.
+     *
+     */
     public static HashMap[] globify(BufferedImage bi, int threshold) {
 	ArrayList<HashMap> globs = new ArrayList<HashMap>();
 
+	// Do something with each point that is a "hit" (non-zero pixel value).
 	for(int y = 0; y < bi.getHeight() - 1; y++) {
 	    for(int x = 0; x < bi.getWidth() - 1; x++)  {
 		Point p = new Point(x, y);
@@ -49,6 +80,22 @@ public class ImageUtils {
 			for(HashMap hm : removals) { globs.remove(hm); }
 		    }
 		}
+	    }
+	}
+	// Now, remove all of the keys with value = 0.
+	for(HashMap glob : globs) {
+	    ArrayList removeThese = new ArrayList();
+	    Iterator itr = glob.keySet().iterator();
+	    while(itr.hasNext()) {
+		Point p = (Point) itr.next();
+		if (glob.get(p).equals(NEIGH_VAL)) {
+		    removeThese.add(p);
+		}
+	    }
+	    itr = removeThese.iterator();
+	    while (itr.hasNext()) {
+		Point p = (Point) itr.next();
+		glob.remove(p);
 	    }
 	}
 	return globs.toArray(new HashMap[globs.size()]);
