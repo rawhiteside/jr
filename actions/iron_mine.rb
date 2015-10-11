@@ -24,6 +24,7 @@ class IronMine < Action
   end
   
   def act
+    @debug = @vals['debug'] == 'y'
     mine_pt = point_from_hash(@vals, 'mine')
     field_rect = Rectangle.new(@vals['area.ul.x'].to_i, @vals['area.ul.y'].to_i,
 			       @vals['area.lr.x'].to_i - @vals['area.ul.x'].to_i,
@@ -44,12 +45,16 @@ class IronMine < Action
     return unless @stones && @stones.size == 7
 
     @colors = @stones.collect{|s| s.color(@stones_pb)}
-    # print "Colors are: " 
-    # p @colors
+    if @debug
+      print "Colors are: " 
+      p @colors
+    end
 
     @gems = @stones.collect{|s| s.gem_shape(@stones_pb)}
-    # print "gems are: " 
-    # p @gems
+    if @debug
+      print "gems are: " 
+      p @gems
+    end
     find_recipes
   end
 
