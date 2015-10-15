@@ -62,7 +62,10 @@ public class WindowGeom extends ARobot {
 	x += 4;
 	PixelBlock pb = new PixelBlock(edgeRect);
 	// Search up for the corner.
-	while(pb.pixelFromScreen(x, y) != 0) { y -= 1; }
+	while(pb.pixelFromScreen(x, y) != 0) {
+	    y -= 1;
+	    if (y < 0) { return null; }
+	}
 	// Skip the little gap.
 	y -= 3;
 	x -=4;
@@ -170,6 +173,7 @@ public class WindowGeom extends ARobot {
 
     private static Rectangle rectFromLeftEdge(int x, int y) {
 	Point origin = findOrigin(new Point(x, y));
+	if (origin == null) {return null;}
 	int width = findWidth(origin);
 	int height = findHeight(origin.x, origin.y);
 	return new Rectangle(origin.x, origin.y, width, height);
