@@ -10,7 +10,7 @@ class Firepits < Action
     gadgets = [
       {:type => :grid, :name => 'g', :label => 'Show me the grid of firepits.'},
       {:type => :combo, :name => 'task', :label => 'What should I do?',
-       :vals => ['Load', 'Burn', 'Load and Burn']
+       :vals => ['Load', 'Burn (light and tend)', 'Light', 'Tend']
       }
     ]
 
@@ -51,11 +51,19 @@ class Firepits < Action
 
   def act
     task = @vals['task']
-    load_firepits if task =~ /Load/
+    load_firepits if task == 'Load'
     burn_firepits if task =~ /Burn/
+    light_firepits if task == 'Light'
+    tend_firepits if task == 'Tend'
   end
 
+
   def burn_firepits
+    light_firepits
+    tend_firepits
+  end
+  
+  def light_firepits
 
     WindowGeom.wait_for_chat_minimized
 
@@ -77,8 +85,11 @@ class Firepits < Action
         end
       end
       w.unpin
-    end    
+    end
+  end
 
+
+  def tend_firepits
     # Watch the burning pits and stoke as appropriate
     GridHelper.new(@vals, 'g').each_point do |p|
 
