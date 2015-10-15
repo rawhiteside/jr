@@ -235,6 +235,7 @@ class SandMine < AbstractMine
 
     if recipe
       run_recipe(recipe, by_wiki_name, delay)
+      puts "--- Recipe complete"
       log_result('Success.')
     else
       msg = 'No recipe found for: ' + recipe_key.inspect
@@ -250,6 +251,9 @@ class SandMine < AbstractMine
   def run_recipe(recipes, stones_by_name, delay)
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
+      puts "----- workload."
+      # Fixes issue with the very first orestone in a workload?
+      sleep_sec(0.5) 
     end
   end
 
@@ -261,13 +265,42 @@ class SandMine < AbstractMine
       
       key = 'A'
       key = 'S' if i == (recipe.size - 1)
-      break unless send_string_at(stone.x, stone.y, key, delay)
+
+      send_string_at(stone.x, stone.y, key, delay)
 
       # If this was the first stone, find a resulting blue pixel
       # from the highlight circle.
-      blue_point = find_highlight_point(stone) if i == 0
-
+      if i == 0
+        blue_point = find_highlight_point(stone)
+        # First stone funny? Visually, it looks like this somethines
+        # doesn't work.
+        if blue_point.nil?
+          puts "No highlight.  Waiting..."
+          sleep_sec 0.5
+          blue_point = find_highlight_point(stone)
+          if blue_point
+            puts "It's there now!"
+          else
+            puts "waiting didn't help.  Sending again."
+            send_string_at(stone.x, stone.y, key, delay)
+            blue_point = find_highlight_point(stone)
+            if blue_point.nil?
+              puts "STILL No highlight.  Sending again!" 
+              send_string_at(stone.x, stone.y, key, delay)
+              blue_point = find_highlight_point(stone)
+              if blue_point
+                puts "Yay!  Got it that time."
+              else
+                puts "Never found it.  Going with nil"
+              end
+            else
+              puts "Found it."
+            end
+          end
+        end
+      end
     end
+
     wait_for_highlight_gone(blue_point)
   end
 
@@ -305,8 +338,8 @@ class SandMine < AbstractMine
       end
     end
 
-    puts "didn't find highlights in this list:"
-    colors.each { |c| puts c.toString() }
+    puts "didn't find highlights "
+
     nil
 
   end
@@ -317,14 +350,8 @@ class SandMine < AbstractMine
     send_string(str)
     sleep_sec delay
     if win = PopupWindow.find
-      log_strange_window(win)
-      win.dismiss
-      sleep_sec(0.1)
       raise BadWorkloadException.new(win)
     end
-
-    true
-    
   end
 
   def log_strange_window(w)
