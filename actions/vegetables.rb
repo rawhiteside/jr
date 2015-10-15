@@ -18,12 +18,10 @@ class Onions < Action
     "Carrots/Osiris's Orange/(1)" => {:water => 1,
                                       :build_incr_fac => 2,
                                       :right_build_init => [:L,]*2
-#                                      :num_right => 4,
                                      },
     "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
                                         :build_incr_fac => 2,
                                         :right_build_init => [:L,]*2
-#                                        :num_right => 4,
                                        },
 
 
@@ -34,8 +32,10 @@ class Onions < Action
 
 
     "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3,
+#                                            :build_incr_fac => 3,
                                            },
     "Leeks/Hapi's Harvest/(1)" => {:water => 1, 
+#                                   :build_incr_fac => 2,
                                   },
 
     "Onions/Amun's Bounty/(1)" => {:water => 1,
@@ -198,13 +198,16 @@ class Onions < Action
       target_secs = water_times[index]
       delta = (Time.new - plant_time)
       delay = target_secs - delta
-      start = Time.new
       sleep_sec(delay)
-      got = Time.new - start
       # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
       with_robot_lock do
-        w.refresh
-        point = w.dialogCoordsFor('Water')
+        point = nil
+        5.times do
+          w.refresh
+          point = w.dialogCoordsFor('Water')
+          break if point
+          sleep 0.02
+        end
         @vegi_data[:water].times { w.dialogClick(point, nil, 0.0) } if point
       end
     end

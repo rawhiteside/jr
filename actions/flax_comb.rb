@@ -13,8 +13,8 @@ class FlaxComb < Action
     # Nil if nothing to click on.  The comb crashed.
     rv = nil
     with_robot_lock do
-      w.refresh
       rv = w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
+      w.refresh
     end
     rv
   end
@@ -30,6 +30,7 @@ class FlaxComb < Action
     loop do
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
+      w.refresh
       loop { break unless process(w) }
       p = PopupWindow.find
       p.dismiss if p

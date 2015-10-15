@@ -29,15 +29,18 @@ class Firepits < Action
       w.pin
       while w.click_on('Add')
 	HowMuch.new(:max)
-	w.refresh
+        w.refresh
+        sleep_sec(0.1)
       end
       while w.click_on('Grill')
 	HowMuch.new(:max)
-	w.refresh
+        w.refresh
+        sleep_sec(0.1)
       end
-      w.refresh while w.click_on('Place')
+      w.refresh while w.click_on('Place', 'tc')
 
       w.refresh
+      sleep_sec(0.1)
       if w.click_on('Take./Limestone')
         HowMuch.new(4)
       end
@@ -62,8 +65,16 @@ class Firepits < Action
       w.pin
       while w.click_on('Strike')
         w.refresh
-        w.refresh if w.click_on('Remove Tinder')
-        w.refresh if w.click_on('Place Tinder')
+        sleep_sec(0.1)
+
+        if w.click_on('Remove Tinder') 
+          w.refresh
+          sleep_sec(0.1)
+        end
+        if w.click_on('Place Tinder')
+          w.refresh
+          sleep_sec(0.1)
+        end
       end
       w.unpin
     end    

@@ -55,6 +55,11 @@ class IronMine < Action
       print "gems are: " 
       p @gems
     end
+
+    if @debug
+      @stones.each {|s| mm(@stones_pb.to_screen(s.center)); sleep_sec(1.0) }
+    end
+    
     find_recipes
   end
 
@@ -445,12 +450,8 @@ class IronOreStone
     return :black
   end
 
-  DELTA = 50
   def color_symbol(color)
-    r, g, b = color.get_red, color.get_green, color.get_blue
-    return :red if (r-g) > 50 && (r-b) > 50
-    return :magenta if (r-g) > 50 && (b-g) > 50
-    nil
+    Clr.color_symbol(color)
   end
 
   # Try to add the provided PxlRun to the stone.
