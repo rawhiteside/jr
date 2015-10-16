@@ -120,7 +120,7 @@ class Walker < ARobot
       coords.each do|xy|
 	walk_to(xy)
 	if block_given?
-	  return :stop if yield(xy[2])  == :stop 
+	  return :stop if yield  == :stop 
 	end
       end
     end
@@ -144,7 +144,7 @@ class Walker < ARobot
 	end
 	walk_to(xy)
 	if block_given?
-	  return :stop if yield(xy[2]) == :stop 
+	  return :stop if yield == :stop 
 	end
       end
       coords.reverse!

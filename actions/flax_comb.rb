@@ -14,7 +14,9 @@ class FlaxComb < Action
     rv = nil
     with_robot_lock do
       rv = w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
+      sleep_sec(0.1)
       w.refresh
+      sleep_sec(0.1)
     end
     rv
   end

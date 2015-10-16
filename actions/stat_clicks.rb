@@ -116,7 +116,7 @@ class StrengthClick < Action
     xy = [@vals['p.x'].to_i, @vals['p.y'].to_i]
     loop do
       stat_wait('Str')
-      click_at(*xy)
+      rclick_at(*xy)
       sleep_sec 1
     end
   end

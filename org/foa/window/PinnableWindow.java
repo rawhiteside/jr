@@ -57,6 +57,15 @@ public class PinnableWindow extends AWindow {
 	super.dialogClick(p, refreshLoc, delay);
 	invalidateHeight();
     }
+    public AWindow clickOn(String menuPath, String refreshLoc) {
+	AWindow rv = super.clickOn(menuPath, refreshLoc);
+	invalidateHeight();
+	return rv;
+    }
+    public void refresh(String where) {
+	super.refresh(where);
+	invalidateHeight();
+    }	
     
     public boolean getPinned() {return m_pinned;}
 
