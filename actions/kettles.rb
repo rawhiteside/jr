@@ -91,6 +91,7 @@ class KettleWindow < PinnableWindow
   def click_button(which)
     xy = @locs[which.downcase]
     dialog_click(Point.new(xy[0], xy[1]), 'tc')
+    sleep_sec(0.1)
   end
 
   # Area holding menu text
@@ -134,6 +135,11 @@ class Potash < KettleAction
     super('Potash')
   end
 
+  def get_gadgets
+    super << {:type => :combo, :label => 'Do what?', :name => 'action' ,
+              :vals => ['Start and tend', 'Tend', ]}
+  end
+
   # The useful numbers in the data area.
   # vals[:water] and vals[:wood]
   def kettle_data(w)
@@ -168,44 +174,61 @@ class Potash < KettleAction
   def act
 
     repeat = @user_vals['repeat'].to_i
+    task = @user_vals['action']
 
     repeat.times do 
       grid = GridHelper.new(@user_vals, 'g')
 
-      # Start them all cooking.
       done = {}
-      grid.each_point do |p|
-        sleep_sec(1)
-        start_potash(p)
-        done[p] = false
+      grid.each_point { |p| done[p] = false }
+
+      # Start them all cooking.
+      if task =~ /Start/
+        grid.each_point do |p|
+          sleep_sec(1)
+          start_potash(p)
+          done[p] = false
+        end
       end
 
+      # Tend until they're all done
       while done.values.include?(false)
         grid.each_point do |p|
-          w = pinned_kettle_window(p)
-          done[p] = tend_potash(w) unless done[p]
-          w.unpin
+          done[p] = tend_potash(p) unless done[p]
           sleep 1
         end
       end
+
+      break unless task =~ /Start/
+
       # fill jugs
       rclick_at(224, 60)
       HowMuch.new(:max)
     end
   end
 
-  # Look at the potash window and decide what, if anything, needs to
-  # be done. Return a true if the potash is complete, false otherwise.
-  def tend_potash(w)
-    v = kettle_data(w)
+  # Look at the potash kettle at the point and decide what, if
+  # anything, needs to be done. Return a true if the potash is
+  # complete, false otherwise.
+  def tend_potash(p)
+    w = pinned_kettle_window(p)
+    v = {}
+    5.times do
+      v = kettle_data(w)
+      break if (v[:wood] && v[:water]) || v[:done]
+      w.refresh
+      sleep_sec (0.1)
+    end
     
     if v[:done]
       w.click_button('take')
+      w.unpin
       return true
     end
     if v[:wood] < 5 && v[:wood] < v[:water]
       w.click_on('Stoke')
     end
+    w.unpin
     return false
   end
   
