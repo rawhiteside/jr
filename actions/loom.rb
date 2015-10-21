@@ -5,25 +5,19 @@ class Weave < Action
     super(n, 'Buildings')
   end
 
-  def get_loom_window(parent)
+  def setup(parent)
     comps = [
       {:type => :point, :name => 'loom', :label => 'Pinned loom.'},
     ]
-    vals = UserIO.prompt(parent, 'Loom', 'Loom', comps)
-    return unless vals
-
-    PinnableWindow.from_point(point_from_hash(vals, 'loom'))
-  end
-
-  def setup(parent)
-    @loom = get_loom_window(parent)
+    @vals = UserIO.prompt(parent, 'Loom', 'Loom', comps)
   end
 
   def act
+    loom = PinnableWindow.from_point(point_from_hash(@vals, 'loom'))
     loop do
       stat_wait('End')
-      @loom.refresh
-      @loom.click_on(weave_what)
+      loom.refresh
+      loom.click_on(weave_what)
       sleep 0.5
     end
   end
@@ -41,12 +35,13 @@ class Linen < Weave
 
 
   def act
+    loom = PinnableWindow.from_point(point_from_hash(@vals, 'loom'))
     loop do
       stat_wait('End')
-      @loom.refresh
-      @loom.click_on(weave_what)
+      loom.refresh
+      loom.click_on(weave_what)
       sleep_sec(0.5)
-      if @loom.click_on('Load the Loom with Thread')
+      if loom.click_on('Load the Loom with Thread')
 	HowMuch.new(:max)
       end
     end

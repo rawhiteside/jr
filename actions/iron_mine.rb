@@ -1,5 +1,6 @@
 require 'action'
 require 'convexhull'
+require 'set'
 require 'm_choose_n'
 
 import org.foa.ImageUtils
@@ -37,35 +38,47 @@ class IronMine < Action
 
   def mine_once(win, rect)
 
-    @stones_pb, xor_pb = get_minefield_changes(win, rect)
-    @stones = find_stones(xor_pb, @stones_pb)
-    return unless @stones && @stones.size >= 7
+    # returns the image of the ore field, and that image XOR-ed with
+    # the empty field
+    stones_image, xor_image = get_minefield_changes(win, rect)
+    edges = ImageUtils.edges(stones_image)
+    xor_edges = ImageUtils.edges(xor_image)
+    UserIO.show_image(xor_image)
+    UserIO.show_image(edges)
+    UserIO.show_image(xor_edges)
+    return
+    
+    stones = find_stones(stones_image, xor_image).select {|s| s.size > 100}
+    return unless stones && stones.size >= 7
 
-    @stones = @stones.sort {|a,b| b.size <=> a.size}[0,7].sort{|a,b| a.ymax <=> b.ymax}
-    return unless @stones && @stones.size == 7
+    stones = stones.sort {|a,b| b.size <=> a.size}[0,7].sort{|a,b| a.max_point.y <=> b.max_point.y}
 
-    @colors = @stones.collect{|s| s.color(@stones_pb)}
     if @debug
-      print "Colors are: " 
-      p @colors
+      mouse_over_stones(stones)
     end
 
-    @gems = @stones.collect{|s| s.gem_shape(@stones_pb)}
-    if @debug
-      print "gems are: " 
-      p @gems
-    end
+    stones.each {|s| s.set_properties}
 
     if @debug
-      @stones.each {|s| mm(@stones_pb.to_screen(s.center)); sleep_sec(1.0) }
+      stones.each {|s| puts s}
     end
     
-    find_recipes
+    find_recipes_and_mine(stones)
   end
 
-  def mineable?(arr)
-    (all_same(arr, @gems) || all_different(arr, @gems)) && 
-      (all_same(arr, @colors) || all_different(arr, @colors))
+  def mouse_over_stones(stones)
+    stones.each do |s|
+      mm(s.x, s.y)
+      sleep_sec 1.5
+    end
+  end
+
+  def mineable?(stones, arr)
+    gems  = stones.collect {|s| s.gem_type}
+    colors  = stones.collect {|s| s.color_symbol}
+
+    (all_same(arr, gems) || all_different(arr, gems)) && 
+      (all_same(arr, colors) || all_different(arr, colors))
   end
 
   def all_different(arr, attrs)
@@ -83,29 +96,35 @@ class IronMine < Action
     return true
   end
 
-  def actually_mine(arr)
+  def actually_mine(stones, arr)
     delay = 0.2
+    highlight_blue_point = nil
     arr.each_index do |i|
-      mm(@stones_pb.to_screen(@stones[arr[i]].center))
+      mm(stones[arr[i]].x, stones[arr[i]].y)
       sleep_sec(delay)
       str = (i == (arr.size - 1)) ? 's' : 'a'
       send_string(str)
       sleep_sec(delay)
+      if i == 0
+        sleep_sec(0.1)
+        highlight_blue_point = find_highlight_point(stones[arr[i]])
+      end
     end
+    wait_for_highlight_gone(highlight_blue_point)
   end
 
   # Provide a list of indices.  Mine it if it's mine-able.
-  def maybe_mine(arr)
-    actually_mine(arr) if mineable?(arr)
+  def maybe_mine(stones, arr)
+    actually_mine(stones, arr) if mineable?(stones, arr)
     dismiss_popup_windows
   end
 
-  def find_recipes
+  def find_recipes_and_mine(stones)
     chooser = MChooseN.new
-    chooser.each(7, 6) {|arr| maybe_mine(arr)}
-    chooser.each(7, 5) {|arr| maybe_mine(arr)}
-    chooser.each(7, 4) {|arr| maybe_mine(arr)}
-    chooser.each(7, 3) {|arr| maybe_mine(arr)}
+    chooser.each(7, 6) {|arr| maybe_mine(stones, arr)}
+    chooser.each(7, 5) {|arr| maybe_mine(stones, arr)}
+    chooser.each(7, 4) {|arr| maybe_mine(stones, arr)}
+    chooser.each(7, 3) {|arr| maybe_mine(stones, arr)}
   end
 
   def dismiss_popup_windows
@@ -132,7 +151,7 @@ class IronMine < Action
     win.click_on('Stop')
     sleep_sec 3
     dismiss_popup_windows
-    empty = PixelBlock.new(rect)
+    empty_img = PixelBlock.new(rect)
 
     # Now, mine, and get another shot with the ore stones.
     win.refresh
@@ -142,390 +161,219 @@ class IronMine < Action
     end
     win.click_on('Work this Mine')
     sleep_sec 5
-    stones = PixelBlock.new(rect)
+    stones_img = PixelBlock.new(rect)
 
     # Compute a new image that's the xor of the two images.
-    return stones, ImageUtils.xor(stones, empty)
+    return stones_img, ImageUtils.xor(stones_img, empty_img)
   end
-
-  # This magic number obtained just by looking at stuff with color cop.
-  BRIGHTNESS_CUTOFF = 10
 
   # Given the xor image of the field, figure out where the stones are.
-  # This probably belongs in the fctory itself..
-  def find_stones(pb_xor, pb_stones)
-    # the factory consumes PxlRuns
-    fac = IronOreStoneFactory.new(pb_stones)
-    pb = ImageUtils.brightness(pb_xor)
-    prun = nil
-    pb.getHeight.times do |y|
-      fac.next_row(y)
-      prun = nil
-      pb.getWidth.times do |x|
-	pixel = pb.pixel(x, y)
-	if pixel > BRIGHTNESS_CUTOFF
-	  if prun
-	    prun.last = x
-	  else
-	    prun = PxlRun.new(y, x, x)
-	  end
-	else
-	  if prun
-	    fac.add_pxl_run(prun)
-	    prun = nil
-	  end
-	end
-      end
-      # Perhaps there was a dangling run constructed
-      fac.add_pxl_run(prun) if prun
+  # a "glob" is just an array of Points corresponding to the orestone.
+  # Return value is an array of these globs.
+  def find_stones(stones_image, xor_image)
+    brightness = ImageUtils.brightness(xor_image)
+    globs = get_globs(brightness, 1)
+
+    stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points)}
+  end
+
+  # XXX DUP of method in sandmine. 
+  def get_globs(brightness, threshold)
+    # +got+ is an array of HashMaps (Java) in which keys are points.  values are just 1's.
+    got = ImageUtils.globify(brightness, threshold)
+    # Convert from java land to ruby land.
+    globs = []
+    got.each do |hash_map|
+      points = []
+      hash_map.key_set.each {|k| points << k}
+      globs << points
     end
 
-    # Flush any trailing "stones" from the bottom of the bitmap.
-    fac.next_row(pb.getHeight)
-    fac.next_row(pb.getHeight + 1)
+    # This is an array of arrays of points.
+    globs
 
-    return fac.stones
   end
 
-  
-
-end
-
-# Holds groups of growing IronOreStones.  The add_pxl_run method
-# accepts a PxlRun, and searches to find the IronOreStones that this
-# fragment overlaps, and adds it.  This may result in stones being
-# merged.
-class IronOreStoneFactory
-  def initialize(pb_stones)
-    @pb_stones = pb_stones
-    # Stones that may still grow with the addition of new runs.
-    @live_list = []
-
-    # Stones that can no longer grow, as they are too high in the
-    # image for new runs to contribute.
-    @dead_list = []
-  end
-
-  # Construct and return the list of 6 stones
-  def stones
-    @live_list + @dead_list
-  end
-  
-  # Starting on row y.  Can move some stones from the live list onto the dead
-  # list, perhaps.
-  def next_row(y)
-    live = []
-    @live_list.each do |stone|
-      if y > (stone.ymax + 1)
-	@dead_list << stone if stone.size > 50
-      else
-	live << stone
-      end
+  def wait_for_highlight_gone(p)
+    if p.nil?
+      sleep 3
+      return
     end
-    @live_list = live
-  end
-
-  def add_pxl_run(pr)
-    first_found = nil
-    merged = []
-    @live_list.each do |stone|
-      if stone.added?(pr)
-	if first_found
-	  first_found.merge(stone)
-	  merged << stone
-	else
-	  first_found = stone
-	end
-      end
+    start = Time.new
+    until !highlight_blue?(getColor(p))
+      sleep_sec 0.5
+      break if (Time.new - start) > 6
     end
-    # If it didn't fit into any, then create a new stone.
-    @live_list << IronOreStone.new(pr, @pb_stones) unless first_found
 
-    # Now, remove all the stones that got merged away.
-    merged.each {|stone| @live_list.delete(stone)}
-  end
-end
-
-class IronOreStone
-  attr_reader :pxl_run_hash, :ymax
-
-  def initialize(pr, pb_stones)
-    # This will hold y => [pr, pr, ...]
-    # That is, for a given y value, the list of pxlruns
-    @pxl_run_hash = {pr.y => [pr]}
-    @ymax = pr.y
-    @pb_stones = pb_stones
-    @convex_hull = nil
-    @center = nil
-    @size = nil
   end
 
-  # return a Point for the center of the stone.
-  def center
-    @center ||= compute_center
-  end
-
-  def compute_center
-    # Find the central y value
-    keys = @pxl_run_hash.keys
-    ymin = keys.min
-    ymax = keys.max
-    ycenter = (ymin + ymax)/2
-    # Now, find the center of the largest run
-    row_runs = @pxl_run_hash[ycenter]
-    xcenter = 0
-    largest = 0
-    row_runs.each do |pr|
-      if (pr.last - pr.first) > largest
-	largest = pr.last - pr.first
-	xcenter = (pr.last + pr.first)/2
-      end
-
-      return Point.new(xcenter, ycenter)
-    end
-  end
-
-  # Do the two provided pxlruns overlap?
-  # We assume, without checking, that the two are in adjacent rows.
-  def overlaps?(pr1, pr2)
-    # x1 first is within the x2 range.
-    return true if pr1.first >= pr2.first && pr1.first <= pr2.last
-
-    # x1 last is within the x2 range.
-    return true if  pr1.last >= pr2.first && pr1.last <= pr2.last
-
-    # The final case is that pr2 is contained entirely within
-    # pr2.  Here's the check for that case.
-    return true if pr2.first >= pr1.first && pr2.first <= pr1.last
-
-    return false
-  end
-
-  # Figure out the gem shape.
-  # We do this by looking at the top of the stone.
-  GEM_SIZE = 30
-  def gem_shape(pb)
-    robot = ARobot.sharedInstance
-    return :wart if wart?
-    return spike_or_finger
-  end
-
-  def spike_or_finger
-    # Search below the highest point.
-    ymin = @pxl_run_hash.keys.min
-    # Just pick the first pr at the min y. There must be at least one.
-    pr_ref = @pxl_run_hash[ymin][0]
-    # find the center of this run.
-    xcenter = (pr_ref.first + pr_ref.last) / 2
-
-    # Count the dark pixels in a NxN surround of each point
-    scansize = 3
-    count = 0
-    ymin.upto(ymin + scansize) do |y|
-      (-scansize).upto(scansize) do |xoff|
-	x = xcenter + xoff
-	count+= 1 if contained?(x, y)
-      end
-    end
-    # XXX puts "count = #{count}"
-    # Another experimentally determined magic number.
-    return count <= 12 ? :spike : :finger
-  end
-
-  # Is the provided pixel contained in the run lists?
-  def contained?(x, y)
-    arr = @pxl_run_hash[y]
-    return false unless arr
-    arr.each do |pr|
-      return true if x >= pr.first && x <= pr.last
-    end
-    return false
-  end
-
-  # We're going to look for dark pixels around the vertices of the
-  # convex hull However, if they're too near to each other, we'll
-  # double count.  So, build the list of points that's at least 7
-  # pixels apart.
-  def probe_points
-    # Get the hull points. 
-    # remove first and last points
-    pts = convex_hull.dup
-    pts.shift
-    pts.pop
-
-    probes = [pts[0]]
-    1.upto(pts.size - 1) do |i|
-      deltax = pts[i].x - pts[i-1].x
-      deltay = pts[i].y - pts[i-1].y
-      if (deltax * deltax + deltay * deltay) > 49
-	probes << pts[i]
-      end
-    end
+  def highlight_blue?(color)
+    r, g, b = color.red, color.green, color.blue
     
-    probes
+    return b > 100 && (b - g) < 20 && (b - r) > 30
   end
 
-  # Scheme 3 for wart detection.
-  def wart?
-    ymin = @pxl_run_hash.keys.min
-
-    filled = 0
-    # Count the number of mine pixels in the GEM_SIZE region.
-    ymin.upto(ymin + GEM_SIZE) do |y|
-      arr = @pxl_run_hash[y]
-      if arr
-	filled += arr.collect{|pr| pr.last - pr.first + 1}.inject{|sum, n| sum + n}
+  def find_highlight_point(stone)
+    y = stone.centroid.y
+    x = stone.centroid.x
+    colors = []
+    stone.rectangle.width.times do |offset|
+      # Examine only points NOT on the stone.
+      local_point = Point.new(x + offset, y)
+      if !stone.points.include?(local_point)
+        point = stone.to_screen(local_point)
+        color = getColor(point)
+        colors << color
+        return point if highlight_blue?(color)
       end
     end
-    # Now, compute the area of the convex hull, which also
-    # uses GEM_SIZE rows.
-    area = convex_hull_area
-    ratio = filled.to_f/area.to_f
-    # XXX puts "wart: #{area} / #{filled} ==> #{ratio}"
-    # An experimental magic number
-    return true if ratio > 0.9
+
+    puts "didn't find highlights "
+
     nil
+
   end
-
-  def convex_hull_area
-    @convex_hull_area ||= compute_convex_hull_area
-  end
-
-  def compute_convex_hull_area
-    polygon_area(convex_hull)
-  end
-
-  def polygon_area(pts)
-    # Duplicate the first pint at the end.
-    pts = pts.dup
-    pts << pts[0]
-    # 
-    area = 0.0
-    0.upto(pts.size - 2) do |i|
-      area += (pts[i].x*pts[i+1].y - pts[i+1].x*pts[i].y)
-    end
-    (area/2.0).abs
-  end
-
-  def convex_hull
-    @convex_hull ||= compute_convex_hull
-  end
-
-  def compute_convex_hull
-    # First, build the list of points holding the max and min x values
-    # on each scanline.
-    # Only the top GEM_SIZE scanlines
-    ymin = @pxl_run_hash.keys.min
-    pts = []
-    ymin.upto(ymin + GEM_SIZE) do |y|
-      arr = @pxl_run_hash[y]
-      if arr
-	minx = arr.collect{|pr| pr.first}.min
-	maxx = arr.collect{|pr| pr.last}.max
-	pts << Point.new(minx, y)
-	pts << Point.new(maxx, y)
-      end
-    end
-
-    # OK, now compute the convex hull of that set.
-    ConvexHull.calculate(pts)
-  end
-
-
-  # Figure out the color.  This only really sorks for our specific mine.
-  # The three colors in that mine are: red, black, and magenta.
-  # The base is yellow, which we don't look for.
-  # Give the original pixel block of the ore field, so we can look at its pixels.
-  def color(pb)
-    # Just iterate over al the pixels until we find a color.
-    # If none found, then it's black
-    @pxl_run_hash.each do |y, arr|
-      arr.each do |pixel_run|
-	pixel_run.first.upto(pixel_run.last) do |x|
-	  c = color_symbol(pb.color(x, y))
-	  return c if c
-	end
-      end
-    end
-    return :black
-  end
-
-  def color_symbol(color)
-    Clr.color_symbol(color)
-  end
-
-  # Try to add the provided PxlRun to the stone.
-  # See if it overlaps with anything in the previous row (pr.y - 1)
-  def added?(pr)
-    # We search the previous row (pr.y - 1)
-    pxlruns = @pxl_run_hash[pr.y - 1]
-    return false unless pxlruns && pxlruns.size > 0
-    pxlruns.each do |pxlrun|
-      if overlaps?(pr, pxlrun)
-	current_y  = @pxl_run_hash[pr.y]
-	if current_y
-	  current_y << pr
-	else
-	  @pxl_run_hash[pr.y] = [pr]
-	end
-	@ymax = pr.y
-	return true
-      end
-    end
-    return false
-  end
-
-  # Need to cache/maintain this.
-  # Pixel count
-  def size
-    @size ||= compute_size
-  end
-
-  def compute_size
-    s = 0
-    @pxl_run_hash.values.each do |prr|
-      prr.each {|pr| s += pr.length}
-    end
-    return s
-  end
-
-  # Copy pxlruns from the other stone into us.
-  def merge(other)
-    other.pxl_run_hash.each do |y, row|
-      my_row = @pxl_run_hash[y]
-      if my_row
-	merge_row(my_row, row)
-      else
-	@pxl_run_hash[y] = row
-      end
-    end
-  end
-
-  def merge_row(mine, his)
-    his.each do |pr|
-      mine << pr unless mine.include?(pr)
-    end
-  end
-
 end
 
-class PxlRun
-  public
-  attr_accessor :y, :first, :last
-  def initialize(y, first, last)
-    @y = y
-    @first = first
-    @last = last
+# XXX DUP of class in sandmine.
+class IronOreStone
+  attr_accessor :points, :min_point, :max_point, :centroid
+  attr_accessor :color_symbol, :gem_type
+
+  def initialize(image, brightness, points)
+    @image = image
+    @brightness = brightness
+    @points = points
+    set_points
   end
 
-  # How many pixels in here?
-  def length
-    @last - @first + 1
+  def set_properties
+    set_color
+    set_gem
+  end
+  
+  # Just look at the stone points and pick the first color.
+  MINE_COLORS = [:red, :magenta]
+  def set_color
+    @points.each do |p|
+      c = Clr.color_symbol(@image.color(p))
+      if MINE_COLORS.include?(c)
+        @color_symbol = c
+        return
+      end
+    end
+    @color_symbol = :black
+  end
+    
+  def set_gem
+    # Put the points in the top half of the stone (where the gems are)
+    # into a Set.  Set for fast query.
+    cutoff = (@max_point.y - @min_point.y)/2 + @min_point.y
+    set = Set.new(@points.select {|p| p.y < cutoff})
+
+    dist = 3
+    ratio = compute_ratio(set, 3)
+    @ratio2 = compute_ratio(set, 2)
+    @ratio4 = compute_ratio(set, 4)
+
+
+    if ratio > 4.0
+      @gem_type = :wart
+    elsif ratio > 2.7
+      @gem_type = :finger
+    else
+      @gem_type = :spike
+    end
+    @ratio3 = ratio
+    
   end
 
-  # Is this equal to another one?
-  def ==(other)
-    @y == other.y && @first == other.first && @last == other.last
+  def compute_ratio(set, dist)
+    
+    # Now, find the set of points without a right neighbor.
+    right_holes = set.to_a.delete_if {|p| set.include?(Point.new(p.x + 1, p.y))}
+    # Now.  The points in +right_holes+ have a hole to their right.
+    # We want to know something about how far to the left the next
+    # hole is.  Count the number of points in which the hole is within
+    # the "magic number" +dist+
+    right_count = count_points_with_nearby_hole(set, right_holes, [-1, 0], dist)
+
+    # Now, do the same thing with up and down instead of right and left.
+    up_holes = set.to_a.delete_if {|p| set.include?(Point.new(p.x, p.y - 1))}
+    up_count = count_points_with_nearby_hole(set, right_holes, [0, 1], dist)
+
+    # puts "right/left: #{right_holes.size}, #{right_count}"
+    # puts "up/down: #{up_holes.size}, #{up_count}"
+    # puts "total: #{right_holes.size + up_holes.size}, #{right_count + up_count}"
+    # puts "Ratio: #{(right_holes.size + up_holes.size).to_f/(right_count + up_count).to_f}"
+    if (right_count + up_count) == 0
+      return 1000.0
+    end
+    (right_holes.size + up_holes.size).to_f/(right_count + up_count).to_f
+  end
+
+
+  def count_points_with_nearby_hole(set, edge_points, incr, dist)
+    count = 0
+    edge_points.each do |p|
+      dist.times do |i|
+        unless set.include?(Point.new(p.x + incr[0], p.y + incr[1]))
+          count += 1
+          next
+        end
+      end
+    end
+
+    count
+    
+  end
+
+  def set_points
+    xmin = ymin = 99999999
+    xmax = ymax = 0
+    xsum = ysum = 0
+    @points.each do |p|
+      x, y = p.x, p.y
+      xmin = x if x < xmin 
+      ymin = y if y < ymin 
+
+      xmax = x if x > xmax 
+      ymax = y if y > ymax
+
+      xsum += x
+      ysum += y
+    end
+
+    @min_point = Point.new(xmin, ymin)
+    @max_point = Point.new(xmax, ymax)
+    @centroid = Point.new(xsum / @points.size, ysum / @points.size)
+
+  end
+
+  def to_screen(point)
+    @image.to_screen(point)
+  end
+
+  def x
+    @image.to_screen(@centroid).x
+  end
+
+  def y
+    @image.to_screen(@centroid).y
+  end
+
+  def size
+    @points.size
+  end
+
+  def to_s
+    "stone: size=#{@points.size}, color=#{@color_symbol}, gem: #{@gem_type}, ratio2: #{@ratio2}, ratio3: #{@ratio3}, ratio4: #{@ratio4}"
+  end
+
+  def rectangle
+    Rectangle.new(@min_point.x, @min_point.y,
+                  @max_point.x - @min_point.x, 
+                  @max_point.y - @min_point.y)
   end
 end
 

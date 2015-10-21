@@ -268,9 +268,16 @@ public class ImageUtils {
      * is defined by threshold.  Pass this a brightness image.
      */
     public static PixelBlock shrink(PixelBlock pb, int threshold) {
-	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold));
+	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold, 0));
+    }
+    public static PixelBlock shrink(PixelBlock pb, int threshold, int count) {
+	return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold, count));
     }
     public static BufferedImage shrink(BufferedImage bi, int threshold) {
+	return shrink(bi, threshold, 0);
+    }
+
+    public static BufferedImage shrink(BufferedImage bi, int threshold, int count) {
         BufferedImage biOut =
             new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 	WritableRaster raster = biOut.getRaster();
@@ -290,15 +297,8 @@ public class ImageUtils {
 	boolean flag = false;
         for(int x = 1; x < bi.getWidth()-1; x++) {
             for(int y = 1; y < bi.getHeight()-1; y++) {
-		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF)  > threshold &&
-		    (bi.getRGB(x-0, y-1) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x+1, y-1) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x-1, y-0) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x-0, y-0) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x+1, y-0) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x-1, y+1) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x-0, y+1) & 0xFFFFFF) > threshold &&
-		    (bi.getRGB(x+1, y+1) & 0xFFFFFF) > threshold) {
+		int n = countZeroNeighbors(bi, x, y, threshold);
+		if (n <= count) {
 		    Color c = new Color(bi.getRGB(x, y));
 		    int[] cvec = {c.getRed(), c.getGreen(), c.getBlue()};
 		    raster.setPixel(x, y, cvec); 
@@ -309,6 +309,20 @@ public class ImageUtils {
 	    }
 	}
 	return biOut;
+    }
+
+    private static int countZeroNeighbors(BufferedImage bi, int x, int y, int threshold) {
+	int count = 0;
+	if ((bi.getRGB(x-1, y-1) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x-0, y-1) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x+1, y-1) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x-1, y-0) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x-0, y-0) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x+1, y-0) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x-1, y+1) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x-0, y+1) & 0xFFFFFF) < threshold) {count++;}
+	if ((bi.getRGB(x+1, y+1) & 0xFFFFFF) < threshold) {count++;}
+	return count;
     }
 
     /**

@@ -40,6 +40,9 @@ public class PixelBlock extends ARobot {
     public Color color(int x, int y) {
 	return new Color(m_bufferedImage.getRGB(x, y));
     }
+    public Color color(Point p) {
+	return color(p.x, p.y);
+    }
 
     /**
      * Returns a Color from the image, given the screen coords.
@@ -49,6 +52,9 @@ public class PixelBlock extends ARobot {
 	x = x - m_origin.x;
 	y = y - m_origin.y;
 	return color(x, y);
+    }
+    public Color colorFromScreen(Point p) {
+	return colorFromScreen(p.x, p.y);
     }
 
 
@@ -77,6 +83,11 @@ public class PixelBlock extends ARobot {
 	    throw new ArrayIndexOutOfBoundsException(msg);
 	}
     }
+    public int pixel(Point p) {
+	return pixel(p.x, p.y);
+    }
+
+
     /*
      * return screen coords for the provided image coords.
      */

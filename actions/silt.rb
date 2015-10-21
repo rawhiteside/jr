@@ -42,7 +42,15 @@ class SiltAction < Action
   end
 
   def setup(parent)
-    @vals = get_vals(parent)
+    # Coords are relative to your head in cart view.
+    gadgets = [
+      {:type => :point, :label => 'UL Corner of gather region', :name => 'ul'},
+      {:type => :point, :label => 'LR Corner of gather region', :name => 'lr'},
+      {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
+      {:type => :number, :label => 'Remaining carry.', :name => 'carry'},
+      {:type => :workd_path, :label => 'Path to walk', :name => 'path'},
+    ]
+    @vals = UserIO.prompt(parent, 'silt', 'Silt', gadgets)
   end
 
   def act
@@ -57,7 +65,8 @@ class SiltAction < Action
     walker = Walker.new
     # An array of boxes to search, in order spiraling out. 
     sub_boxes = make_regions(box)
-    coords = path_coords
+    # coords = path_coords
+    coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     loop do
       coords.each do |coord|
@@ -139,18 +148,6 @@ class SiltAction < Action
   end
 
   def get_vals(parent)
-    # Coords are relative to your head in cart view.
-    gadgets = [
-      {:type => :point, :label => 'UL Corner of gather region',
-	:name => 'ul'},
-      {:type => :point, :label => 'LR Corner of gather region',
-	:name => 'lr'},
-      {:type => :point, :label => 'Drag to the pinned WH menu.',
-	:name => 'stash'},
-      {:type => :number, :label => 'Remaining carry.',
-	:name => 'carry'},
-    ]
-    return UserIO.prompt(parent, 'papyrus', 'papyrus', gadgets)
   end
 end
 
