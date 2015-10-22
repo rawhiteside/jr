@@ -43,23 +43,16 @@ class IronMine < Action
     stones_image, xor_image = get_minefield_changes(win, rect)
     edges = ImageUtils.edges(stones_image)
     xor_edges = ImageUtils.edges(xor_image)
-    UserIO.show_image(xor_image)
-    UserIO.show_image(edges)
-    UserIO.show_image(xor_edges)
-    return
     
     stones = find_stones(stones_image, xor_image).select {|s| s.size > 100}
     return unless stones && stones.size >= 7
 
     stones = stones.sort {|a,b| b.size <=> a.size}[0,7].sort{|a,b| a.max_point.y <=> b.max_point.y}
 
-    if @debug
-      mouse_over_stones(stones)
-    end
-
     stones.each {|s| s.set_properties}
 
     if @debug
+      mouse_over_stones(stones)
       stones.each {|s| puts s}
     end
     
@@ -67,9 +60,25 @@ class IronMine < Action
   end
 
   def mouse_over_stones(stones)
+    off = 15
+    off_delay = 0.2
     stones.each do |s|
+
       mm(s.x, s.y)
       sleep_sec 1.5
+
+      # Signal the gem type.
+      # horizontal wiggle:  wart
+      # vertical wiggle: spike
+      # diagonal wiggle: finger
+      case s.gem_type
+      when :wart
+        2.times {mm(s.x - off, s.y); sleep_sec(off_delay); mm(s.x + off, s.y); sleep_sec(off_delay); }
+      when :finger
+        2.times {mm(s.x - off, s.y - off); sleep_sec(off_delay); mm(s.x + off, s.y + off); sleep_sec(off_delay); }
+      when :spike
+        2.times {mm(s.x, s.y - off); sleep_sec(off_delay); mm(s.x, s.y + off); sleep_sec(off_delay); }
+      end
     end
   end
 
@@ -266,15 +275,69 @@ class IronOreStone
   end
     
   def set_gem
+    @gem_type = GemDetector.new(self).gem_type
+  end
+
+
+  def set_points
+    xmin = ymin = 99999999
+    xmax = ymax = 0
+    xsum = ysum = 0
+    @points.each do |p|
+      x, y = p.x, p.y
+      xmin = x if x < xmin 
+      ymin = y if y < ymin 
+
+      xmax = x if x > xmax 
+      ymax = y if y > ymax
+
+      xsum += x
+      ysum += y
+    end
+
+    @min_point = Point.new(xmin, ymin)
+    @max_point = Point.new(xmax, ymax)
+    @centroid = Point.new(xsum / @points.size, ysum / @points.size)
+
+  end
+
+  def to_screen(point)
+    @image.to_screen(point)
+  end
+
+  def x
+    @image.to_screen(@centroid).x
+  end
+
+  def y
+    @image.to_screen(@centroid).y
+  end
+
+  def size
+    @points.size
+  end
+
+  def to_s
+    "stone: size=#{@points.size}, color=#{@color_symbol}, gem: #{@gem_type} "
+  end
+
+  def rectangle
+    Rectangle.new(@min_point.x, @min_point.y,
+                  @max_point.x - @min_point.x, 
+                  @max_point.y - @min_point.y)
+  end
+end
+
+class GemDetector
+
+  def initialize(stone)
     # Put the points in the top half of the stone (where the gems are)
     # into a Set.  Set for fast query.
-    cutoff = (@max_point.y - @min_point.y)/2 + @min_point.y
-    set = Set.new(@points.select {|p| p.y < cutoff})
+    cutoff = (stone.max_point.y - stone.min_point.y)/2 + stone.min_point.y
+    set = Set.new(stone.points.select {|p| p.y < cutoff})
 
     dist = 3
     ratio = compute_ratio(set, 3)
-    @ratio2 = compute_ratio(set, 2)
-    @ratio4 = compute_ratio(set, 4)
 
 
     if ratio > 4.0
@@ -284,7 +347,6 @@ class IronOreStone
     else
       @gem_type = :spike
     end
-    @ratio3 = ratio
     
   end
 
@@ -328,52 +390,8 @@ class IronOreStone
     
   end
 
-  def set_points
-    xmin = ymin = 99999999
-    xmax = ymax = 0
-    xsum = ysum = 0
-    @points.each do |p|
-      x, y = p.x, p.y
-      xmin = x if x < xmin 
-      ymin = y if y < ymin 
-
-      xmax = x if x > xmax 
-      ymax = y if y > ymax
-
-      xsum += x
-      ysum += y
-    end
-
-    @min_point = Point.new(xmin, ymin)
-    @max_point = Point.new(xmax, ymax)
-    @centroid = Point.new(xsum / @points.size, ysum / @points.size)
-
-  end
-
-  def to_screen(point)
-    @image.to_screen(point)
-  end
-
-  def x
-    @image.to_screen(@centroid).x
-  end
-
-  def y
-    @image.to_screen(@centroid).y
-  end
-
-  def size
-    @points.size
-  end
-
-  def to_s
-    "stone: size=#{@points.size}, color=#{@color_symbol}, gem: #{@gem_type}, ratio2: #{@ratio2}, ratio3: #{@ratio3}, ratio4: #{@ratio4}"
-  end
-
-  def rectangle
-    Rectangle.new(@min_point.x, @min_point.y,
-                  @max_point.x - @min_point.x, 
-                  @max_point.y - @min_point.y)
+  def gem_type
+    @gem_type
   end
 end
 
