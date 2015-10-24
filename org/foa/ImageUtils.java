@@ -51,54 +51,56 @@ public class ImageUtils {
 	for(int y = 0; y < bi.getHeight() - 1; y++) {
 	    for(int x = 0; x < bi.getWidth() - 1; x++)  {
 		Point p = new Point(x, y);
-
 		// is it a hit or a miss?
-		if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) {
-
-		    // The list of globs we can add this point to. 
-		    ArrayList<HashMap> addedTo = new ArrayList<HashMap>();
-
-		    // Which globs can we add this point to? 
-		    for(HashMap glob : globs) {
-			if(maybeAdd(glob, p)) { addedTo.add(glob); }
-		    }
-
-		    // How many did we add the point to?
-		    if(addedTo.size() == 0) {
-			// None.  Create a new glob
-			HashMap glob = new HashMap();
-			addPointToGlob(p, glob);
-			globs.add(glob);
-		    } else if (addedTo.size() > 1) {
-			// Multiple globs.  We must merge them.
-			HashMap keep = addedTo.get(0);
-			ArrayList<HashMap> removals = new ArrayList<HashMap>();
-			for(int i = 1; i < addedTo.size(); i++) {
-			    mergeGlobs(keep, addedTo.get(i));
-			    removals.add(addedTo.get(i));
-			}
-			for(HashMap hm : removals) { globs.remove(hm); }
-		    }
-		}
+		if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) { globifyPoint(globs, p); }
 	    }
 	}
 	// Now, remove all of the keys with value = 0.
+	for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
+	return globs.toArray(new HashMap[globs.size()]);
+    }
+
+    private static void globifyPoint(ArrayList<HashMap> globs, Point p) {
+	// The list of globs we can add this point to. 
+	ArrayList<HashMap> addedTo = new ArrayList<HashMap>();
+
+	// Which globs can we add this point to? 
 	for(HashMap glob : globs) {
-	    ArrayList removeThese = new ArrayList();
-	    Iterator itr = glob.keySet().iterator();
-	    while(itr.hasNext()) {
-		Point p = (Point) itr.next();
-		if (glob.get(p).equals(NEIGH_VAL)) {
-		    removeThese.add(p);
-		}
+	    if(maybeAdd(glob, p)) { addedTo.add(glob); }
+	}
+
+	// How many did we add the point to?
+	if(addedTo.size() == 0) {
+	    // None.  Create a new glob
+	    HashMap glob = new HashMap();
+	    addPointToGlob(p, glob);
+	    globs.add(glob);
+	} else if (addedTo.size() > 1) {
+	    // Multiple globs.  We must merge them.
+	    HashMap keep = addedTo.get(0);
+	    ArrayList<HashMap> removals = new ArrayList<HashMap>();
+	    for(int i = 1; i < addedTo.size(); i++) {
+		mergeGlobs(keep, addedTo.get(i));
+		removals.add(addedTo.get(i));
 	    }
-	    itr = removeThese.iterator();
-	    while (itr.hasNext()) {
-		Point p = (Point) itr.next();
-		glob.remove(p);
+	    for(HashMap hm : removals) { globs.remove(hm); }
+	}
+    }
+
+    private static void removeNeighborsFromGlob(HashMap glob) {
+	ArrayList removeThese = new ArrayList();
+	Iterator itr = glob.keySet().iterator();
+	while(itr.hasNext()) {
+	    Point p = (Point) itr.next();
+	    if (glob.get(p).equals(NEIGH_VAL)) {
+		removeThese.add(p);
 	    }
 	}
-	return globs.toArray(new HashMap[globs.size()]);
+	itr = removeThese.iterator();
+	while (itr.hasNext()) {
+	    Point p = (Point) itr.next();
+	    glob.remove(p);
+	}
     }
 
     private static Integer POINT_VAL = new Integer(1);
@@ -142,6 +144,24 @@ public class ImageUtils {
 	    return true;
 	}
 	
+    }
+
+    public static BufferedImage imageFromPoints(BufferedImage bi, Point[] points)  {
+	BufferedImage biOut =
+            new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
+	WritableRaster raster = biOut.getRaster();
+	int[] zeros = {0, 0, 0};
+	int[] ones = {255, 255, 255};
+        for(int x = 1; x < bi.getWidth()-1; x++) {
+            for(int y = 1; y < bi.getHeight()-1; y++) {
+		raster.setPixel(x, y, zeros);
+	    }
+	}
+	for(int i = 0; i < points.length; i++) {
+	    Point p = points[i];
+	    raster.setPixel(p.x, p.y, ones);
+	}
+	return biOut;
     }
     /**
      * Return an image constructed from the xor of the two input images.

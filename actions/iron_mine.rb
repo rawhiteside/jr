@@ -45,9 +45,15 @@ class IronMine < Action
     xor_edges = ImageUtils.edges(xor_image)
     
     stones = find_stones(stones_image, xor_image).select {|s| s.size > 100}
-    return unless stones && stones.size >= 7
-
-    stones = stones.sort {|a,b| b.size <=> a.size}[0,7].sort{|a,b| a.max_point.y <=> b.max_point.y}
+    unless stones
+      puts "Rejected. No stones found"
+      return
+    end
+    stones = stones.sort { |a,b| b.size <=> a.size }[0,7]
+    if stones.size < 7
+      stones = stones[1,7]
+    end
+    stones = stones.sort{|a,b| a.max_point.y <=> b.max_point.y}
 
     stones.each {|s| s.set_properties}
 
@@ -130,10 +136,10 @@ class IronMine < Action
 
   def find_recipes_and_mine(stones)
     chooser = MChooseN.new
-    chooser.each(7, 6) {|arr| maybe_mine(stones, arr)}
-    chooser.each(7, 5) {|arr| maybe_mine(stones, arr)}
-    chooser.each(7, 4) {|arr| maybe_mine(stones, arr)}
-    chooser.each(7, 3) {|arr| maybe_mine(stones, arr)}
+    chooser.each(stones.size, 6) {|arr| maybe_mine(stones, arr)} if stones.size >= 6
+    chooser.each(stones.size, 5) {|arr| maybe_mine(stones, arr)} if stones.size >= 5
+    chooser.each(stones.size, 3) {|arr| maybe_mine(stones, arr)} if stones.size >= 3
+    chooser.each(stones.size, 4) {|arr| maybe_mine(stones, arr)} if stones.size >= 4
   end
 
   def dismiss_popup_windows
@@ -183,7 +189,7 @@ class IronMine < Action
     brightness = ImageUtils.brightness(xor_image)
     globs = get_globs(brightness, 1)
 
-    stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points)}
+    stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points, @debug)}
   end
 
   # XXX DUP of method in sandmine. 
@@ -228,7 +234,7 @@ class IronMine < Action
     colors = []
     stone.rectangle.width.times do |offset|
       # Examine only points NOT on the stone.
-      local_point = Point.new(x + offset, y)
+      local_point = Point.new(x + offset, y - offset)
       if !stone.points.include?(local_point)
         point = stone.to_screen(local_point)
         color = getColor(point)
@@ -244,13 +250,15 @@ class IronMine < Action
   end
 end
 
-# XXX DUP of class in sandmine.
+# XXX Close DUP of class in sandmine.
 class IronOreStone
   attr_accessor :points, :min_point, :max_point, :centroid
   attr_accessor :color_symbol, :gem_type
+  attr_reader :image
 
-  def initialize(image, brightness, points)
+  def initialize(image, brightness, points, debug)
     @image = image
+    @debug = debug
     @brightness = brightness
     @points = points
     set_points
@@ -261,8 +269,12 @@ class IronOreStone
     set_gem
   end
   
+  def color(p)
+    @image.color(p)
+  end
+
   # Just look at the stone points and pick the first color.
-  MINE_COLORS = [:red, :magenta]
+  MINE_COLORS = [:magenta, :cyan, :blue]
   def set_color
     @points.each do |p|
       c = Clr.color_symbol(@image.color(p))
@@ -275,7 +287,7 @@ class IronOreStone
   end
     
   def set_gem
-    @gem_type = GemDetector.new(self).gem_type
+    @gem_type = GemDetector.new(self, @debug).gem_type
   end
 
 
@@ -305,6 +317,7 @@ class IronOreStone
     @image.to_screen(point)
   end
 
+  # Is this really a good idea, Bob? 
   def x
     @image.to_screen(@centroid).x
   end
@@ -328,7 +341,9 @@ class IronOreStone
   end
 end
 
-class GemDetector
+
+class GemDetector0
+  attr_reader :gem_type
 
   def initialize(stone)
     # Put the points in the top half of the stone (where the gems are)
@@ -390,9 +405,208 @@ class GemDetector
     
   end
 
-  def gem_type
-    @gem_type
+end
+
+class GemDetector1
+  attr_reader :gem_type
+
+  def initialize(stone)
+    @gem_type = find_gem_shape(stone)
   end
+
+  # Figure out the gem shape.
+  # We do this by looking at the top of the stone.
+  GEM_SIZE = 30
+  def find_gem_shape(stone)
+
+    cutoff = stone.min_point.y + GEM_SIZE
+    # Count the number of mine pixels in the GEM_SIZE region.
+    top_points =  stone.points.select {|p| p.y <= cutoff}
+
+    return :wart if wart?(top_points)
+
+    return spike_or_finger(stone, top)
+  end
+
+  def spike_or_finger(stone, top_points)
+    # Search below the highest point.
+    ymin = stone.min_point.y
+
+    # Find the points at the top.  There must be at least one.
+    top_row = top_points.select {|p| p.y == ymin}
+    # Now, pick the middle one.
+    ref_point = top_row[top_row.size/2]
+
+    # Count the mine pixels in a rectangular region around that point.
+    count = 0
+    region_size = 4
+    region_size.times do |yoff|
+      (-region_size).upto(region_size) do |xoff|
+        if top_points.include?(Point.new(ref_point.x + xoff, ref_point.y + yoff))
+          count += 1
+        end
+      end
+    end
+     puts "count = #{count}"
+    # Another experimentally determined magic number.
+    return count <= 11 ? :spike : :finger
+  end
+
+  # Is the provided pixel contained in the run lists?
+  def contained?(x, y)
+    arr = @pxl_run_hash[y]
+    return false unless arr
+    arr.each do |pr|
+      return true if x >= pr.first && x <= pr.last
+    end
+    return false
+  end
+
+  # Scheme 3 for wart detection.
+  def wart?(top_points)
+    filled = top_points.size
+    # Now, compute the area of the convex hull, which also
+    # uses GEM_SIZE rows.
+    area = convex_hull_area(top_points)
+    ratio = filled.to_f/area.to_f
+    # XXX puts "wart: #{area} / #{filled} ==> #{ratio}"
+    # An experimental magic number
+    return true if ratio > 0.9
+    nil
+  end
+
+  def convex_hull_area(points)
+    compute_convex_hull_area(points)
+  end
+
+  def compute_convex_hull_area(points)
+    polygon_area(convex_hull(points))
+  end
+
+  def polygon_area(pts)
+    # Duplicate the first pint at the end.
+    pts = pts.dup
+    pts << pts[0]
+    # 
+    area = 0.0
+    0.upto(pts.size - 2) do |i|
+      area += (pts[i].x*pts[i+1].y - pts[i+1].x*pts[i].y)
+    end
+    (area/2.0).abs
+  end
+
+  def convex_hull(points)
+    compute_convex_hull(points)
+  end
+
+  def compute_convex_hull(points)
+    # First, build the list of points holding the max and min x values
+    # on each scanline.
+    # Only the top GEM_SIZE scanlines
+    xmins = {}
+    xmaxes = {}
+    points.each do |p|
+      if xmins[p.y].nil? || xmins[p.y].x > p.x
+        xmins[p.y] = p
+      end
+      if xmaxes[p.y].nil? || xmaxes[p.y].x < p.x
+        xmaxes[p.y] = p
+      end
+    end
+    pts = xmins.values + xmaxes.values
+
+    # OK, now compute the convex hull of that set.
+    ConvexHull.calculate(pts)
+  end
+
+end
+
+class GemDetector
+  attr_reader :gem_type
+
+  def initialize(stone, debug)
+    @debug = debug
+    
+    # Find the points in the top 1/4 of the stone.
+    cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/4
+    top_points = stone.points.select {|p| p.y < cut}
+
+    if wart?(stone)
+      @gem_type = :wart
+      return
+    end
+    @gem_type = finger_or_spike(top_points)
+
+  end
+
+  def finger_or_spike(top_points)
+    # How many horizontal or vertical 1-pixel lines to we find?  These
+    # will be point with either no neighbors left&right or no
+    # neighbors up&down.
+    set = Set.new(top_points)
+    rl = top_points.count {|p| (!set.include?(Point.new(p.x - 1, p.y)) && (!set.include?(Point.new(p.x + 1, p.y))))}
+    ud = top_points.count {|p| (!set.include?(Point.new(p.x, p.y - 1)) && (!set.include?(Point.new(p.x, p.y + 1))))}
+    count = rl + ud
+    ratio = set.size / count.to_f
+
+    puts "one-pixels: #{count}, ratio = #{ratio}" if @debug
+
+    (ratio < 30.0) ? :spike : :finger
+
+  end
+
+  def wart?(stone)
+    cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/3
+    top_points = stone.points.select {|p| p.y < cut}
+    set_points = Set.new(top_points)
+    if top_points.size != set_points.size
+      puts "*************Top points, set_points: #{top_points.size}, #(set_points.size)"
+    end
+
+    # Compute the area of the convex hull.
+    hull = convex_hull(top_points)
+    area = polygon_area(hull)
+
+    filled = top_points.size
+    ratio = filled.to_f/area.to_f
+    puts "wart: #{area} / #{filled} ==> #{ratio}" if @debug
+    # An experimental magic number
+    return true if ratio > 0.88
+    nil
+  end
+
+  def polygon_area(pts)
+    # Duplicate the first pint at the end.
+    pts = pts.dup
+    pts << pts[0]
+    # 
+    area = 0.0
+    0.upto(pts.size - 2) do |i|
+      area += (pts[i].x*pts[i+1].y - pts[i+1].x*pts[i].y)
+    end
+    (area/2.0).abs
+  end
+
+
+  def convex_hull(points)
+    # First, build the list of points holding the max and min x values
+    # on each scanline.
+    xmins = {}
+    xmaxes = {}
+    points.each do |p|
+      if xmins[p.y].nil? || xmins[p.y].x > p.x
+        xmins[p.y] = p
+      end
+      if xmaxes[p.y].nil? || xmaxes[p.y].x < p.x
+        xmaxes[p.y] = p
+      end
+    end
+    pts = xmins.values + xmaxes.values
+
+    # OK, now compute the convex hull of that set.
+    ConvexHull.calculate(points)
+  end
+
 end
 
 Action.add_action(IronMine.new)
