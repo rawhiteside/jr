@@ -81,7 +81,9 @@ public abstract class AWindow extends ARobot  {
     }
 
 
-    public void refresh(){ refresh("tc"); }
+    public void refresh(){
+	refresh("tc");
+    }
     public void refresh(String where) {
 	Rectangle rect = getRect();
 	if (where.equals("tc")) {

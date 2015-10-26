@@ -1,5 +1,6 @@
 package org.foa;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashMap;
 
 /**
  * This class should be used by JRuby threads instead of the bare
@@ -19,6 +20,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ControllableThread extends Thread {
     private static ReentrantLock s_pauseLock = new ReentrantLock();
     boolean m_killed = false;
+    /* A place for thread-local info usable from Java or Ruby. */
+    private HashMap m_thread_vars = new HashMap();
 
     public ControllableThread(Runnable runnable) {
 	super(runnable);
@@ -72,4 +75,5 @@ public class ControllableThread extends Thread {
 	    throw new ThreadKilledException();
 	}
     }
+    public HashMap threadVars() { return m_thread_vars; }
 }

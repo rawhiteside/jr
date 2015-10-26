@@ -16,12 +16,12 @@ class Onions < Action
                                        },
     
     "Carrots/Osiris's Orange/(1)" => {:water => 1,
-                                      :build_incr_fac => 2,
-                                      :right_build_init => [:L,]*2
+#                                      :build_incr_fac => 2,
+#                                      :right_build_init => [:L,]*2
                                      },
     "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
-                                        :build_incr_fac => 2,
-                                        :right_build_init => [:L,]*2
+#                                        :build_incr_fac => 2,
+#                                        :right_build_init => [:L,]*2
                                        },
 
 

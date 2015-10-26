@@ -12,6 +12,21 @@ class Bounds
     add(xy2) if xy2
   end
 
+  def self.rect_from_points(points)
+    xmin = ymin = 99999999
+    xmax = ymax = 0
+    points.each do |p|
+      x, y = p.x, p.y
+      xmin = x if x < xmin 
+      ymin = y if y < ymin 
+
+      xmax = x if x > xmax 
+      ymax = y if y > ymax
+
+    end
+    Rectangle.new(xmin, ymin, xmax - xmin, ymax - ymin)
+  end
+
   def rect
     Rectangle.new(xmin, ymin, xmax - xmin, ymax - ymin)
   end

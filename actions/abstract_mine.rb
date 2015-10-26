@@ -8,7 +8,7 @@ class Clr
   # Main color(s) must be this high
   CTHRESH = 150
   # Diff between max and min must be this large
-  CDIFF = 90
+  CDIFF = 80
   # The paired colors must be this close
   CDIFF2 = 15
   def self.red?(r, g, b)

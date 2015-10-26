@@ -54,7 +54,6 @@ class IronMine < Action
       stones = stones[1,7]
     end
     stones = stones.sort{|a,b| a.max_point.y <=> b.max_point.y}
-
     stones.each {|s| s.set_properties}
 
     if @debug
@@ -71,13 +70,13 @@ class IronMine < Action
     stones.each do |s|
 
       mm(s.x, s.y)
-      sleep_sec 1.5
+      sleep_sec 1.0
 
-      # Signal the gem type.
+      # Signal the crystal type.
       # horizontal wiggle:  wart
       # vertical wiggle: spike
       # diagonal wiggle: finger
-      case s.gem_type
+      case s.crystal_type
       when :wart
         2.times {mm(s.x - off, s.y); sleep_sec(off_delay); mm(s.x + off, s.y); sleep_sec(off_delay); }
       when :finger
@@ -89,10 +88,10 @@ class IronMine < Action
   end
 
   def mineable?(stones, arr)
-    gems  = stones.collect {|s| s.gem_type}
+    crystals  = stones.collect {|s| s.crystal_type}
     colors  = stones.collect {|s| s.color_symbol}
 
-    (all_same(arr, gems) || all_different(arr, gems)) && 
+    (all_same(arr, crystals) || all_different(arr, crystals)) && 
       (all_same(arr, colors) || all_different(arr, colors))
   end
 
@@ -231,15 +230,30 @@ class IronMine < Action
   def find_highlight_point(stone)
     y = stone.centroid.y
     x = stone.centroid.x
-    colors = []
     stone.rectangle.width.times do |offset|
       # Examine only points NOT on the stone.
-      local_point = Point.new(x + offset, y - offset)
-      if !stone.points.include?(local_point)
-        point = stone.to_screen(local_point)
-        color = getColor(point)
-        colors << color
-        return point if highlight_blue?(color)
+      y_offs = [0, -offset, -offset/2]
+      y_offs.each do |y_off|
+        local_point = Point.new(x + offset, y + y_off)
+        if !stone.points.include?(local_point)
+          point = stone.to_screen(local_point)
+          return point if highlight_blue?(getColor(point))
+        end
+        local_point = Point.new(x + offset, y - y_off)
+        if !stone.points.include?(local_point)
+          point = stone.to_screen(local_point)
+          return point if highlight_blue?(getColor(point))
+        end
+        local_point = Point.new(x - offset, y + y_off)
+        if !stone.points.include?(local_point)
+          point = stone.to_screen(local_point)
+          return point if highlight_blue?(getColor(point))
+        end
+        local_point = Point.new(x - offset, y - y_off)
+        if !stone.points.include?(local_point)
+          point = stone.to_screen(local_point)
+          return point if highlight_blue?(getColor(point))
+        end
       end
     end
 
@@ -253,7 +267,7 @@ end
 # XXX Close DUP of class in sandmine.
 class IronOreStone
   attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol, :gem_type
+  attr_accessor :color_symbol, :crystal_type
   attr_reader :image
 
   def initialize(image, brightness, points, debug)
@@ -265,8 +279,9 @@ class IronOreStone
   end
 
   def set_properties
+    puts "***********************************************************" if @debug
     set_color
-    set_gem
+    set_crystal
   end
   
   def color(p)
@@ -286,8 +301,8 @@ class IronOreStone
     @color_symbol = :black
   end
     
-  def set_gem
-    @gem_type = GemDetector.new(self, @debug).gem_type
+  def set_crystal
+    @crystal_type = CrystalDetector.new(self, @debug).crystal_type
   end
 
 
@@ -331,7 +346,7 @@ class IronOreStone
   end
 
   def to_s
-    "stone: size=#{@points.size}, color=#{@color_symbol}, gem: #{@gem_type} "
+    "stone: size=#{@points.size}, color=#{@color_symbol}, crystal: #{@crystal_type} "
   end
 
   def rectangle
@@ -342,11 +357,11 @@ class IronOreStone
 end
 
 
-class GemDetector0
-  attr_reader :gem_type
+class CrystalDetector0
+  attr_reader :crystal_type
 
   def initialize(stone)
-    # Put the points in the top half of the stone (where the gems are)
+    # Put the points in the top half of the stone (where the crystals are)
     # into a Set.  Set for fast query.
     cutoff = (stone.max_point.y - stone.min_point.y)/2 + stone.min_point.y
     set = Set.new(stone.points.select {|p| p.y < cutoff})
@@ -356,11 +371,11 @@ class GemDetector0
 
 
     if ratio > 4.0
-      @gem_type = :wart
+      @crystal_type = :wart
     elsif ratio > 2.7
-      @gem_type = :finger
+      @crystal_type = :finger
     else
-      @gem_type = :spike
+      @crystal_type = :spike
     end
     
   end
@@ -404,125 +419,11 @@ class GemDetector0
     count
     
   end
-
 end
 
-class GemDetector1
-  attr_reader :gem_type
 
-  def initialize(stone)
-    @gem_type = find_gem_shape(stone)
-  end
-
-  # Figure out the gem shape.
-  # We do this by looking at the top of the stone.
-  GEM_SIZE = 30
-  def find_gem_shape(stone)
-
-    cutoff = stone.min_point.y + GEM_SIZE
-    # Count the number of mine pixels in the GEM_SIZE region.
-    top_points =  stone.points.select {|p| p.y <= cutoff}
-
-    return :wart if wart?(top_points)
-
-    return spike_or_finger(stone, top)
-  end
-
-  def spike_or_finger(stone, top_points)
-    # Search below the highest point.
-    ymin = stone.min_point.y
-
-    # Find the points at the top.  There must be at least one.
-    top_row = top_points.select {|p| p.y == ymin}
-    # Now, pick the middle one.
-    ref_point = top_row[top_row.size/2]
-
-    # Count the mine pixels in a rectangular region around that point.
-    count = 0
-    region_size = 4
-    region_size.times do |yoff|
-      (-region_size).upto(region_size) do |xoff|
-        if top_points.include?(Point.new(ref_point.x + xoff, ref_point.y + yoff))
-          count += 1
-        end
-      end
-    end
-     puts "count = #{count}"
-    # Another experimentally determined magic number.
-    return count <= 11 ? :spike : :finger
-  end
-
-  # Is the provided pixel contained in the run lists?
-  def contained?(x, y)
-    arr = @pxl_run_hash[y]
-    return false unless arr
-    arr.each do |pr|
-      return true if x >= pr.first && x <= pr.last
-    end
-    return false
-  end
-
-  # Scheme 3 for wart detection.
-  def wart?(top_points)
-    filled = top_points.size
-    # Now, compute the area of the convex hull, which also
-    # uses GEM_SIZE rows.
-    area = convex_hull_area(top_points)
-    ratio = filled.to_f/area.to_f
-    # XXX puts "wart: #{area} / #{filled} ==> #{ratio}"
-    # An experimental magic number
-    return true if ratio > 0.9
-    nil
-  end
-
-  def convex_hull_area(points)
-    compute_convex_hull_area(points)
-  end
-
-  def compute_convex_hull_area(points)
-    polygon_area(convex_hull(points))
-  end
-
-  def polygon_area(pts)
-    # Duplicate the first pint at the end.
-    pts = pts.dup
-    pts << pts[0]
-    # 
-    area = 0.0
-    0.upto(pts.size - 2) do |i|
-      area += (pts[i].x*pts[i+1].y - pts[i+1].x*pts[i].y)
-    end
-    (area/2.0).abs
-  end
-
-  def convex_hull(points)
-    compute_convex_hull(points)
-  end
-
-  def compute_convex_hull(points)
-    # First, build the list of points holding the max and min x values
-    # on each scanline.
-    # Only the top GEM_SIZE scanlines
-    xmins = {}
-    xmaxes = {}
-    points.each do |p|
-      if xmins[p.y].nil? || xmins[p.y].x > p.x
-        xmins[p.y] = p
-      end
-      if xmaxes[p.y].nil? || xmaxes[p.y].x < p.x
-        xmaxes[p.y] = p
-      end
-    end
-    pts = xmins.values + xmaxes.values
-
-    # OK, now compute the convex hull of that set.
-    ConvexHull.calculate(pts)
-  end
-
-end
-
-class GemDetector
-  attr_reader :gem_type
+class CrystalDetector
+  attr_reader :crystal_type
 
   def initialize(stone, debug)
     @debug = debug
@@ -531,15 +432,18 @@ class GemDetector
     cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/4
     top_points = stone.points.select {|p| p.y < cut}
 
-    if wart?(stone)
-      @gem_type = :wart
+    if spike?(top_points)
+      @crystal_type = :spike
       return
     end
-    @gem_type = finger_or_spike(top_points)
-
+    if wart?(stone)
+      @crystal_type = :wart
+      return
+    end
+    @crystal_type = :finger
   end
 
-  def finger_or_spike(top_points)
+  def spike?(top_points)
     # How many horizontal or vertical 1-pixel lines to we find?  These
     # will be point with either no neighbors left&right or no
     # neighbors up&down.
@@ -547,32 +451,56 @@ class GemDetector
     rl = top_points.count {|p| (!set.include?(Point.new(p.x - 1, p.y)) && (!set.include?(Point.new(p.x + 1, p.y))))}
     ud = top_points.count {|p| (!set.include?(Point.new(p.x, p.y - 1)) && (!set.include?(Point.new(p.x, p.y + 1))))}
     count = rl + ud
+    return false if count == 0
     ratio = set.size / count.to_f
 
-    puts "one-pixels: #{count}, ratio = #{ratio}" if @debug
+    puts "spike one-pixels: #{count}, ratio = #{ratio}" if @debug
 
-    (ratio < 30.0) ? :spike : :finger
+    # Small values here are spikes.  Big numbers, fingers.
+    ratio < 20.0
+  end
 
+  def crystal_pixel?(color)
+    r, g, b = color.red, color.green, color.blue
+    return false unless (r >= g) && (r >= b)
+
+    # Red
+    cut = r/4
+    return true if (r - g) > cut && (r - b) > cut
+    # Very bright
+    sum = r + g + b
+    return true if sum > 525
+
+    # Very dark
+    return true if sum < 75
+    
   end
 
   def wart?(stone)
     cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/3
     top_points = stone.points.select {|p| p.y < cut}
-    set_points = Set.new(top_points)
-    if top_points.size != set_points.size
-      puts "*************Top points, set_points: #{top_points.size}, #(set_points.size)"
-    end
+    glob = ImageUtils.globify_points(top_points).sort { |a,b| b.size <=> a.size }[0]
+    # Compute the width of the bounding box.
+    box1 = Bounds.rect_from_points(glob)
 
-    # Compute the area of the convex hull.
-    hull = convex_hull(top_points)
-    area = polygon_area(hull)
+    # Now, remove the crystals and do it again.
+    top_points.select! { |p| !(crystal_pixel?(stone.image.color(p))) }
+#    bi = ImageUtils.image_from_points(stone.image.buffered_image, top_points)
+#    UserIO.show_image(bi)
+    glob = ImageUtils.globify_points(top_points).sort { |a,b| b.size <=> a.size }[0]
+    box2 = Bounds.rect_from_points(glob)
 
-    filled = top_points.size
-    ratio = filled.to_f/area.to_f
-    puts "wart: #{area} / #{filled} ==> #{ratio}" if @debug
-    # An experimental magic number
-    return true if ratio > 0.88
-    nil
+    delta_w = box1.width - box2.width
+    delta_h = box1.height - box2.height
+    delta_area = delta_w * delta_h
+
+    return false if delta_area <= 0
+
+    ratio = (box1.width * box1.height).to_f / delta_area.to_f
+    puts "wart? #{delta_w}, #{delta_h}, #{delta_area}, #{ratio} "
+      
+    # Small numbers are fingers (false).  Large ones warts (true).
+    ratio > 8.0
   end
 
   def polygon_area(pts)
