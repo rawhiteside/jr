@@ -18,7 +18,6 @@ class PyramidPushStack < Action
   def act
     dir = @vals['direction']
     while win = PinnableWindow.from_point(point_from_hash(@vals, 'win'))
-      puts "pushing #{dir}"
       push(win, dir)
     end
   end
@@ -28,7 +27,6 @@ class PyramidPushStack < Action
       win.refresh
       text = win.read_text
       if text && text.include?(direction)
-        p text
         stat_wait('End')
         win.click_on("Push this block #{direction}")
         sleep_sec 1.0
