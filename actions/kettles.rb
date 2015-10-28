@@ -185,7 +185,6 @@ class Potash < KettleAction
       # Start them all cooking.
       if task =~ /Start/
         grid.each_point do |p|
-          sleep_sec(1)
           start_potash(p)
           done[p] = false
         end
@@ -194,8 +193,9 @@ class Potash < KettleAction
       # Tend until they're all done
       while done.values.include?(false)
         grid.each_point do |p|
-          done[p] = tend_potash(p) unless done[p]
-          sleep 1
+          unless done[p]
+            done[p] = tend_potash(p) 
+          end
         end
       end
 
@@ -220,6 +220,11 @@ class Potash < KettleAction
       sleep_sec (0.1)
     end
     
+    unless (v[:wood] && v[:water]) || v[:done]
+      puts "Didn't read kettle: "
+      puts kettle_data(w)
+    end
+
     if v[:done]
       w.click_button('take')
       w.unpin

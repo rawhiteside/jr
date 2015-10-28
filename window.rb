@@ -40,7 +40,7 @@ class HowMuch < Window
       sleep_sec(0.1)
       5.times do 
 	win = Window.from_point(Point.new(wid/2, height/2))
-	break if win 
+	break if win && win.read_text =~ /How/
 	sleep_sec 0.1
       end
 
@@ -54,7 +54,16 @@ class HowMuch < Window
 	robot.send_string(quant.to_i.to_s)
 	win.dialog_click(Point.new(170, rect.height - 45))
       end
+      # Wait until it's gone.
+      5.times do 
+	win = Window.from_point(Point.new(wid/2, height/2))
+        break unless win
+        break unless rect == win.rect
+	sleep_sec 0.1
+      end
+
     end
+    
     sleep_sec 0.1
   end
 end
@@ -287,6 +296,9 @@ class Tiler < ARobot
 
   def tile(pinnable, delay = 0)
     s_width = screen_size.width
+
+    pinnable.default_refresh_loc = 'tc' if @ovlp > 0.0
+
     if (@xtile + pinnable.rect.width) >= s_width
       @xtile = 2
       @ytile = (@ymax + 1 + @y_off)
