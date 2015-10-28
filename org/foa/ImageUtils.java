@@ -60,6 +60,28 @@ public class ImageUtils {
 	return globs.toArray(new HashMap[globs.size()]);
     }
 
+    public static Point[][] globifyPoints(Point[] points) {
+	ArrayList<HashMap> globs = new ArrayList<HashMap>();
+	for(int i = 0; i < points.length; i++) { globifyPoint(globs, points[i]); }
+	
+	// Now, remove all of the keys with value = 0.
+	for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
+	return globsAsArrays(globs);
+    }
+
+    private static Point[][] globsAsArrays(ArrayList<HashMap> globs) {
+	Point[][] rv = new Point[globs.size()][];
+	for(int i = 0; i < globs.size(); i++) {
+	    Object[] tmp = globs.get(i).keySet().toArray();
+	    Point ptmp[] = new Point[tmp.length];
+	    for(int j = 0; j < tmp.length; j++) {
+		ptmp[j] = (Point) tmp[j];
+	    }
+	    rv[i] = ptmp;
+	}
+	return rv;
+    }
+
     private static void globifyPoint(ArrayList<HashMap> globs, Point p) {
 	// The list of globs we can add this point to. 
 	ArrayList<HashMap> addedTo = new ArrayList<HashMap>();

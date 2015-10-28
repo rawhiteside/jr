@@ -18,6 +18,7 @@ import java.awt.event.*;
 public abstract class AWindow extends ARobot  {
     private Rectangle m_rect;
     private TextReader m_textReader = null;
+    private String m_defaultRefreshLoc = "lc"; 
 
     public AWindow() {
 	super();
@@ -80,18 +81,23 @@ public abstract class AWindow extends ARobot  {
 			     rect.height - margin.top - margin.bottom);
     }
 
+    public String getDefaultRefreshLoc() { return m_defaultRefreshLoc; }
+    public void setDefaultRefreshLoc(String loc) { m_defaultRefreshLoc = loc; }
 
-    public void refresh(){
-	refresh("tc");
-    }
+
+    public void refresh(){ refresh(getDefaultRefreshLoc()); }
     public void refresh(String where) {
 	Rectangle rect = getRect();
 	if (where.equals("tc")) {
-	    dialogClick(new Point(rect.width / 2, 2));
+	    dialogClick(new Point(rect.width / 2, 4));
 	} else if (where.equals("tl")) {
-	    dialogClick(new Point(0, 2));
+	    dialogClick(new Point(4, 4));
 	} else if (where.equals("tr")) {
-	    dialogClick(new Point(rect.width, 2));
+	    dialogClick(new Point(rect.width - 4, 4));
+	} else if (where.equals("lc")) {
+	    dialogClick(new Point(4, rect.height / 2));
+	} else if (where.equals("rc")) {
+	    dialogClick(new Point(rect.width - 4, rect.height / 2));
 	} else {
 	    throw new RuntimeException("Bad refresh arg: " + where);
 	}

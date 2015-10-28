@@ -88,7 +88,7 @@ public class WindowGeom extends ARobot {
 	PixelBlock pb = new PixelBlock(new Rectangle(x, y, screenWidth - x, 1));
 	while(pb.pixelFromScreen(x, y) != 0) {
 	    x += 1;
-	    if (x >= screenWidth) { break; }
+	    if (x >= screenWidth) { return 0; }
 	}
 	x += 3;
 	return x - xOrig;
@@ -118,15 +118,9 @@ public class WindowGeom extends ARobot {
 	int y = rect.y;
 	ARobot robot = ARobot.sharedInstance();
 	int screenHeight = robot.screenSize().height;
-	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, robot.screenSize().height));
-	if (pb.pixelFromScreen(x, y) == 0 &&
-	    pb.pixelFromScreen(x, y + 3) == 0 &&
-	    pb.pixelFromScreen(x, y + rect.height) == 0 &&
-	    pb.pixelFromScreen(x, y + rect.height - 3) == 0) {
 
-	    // Looks OK.  No change necessary
-	    return rect;
-	}
+	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, robot.screenSize().height));
+
 	// Start searching upwards frum the center, looking for the border.
 	int ymin = -1;
 	for (int iy = y + rect.height/2; iy > 3; iy--){
@@ -176,6 +170,9 @@ public class WindowGeom extends ARobot {
 	if (origin == null) {return null;}
 	int width = findWidth(origin);
 	int height = findHeight(origin.x, origin.y);
+
+	if (height <= 10 || width <= 10) { return null; }
+
 	return new Rectangle(origin.x, origin.y, width, height);
     }
     

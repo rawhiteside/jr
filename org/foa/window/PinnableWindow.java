@@ -72,14 +72,20 @@ public class PinnableWindow extends AWindow {
     public PinnableWindow pin() {
 	Rectangle r = getRect();
 	// Pin/unpin don't invalidate height. Thus the super.
-	super.dialogClick(new Point(r.width - 20, 20));
+
+	// XXX 10/28/15 delay increased to 0.05, when I saw a kettle window not unpin.
+	// XXX Will it help?  I dunno.
+	super.dialogClick(new Point(r.width - 20, 20), null, 0.05);
 	m_pinned = true;
 	return this;
     }
 
     public void unpin() {
 	// Pin/unpin don't invalidate height. Thus the super.
-	super.dialogClick(new Point(getRect().width - 20, 20));
+
+	// XXX 10/28/15 delay increased to 0.05, when I saw a kettle window not unpin.
+	// XXX Will it help?  I dunno.
+	super.dialogClick(new Point(getRect().width - 20, 20), null, 0.05);
 	m_pinned = false;
     }
 
