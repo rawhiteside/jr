@@ -154,10 +154,10 @@ class Potash < KettleAction
     vals
   end
 
-  def pinned_kettle_window(p)
+  def pinned_kettle_window(p, pinned = true)
     w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
     w = KettleWindow.new(w.rect)
-    w.pin
+    w.pin if pinned
     w
   end
 
@@ -193,10 +193,9 @@ class Potash < KettleAction
       # Tend until they're all done
       while done.values.include?(false)
         grid.each_point do |p|
-          unless done[p]
-            done[p] = tend_potash(p) 
-          end
+          done[p] = tend_potash(p) unless done[p]
         end
+        sleep_sec(3.0)
       end
 
       break unless task =~ /Start/
@@ -211,7 +210,7 @@ class Potash < KettleAction
   # anything, needs to be done. Return a true if the potash is
   # complete, false otherwise.
   def tend_potash(p)
-    w = pinned_kettle_window(p)
+    w = pinned_kettle_window(p, false)
     v = {}
     5.times do
       v = kettle_data(w)
@@ -226,14 +225,18 @@ class Potash < KettleAction
     end
 
     if v[:done]
+      w.pin
       w.click_button('take')
       w.unpin
       return true
     end
+
     if v[:wood] < 5 && v[:wood] < v[:water]
       w.click_on('Stoke')
+    else
+      w.pin
+      w.unpin
     end
-    w.unpin
     return false
   end
   
