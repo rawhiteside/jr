@@ -137,7 +137,8 @@ class Potash < KettleAction
 
   def get_gadgets
     super << {:type => :combo, :label => 'Do what?', :name => 'action' ,
-              :vals => ['Start and tend', 'Tend', ]}
+              :vals => ['Start and tend', 'Tend', 'Ignite and tend']
+    }
   end
 
   # The useful numbers in the data area.
@@ -161,13 +162,15 @@ class Potash < KettleAction
     w
   end
 
-  def start_potash(p)
+  def start_potash(p, ignite)
     w = pinned_kettle_window(p)
-    # Have to pause between these to let them update.
-    w.click_button('potash')
-    sleep_sec(0.1)
-    w.click_button('begin')
-    sleep_sec(0.1)
+    unless ignite
+      # Have to pause between these to let them update.
+      w.click_button('potash')
+      sleep_sec(0.1)
+      w.click_button('begin')
+      sleep_sec(0.1)
+    end
     w.click_button('ignite')
     HowMuch.new(:max)
     w.unpin
@@ -186,9 +189,9 @@ class Potash < KettleAction
       grid.each_point { |p| done[p] = false }
 
       # Start them all cooking.
-      if task =~ /Start/
+      if task =~ /Start/ || task =~ /Ignite/
         grid.each_point do |p|
-          start_potash(p)
+          start_potash(p, task =~ /Ignite/)
           done[p] = false
         end
       end
