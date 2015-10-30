@@ -226,7 +226,7 @@ public abstract class AWindow extends ARobot  {
 		    break;
 		}
 		if (i >= path.length - 1) { 
-		    rclickAt(pt);
+		    rclickAt(pt, 0.05);
 		}
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);
