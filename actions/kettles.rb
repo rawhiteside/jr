@@ -163,8 +163,11 @@ class Potash < KettleAction
 
   def start_potash(p)
     w = pinned_kettle_window(p)
+    # Have to pause between these to let them update.
     w.click_button('potash')
+    sleep_sec(0.1)
     w.click_button('begin')
+    sleep_sec(0.1)
     w.click_button('ignite')
     HowMuch.new(:max)
     w.unpin
