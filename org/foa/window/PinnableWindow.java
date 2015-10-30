@@ -176,11 +176,14 @@ public class PinnableWindow extends AWindow {
 	ARobot robot = new ARobot();
 	robot.claimRobotLock();
 	try {
+	    double postDismissDelay = 0.0;
 	    double delay = 0.05;
 	    // May need to try several times.
 	    for(int kk = 0; kk < 5; kk++) {
 		robot.mm(new Point(pt.x, pt.y - 1), delay);
+		robot.sleepSec(postDismissDelay);
 		robot.mm(pt, delay);
+		postDismissDelay = 0.0;
 		robot.rclickAt(pt, delay);
 		robot.sleepSec(delay);
 		// Now, give it at most a half-second to appear.
@@ -207,7 +210,7 @@ public class PinnableWindow extends AWindow {
 		// OK, something weird. The window pops in a remote place sometimes.
 		// Dismiss all, and try again.
 		AWindow.dismissAll();
-		robot.sleepSec(0.1);
+		postDismissDelay = 0.1;
 		System.out.println("Trying again to pop a window.");
 		delay = kk * delay;
 	    }
