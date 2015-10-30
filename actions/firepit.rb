@@ -37,7 +37,7 @@ class Firepits < Action
         w.refresh
         sleep_sec(0.1)
       end
-      w.refresh while w.click_on('Place', 'tc')
+      w.refresh while w.click_on('Place', 'lc')
 
       w.refresh
       sleep_sec(0.1)

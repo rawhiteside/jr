@@ -429,8 +429,15 @@ class CrystalDetector
     @debug = debug
     
     # Find the points in the top 1/4 of the stone.
-    cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/4
-    top_points = stone.points.select {|p| p.y < cut}
+    # cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/2
+    # top_points = stone.points.select {|p| p.y < cut}
+    top_points = stone.points # XXX
+
+    iterations = 10
+    crystal_points = crystal_pixels(stone.image, top_points)
+    fom = iterate_neighbor_count(crystal_points, iterations)
+
+    puts "Iterations, value: #{iterations}, #{fom}"
 
     if spike?(top_points)
       @crystal_type = :spike
@@ -460,20 +467,62 @@ class CrystalDetector
     ratio < 20.0
   end
 
+  def iterate_neighbor_count(points, iteration_count)
+    # Put points into a has as keys, ith values being a count.
+    hash = {}
+    points.each {|p| hash[p] = 1.0}
+    iteration_count.times do
+      out_hash = {}
+      points.each do |p|
+
+        count = hash[p]
+        [
+          [-1, -1], [0, -1], [1, -1],
+          [-1,  0],          [1,  0],
+          [-1,  1], [0,  1], [1,  1],
+        ].each do |off|
+          target = Point.new(p.x + off[0], p.y + off[1])
+          count += hash[target] if hash[target]
+        end
+        out_hash[p] = count
+      end
+      # Scale by max possible, so numbers don't get too big
+      points.each { |p| out_hash[p] /= 9.0 }
+
+      hash = out_hash
+    end
+    # return the max value
+    sorted = hash.values.sort
+    arr = []
+    10.times do |i|
+      index = sorted.size * i / 10
+      arr << (sorted[index] * 100).to_i
+    end
+
+    p arr
+
+    return hash.values.max
+  end
+
   def crystal_pixel?(color)
     r, g, b = color.red, color.green, color.blue
     return false unless (r >= g) && (r >= b)
 
     # Red
-    cut = r/4
+    cut = r/5
     return true if (r - g) > cut && (r - b) > cut
-    # Very bright
+
+    # Very bright, but not bright magenta
     sum = r + g + b
-    return true if sum > 525
+    return true if (sum > 550) && r >= g && r >= b && (g-b).abs < 50
 
     # Very dark
     return true if sum < 75
     
+  end
+
+  def crystal_pixels(img, points)
+    points.select {|p| crystal_pixel?(img.color(p))}
   end
 
   def wart?(stone)
