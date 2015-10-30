@@ -498,8 +498,10 @@ class CrystalDetector
       index = sorted.size * i / 10
       arr << (sorted[index] * 100).to_i
     end
-
-    p arr
+    File.open('mine-crystals.cvs', 'a') do |f|
+      arr.each {|a| f.write(", #{a.to_s}")}
+      f.puts ""
+    end
 
     return hash.values.max
   end
