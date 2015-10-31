@@ -46,11 +46,11 @@ class Onions < Action
 
   # Size of a side of the square we look at to detect plants. Square
   # will be centered on your head.
-  SQUARE_SIZE = 450
+  SQUARE_SIZE = 200
 
   # The distance out that Jaby's arm reaches from the center of her
   # head.  Actually, picking up is larger.  Using this value for now. 
-  REACH_RADIUS = 50
+  REACH_RADIUS = 40
 
   def setup(parent)
     gadgets = [
@@ -112,6 +112,7 @@ class Onions < Action
 
     # Needs to be down below the build menu.
     tiler = Tiler.new(0, 190)
+    tiler.y_offset = 20
     plant_count = 0
     
     build_base = [:w, :w]
@@ -132,7 +133,9 @@ class Onions < Action
 
       # If we missed it, plow ahead.
       next unless w
+      #puts "***Tiling #{plant_count}"
       tiler.tile(w)
+      #puts "***done tiling #{plant_count}"
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
     end
 
@@ -152,7 +155,10 @@ class Onions < Action
 
       # If we missed it, plow ahead.
       next unless w
+      #puts "***Tiling #{plant_count}"
       tiler.tile(w)
+      #puts "***done tiling #{plant_count}"
+
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
     end
     
@@ -190,7 +196,7 @@ class Onions < Action
   
   def tend(w, plant_number, plant_time)
     # Times in sec (relative to plant time) at which to water.
-    # 
+    #
     # grow_times = [0, 15, 30, 45] # measured.
     water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
     harvest_time = 46
@@ -199,7 +205,7 @@ class Onions < Action
       delta = (Time.new - plant_time)
       delay = target_secs - delta
       sleep_sec(delay)
-      # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
+      #puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
       with_robot_lock do
         point = nil
         5.times do
@@ -212,6 +218,8 @@ class Onions < Action
       end
     end
     sleep_sec(harvest_time - (Time.new - plant_time))
+
+    #puts "hargesting #{plant_number}"
 
     harvest_and_unpin(w)
   end
