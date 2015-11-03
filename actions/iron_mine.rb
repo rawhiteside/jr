@@ -431,41 +431,48 @@ class CrystalDetector
     # Find the points in the top 1/4 of the stone.
     # cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/2
     # top_points = stone.points.select {|p| p.y < cut}
-    top_points = stone.points # XXX
+
+    # Returns a 10-element array summarizing statistics about the crystals.
+    iterations = 5
+    crystal_points = crystal_pixels(stone.image, stone.points)
+    arr5 = iterate_neighbor_count(crystal_points, iterations)
 
     iterations = 10
-    crystal_points = crystal_pixels(stone.image, top_points)
-    fom = iterate_neighbor_count(crystal_points, iterations)
+    crystal_points = crystal_pixels(stone.image, stone.points)
+    arr10 = iterate_neighbor_count(crystal_points, iterations)
 
-    puts "Iterations, value: #{iterations}, #{fom}"
+    iterations = 15
+    crystal_points = crystal_pixels(stone.image, stone.points)
+    arr = arr15 = iterate_neighbor_count(crystal_points, iterations)
 
-    if spike?(top_points)
+    # index of first element greater than 10 (arr is sorted.)
+    index = arr.find_index {|e| e >= 10.0}
+    if index.nil? || index >=6
       @crystal_type = :spike
-      return
-    end
-    if wart?(stone)
+    elsif index <= 3
       @crystal_type = :wart
-      return
+    else
+      @crystal_type = :finger
     end
-    @crystal_type = :finger
+
+    iterations = 20
+    crystal_points = crystal_pixels(stone.image, stone.points)
+    arr20 = iterate_neighbor_count(crystal_points, iterations)
+    File.open('mine-log.csv', 'a') do |f|
+      f.print "#{@crystal_type}, "
+      arr5.each {|elt| f.print ", #{elt}"}
+      f.print ", "
+      arr10.each {|elt| f.print ", #{elt}"}
+      f.print ", "
+      arr15.each {|elt| f.print ", #{elt}"}
+      f.print ", "
+      arr20.each {|elt| f.print ", #{elt}"}
+
+      f.print "\n"
+    end
+
   end
 
-  def spike?(top_points)
-    # How many horizontal or vertical 1-pixel lines to we find?  These
-    # will be point with either no neighbors left&right or no
-    # neighbors up&down.
-    set = Set.new(top_points)
-    rl = top_points.count {|p| (!set.include?(Point.new(p.x - 1, p.y)) && (!set.include?(Point.new(p.x + 1, p.y))))}
-    ud = top_points.count {|p| (!set.include?(Point.new(p.x, p.y - 1)) && (!set.include?(Point.new(p.x, p.y + 1))))}
-    count = rl + ud
-    return false if count == 0
-    ratio = set.size / count.to_f
-
-    puts "spike one-pixels: #{count}, ratio = #{ratio}" if @debug
-
-    # Small values here are spikes.  Big numbers, fingers.
-    ratio < 20.0
-  end
 
   def iterate_neighbor_count(points, iteration_count)
     # Put points into a has as keys, ith values being a count.
@@ -503,7 +510,7 @@ class CrystalDetector
       f.puts ""
     end
 
-    return hash.values.max
+    return arr
   end
 
   def crystal_pixel?(color)
@@ -525,65 +532,6 @@ class CrystalDetector
 
   def crystal_pixels(img, points)
     points.select {|p| crystal_pixel?(img.color(p))}
-  end
-
-  def wart?(stone)
-    cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/3
-    top_points = stone.points.select {|p| p.y < cut}
-    glob = ImageUtils.globify_points(top_points).sort { |a,b| b.size <=> a.size }[0]
-    # Compute the width of the bounding box.
-    box1 = Bounds.rect_from_points(glob)
-
-    # Now, remove the crystals and do it again.
-    top_points.select! { |p| !(crystal_pixel?(stone.image.color(p))) }
-#    bi = ImageUtils.image_from_points(stone.image.buffered_image, top_points)
-#    UserIO.show_image(bi)
-    glob = ImageUtils.globify_points(top_points).sort { |a,b| b.size <=> a.size }[0]
-    box2 = Bounds.rect_from_points(glob)
-
-    delta_w = box1.width - box2.width
-    delta_h = box1.height - box2.height
-    delta_area = delta_w * delta_h
-
-    return false if delta_area <= 0
-
-    ratio = (box1.width * box1.height).to_f / delta_area.to_f
-    puts "wart? #{delta_w}, #{delta_h}, #{delta_area}, #{ratio} "
-      
-    # Small numbers are fingers (false).  Large ones warts (true).
-    ratio > 8.0
-  end
-
-  def polygon_area(pts)
-    # Duplicate the first pint at the end.
-    pts = pts.dup
-    pts << pts[0]
-    # 
-    area = 0.0
-    0.upto(pts.size - 2) do |i|
-      area += (pts[i].x*pts[i+1].y - pts[i+1].x*pts[i].y)
-    end
-    (area/2.0).abs
-  end
-
-
-  def convex_hull(points)
-    # First, build the list of points holding the max and min x values
-    # on each scanline.
-    xmins = {}
-    xmaxes = {}
-    points.each do |p|
-      if xmins[p.y].nil? || xmins[p.y].x > p.x
-        xmins[p.y] = p
-      end
-      if xmaxes[p.y].nil? || xmaxes[p.y].x < p.x
-        xmaxes[p.y] = p
-      end
-    end
-    pts = xmins.values + xmaxes.values
-
-    # OK, now compute the convex hull of that set.
-    ConvexHull.calculate(points)
   end
 
 end
