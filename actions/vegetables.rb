@@ -189,7 +189,7 @@ class Onions < Action
     spoint = x.to_screen(point)
 
     w = PinnableWindow.from_screen_click(spoint)
-    w.pin
+    w.pin if w
 
     return w, plant_time
   end
