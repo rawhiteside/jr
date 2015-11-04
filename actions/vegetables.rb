@@ -16,12 +16,8 @@ class Onions < Action
                                        },
     
     "Carrots/Osiris's Orange/(1)" => {:water => 1,
-#                                      :build_incr_fac => 2,
-#                                      :right_build_init => [:L,]*2
                                      },
     "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
-#                                        :build_incr_fac => 2,
-#                                        :right_build_init => [:L,]*2
                                        },
 
 
@@ -199,13 +195,13 @@ class Onions < Action
     #
     # grow_times = [0, 15, 30, 45] # measured.
     water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
-    harvest_time = 46
+    harvest_time = 36
     3.times do |index|
       target_secs = water_times[index]
       delta = (Time.new - plant_time)
       delay = target_secs - delta
       sleep_sec(delay)
-      #puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
+      # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
       with_robot_lock do
         point = nil
         5.times do
