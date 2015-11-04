@@ -71,7 +71,7 @@ public class ImageUtils {
 	    maps[i] = globs.get(i);
 	    maxY[i] = 0;
 	    Object[] arr = maps[i].keySet().toArray();
-	    for(int j = 0; j < arr.length; i++) {
+	    for(int j = 0; j < arr.length; j++) {
 		Point p = (Point)arr[j];
 		if(p.y > maxY[i]) {maxY[i] = p.y;}
 	    }
