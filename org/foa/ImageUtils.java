@@ -53,11 +53,20 @@ public class ImageUtils {
 		Point p = new Point(x, y);
 		// is it a hit or a miss?
 		if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) { globifyPoint(globs, p); }
+		// XXX TMP HACK FOR TEST.
+		if(globsTooBig(globs)) { return null; }
 	    }
 	}
 	// Now, remove all of the keys with value = 0.
 	for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
 	return globs.toArray(new HashMap[globs.size()]);
+    }
+
+    private static boolean globsTooBig(ArrayList<HashMap> globs) {
+	for(HashMap glob : globs) {
+	    if(glob.size() > 20000) {return true;}
+	}
+	return false;
     }
 
     public static Point[][] globifyPoints(Point[] points) {

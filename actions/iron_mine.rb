@@ -47,6 +47,7 @@ class IronMine < Action
     stones = find_stones(stones_image, xor_image).select {|s| s.size > 100}
     unless stones
       puts "Rejected. No stones found"
+      UserIO.show_image(xor_image)
       return
     end
     stones = stones.sort { |a,b| b.size <=> a.size }[0,7]
@@ -54,7 +55,9 @@ class IronMine < Action
       stones = stones[1,7]
     end
     stones = stones.sort{|a,b| a.max_point.y <=> b.max_point.y}
+    stones.each {|s| puts "Stone size is #{s.size}"}
     stones.each {|s| s.set_properties}
+    puts "Using #{stones.size} stones"
 
     if @debug
       mouse_over_stones(stones)
@@ -186,13 +189,14 @@ class IronMine < Action
   # Return value is an array of these globs.
   def find_stones(stones_image, xor_image)
     brightness = ImageUtils.brightness(xor_image)
-    globs = get_globs(brightness, 1)
+    globs = get_globs(brightness, 10)
 
     stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points, @debug)}
   end
 
   # XXX DUP of method in sandmine. 
   def get_globs(brightness, threshold)
+
     # +got+ is an array of HashMaps (Java) in which keys are points.  values are just 1's.
     got = ImageUtils.globify(brightness, threshold)
     # Convert from java land to ruby land.
@@ -210,7 +214,7 @@ class IronMine < Action
 
   def wait_for_highlight_gone(p)
     if p.nil?
-      sleep 3
+      sleep_sec 3
       return
     end
     start = Time.new
@@ -218,6 +222,7 @@ class IronMine < Action
       sleep_sec 0.5
       break if (Time.new - start) > 6
     end
+    sleep_sec 0.3
 
   end
 
@@ -279,7 +284,6 @@ class IronOreStone
   end
 
   def set_properties
-    puts "***********************************************************" if @debug
     set_color
     set_crystal
   end
@@ -428,47 +432,20 @@ class CrystalDetector
   def initialize(stone, debug)
     @debug = debug
     
-    # Find the points in the top 1/4 of the stone.
-    # cut = stone.min_point.y + (stone.max_point.y - stone.min_point.y)/2
-    # top_points = stone.points.select {|p| p.y < cut}
-
-    # Returns a 10-element array summarizing statistics about the crystals.
-    iterations = 5
-    crystal_points = crystal_pixels(stone.image, stone.points)
-    arr5 = iterate_neighbor_count(crystal_points, iterations)
-
     iterations = 10
     crystal_points = crystal_pixels(stone.image, stone.points)
-    arr10 = iterate_neighbor_count(crystal_points, iterations)
-
-    iterations = 15
-    crystal_points = crystal_pixels(stone.image, stone.points)
-    arr = arr15 = iterate_neighbor_count(crystal_points, iterations)
+    arr = iterate_neighbor_count(crystal_points, iterations)
 
     # index of first element greater than 10 (arr is sorted.)
-    index = arr.find_index {|e| e >= 10.0}
-    if index.nil? || index >=6
-      @crystal_type = :spike
-    elsif index <= 3
+    if arr[8] > 66
       @crystal_type = :wart
-    else
+    elsif arr[8] > 39
       @crystal_type = :finger
+    else
+      @crystal_type = :spike
     end
-
-    iterations = 20
-    crystal_points = crystal_pixels(stone.image, stone.points)
-    arr20 = iterate_neighbor_count(crystal_points, iterations)
-    File.open('mine-log.csv', 'a') do |f|
-      f.print "#{@crystal_type}, "
-      arr5.each {|elt| f.print ", #{elt}"}
-      f.print ", "
-      arr10.each {|elt| f.print ", #{elt}"}
-      f.print ", "
-      arr15.each {|elt| f.print ", #{elt}"}
-      f.print ", "
-      arr20.each {|elt| f.print ", #{elt}"}
-
-      f.print "\n"
+    if @debug
+      puts "Crystal type: #{@crystal_type}, prob val: #{arr[8]}"
     end
 
   end
