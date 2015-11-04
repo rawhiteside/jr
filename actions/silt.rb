@@ -7,29 +7,6 @@ class SiltAction < Action
     super('Silt', 'Gather')
   end
 
-  def path_coords
-    xvals = []
-    yvals = []
-    x = -929.0
-    while x > -958
-      xvals << x.to_i
-      x -= 3.5
-    end
-    y = 5345.0
-    while y > 5317
-      yvals << y.to_i
-      y -= 3.5
-    end
-    coords = []
-    yvals.each do |y|
-      xvals.each do |x|
-	coords << [x, y]
-      end
-      xvals = xvals.reverse
-    end
-    return coords
-  end
-
   def stash(walker)
     
     stash_path = [[-925, 5340], [-932, 5355]]
@@ -47,8 +24,7 @@ class SiltAction < Action
       {:type => :point, :label => 'UL Corner of gather region', :name => 'ul'},
       {:type => :point, :label => 'LR Corner of gather region', :name => 'lr'},
       {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
-      {:type => :number, :label => 'Remaining carry.', :name => 'carry'},
-      {:type => :workd_path, :label => 'Path to walk', :name => 'path'},
+      {:type => :world_path, :label => 'Path to walk', :name => 'path', :aux => "Silt"},
     ]
     @vals = UserIO.prompt(parent, 'silt', 'Silt', gadgets)
   end
@@ -56,8 +32,6 @@ class SiltAction < Action
   def act
     @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
 
-    @carry_max = @vals['carry'].to_i
-    @carry_current = 0
 
     box = Bounds.new([@vals['ul.x'].to_i, @vals['ul.y'].to_i],
 		     [@vals['lr.x'].to_i, @vals['lr.y'].to_i])
@@ -65,24 +39,40 @@ class SiltAction < Action
     walker = Walker.new
     # An array of boxes to search, in order spiraling out. 
     sub_boxes = make_regions(box)
-    # coords = path_coords
     coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     loop do
+      last_coord = nil
       coords.each do |coord|
-	walker.walk_to(coord)
-	loop do
-	  break unless gather_once(sub_boxes)
-	  @carry_current += 10
-	  if @carry_current >= @carry_max
-	    stash(walker)
-	  end
-	end
+        # Its either coordinates [x, y], or the word "silt".
+        if coord.kind_of?(Array)
+	  walker.walk_to(coord)
+          last_coord = coord
+        else
+          gather_at(walker, last_coord, sub_boxes)
+        end
       end
     end
   end
 
-  
+  def gather_at(walker, coords, sub_boxes)
+    loop do
+      # Gather as many as we find, going from one silt pile to
+      # another.
+      got_some = gather_several(sub_boxes)
+      return unless got_some
+      # Go back to the starting point and check again for more.
+      walker.walk_to(coords)
+    end
+  end
+
+  def gather_several(sub_boxes)
+    gathered_once = gather_once(sub_boxes)
+    if gathered_once
+      loop { gather_once(sub_boxes) }
+    end
+    return gathered_once
+  end
   
   def silt_color?(pixel_block, x, y)
     color = pixel_block.color(x, y)
@@ -99,26 +89,24 @@ class SiltAction < Action
       pixel_block = screen_rectangle(box.xmin, box.ymin, box.width, box.height)
       2.upto(box.height - 3) do |y|
 	2.upto(box.width - 3) do |x|
-	  if silt_color?(pixel_block, x, y) &&
-	      silt_color?(pixel_block, x-1, y) &&
 
-	      silt_color?(pixel_block, x-1, y-1) &&
-	      silt_color?(pixel_block, x, y-1) &&
-	      silt_color?(pixel_block, x-2, y) &&
-	      silt_color?(pixel_block, x-2, y-2) &&
-	      silt_color?(pixel_block, x, y-2)
-
-	      silt_color?(pixel_block, x+1, y) &&
-	      silt_color?(pixel_block, x+1, y+1) &&
-	      silt_color?(pixel_block, x, y+1) &&
-	      silt_color?(pixel_block, x+2, y) &&
-	      silt_color?(pixel_block, x+2, y+2) &&
-	      silt_color?(pixel_block, x, y+2)
+          # Search around [x, y]
+          all_silt = true
+          -2.upto(2) do |xoff|
+            -2.upto(2) do |yoff|
+              unless silt_color?(pixel_block, x + xoff, y + yoff)
+	        all_silt = false 
+                break
+              end
+            end
+            break unless all_silt
+          end
+          if all_silt
 	    screen_x, screen_y  = pixel_block.to_screen(x, y)
 	    rclick_at(screen_x, screen_y)
 	    sleep_sec 5
 	    return true
-	  end
+          end
 	end
       end
     end
