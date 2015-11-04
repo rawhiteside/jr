@@ -53,20 +53,36 @@ public class ImageUtils {
 		Point p = new Point(x, y);
 		// is it a hit or a miss?
 		if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) { globifyPoint(globs, p); }
-		// XXX TMP HACK FOR TEST.
-		if(globsTooBig(globs)) { return null; }
 	    }
+	    if ((y % 10) == 9) { pruneGlobs(globs, y, 15); }
 	}
 	// Now, remove all of the keys with value = 0.
 	for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
 	return globs.toArray(new HashMap[globs.size()]);
     }
 
-    private static boolean globsTooBig(ArrayList<HashMap> globs) {
-	for(HashMap glob : globs) {
-	    if(glob.size() > 20000) {return true;}
+    // Remove small globs that cannot get larger.
+
+    private static void pruneGlobs(ArrayList<HashMap> globs, int y, int minSize) {
+	// Max Y value in a glob.
+	int[] maxY = new int[globs.size()];
+	HashMap[] maps = new HashMap[globs.size()];
+	for(int i = 0; i < globs.size(); i++) {
+	    maps[i] = globs.get(i);
+	    maxY[i] = 0;
+	    Object[] arr = maps[i].keySet().toArray();
+	    for(int j = 0; j < arr.length; i++) {
+		Point p = (Point)arr[j];
+		if(p.y > maxY[i]) {maxY[i] = p.y;}
+	    }
 	}
-	return false;
+
+	// Now, delete the small globs that can't get bigger.
+	for(int i = 0; i < maxY.length; i++) {
+	    if (maps[i].size() <= minSize && maxY[i] < (y-1)) {
+		globs.remove(maps[i]);
+	    }
+	}
     }
 
     public static Point[][] globifyPoints(Point[] points) {
