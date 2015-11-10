@@ -290,6 +290,7 @@ class Tiler < ARobot
       break unless w
       windows << w
       tile(w, delay)
+
     end
     windows
   end
@@ -309,13 +310,17 @@ class Tiler < ARobot
     # shrink when we move it.  If so, track the max y using the max of
     # the two heights.
     prev_height = pinnable.rect.height
+    with_robot_lock do
+      pinnable.drag_to(Point.new(@xtile, @ytile))
 
-    pinnable.drag_to(Point.new(@xtile, @ytile))
+      sleep_sec(0.1)
+      pinnable.refresh('lc')
 
-    curr_height = pinnable.rect.height
-    use_height = [prev_height, curr_height].max
-    @xtile += ((1.0 - @ovlp) * pinnable.rect.width ).to_i
-    @ymax = [@ymax, @ytile + use_height].max
+      curr_height = pinnable.rect.height
+      use_height = [prev_height, curr_height].max
+      @xtile += ((1.0 - @ovlp) * pinnable.rect.width ).to_i
+      @ymax = [@ymax, @ytile + use_height].max
+    end
 
     pinnable
   end
