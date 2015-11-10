@@ -45,7 +45,7 @@ class IronMine < Action
     xor_edges = ImageUtils.edges(xor_image)
     
     stones = find_stones(stones_image, xor_image).select {|s| s.size > 100}
-    unless stones
+    if stones.nil?
       puts "Rejected. No stones found"
       UserIO.show_image(xor_image)
       return
