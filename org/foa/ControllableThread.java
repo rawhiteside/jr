@@ -70,7 +70,9 @@ public class ControllableThread extends Thread {
     public static void sleepSec(double seconds) {
 	checkForPause();
 	try {
-	    Thread.sleep((int)(1000 * seconds));
+	    if (seconds > 0.0) {
+		Thread.sleep((int)(1000 * seconds));
+	    }
 	} catch(Exception e) {
 	    throw new ThreadKilledException();
 	}
