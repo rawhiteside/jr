@@ -64,7 +64,7 @@ class IronMine < Action
       stones.each {|s| puts s}
     end
     
-    find_recipes_and_mine(stones)
+    find_workloads_and_mine(stones)
   end
 
   def mouse_over_stones(stones)
@@ -136,7 +136,7 @@ class IronMine < Action
     dismiss_popup_windows
   end
 
-  def find_recipes_and_mine(stones)
+  def find_workloads_and_mine(stones)
     chooser = MChooseN.new
     chooser.each(stones.size, 6) {|arr| maybe_mine(stones, arr)} if stones.size >= 6
     chooser.each(stones.size, 5) {|arr| maybe_mine(stones, arr)} if stones.size >= 5
@@ -359,72 +359,6 @@ class IronOreStone
                   @max_point.y - @min_point.y)
   end
 end
-
-
-class CrystalDetector0
-  attr_reader :crystal_type
-
-  def initialize(stone)
-    # Put the points in the top half of the stone (where the crystals are)
-    # into a Set.  Set for fast query.
-    cutoff = (stone.max_point.y - stone.min_point.y)/2 + stone.min_point.y
-    set = Set.new(stone.points.select {|p| p.y < cutoff})
-
-    dist = 3
-    ratio = compute_ratio(set, 3)
-
-
-    if ratio > 4.0
-      @crystal_type = :wart
-    elsif ratio > 2.7
-      @crystal_type = :finger
-    else
-      @crystal_type = :spike
-    end
-    
-  end
-
-  def compute_ratio(set, dist)
-    
-    # Now, find the set of points without a right neighbor.
-    right_holes = set.to_a.delete_if {|p| set.include?(Point.new(p.x + 1, p.y))}
-    # Now.  The points in +right_holes+ have a hole to their right.
-    # We want to know something about how far to the left the next
-    # hole is.  Count the number of points in which the hole is within
-    # the "magic number" +dist+
-    right_count = count_points_with_nearby_hole(set, right_holes, [-1, 0], dist)
-
-    # Now, do the same thing with up and down instead of right and left.
-    up_holes = set.to_a.delete_if {|p| set.include?(Point.new(p.x, p.y - 1))}
-    up_count = count_points_with_nearby_hole(set, right_holes, [0, 1], dist)
-
-    # puts "right/left: #{right_holes.size}, #{right_count}"
-    # puts "up/down: #{up_holes.size}, #{up_count}"
-    # puts "total: #{right_holes.size + up_holes.size}, #{right_count + up_count}"
-    # puts "Ratio: #{(right_holes.size + up_holes.size).to_f/(right_count + up_count).to_f}"
-    if (right_count + up_count) == 0
-      return 1000.0
-    end
-    (right_holes.size + up_holes.size).to_f/(right_count + up_count).to_f
-  end
-
-
-  def count_points_with_nearby_hole(set, edge_points, incr, dist)
-    count = 0
-    edge_points.each do |p|
-      dist.times do |i|
-        unless set.include?(Point.new(p.x + incr[0], p.y + incr[1]))
-          count += 1
-          next
-        end
-      end
-    end
-
-    count
-    
-  end
-end
-
 
 class CrystalDetector
   attr_reader :crystal_type
