@@ -48,6 +48,9 @@ class SiltAction < Action
         if coord.kind_of?(Array)
 	  walker.walk_to(coord)
           last_coord = coord
+        elsif coord == 'Stash'
+          @stash_window.refresh
+          HowMuch.new(:max) if @stash_window.click_on('Stash/Silt')
         else
           gather_at(walker, last_coord, sub_boxes)
         end
@@ -69,7 +72,7 @@ class SiltAction < Action
   def gather_several(sub_boxes)
     gathered_once = gather_once(sub_boxes)
     if gathered_once
-      loop { gather_once(sub_boxes) }
+      loop { break unless gather_once(sub_boxes) }
     end
     return gathered_once
   end
@@ -77,23 +80,24 @@ class SiltAction < Action
   def silt_color?(pixel_block, x, y)
     color = pixel_block.color(x, y)
     r, g, b = color.red, color.green, color.blue
-    return false unless r > 110 && r < 175
+    return false unless r > 150 && r < 220
     delrg = r - g
-    return false unless delrg >= 6 && delrg < 15
+    return false unless delrg >= 4 && delrg < 15
     delgb = g - b
-    return delgb >= 6 && delgb < 15
+    return delgb >= 4 && delgb < 20
   end
 
   def gather_once(boxes)
+    rad = 2
     boxes.each do |box|
-      pixel_block = screen_rectangle(box.xmin, box.ymin, box.width, box.height)
-      2.upto(box.height - 3) do |y|
-	2.upto(box.width - 3) do |x|
+      pixel_block = screen_rectangle(box.xmin - rad, box.ymin - rad, box.width + rad, box.height + rad)
+      rad.upto(box.height - 1) do |y|
+        rad.upto(box.width - 1) do |x|
 
           # Search around [x, y]
           all_silt = true
-          -2.upto(2) do |xoff|
-            -2.upto(2) do |yoff|
+          -rad.upto(rad) do |xoff|
+            -rad.upto(rad) do |yoff|
               unless silt_color?(pixel_block, x + xoff, y + yoff)
 	        all_silt = false 
                 break
@@ -107,7 +111,7 @@ class SiltAction < Action
 	    sleep_sec 5
 	    return true
           end
-	end
+        end
       end
     end
     return false
