@@ -52,7 +52,7 @@ class CactusRun < Action
 
   def wait_for_collect(w)
     w.refresh
-    until w.read_text =~ /2 drops/
+    until w.read_text =~ /(2|3) drops/
       sleep_sec(3)
       w.refresh
     end
