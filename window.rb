@@ -40,7 +40,7 @@ class HowMuch < Window
       sleep_sec(0.1)
       5.times do 
 	win = Window.from_point(Point.new(wid/2, height/2))
-	break if win && win.read_text =~ /How/
+	break if win && win.read_text =~ /(H|h)ow (much|many)/
 	sleep_sec 0.1
       end
 
