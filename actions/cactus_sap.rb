@@ -1,48 +1,85 @@
 require 'action'
+require 'walker'
 
-class CactusSap < Action
-
+class CactusRun < Action
   def initialize
-    super('Cactus Sap (2)', 'Gather')
+    super('Cactus run', 'Gather')
   end
 
-  def find_windows
-    y = 70
-    x = 60
-
-    windows = []
-    w = find_one_window(x, y)
-    windows << w
-
-    y = w.rect.y + w.rect.height + 30 
-    w = find_one_window(x, y)
-    windows << w
-
-    windows
+  def setup(parent)
+    gadgets = [
+      {:type => :world_path, :label => 'Path to walk.', :name => 'path', :aux => ['Collect', 'Stash']},
+      {:type => :point, :name => 'warehouse', :label => 'Warehouse'},
+      {:type => :point, :name => 'win-stack', :label => 'Stack of pinned cactus windows.'},
+    ]
+    @vals = UserIO.prompt(parent, 'Cactus', 'Cactus', gadgets)
   end
 
-  def find_one_window(x, y)
-    w = PinnableWindow.from_point(Point.new(x, y))
-    unless w
-      msg = 'Missed a pinned cactus dialog'
+  def tile_windows
+    x = @vals['win-stack.x'].to_i
+    y = @vals['win-stack.y'].to_i
+    tiler = Tiler.new(2, 85)
+    tiler.y_offset = 10
+    @windows = tiler.tile_stack(x, y, 0.1)
+  end
+
+  def init_stuff
+    tile_windows
+
+    x = @vals['warehouse.x'].to_i
+    y = @vals['warehouse.y'].to_i
+    @warehouse = PinnableWindow.from_point(Point.new(x, y))
+    @coords = WorldLocUtils.parse_world_path(@vals['path'])
+
+    # Count the number of non-coordinates, and make sure that matches
+    # the number of wondows.
+    harvests = @coords.select {|e| e.kind_of?(String) && e == 'Collect'}.size
+    if @windows.size != harvests
+      msg = "The path provided ask for #{harvests} harvests,\nbut there are #{@windows.size} windows."
       UserIO.error(msg)
-      raise Exception.new(msg)
+      return nil
     end
-    w
+    true
+  end
 
+  def gather(w)
+    wait_for_collect(w)
+    while w.click_on('Collect')
+      w.refresh
+      sleep_sec 0.1
+    end
+  end
+
+  def wait_for_collect(w)
+    w.refresh
+    until w.read_text =~ /Collect/
+      sleep_sec(3)
+      w.refresh
+    end
   end
 
   def act
-    windows = find_windows
+    return unless init_stuff
+    walker = Walker.new
     loop do
-      windows.each do |w|
-	w.refresh
-	if w.read_text =~ /3 drops/
-	  3.times {w.click_on('Collect'); sleep_sec 1}
-	end
+      windows = @windows.reverse
+      @coords.each do |c|
+        if c.kind_of? Array
+          walker.walk_to(c)
+        elsif c == 'Stash'
+          stash
+        else
+          gather(windows.shift)
+        end
       end
-      sleep_sec 30
+
     end
   end
+
+  def stash
+    @warehouse.refresh
+    HowMuch.new(:max) if @warehouse.click_on('Stash/Cactus')
+  end
+
 end
-Action.add_action(CactusSap.new)
+Action.add_action(CactusRun.new)

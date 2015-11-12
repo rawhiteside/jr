@@ -573,12 +573,15 @@ class SetupWorldPathGadget < JPanel
     area = scroll.text_area
     button_box.add(WorldLocUtils.current_location_button(area, true))
     if h[:aux]
-      aux_button = JButton.new(h[:aux])
-      aux_button.add_action_listener do |e|
-        area.append(h[:aux] + "\n")
-        area.caret_position = area.text.size
+      auxs = h[:aux].kind_of?(Array) ? h[:aux] : [h[:aux]]
+      auxs.each do |aux|
+        aux_button = JButton.new(aux)
+        aux_button.add_action_listener do |e|
+          area.append(aux + "\n")
+          area.caret_position = area.text.size
+        end
+        button_box.add(aux_button)
       end
-      button_box.add(aux_button)
     end
 
     box.add(Box.create_horizontal_glue)
