@@ -8,9 +8,12 @@ class TreeRun < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :world_path, :label => 'Path to walk.', :name => 'path', :aux => 'Gather Wood'},
+      {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
+       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2']},
       {:type => :point, :name => 'bonfire', :label => 'Bonfire'},
       {:type => :point, :name => 'win-stack', :label => 'Stack of pinned tree windows.'},
+      {:type => :point, :name => 'water-mine-1', :label => 'Water mine 1'},
+      {:type => :point, :name => 'water-mine-2', :label => 'Water mine 2'},
     ]
     @vals = UserIO.prompt(parent, 'Trees', 'Trees', gadgets)
   end
@@ -26,9 +29,12 @@ class TreeRun < Action
   def init_stuff
     tile_windows
 
-    x = @vals['bonfire.x'].to_i
-    y = @vals['bonfire.y'].to_i
-    @bonfire = PinnableWindow.from_point(Point.new(x, y))
+    @bonfire = PinnableWindow.from_point(point_from_hash(@vals, 'bonfire'))
+    water_mine_1 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
+    water_mine_2 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
+    @mine_worker1 = WaterMineWorker.new(water_mine_1)
+    @mine_worker2 = WaterMineWorker.new(water_mine_2)
+
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     # Count the number of non-coordinates, and make sure that matches
@@ -69,8 +75,12 @@ class TreeRun < Action
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
-        else
+        elsif c == 'Gather Wood'
           gather(windows.shift)
+        elsif c == 'Water Mine 1'
+          @mine_worker1.tend
+        elsif c == 'Water Mine 2'
+          @mine_worker2.tend
         end
       end
 
