@@ -9,9 +9,11 @@ class KettleAction < GridAction
       'Take' => [42, 256],
       'Begin' => [42, 256],
       'Potash' => [42, 180],
-      'Flower Fert' => [42, 206],
+      'Flower Fert' => [42, 205],
       'Weed Killer' => [126, 180],
-      'Grain Fert' => [126, 206],
+      'Grain Fert' => [126, 205],
+      'Salt' => [126, 255],
+      'Acid' => [126, 280],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
   end
@@ -84,6 +86,8 @@ class KettleWindow < PinnableWindow
       'potash' => [42, 180],
       'weed killer' => [126, 180],
       'grain fert' => [126, 206],
+      'salt' => [126, 255],
+      'acid' => [126, 280],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
   end
