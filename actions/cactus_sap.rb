@@ -45,8 +45,8 @@ class CactusRun < Action
   def gather(w)
     wait_for_collect(w)
     while w.click_on('Collect')
-      w.refresh
-      sleep_sec 0.1
+      w.refresh 'lc'
+      sleep_sec 0.05
     end
   end
 
