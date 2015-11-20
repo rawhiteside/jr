@@ -457,8 +457,9 @@ class WorldLocUtils
       if match
         rv << [match[1].to_i, match[2].to_i]
         next
+      else
+        rv << line
       end
-      rv << line
     end
     rv
   end

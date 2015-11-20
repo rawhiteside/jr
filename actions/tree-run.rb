@@ -39,7 +39,7 @@ class TreeRun < Action
 
     # Count the number of non-coordinates, and make sure that matches
     # the number of wondows.
-    harvests = @coords.select {|e| e.kind_of? String}.size
+    harvests = @coords.select {|e| e.kind_of?(String)&& e =~ /Gather/}.size
     if @windows.size != harvests
       msg = "The path provided ask for #{harvests} harvests,\nbut there are #{@windows.size} windows."
       UserIO.error(msg)
