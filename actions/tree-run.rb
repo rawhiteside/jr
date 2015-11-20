@@ -37,8 +37,8 @@ class TreeRun < Action
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
-    # Count the number of non-coordinates, and make sure that matches
-    # the number of wondows.
+    # Count the number of wood Hwrvest requests, and make sure that
+    # matches the number of wondows.
     harvests = @coords.select {|e| e.kind_of?(String)&& e =~ /Gather/}.size
     if @windows.size != harvests
       msg = "The path provided ask for #{harvests} harvests,\nbut there are #{@windows.size} windows."
