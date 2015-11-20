@@ -25,7 +25,7 @@ class WaterMineAction < Action
 end
 
 class WaterMineWorker
-  WIND_INTERVAL = 50 * 60
+  WIND_INTERVAL = 50 * 110
   def initialize(w)
     @win = w
     @last_wind_time = nil
@@ -33,13 +33,11 @@ class WaterMineWorker
 
   def tend
     if @last_wind_time.nil? || ((Time.new - @last_wind_time) > WIND_INTERVAL)
-      puts 'winding'
       @last_wind_time = Time.new
       @win.click_on('Wind', 'lc')
     end
     @win.refresh
     ARobot.new.sleep_sec(0.5)
-    puts 'checking for take'
     @win.click_on('Take')
   end
 end
