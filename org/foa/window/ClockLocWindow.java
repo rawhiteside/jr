@@ -34,8 +34,44 @@ public class ClockLocWindow extends AWindow {
 	return super.textReader();
     }
 
+    public String dateTime() {
+	String text = readText();
+	String[] lines = text.split("\n");
+	return lines[0];
+    }
+
+    public String date() {
+	String[] fields = dtFields();
+	return fields[0] + "," + fields[1];
+    }
+
+    public String time() {
+	String[] fields = dtFields();
+	return fields[2].trim();
+    }
+
+    private String[] dtFields() {
+	String dt = dateTime();
+	return dt.split(",");
+    }
+
     public int[] coords() {
-	String[] lines = readText().split("\n");
+	// All this error catching is because of a really
+	// low-probability failure that I don't understand.  Perhaps
+	// the output here will let me figure it out.
+	for(int i = 0; i < 5; i++) {
+	    String text = readText();
+	    try { return attemptCoords(text); }
+	    catch (NumberFormatException e) {
+		System.out.println("Coords failed with \"" + text + "\" Retrying.");
+	    }
+	    sleepSec(0.1);
+	}
+	return null;
+    }
+
+    private int[] attemptCoords(String text) {
+	String[] lines = text.split("\n");
 	String position = lines[lines.length - 1];
 	String[] words = position.split(" ");
 	int y = Integer.parseInt(words[words.length - 1]);
@@ -43,4 +79,5 @@ public class ClockLocWindow extends AWindow {
 	int x = Integer.parseInt(xstring);
 	return new int[] {x, y};
     }
+	
 }
