@@ -33,7 +33,12 @@ class ReadWindow < Action
       UserIO.prompt(nil, nil, 'Read this data', comps)
     end
 
-    puts ClockLocWindow.instance.read_text
+    cl = ClockLocWindow.instance
+    puts cl.read_text
+    puts cl.date_time
+    puts cl.date
+    puts cl.time
+
     puts SkillsWindow.new.read_text
   end
 end
