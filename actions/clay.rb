@@ -87,26 +87,27 @@ class Clay < Action
       walker.walk_loop(path, 99999999) do
 	if @jug_count.count < 25
 	  walker.walk_to(chest_coords)
-          stash_it('Stash/Clay')
-          stash_it('Stash/Flint')
+          stash_it(stash_window, 'Stash/Clay')
+          stash_it(stash_window, 'Stash/Flint')
 	  walker.walk_to(water_coords)
 	  refill
 	end
       end
     end
 
-    # Don't know why this occasionally fails, but it does. 
-    def stash_it(what)
-      loop do
-        if stash_window.click_on(what)
-          HowMuch.new(:max)
-          break
-        end
-        sleep_sec(1.0)
-      end
-    end
-      
   end
+
+  def stash_it(stash_window, what)
+    # Don't know why this occasionally fails, but it does. 
+    loop do
+      if stash_window.click_on(what)
+        HowMuch.new(:max)
+        break
+      end
+      sleep_sec(1.0)
+    end
+  end
+
 
   def refill
     with_robot_lock do
