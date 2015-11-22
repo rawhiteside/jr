@@ -44,7 +44,6 @@ class SandMine < AbstractMine
         ControllableThread.check_for_pause
         stones = mine_get_stones(w)
         assign_colors_to_stones(stones)
-        stones.each {|s| puts s.to_s}
         mine_stones(stones, true, @delay)
       rescue BadWorkloadException => e
 	puts 'Bad workload exception.'
@@ -91,7 +90,6 @@ class SandMine < AbstractMine
   end
   
   def mine_get_stones(w)
-    puts "---Mining"
     wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
     sleep_sec(5.0)
@@ -235,7 +233,6 @@ class SandMine < AbstractMine
 
     if recipe
       run_recipe(recipe, by_wiki_name, delay)
-      puts "--- Recipe complete"
       log_result('Success.')
     else
       msg = 'No recipe found for: ' + recipe_key.inspect
@@ -251,7 +248,6 @@ class SandMine < AbstractMine
   def run_recipe(recipes, stones_by_name, delay)
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
-      puts "----- workload."
       # Fixes issue with the very first orestone in a workload?
       sleep_sec(0.5) 
     end
