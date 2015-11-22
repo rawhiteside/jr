@@ -13,16 +13,24 @@ public class ClockLocWindow extends AWindow {
     }
     // Find the clock loc window at its default place.
     public static ClockLocWindow instance() {
-	if (s_instance == null) {
-	    int screenWidth = new ARobot().screenSize().width;
-	    Rectangle rect = WindowGeom.rectFromPoint(new Point(screenWidth/2, 50));
-	    if (rect == null) {
-		System.out.println("Failed to find clock loc window.");
-	    } else {
-		s_instance = new ClockLocWindow(rect);
-	    }
-	}
+	if (s_instance == null) { s_instance = createInstance(); }
 	return s_instance;
+    }
+
+    public static ClockLocWindow resetInstance() {
+	s_instance = createInstance();
+	return s_instance;
+    }
+
+    private static ClockLocWindow createInstance() {
+	int screenWidth = new ARobot().screenSize().width;
+	Rectangle rect = WindowGeom.rectFromPoint(new Point(screenWidth/2, 50));
+	if (rect == null) {
+	    System.out.println("Failed to find clock loc window.");
+	    return null;
+	} else {
+	    return new ClockLocWindow(rect);
+	}
     }
 
     public Insets textInsets() {
@@ -60,12 +68,13 @@ public class ClockLocWindow extends AWindow {
 	// low-probability failure that I don't understand.  Perhaps
 	// the output here will let me figure it out.
 	for(int i = 0; i < 5; i++) {
-	    String text = readText();
+	    String text = ClockLocWindow.instance().readText();
 	    try { return attemptCoords(text); }
 	    catch (NumberFormatException e) {
 		System.out.println("Coords failed with \"" + text + "\" Retrying.");
 	    }
 	    sleepSec(0.1);
+	    ClockLocWindow.resetInstance();
 	}
 	return null;
     }
