@@ -13,12 +13,16 @@ class WaterMineAction < Action
 
   end
 
+  def stop
+    @water_mine.log_action('Stop')
+  end
+
   def act
     pt = point_from_hash(@vals, 'water-mine')
     win = PinnableWindow.from_point(pt)
-    water_mine = WaterMineWorker.new(win)
+    @water_mine = WaterMineWorker.new(win)
     loop do
-      water_mine.tend
+      @water_mine.tend
       sleep_sec(50)
     end
   end
@@ -47,10 +51,6 @@ class WaterMineWorker
     end
   end
 
-  def stop
-    log_action('Stop')
-    super
-  end
   
   def log_action(action)
     text = @win.read_text

@@ -18,6 +18,12 @@ class TreeRun < Action
     @vals = UserIO.prompt(parent, 'Trees', 'Trees', gadgets)
   end
 
+  def stop
+    @mine_worker1.log_action('Stop')
+    @mine_worker2.log_action('Stop')
+    super
+  end
+
   def tile_windows
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
