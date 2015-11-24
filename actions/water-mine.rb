@@ -47,6 +47,11 @@ class WaterMineWorker
     end
   end
 
+  def stop
+    log_action('Stop')
+    super
+  end
+  
   def log_action(action)
     text = @win.read_text
     label = text.split("\n")[1]
