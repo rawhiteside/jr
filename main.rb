@@ -224,7 +224,7 @@ class ActionController
     if event.get_state_change == ItemEvent::SELECTED
       @action.start(@checkbox) 
       @checkbox.set_background(Color::GREEN)
-     @checkbox.set_opaque(true)
+      @checkbox.set_opaque(true)
       @checkbox.repaint
     else
       @action.stop
