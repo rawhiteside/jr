@@ -42,7 +42,6 @@ class DigStones < Action
     loop do
       stat_wait('End')
       p = mouse_pos
-      w.refresh
       w.click_on('Dig')
       mm(p)
       sleep_sec(5)  # MAGIC.  Dig happens server side and lag.
