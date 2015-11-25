@@ -15,6 +15,7 @@ class WaterMineAction < Action
 
   def stop
     @water_mine.log_action('Stop')
+    super
   end
 
   def act
