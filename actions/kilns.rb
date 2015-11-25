@@ -1,5 +1,4 @@
 require 'action'
-require 'walker'
 require 'user-io'
 
 class Kilns < GridAction
@@ -9,13 +8,15 @@ class Kilns < GridAction
 
   def get_gadgets
     super +
-      [{:type => :text, :label => 'String to send', :name => 'string'}]
+      [{:type => :text, :label => 'String to send', :name => 'string'},
+       {:type => :number, :label => 'Key delay', :name => 'key-delay'}]
   end
 
   def act_at(p)
+    
     mm(p['x'],p['y'])
     sleep_sec 0.3
-    send_string(@user_vals['string'])
+    send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
 end
 
