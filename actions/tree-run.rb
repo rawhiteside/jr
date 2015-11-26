@@ -41,11 +41,11 @@ class TreeRun < Action
 
     water_mine_1 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
     scan_interval_1 = @vals['scan-interval-1'].to_i
-    @mine_worker1 = WaterMineWorker.new(water_mine_1, scan_interval_1)
+    @mine_worker1 = WaterMineWorker.new(water_mine_1, scan_interval_1 * 60)
 
     water_mine_2 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
     scan_interval_2 = @vals['scan-interval-2'].to_i
-    @mine_worker2 = WaterMineWorker.new(water_mine_2, scan_interval_2)
+    @mine_worker2 = WaterMineWorker.new(water_mine_2, scan_interval_2 * 60)
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
