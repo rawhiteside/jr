@@ -19,8 +19,8 @@ class TreeRun < Action
   end
 
   def stop
-    @mine_worker1.log_action('Stop')
-    @mine_worker2.log_action('Stop')
+    @mine_worker1.log_action('Stop') if @mine_worker1
+    @mine_worker2.log_action('Stop') if @mine_worker2
     super
   end
 
