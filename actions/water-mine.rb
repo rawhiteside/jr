@@ -42,6 +42,7 @@ class WaterMineWorker
     @last_wind_time = nil
     log_action('Start')
     @scan_interval = scan_interval
+    @scan_gems = 0
   end
 
   def start_scan
