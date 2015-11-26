@@ -69,7 +69,7 @@ class WaterMineWorker
   end
 
   def set_angle(ang)
-    puts "Set/Angle of #{ang}" unless @win.click_on("Set/Angle of #{ang}")
+    ang = 10 if ang > 30
     @win.refresh
     log_action("Pitch angle #{ang}")
   end
