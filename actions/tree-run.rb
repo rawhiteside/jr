@@ -13,7 +13,9 @@ class TreeRun < Action
       {:type => :point, :name => 'bonfire', :label => 'Bonfire'},
       {:type => :point, :name => 'win-stack', :label => 'Stack of pinned tree windows.'},
       {:type => :point, :name => 'water-mine-1', :label => 'Water mine 1'},
+      {:type => :number, :name => 'scan-interval-1', :label => 'Angle scan interval 1 (min)'},
       {:type => :point, :name => 'water-mine-2', :label => 'Water mine 2'},
+      {:type => :number, :name => 'scan-interval-2', :label => 'Angle scan interval 2 (min)'},
     ]
     @vals = UserIO.prompt(parent, 'Trees', 'Trees', gadgets)
   end
@@ -36,10 +38,14 @@ class TreeRun < Action
     tile_windows
 
     @bonfire = PinnableWindow.from_point(point_from_hash(@vals, 'bonfire'))
+
     water_mine_1 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
+    scan_interval_1 = @vals['scan-interval-1'].to_i
+    @mine_worker1 = WaterMineWorker.new(water_mine_1, scan_interval_1)
+
     water_mine_2 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
-    @mine_worker1 = WaterMineWorker.new(water_mine_1)
-    @mine_worker2 = WaterMineWorker.new(water_mine_2)
+    scan_interval_2 = @vals['scan-interval-2'].to_i
+    @mine_worker2 = WaterMineWorker.new(water_mine_2, scan_interval_2)
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
