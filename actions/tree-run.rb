@@ -9,13 +9,15 @@ class TreeRun < Action
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
-       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2']},
+       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash']},
       {:type => :point, :name => 'bonfire', :label => 'Bonfire'},
       {:type => :point, :name => 'win-stack', :label => 'Stack of pinned tree windows.'},
       {:type => :point, :name => 'water-mine-1', :label => 'Water mine 1'},
-      {:type => :number, :name => 'scan-interval-1', :label => 'Angle scan interval 1 (min)'},
+      {:type => :number, :name => 'scan-interval-wm1-1', :label => 'WM1: Angle scan interval 1 (minutes)'},
+      {:type => :number, :name => 'scan-interval-wm1-2', :label => 'WM1: Angle scan interval 2 (minutes)'},
       {:type => :point, :name => 'water-mine-2', :label => 'Water mine 2'},
-      {:type => :number, :name => 'scan-interval-2', :label => 'Angle scan interval 2 (min)'},
+      {:type => :number, :name => 'scan-interval-wm2-1', :label => 'WM2: Angle scan interval 1 (minutes)'},
+      {:type => :number, :name => 'scan-interval-wm2-2', :label => 'WM2: Angle scan interval 2 (minutes)'},
     ]
     @vals = UserIO.prompt(parent, 'Trees', 'Trees', gadgets)
   end
@@ -39,13 +41,15 @@ class TreeRun < Action
 
     @bonfire = PinnableWindow.from_point(point_from_hash(@vals, 'bonfire'))
 
-    water_mine_1 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
-    scan_interval_1 = @vals['scan-interval-1'].to_i
-    @mine_worker1 = WaterMineWorker.new(water_mine_1, scan_interval_1 * 60)
+    water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
+    scan_interval_1 = @vals['scan-interval-wm1-1'].to_i
+    scan_interval_2 = @vals['scan-interval-wm1-2'].to_i
+    @mine_worker1 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
 
-    water_mine_2 = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
-    scan_interval_2 = @vals['scan-interval-2'].to_i
-    @mine_worker2 = WaterMineWorker.new(water_mine_2, scan_interval_2 * 60)
+    water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
+    scan_interval_1 = @vals['scan-interval-wm2-1'].to_i
+    scan_interval_2 = @vals['scan-interval-wm2-2'].to_i
+    @mine_worker2 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
@@ -93,13 +97,19 @@ class TreeRun < Action
           @mine_worker1.tend
         elsif c == 'Water Mine 2'
           @mine_worker2.tend
+        elsif c == 'Bonfire Stash'
+          bonfire_stash(@bonfire)
         end
       end
+      
 
-      @bonfire.refresh
-      HowMuch.new(:max) if @bonfire.click_on('Add')
 
     end
+  end
+
+  def bonfire_stash(bonfire)
+    bonfire.refresh
+    HowMuch.new(:max) if bonfire.click_on('Add')
   end
 end
 Action.add_action(TreeRun.new)
