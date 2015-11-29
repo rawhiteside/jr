@@ -162,7 +162,6 @@ class Onions < Action
     @threads.each {|t| t.join}
   end
 
-  MAGIC_THRESHOLD = 40
   def plant_and_pin(build_recipe, search_dir)
 
     builder = BuildMenu.new
@@ -176,9 +175,12 @@ class Onions < Action
     # Try to shrink twice.
     x1 = ImageUtils.shrink(x, 1)
     x2 = ImageUtils.shrink(x1, 1)
+    x3 = ImageUtils.shrink(x2, 1)
 
-    point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS)
+    point = ImageUtils.find_largest(x3, search_dir, REACH_RADIUS)
+    point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS) unless point
     point = ImageUtils.find_largest(x1, search_dir, REACH_RADIUS) unless point
+    point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS) unless point
 
     return nil, nil unless point
     
