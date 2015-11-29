@@ -12,20 +12,20 @@ class IronMine < Action
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Show me the stone area', :name => 'area',
-	:gadgets => [
-	  {:type => :point, :label => 'UL corner', :name => 'ul'},
-	  {:type => :point, :label => 'LR corner', :name => 'lr'},
-	]
+       :gadgets => [
+	 {:type => :point, :label => 'UL corner', :name => 'ul'},
+	 {:type => :point, :label => 'LR corner', :name => 'lr'},
+       ]
       },
       {:type => :point, :label => 'Pinned mine dialog', :name => 'mine'},
-      {:type => :combo, :label => 'Debug mode?', :name => 'debug',
-	:vals => ['y', 'n']},
+      {:type => :combo, :label => 'Debug level', :name => 'debug',
+       :vals => ['0', '1', '2']},
     ]
     @vals = UserIO.prompt(parent, 'iron_mine', 'Mine Iron', gadgets)
   end
   
   def act
-    @debug = @vals['debug'] == 'y'
+    @debug_level = @vals['debug'].to_i
     mine_pt = point_from_hash(@vals, 'mine')
     field_rect = Rectangle.new(@vals['area.ul.x'].to_i, @vals['area.ul.y'].to_i,
 			       @vals['area.lr.x'].to_i - @vals['area.ul.x'].to_i,
@@ -59,12 +59,23 @@ class IronMine < Action
     stones.each {|s| s.set_properties}
     puts "Using #{stones.size} stones"
 
-    if @debug
+    if @debug_level > 0
       mouse_over_stones(stones)
       stones.each {|s| puts s}
     end
+
+    if @debug_level > 1
+      show_crystal_points(stones, stones_image)
+    end
     
     find_workloads_and_mine(stones)
+  end
+
+  def show_crystal_points(stones, image)
+    points = []
+    points = stones.inject([]) {|arr, stone| arr += stone.crystal_points}
+    points_image = ImageUtils.image_from_points(image.buffered_image, points)
+    UserIO.show_image(points_image)
   end
 
   def mouse_over_stones(stones)
@@ -191,7 +202,7 @@ class IronMine < Action
     brightness = ImageUtils.brightness(xor_image)
     globs = get_globs(brightness, 10)
 
-    stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points, @debug)}
+    stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points, @debug_level)}
   end
 
   # XXX DUP of method in sandmine. 
@@ -274,10 +285,11 @@ class IronOreStone
   attr_accessor :points, :min_point, :max_point, :centroid
   attr_accessor :color_symbol, :crystal_type
   attr_reader :image
+  attr_reader :crystal_points
 
-  def initialize(image, brightness, points, debug)
+  def initialize(image, brightness, points, debug_level)
     @image = image
-    @debug = debug
+    @debug_level = debug_level
     @brightness = brightness
     @points = points
     set_points
@@ -293,7 +305,7 @@ class IronOreStone
   end
 
   # Just look at the stone points and pick the first color.
-  MINE_COLORS = [:magenta, :cyan, :blue]
+  MINE_COLORS = [:yellow, :cyan, :green]
   def set_color
     @points.each do |p|
       c = Clr.color_symbol(@image.color(p))
@@ -304,9 +316,11 @@ class IronOreStone
     end
     @color_symbol = :black
   end
-    
+  
   def set_crystal
-    @crystal_type = CrystalDetector.new(self, @debug).crystal_type
+    cd = CrystalDetector.new(self, @debug_level)
+    @crystal_type = cd.crystal_type
+    @crystal_points = cd.crystal_points
   end
 
 
@@ -362,13 +376,14 @@ end
 
 class CrystalDetector
   attr_reader :crystal_type
+  attr_reader :crystal_points
 
-  def initialize(stone, debug)
-    @debug = debug
+  def initialize(stone, debug_level)
+    @debug_level = debug_level
     
     iterations = 10
-    crystal_points = crystal_pixels(stone.image, stone.points)
-    arr = iterate_neighbor_count(crystal_points, iterations)
+    @crystal_points = crystal_pixels(stone.image, stone.points)
+    arr = iterate_neighbor_count(@crystal_points, iterations)
 
     # index of first element greater than 10 (arr is sorted.)
     if arr[8] > 66
@@ -378,7 +393,7 @@ class CrystalDetector
     else
       @crystal_type = :spike
     end
-    if @debug
+    if @debug_level > 0
       puts "Crystal type: #{@crystal_type}, prob val: #{arr[8]}"
     end
 
@@ -387,6 +402,7 @@ class CrystalDetector
 
   def iterate_neighbor_count(points, iteration_count)
     # Put points into a has as keys, ith values being a count.
+    return [] if points.nil? || points.size == 0
     hash = {}
     points.each {|p| hash[p] = 1.0}
     iteration_count.times do
@@ -412,6 +428,7 @@ class CrystalDetector
     # return the max value
     sorted = hash.values.sort
     arr = []
+
     10.times do |i|
       index = sorted.size * i / 10
       arr << (sorted[index] * 100).to_i
@@ -426,15 +443,16 @@ class CrystalDetector
 
   def crystal_pixel?(color)
     r, g, b = color.red, color.green, color.blue
-    return false unless (r >= g) && (r >= b)
+    return false unless (b >= g) && (b >= r)
 
-    # Red
-    cut = r/5
-    return true if (r - g) > cut && (r - b) > cut
+    # Blue
+    cut = b/5
 
-    # Very bright, but not bright magenta
+    return true if (b - g) > cut && (b - r) > cut
+
+    # Very bright, but not bright cyan
     sum = r + g + b
-    return true if (sum > 550) && r >= g && r >= b && (g-b).abs < 50
+    return true if (sum > 550) && b >= g && b >= r && (g-r).abs < 50
 
     # Very dark
     return true if sum < 75
