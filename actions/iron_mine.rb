@@ -384,24 +384,28 @@ class CrystalDetector
     iterations = 10
     @crystal_points = crystal_pixels(stone.image, stone.points)
     arr = iterate_neighbor_count(@crystal_points, iterations)
-
-    # index of first element greater than 10 (arr is sorted.)
-    if arr[8] > 66
-      @crystal_type = :wart
-    elsif arr[8] > 39
-      @crystal_type = :finger
+    
+    if arr.size > 8
+      # index of first element greater than 10 (arr is sorted.)
+      if arr[8] > 66
+        @crystal_type = :wart
+      elsif arr[8] > 39
+        @crystal_type = :finger
+      else
+        @crystal_type = :spike
+      end
+      if @debug_level > 0
+        puts "Crystal type: #{@crystal_type}, probe val: #{arr[8]}"
+      end
     else
-      @crystal_type = :spike
-    end
-    if @debug_level > 0
-      puts "Crystal type: #{@crystal_type}, prob val: #{arr[8]}"
+      puts "arr bogus: #{arr}"
     end
 
   end
 
 
   def iterate_neighbor_count(points, iteration_count)
-    # Put points into a has as keys, ith values being a count.
+    # Put points into a hash as keys, with values being a count.
     return [] if points.nil? || points.size == 0
     hash = {}
     points.each {|p| hash[p] = 1.0}
