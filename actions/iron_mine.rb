@@ -51,9 +51,9 @@ class IronMine < Action
       return
     end
     stones = stones.sort { |a,b| b.size <=> a.size }[0,7]
-    if stones.size < 7
-      stones = stones[1,7]
-    end
+    stones = stones[1,7] if stones.size < 7
+    return unless stones
+
     stones = stones.sort{|a,b| a.max_point.y <=> b.max_point.y}
     stones.each {|s| puts "Stone size is #{s.size}"}
     stones.each {|s| s.set_properties}
