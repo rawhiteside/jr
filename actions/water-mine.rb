@@ -8,6 +8,7 @@ class WaterMineAction < Action
   def setup(parent)
     gadgets = [
       {:type => :point, :name => 'water-mine', :label => 'Water mine'},
+      {:type => :number, :name => 'check-freq', :label => 'Gem check interval (seconds)'},
       {:type => :number, :name => 'scan-interval-1', :label => 'Angle scan interval 1 (minutes)'},
       {:type => :number, :name => 'scan-interval-2', :label => 'Angle scan interval 2 (minutes)'},
     ]
@@ -23,6 +24,7 @@ class WaterMineAction < Action
   def act
     pt = point_from_hash(@vals, 'water-mine')
     win = PinnableWindow.from_point(pt)
+    gem_delay = @vals['check-freq'].to_i
     interval_minutes1 = @vals['scan-interval-1'].to_i
     interval_minutes2 = @vals['scan-interval-2'].to_i
 
@@ -30,7 +32,7 @@ class WaterMineAction < Action
 
     loop do
       @water_mine.tend
-      sleep_sec(30)
+      sleep_sec(gem_delay)
     end
   end
 end
@@ -68,7 +70,7 @@ class WaterMineWorker
       # If no gems, go to the next angle and try again.
       if @scan_gems == 0
         @scan_interval = @scan_interval1
-        set_angle(angle + 1)
+        set_angle(angle - 1)
       else
         @scan_interval = @scan_interval2
       end
@@ -81,10 +83,12 @@ class WaterMineWorker
 
   def set_angle(ang)
     ang = 10 if ang > 30
+    ang = 30 if ang < 10
     @win.refresh
     # Need to figure out why click_on sometimes fails on the laptop. 
     loop do
       break if @win.click_on("Set/Angle of #{ang}")
+      p @win.read_text
       sleep 0.2
     end
     @win.refresh
