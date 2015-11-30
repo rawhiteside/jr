@@ -55,9 +55,7 @@ class IronMine < Action
     return unless stones
 
     stones = stones.sort{|a,b| a.max_point.y <=> b.max_point.y}
-    stones.each {|s| puts "Stone size is #{s.size}"}
     stones.each {|s| s.set_properties}
-    puts "Using #{stones.size} stones"
 
     if @debug_level > 0
       mouse_over_stones(stones)
