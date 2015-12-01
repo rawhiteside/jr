@@ -3,6 +3,7 @@ require 'convexhull'
 require 'set'
 require 'm_choose_n'
 
+
 import org.foa.ImageUtils
 
 class IronMine < Action
@@ -124,19 +125,21 @@ class IronMine < Action
 
   def actually_mine(stones, arr)
     delay = 0.2
-    highlight_blue_point = nil
+    watcher = nil
     arr.each_index do |i|
-      mm(stones[arr[i]].x, stones[arr[i]].y)
+      stone = stones[arr[i]]
+
+      watcher = StoneHighlightWatcher.new(stone) if i == 0
+      
+      mm(stone.x, stone.y)
       sleep_sec(delay)
       str = (i == (arr.size - 1)) ? 's' : 'a'
       send_string(str)
       sleep_sec(delay)
-      if i == 0
-        sleep_sec(0.1)
-        highlight_blue_point = find_highlight_point(stones[arr[i]])
-      end
+      
+      watcher.wait_highlight(true) if i == 0
     end
-    wait_for_highlight_gone(highlight_blue_point)
+    watcher.wait_highlight(false)
   end
 
   # Provide a list of indices.  Mine it if it's mine-able.
@@ -220,67 +223,11 @@ class IronMine < Action
     globs
 
   end
-
-  def wait_for_highlight_gone(p)
-    if p.nil?
-      sleep_sec 3
-      return
-    end
-    start = Time.new
-    until !highlight_blue?(getColor(p))
-      sleep_sec 0.5
-      break if (Time.new - start) > 6
-    end
-    sleep_sec 0.3
-
-  end
-
-  def highlight_blue?(color)
-    r, g, b = color.red, color.green, color.blue
-    
-    return b > 100 && (b - g) < 20 && (b - r) > 30
-  end
-
-  def find_highlight_point(stone)
-    y = stone.centroid.y
-    x = stone.centroid.x
-    stone.rectangle.width.times do |offset|
-      # Examine only points NOT on the stone.
-      y_offs = [0, -offset, -offset/2]
-      y_offs.each do |y_off|
-        local_point = Point.new(x + offset, y + y_off)
-        if !stone.points.include?(local_point)
-          point = stone.to_screen(local_point)
-          return point if highlight_blue?(getColor(point))
-        end
-        local_point = Point.new(x + offset, y - y_off)
-        if !stone.points.include?(local_point)
-          point = stone.to_screen(local_point)
-          return point if highlight_blue?(getColor(point))
-        end
-        local_point = Point.new(x - offset, y + y_off)
-        if !stone.points.include?(local_point)
-          point = stone.to_screen(local_point)
-          return point if highlight_blue?(getColor(point))
-        end
-        local_point = Point.new(x - offset, y - y_off)
-        if !stone.points.include?(local_point)
-          point = stone.to_screen(local_point)
-          return point if highlight_blue?(getColor(point))
-        end
-      end
-    end
-
-    puts "didn't find highlights "
-
-    nil
-
-  end
 end
 
 # XXX Close DUP of class in sandmine.
 class IronOreStone
-  attr_accessor :points, :min_point, :max_point, :centroid
+  attr_accessor :points, :min_point, :max_point, :centroid, :rect
   attr_accessor :color_symbol, :crystal_type
   attr_reader :image
   attr_reader :crystal_points
@@ -341,7 +288,9 @@ class IronOreStone
     @min_point = Point.new(xmin, ymin)
     @max_point = Point.new(xmax, ymax)
     @centroid = Point.new(xsum / @points.size, ysum / @points.size)
-
+    @rect = Rectangle.new(@min_point.x, @min_point.y,
+                          @max_point.x - @min_point.x + 1,
+                          @max_point.y - @min_point.y + 1)  
   end
 
   def to_screen(point)
@@ -465,6 +414,59 @@ class CrystalDetector
     points.select {|p| crystal_pixel?(img.color(p))}
   end
 
+end
+
+class StoneHighlightWatcher
+  def initialize(stone)
+    @stone = stone
+    @rect = make_rect(stone, stone.image)
+    @empty = PixelBlock.new(@rect)
+  end
+
+  def highlight?
+    xor = ImageUtils.brightness(ImageUtils.xor(@empty, PixelBlock.new(@rect)))
+    globs = ImageUtils.globify(xor, 10)
+
+    return false if (globs.nil? || globs.size < 8)
+    globs = globs.sort { |a,b| b.size <=> a.size }
+
+    # Should be one large ring, and a bunch of little arrow things.
+    globs[0].size > (globs[1].size * 10)
+  end
+  
+
+  def wait_highlight(expect)
+    start = Time.now
+    loop do
+      break if highlight? == expect
+      break if (Time.now - start) > 4.0
+      ARobot.shared_instance.sleep_sec(0.1)
+    end
+  end
+
+  def make_rect(stone, image)
+    srect = Rectangle.new(stone.rect)
+
+    xy = image.to_screen(srect.x, srect.y)
+    srect.x = xy[0]
+    srect.y = xy[1]
+
+    # A rectangle a little larger than the stone
+    rect = Rectangle.new(srect.x - srect.width/4,
+                         srect.y - srect.height/4,
+                         (srect.width * 3) / 2,
+                         (srect.height * 3) / 2)
+    ss = ARobot.sharedInstance.screen_size
+    rect.x = 0 if rect.x < 0
+    rect.x = ss.width - 1 if rect.x >= ss.width
+
+    rect.y = 0 if rect.y < 0
+    rect.y = ss.height - 1 if rect.y >= ss.height
+
+    return rect
+  end
+
+  
 end
 
 Action.add_action(IronMine.new)
