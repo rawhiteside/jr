@@ -86,7 +86,7 @@ class WaterMineWorker
     ang = 30 if ang < 10
     @win.refresh
     # Need to figure out why click_on sometimes fails on the laptop. 
-    loop do
+    5.times do
       break if @win.click_on("Set/Angle of #{ang}")
       p @win.read_text
       sleep 0.2
