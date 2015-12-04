@@ -219,6 +219,7 @@ public abstract class AWindow extends ARobot  {
 	}
 	try {
 	    for(int i = 0; i < path.length; i++) {
+		if(w == null) { break; }
 		String menu = path[i];
 		Point pt = w.coordsFor(menu);
 		if (pt == null) {
