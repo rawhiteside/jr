@@ -231,7 +231,7 @@ public abstract class AWindow extends ARobot  {
 		else {
 		    w = PinnableWindow.fromScreenClick(pt);
 		    // Move the mouse out of the way. 
-		    if (pt.x > w.getRect().x) {
+		    if (w != null && (pt.x > w.getRect().x)) {
 			mm(w.getRect().x, w.getRect().y);
 			sleepSec(0.1);
 		    }
