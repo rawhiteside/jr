@@ -23,20 +23,19 @@ class Raeli < Action
     loop do
       px = w.rect.x + 30
       py = w.rect.y + 200
-      pixel = get_pixel(px, py)
-      next if pixel == prev_pixel
+      color = get_color(px, py)
+      next if color == prev_color
       w.refresh
       text = w.read_text
       last = text.split("\n").last
 
-      prev_pixel = pixel
-      r, g, b = rgb_from_pixel(pixel)
-
+      prev_color = color
+      
       File.open('Raeli.log', 'a') do |f|
-	f.puts("#{Time.now - start}: #{last} : RGB=(#{r}, #{g}, #{b} ")
+	f.puts("#{Time.now - start}: #{last} : RGB=(#{color.red}, #{color.green}, #{color.blue} ")
       end
 
-      sleep_sec(30)
+      sleep_sec(10)
     end
   end
 
