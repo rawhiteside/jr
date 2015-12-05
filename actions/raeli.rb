@@ -19,7 +19,7 @@ class Raeli < Action
     start = Time.now
     w.click_on('Begin')
 
-    prev_pixel = nil
+    prev_color = nil
     loop do
       px = w.rect.x + 30
       py = w.rect.y + 200
