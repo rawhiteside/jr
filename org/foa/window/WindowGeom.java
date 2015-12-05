@@ -22,11 +22,16 @@ public class WindowGeom extends ARobot {
     }
 
     public static Rectangle rectFromPoint(Point p) {
+	return rectFromPoint(p, false);
+    }
+    public static Rectangle rectFromPoint(Point p, boolean debug) {
 	int x = findLeftEdge(p.x, p.y);
 	if (x < 0) {
+	    if(debug) { System.out.println("Failed to find left edge"); }
 	    return null;
 	}
-	return rectFromLeftEdge(x, p.y);
+	
+	return rectFromLeftEdge(x, p.y, debug);
     }
 
     // Wait a while for the edge to appear, if it has not yet.
@@ -165,13 +170,19 @@ public class WindowGeom extends ARobot {
     }
 
 
-    private static Rectangle rectFromLeftEdge(int x, int y) {
+    private static Rectangle rectFromLeftEdge(int x, int y, boolean debug) {
 	Point origin = findOrigin(new Point(x, y));
-	if (origin == null) {return null;}
+	if (origin == null) {
+	    if(debug) { System.out.println("Failed to find origin"); }
+	    return null;
+	}
 	int width = findWidth(origin);
 	int height = findHeight(origin.x, origin.y);
 
-	if (height <= 10 || width <= 10) { return null; }
+	if (height <= 10 || width <= 10) {
+	    if(debug) { System.out.println("Rectangle was too small: " + width + ", " + height); }
+	    return null;
+	}
 
 	return new Rectangle(origin.x, origin.y, width, height);
     }
