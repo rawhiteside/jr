@@ -1,4 +1,5 @@
 require 'action'
+import javax.imageio.ImageIO
 
 class Raeli < Action
   def initialize
@@ -8,6 +9,7 @@ class Raeli < Action
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag to pinned Raeli', :name => 'w'},
+      {:type => :combo, :label => "Task", :name => 'task', :vals => ['Watch', 'Burn and watch'], },
     ]
     @vals = UserIO.prompt(parent, @name, @name, comps)
   end
@@ -17,25 +19,33 @@ class Raeli < Action
     return unless w
 
     start = Time.now
-    w.click_on('Begin')
+    w.click_on('Begin') if @vals['task'] =~ /Burn/
 
     prev_color = nil
+    counter = 0
     loop do
       px = w.rect.x + 30
       py = w.rect.y + 200
       color = get_color(px, py)
-      next if color == prev_color
-      w.refresh
-      text = w.read_text
-      last = text.split("\n").last
+      if color != prev_color
 
-      prev_color = color
-      
-      File.open('Raeli.log', 'a') do |f|
-	f.puts("#{Time.now - start}: #{last} : RGB=(#{color.red}, #{color.green}, #{color.blue} ")
+        counter += 1
+
+        w.refresh
+        prev_color = color
+        hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
+        hsb_str = sprintf("%0.3f, %0.3f, %0.3f", hsb[0], hsb[1], hsb[2])
+
+        File.open('Raeli.log', 'a') do |f|
+	  f.puts("#{counter}, #{Time.now}, seconds:=> , #{(Time.now - start).to_i}, RGB:=>, #{color.red}, #{color.green}, #{color.blue}, HSB:=>, #{hsb_str}")
+        end
+        filename = "raeli-shots/image.%04d.%03d.%03d.%03d.png" % [counter, color.red, color.green, color.blue]
+        pb = PixelBlock.new(w.rect)
+        ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
       end
 
       sleep_sec(10)
+      ControllableThread.check_for_pause
     end
   end
 
