@@ -7,17 +7,6 @@ class SiltAction < Action
     super('Silt', 'Gather')
   end
 
-  def stash(walker)
-    
-    stash_path = [[-925, 5340], [-932, 5355]]
-    walker.walk_path(stash_path)
-    if @stash_window.click_on('Stash/Silt')
-      HowMuch.new(:max)
-    end
-    walker.walk_path(stash_path.reverse)
-    @carry_current = 0
-  end
-
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
@@ -52,6 +41,7 @@ class SiltAction < Action
           @stash_window.refresh
           HowMuch.new(:max) if @stash_window.click_on('Stash/Silt')
         else
+          sleep_sec(0.2)
           gather_at(walker, last_coord, sub_boxes)
         end
       end
@@ -80,11 +70,11 @@ class SiltAction < Action
   def silt_color?(pixel_block, x, y)
     color = pixel_block.color(x, y)
     r, g, b = color.red, color.green, color.blue
-    return false unless r > 150 && r < 220
-    delrg = r - g
-    return false unless delrg >= 4 && delrg < 15
-    delgb = g - b
-    return delgb >= 4 && delgb < 20
+    hsb = Color.RGBtoHSB(r, g, b, nil)
+    hue = hsb[0]
+    sat = hsb[1]
+
+    return (hue > 0.08 && hue < 0.13 && sat < 0.145)
   end
 
   def gather_once(boxes)
@@ -96,8 +86,8 @@ class SiltAction < Action
 
           # Search around [x, y]
           all_silt = true
-          -rad.upto(rad) do |xoff|
-            -rad.upto(rad) do |yoff|
+          (-rad).upto(rad) do |xoff|
+            (-rad).upto(rad) do |yoff|
               unless silt_color?(pixel_block, x + xoff, y + yoff)
 	        all_silt = false 
                 break
@@ -108,7 +98,7 @@ class SiltAction < Action
           if all_silt
 	    screen_x, screen_y  = pixel_block.to_screen(x, y)
 	    rclick_at(screen_x, screen_y)
-	    sleep_sec 5
+	    sleep_sec 4
 	    return true
           end
         end

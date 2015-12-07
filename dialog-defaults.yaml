@@ -27,10 +27,10 @@ Loom:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    loom.x: '987'
-    loom.y: '159'
+    loom.x: '305'
+    loom.y: '400'
 Slate:
-  2: T& camp
+  2: Near UArch
   1: true
   Parameter set 1:
     coords: |
@@ -75,10 +75,10 @@ Slate:
       3202, -6245
       3201, -6238
       3198, -6236
-      3196, -6234
+      3198, -6234
       3195, -6232
       3195, -6234
-      3197, -6236
+      3200, -6236
       3201, -6249
       3198, -6251
       3198, -6254
@@ -164,6 +164,8 @@ Trees:
       Gather Wood
       3191, -6220
       Gather Wood
+      3179, -6225
+      Water Mine 2
       3191, -6224
       Gather Wood
       Gather Wood
@@ -177,11 +179,17 @@ Trees:
       3194, -6231
       Gather Wood
       Gather Wood
+      3201, -6239
+      Water Mine 1
       3202, -6234
-    bonfire.x: '200'
-    bonfire.y: '573'
-    win-stack.x: '666'
-    win-stack.y: '690'
+    bonfire.x: '309'
+    bonfire.y: '727'
+    win-stack.x: '942'
+    win-stack.y: '626'
+    water-mine-1.x: '305'
+    water-mine-1.y: '922'
+    water-mine-2.x: '603'
+    water-mine-2.y: '916'
   Test in camp:
     path: |
       3202, -6233
@@ -198,15 +206,13 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    help: |
-      zoom out 10 clicks
-      LIght intensity off
+    help: Zoom out 12 clicks
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '472'
-    stack.y: '631'
+    stack.x: '427'
+    stack.y: '564'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
@@ -223,19 +229,19 @@ Grass:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '507'
-    chest.y: '547'
-    chest-coords: 3064, -6262
-    count: '6'
+    chest.x: '1105'
+    chest.y: '227'
+    chest-coords: 3187, -6264
+    count: '100'
     path: |
-      3066, -6259
-      3071, -6259
+      3187, -6264
+      3189, -6264
 Flax Comb:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    w.x: '704'
-    w.y: '326'
+    w.x: '420'
+    w.y: '398'
 Interval tab:
   2: Parameter set 1
   1: false
@@ -243,161 +249,229 @@ Interval tab:
     interval: '5'
 onions:
   2: Parameter set 1
-  1: false
+  1: true
   Parameter set 1:
-    veggie: Onions/Tears of Sinai/(2)
-    grow: 3302, -6146
-    water: 3302, -6146
-    head.x: '682'
-    head.y: '400'
-    plant.x: '292'
-    plant.y: '452'
-    repeat: '25'
+    veggie: Carrots/Osiris'Green Leaf/(2)
+    grow: 3094, -6080
+    water: 3094, -6080
+    head.x: '958'
+    head.y: '550'
+    plant.x: '399'
+    plant.y: '650'
+    repeat: '44'
     beds: '12'
     second: '22'
     third: '34'
+  Leeks(1):
+    veggie: Cabbage/Bastet's Yielding/(2)
+    grow: ''
+    water: ''
+    head.x: ''
+    head.y: ''
+    plant.x: ''
+    plant.y: ''
+    repeat: ''
+    beds: ''
+    second: ''
+    third: ''
+  Leeks Hapi:
+    veggie: Leeks/Horus' Grain/(2- 3 waters!)
+    grow: 4380, -5962
+    water: 4380, -5962
+    head.x: '958'
+    head.y: '550'
+    plant.x: '239'
+    plant.y: '595'
+    repeat: '1'
+    beds: '12'
+    second: '20'
+    third: '34'
+  One-yield veggies:
+    veggie: Garlic/Heket's Reaping/(1)
+    grow: 3023, -6255
+    water: 3023, -6255
+    head.x: '958'
+    head.y: '550'
+    plant.x: '345'
+    plant.y: '751'
+    repeat: '24'
+    beds: '12'
+    second: '19'
+    third: '31'
 iron_mine:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    area.ul.x: '102'
-    area.ul.y: '26'
-    area.lr.x: '1303'
-    area.lr.y: '591'
-    mine.x: '1185'
-    mine.y: '666'
-    debug: n
+    area.ul.x: '237'
+    area.ul.y: '112'
+    area.lr.x: '1622'
+    area.lr.y: '870'
+    mine.x: '332'
+    mine.y: '935'
+    debug: '0'
 Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '813'
-    g.top-left.y: '195'
-    g.bottom-right.x: '1142'
-    g.bottom-right.y: '588'
+    g.top-left.x: '1139'
+    g.top-left.y: '191'
+    g.bottom-right.x: '1522'
+    g.bottom-right.y: '642'
     g.num-cols: '6'
     g.num-rows: '6'
-    task: Tend
+    task: Light
 Glazier:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '634'
-    g.top-left.y: '481'
-    g.bottom-right.x: '634'
-    g.bottom-right.y: '587'
-    g.num-cols: '1'
+    g.top-left.x: '749'
+    g.top-left.y: '627'
+    g.bottom-right.x: '867'
+    g.bottom-right.y: '735'
+    g.num-cols: '2'
     g.num-rows: '3'
-    what: Make a Glass Pipe
+    what: Make a Glass Rod
 Potash:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '535'
-    g.top-left.y: '228'
-    g.bottom-right.x: '874'
-    g.bottom-right.y: '568'
+    g.top-left.x: '804'
+    g.top-left.y: '368'
+    g.bottom-right.x: '1173'
+    g.bottom-right.y: '738'
     g.num-cols: '7'
     g.num-rows: '7'
-    repeat: '2'
-    delay: '1'
-    action: Start and tend
+    repeat: '10'
+    delay: '0'
+    action: Tend
+Show results:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    text: |
+      This is a Kettle
+      Useable by Initiate
+      -----
+      -----
+      Utility. . .
+      Ownership. . .
+      ?
+      ? ?
 Clay:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '299'
-    chest.y: '540'
-    chest-coords: 3151, -6260
-    water-coords: 3151, -6260
-    jug_count: '120'
+    chest.x: '339'
+    chest.y: '858'
+    chest-coords: 3151, -6259
+    water-coords: 3151, -6259
+    jug_count: '480'
     path: |
-      3154, -6259
-      3162, -6259
-Cutstones:
-  2: Parameter set 1
-  1: false
-  Parameter set 1:
-    g.top-left.x: '559'
-    g.top-left.y: '255'
-    g.bottom-right.x: '793'
-    g.bottom-right.y: '550'
-    g.num-cols: '4'
-    g.num-rows: '7'
-    repeat: '999'
-    delay: '223'
-sand_mine:
-  2: Parameter set 1
-  1: false
-  Parameter set 1:
-    field.ul.x: '209'
-    field.ul.y: '74'
-    field.lr.x: '1180'
-    field.lr.y: '506'
-    mine.x: '123'
-    mine.y: '555'
-    stone-count: '7'
-    delay: '0.2'
-    debug: n
-Take from kettles:
-  2: Parameter set 1
-  1: false
-  Parameter set 1:
-    g.top-left.x: '549'
-    g.top-left.y: '232'
-    g.bottom-right.x: '869'
-    g.bottom-right.y: '551'
-    g.num-cols: '7'
-    g.num-rows: '7'
-    repeat: '1'
-    delay: '1'
-PapyPlant:
-  2: Parameter set 1
-  1: false
-  Parameter set 1:
-    plant.x: '173'
-    plant.y: '431'
-    coords: |
-      887, -5030
-      887, -5024
-      887, -5019
-      887, -5004
-      887, -4999
-      887, -4990
-      887, -4985
-      887, -4979
-    delay: '7'
+      3140, -6259
+      3163, -6259
 Pottery Wheels:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '512'
-    g.top-left.y: '247'
-    g.bottom-right.x: '825'
-    g.bottom-right.y: '561'
+    g.top-left.x: '782'
+    g.top-left.y: '372'
+    g.bottom-right.x: '1144'
+    g.bottom-right.y: '735'
     g.num-cols: '6'
     g.num-rows: '6'
-    repeat: '99999'
-    delay: '75'
+    repeat: '9999'
+    delay: '77'
     string: j
+Forge:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '785'
+    g.top-left.y: '474'
+    g.bottom-right.x: '1228'
+    g.bottom-right.y: '597'
+    g.num-cols: '5'
+    g.num-rows: '2'
+    what: Sheeting/Make Steel
+Bricks:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '893'
+    g.top-left.y: '476'
+    g.bottom-right.x: '1020'
+    g.bottom-right.y: '603'
+    g.num-cols: '4'
+    g.num-rows: '4'
+    repeat: '99999'
+    delay: '40'
+sand_mine:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    field.ul.x: '334'
+    field.ul.y: '135'
+    field.lr.x: '1752'
+    field.lr.y: '815'
+    mine.x: '316'
+    mine.y: '931'
+    stone-count: '7'
+    delay: '0.1'
+    debug: n
+PapyPlant:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    plant.x: '365'
+    plant.y: '743'
+    coords: |
+      880, -4877
+      879, -4875
+      879, -4873
+    delay: '5'
+Take from kettles:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '790'
+    g.top-left.y: '389'
+    g.bottom-right.x: '1186'
+    g.bottom-right.y: '782'
+    g.num-cols: '7'
+    g.num-rows: '2'
+    repeat: '1'
+    delay: '0'
+wheat:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    grow_loc: 3082, -6233
+    rows: '5'
+    cols: '5'
+    water_loc: 3091, -6233
+    stash_loc: 3088, -6233
+    stash_win.x: '326'
+    stash_win.y: '829'
+    plant_win.x: '86'
+    plant_win.y: '763'
 block:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    win.x: '1054'
-    win.y: '69'
-    direction: East
+    win.x: '1596'
+    win.y: '44'
+    direction: South
 silt:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    ul.x: '477'
-    ul.y: '156'
-    lr.x: '920'
-    lr.y: '565'
-    stash.x: '1055'
-    stash.y: '646'
-    path: |
+    ul.x: '786'
+    ul.y: '366'
+    lr.x: '1151'
+    lr.y: '751'
+    stash.x: '409'
+    stash.y: '913'
+    path: |+
       2779, -6434
       Silt
       2779, -6430
@@ -458,10 +532,6 @@ silt:
       2795, -6418
       Silt
       2795, -6414
-      Silt
-      2795, -6410
-      Silt
-      2799, -6413
       Silt
       2799, -6417
       Silt
@@ -578,6 +648,9 @@ silt:
       2839, -6469
       2820, -6447
       2820, -6421
+      2829, -6414
+      Stash
+      2820, -6421
       2759, -6421
       2759, -6391
       2752, -6385
@@ -631,8 +704,120 @@ silt:
       Silt
       2762, -6347
       Silt
+      2762, -6343
+      Silt
+      2766, -6343
+      Silt
+      2770, -6343
+      Silt
+      2774, -6343
+      Silt
+      2778, -6343
+      Silt
+      2782, -6343
+      Silt
+      2786, -6343
+      Silt
+      2763, -6343
       2745, -6364
       2745, -6402
       2763, -6426
       2779, -6425
+
+Clay Bricks:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '789'
+    g.top-left.y: '412'
+    g.bottom-right.x: '1089'
+    g.bottom-right.y: '709'
+    g.num-cols: '4'
+    g.num-rows: '4'
+    repeat: '999'
+    delay: '41'
+Cactus:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    path: |
+      3402, -5952
+      Collect
+      3396, -5952
+      Collect
+      3394, -5954
+      Collect
+      3391, -5964
+      Collect
+      3383, -5965
+      Collect
+      3362, -5963
+      Collect
+      3334, -5960
+      Collect
+      3356, -5977
+      Collect
+      3357, -5984
+      Collect
+      3364, -5982
+      Collect
+      3363, -5980
+      Collect
+      3374, -5976
+      Collect
+      3380, -5972
+      Collect
+      3405, -5961
       Stash
+    warehouse.x: '593'
+    warehouse.y: '874'
+    win-stack.x: '1164'
+    win-stack.y: '939'
+water-mine:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    water-mine.x: '429'
+    water-mine.y: '689'
+    check-freq: '10'
+    scan-interval-1: '4'
+    scan-interval-2: '10'
+Fire Bricks:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '819'
+    g.top-left.y: '436'
+    g.bottom-right.x: '1061'
+    g.bottom-right.y: '680'
+    g.num-cols: '4'
+    g.num-rows: '4'
+    repeat: '9999'
+    delay: '41'
+Kilns:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '864'
+    g.top-left.y: '368'
+    g.bottom-right.x: '966'
+    g.bottom-right.y: '751'
+    g.num-cols: '2'
+    g.num-rows: '4'
+    repeat: '999'
+    delay: '155'
+    string: tbwf
+    key-delay: '1'
+color-picker:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    loc.x: '117'
+    loc.y: '62'
+Raeli:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    w.x: '1627'
+    w.y: '312'
+    task: Watch
