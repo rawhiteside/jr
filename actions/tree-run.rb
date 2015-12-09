@@ -64,8 +64,18 @@ class TreeRun < Action
     true
   end
 
+  def secs_to_wait(w)
+    w.refresh
+    sleep_sec 0.5
+    text = w.read_text
+    match = Regexp.new('no Wood for ([0-9]+) ').match(text)
+
+    match ? match[1].to_i : 0
+  end    
+
   def gather(w)
     loop do
+      return if (secs = secs_to_wait(w)) > 15
       w.refresh
       break if w.click_on('Gather')
       sleep_sec 2
@@ -109,6 +119,9 @@ class TreeRun < Action
 
   def bonfire_stash(bonfire)
     bonfire.refresh
+    sleep 0.2
+    bonfire.refresh
+    sleep 0.2
     HowMuch.new(:max) if bonfire.click_on('Add')
   end
 end
