@@ -135,7 +135,7 @@ public class PinnableWindow extends AWindow {
 	    // sleepSec(delay);
 	    mm(p, delay);
 	    rbu();
-	    // sleepSec(delay);
+	    sleepSec(delay);
 	    return isDialogAt(p);
 	}
 	catch(ThreadKilledException e) { throw e; }
