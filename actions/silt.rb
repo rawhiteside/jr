@@ -74,7 +74,7 @@ class SiltAction < Action
     hue = hsb[0]
     sat = hsb[1]
 
-    return (hue > 0.08 && hue < 0.13 && sat < 0.145)
+    return (hue > 0.08 && hue < 0.11 && sat < 0.18)
   end
 
   def gather_once(boxes)
@@ -97,6 +97,9 @@ class SiltAction < Action
           end
           if all_silt
 	    screen_x, screen_y  = pixel_block.to_screen(x, y)
+            point = Point.new(screen_x, screen_y)
+            return false if point == @last_point
+            @last_point = point
 	    rclick_at(screen_x, screen_y)
 	    sleep_sec 4
 	    return true
