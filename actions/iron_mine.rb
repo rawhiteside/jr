@@ -1,5 +1,6 @@
 require 'action'
 require 'convexhull'
+require 'timer'
 require 'set'
 require 'm_choose_n'
 
@@ -201,7 +202,11 @@ class IronMine < Action
   # Return value is an array of these globs.
   def find_stones(stones_image, xor_image)
     brightness = ImageUtils.brightness(xor_image)
-    globs = get_globs(brightness, 10)
+    globs = nil
+    seconds = Timer.time_this do
+      globs = get_globs(brightness, 10)
+    end
+    puts "Globify: #{seconds} seconds"
 
     stones = globs.collect {|points| IronOreStone.new(stones_image, brightness, points, @debug_level)}
   end
@@ -392,7 +397,19 @@ class CrystalDetector
     return arr
   end
 
-  def crystal_pixel?(color)
+  def crystal_color?(color)
+    return true if color == Color::WHITE
+    return true if color == Color::BLACK
+    hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
+    hue = hsb[0]
+    if hue > 0.64 && hue < 0.76
+      true
+    else
+      false
+    end
+  end
+
+  def crystal_colorXXX?(color)
     r, g, b = color.red, color.green, color.blue
     return false unless (b >= g) && (b >= r)
 
@@ -411,7 +428,7 @@ class CrystalDetector
   end
 
   def crystal_pixels(img, points)
-    points.select {|p| crystal_pixel?(img.color(p))}
+    points.select {|p| crystal_color?(img.color(p))}
   end
 
 end
