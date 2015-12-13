@@ -37,7 +37,7 @@ class Raeli < Action
         hsb_str = sprintf("%0.3f, %0.3f, %0.3f", hsb[0], hsb[1], hsb[2])
 
         File.open('Raeli.log', 'a') do |f|
-	  f.puts("#{counter}, #{Time.now}, seconds:=> , #{(Time.now - start).to_i}, RGB:=>, #{color.red}, #{color.green}, #{color.blue}, HSB:=>, #{hsb_str}")
+	  f.puts("#{counter}, #{Time.now}, minutes:=> , #{(Time.now - start).to_i/60}, RGB:=>, #{color.red}, #{color.green}, #{color.blue}, HSB:=>, #{hsb_str}")
         end
         filename = "raeli-shots/image.%04d.%03d.%03d.%03d.png" % [counter, color.red, color.green, color.blue]
         pb = PixelBlock.new(w.rect)
