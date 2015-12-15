@@ -16,7 +16,12 @@ class Kilns < GridAction
     
     mm(p['x'],p['y'])
     sleep_sec 0.1
-    send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
+    # No delay on the last character.
+    str = @user_vals['string']
+    head = str[0, str.size - 1]
+    tail = str[str.size - 1]
+    send_string(head, @user_vals['key-delay'].to_f)
+    send_string(tail)
   end
 end
 
