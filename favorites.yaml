@@ -1,9 +1,9 @@
 ---
 Constitution click: 1
 Endurance click: 1
-Acquire font: 0
-Cutstones: 0
-Firepits: 1
+Acquire font: 1
+Cutstones: 1
+Firepits: 0
 Flax Comb: 1
 Flimsy Bricks: 1
 Wood planes: 1
@@ -11,16 +11,35 @@ Weave Linen: 1
 Weave Canvas: 1
 Casual Slate: 1
 Dig Stones: 1
-Grass: 1
+Grass: 0
 Casual Grass: 1
-Slate: 1
-Eat: 1
+Slate: 0
+Eat: 0
 Focus click: 1
 Inverval tabs: 1
 Strength click: 1
 Grow onions: 1
 Flax Seeds: 1
 Read Window: 1
-Mine iron: 1
-Grow vegetables: 1
-Tree run: 1
+Mine iron: 0
+Grow vegetables: 0
+Tree run: 0
+Test Build Gadget: 1
+Glazier: 0
+Potash: 0
+Clay: 0
+Dowse Strontium: 0
+Mine sand: 0
+Take from kettles: 0
+Plant Papyrus: 0
+Pottery Wheels: 1
+Pyramid push: 0
+Silt: 0
+Cactus run: 0
+Water mine: 0
+Kilns: 1
+Stir: 0
+Raeli: 0
+Color Picker: 1
+Casual Clay: 1
+Grow flax: 1

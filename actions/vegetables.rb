@@ -28,10 +28,8 @@ class Onions < Action
 
 
     "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3,
-#                                            :build_incr_fac => 3,
                                            },
-    "Leeks/Hapi's Harvest/(1)" => {:water => 1, 
-#                                   :build_incr_fac => 2,
+    "Leeks/Hapi's Harvest/(1)" => {:water => 1,
                                   },
 
     "Onions/Amun's Bounty/(1)" => {:water => 1,
@@ -117,7 +115,7 @@ class Onions < Action
       extra.each {|elt| build_base << elt }
     end
     build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
-    num_left = @vegi_data[:num_left] || 6
+    num_left = max_plants/2
     build_incr_fac = @vegi_data[:build_incr_fac] || 1
 
     build_recipe = ([] << build_base).flatten
@@ -129,9 +127,8 @@ class Onions < Action
 
       # If we missed it, plow ahead.
       next unless w
-      #puts "***Tiling #{plant_count}"
       tiler.tile(w)
-      #puts "***done tiling #{plant_count}"
+
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
     end
 
@@ -141,7 +138,7 @@ class Onions < Action
       extra.each {|elt| build_base << elt }
     end
 
-    num_right = @vegi_data[:num_right] || 6
+    num_right = max_plants - num_left
     build_recipe = ([] << build_base).flatten
     num_right.times do |index|
       break if plant_count >= max_plants
@@ -151,9 +148,7 @@ class Onions < Action
 
       # If we missed it, plow ahead.
       next unless w
-      #puts "***Tiling #{plant_count}"
       tiler.tile(w)
-      #puts "***done tiling #{plant_count}"
 
       @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
     end

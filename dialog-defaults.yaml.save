@@ -102,7 +102,7 @@ Slate:
       3652, -5275
       3644, -5275
 Trees:
-  2: In camp
+  2: double-water-mine
   1: true
   Parameter set 1:
     path: |
@@ -183,18 +183,18 @@ Trees:
       Gather Wood
       3202, -6234
       Bonfire Stash
-    bonfire.x: '554'
-    bonfire.y: '596'
-    win-stack.x: '1027'
-    win-stack.y: '474'
-    water-mine-1.x: '297'
-    water-mine-1.y: '597'
+    bonfire.x: '349'
+    bonfire.y: '428'
+    win-stack.x: '1071'
+    win-stack.y: '720'
+    water-mine-1.x: '308'
+    water-mine-1.y: '607'
     scan-interval-wm1-1: '4'
-    scan-interval-wm1-2: '15'
-    water-mine-2.x: '826'
-    water-mine-2.y: '586'
-    scan-interval-wm2-1: '4'
-    scan-interval-wm2-2: '20'
+    scan-interval-wm1-2: '10'
+    water-mine-2.x: '589'
+    water-mine-2.y: '605'
+    scan-interval-wm2-1: '2'
+    scan-interval-wm2-2: '10'
   Test in camp:
     path: |
       3202, -6233
@@ -246,16 +246,16 @@ Trees:
       Gather Wood
       3201, -6240
       Water Mine 1
-    bonfire.x: '392'
-    bonfire.y: '448'
-    win-stack.x: '1027'
-    win-stack.y: '614'
-    water-mine-1.x: '370'
-    water-mine-1.y: '656'
+    bonfire.x: '399'
+    bonfire.y: '446'
+    win-stack.x: '982'
+    win-stack.y: '680'
+    water-mine-1.x: '377'
+    water-mine-1.y: '646'
     scan-interval-wm1-1: '6'
     scan-interval-wm1-2: '15'
-    water-mine-2.x: '637'
-    water-mine-2.y: '678'
+    water-mine-2.x: '659'
+    water-mine-2.y: '659'
     scan-interval-wm2-1: '6'
     scan-interval-wm2-2: '15'
 ?
@@ -462,12 +462,12 @@ silt:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    ul.x: '498'
-    ul.y: '228'
-    lr.x: '869'
-    lr.y: '589'
-    stash.x: '316'
-    stash.y: '612'
+    ul.x: '786'
+    ul.y: '366'
+    lr.x: '1151'
+    lr.y: '751'
+    stash.x: '409'
+    stash.y: '913'
     path: |+
       2779, -6434
       Silt
@@ -773,16 +773,16 @@ Kilns:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '617'
-    g.top-left.y: '318'
-    g.bottom-right.x: '744'
-    g.bottom-right.y: '485'
-    g.num-cols: '4'
+    g.top-left.x: '592'
+    g.top-left.y: '268'
+    g.bottom-right.x: '662'
+    g.bottom-right.y: '532'
+    g.num-cols: '2'
     g.num-rows: '4'
     repeat: '9999'
     delay: '155'
     string: tbwf
-    key-delay: '1.1'
+    key-delay: '1'
 Raeli:
   2: Parameter set 1
   1: false
@@ -790,9 +790,3 @@ Raeli:
     w.x: '1106'
     w.y: '124'
     task: Burn and watch
-color-picker:
-  2: Parameter set 1
-  1: false
-  Parameter set 1:
-    loc.x: '115'
-    loc.y: '97'
