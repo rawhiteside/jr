@@ -85,7 +85,9 @@ public abstract class AWindow extends ARobot  {
     public void setDefaultRefreshLoc(String loc) { m_defaultRefreshLoc = loc; }
 
 
-    public void refresh(){ refresh(getDefaultRefreshLoc()); }
+    public void refresh(){
+	refresh(getDefaultRefreshLoc()); 
+    }
     public void refresh(String where) {
 	Rectangle rect = getRect();
 	if (where.equals("tc")) {

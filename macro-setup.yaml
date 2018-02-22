@@ -51,3 +51,9 @@ Wood planes: "Planes wood into boards using a wood plane.\n---------------------
 Silt: |
   zoom out 10 clicks
   LIght intensity off
+Casual Clay: 'Just watches for the clay icon, and clicks when it''s found.  You''ve
+  gotta run around yourself. '
+Casual Grass: 'Watches for the grass icon, and clicks on it.  You''ve gotta move around
+  yourself. '
+Casual Slate: "Watches for a slate icon, and clicks on it.  Move around manually.\
+  \ \n"

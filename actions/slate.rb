@@ -8,7 +8,7 @@ class CasualSlate < Action
 
   def act
     pixel = 0xF2F2EE
-    xy = [[226, 51], [226 - 128, 51]]
+    xy = [[226, 51], [226 - 64, 51], [226 - 128, 51]]
     loop do
       xy.each do |point|
         if pixel == get_pixel(*point)

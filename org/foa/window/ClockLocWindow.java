@@ -81,8 +81,9 @@ public class ClockLocWindow extends AWindow {
 
     private int[] attemptCoords(String text) {
 	String[] lines = text.split("\n");
-	String position = lines[lines.length - 1];
-	String[] words = position.split(" ");
+	String position = lines[lines.length - 2];
+	String[] chunks = position.split(":");
+	String[] words = chunks[1].split(" ");
 	int y = Integer.parseInt(words[words.length - 1]);
 	String xstring = words[words.length - 2].replaceAll(",", "");
 	int x = Integer.parseInt(xstring);

@@ -105,84 +105,88 @@ class Onions < Action
     yhead = @vals['head.y'].to_i
 
     # Needs to be down below the build menu.
-    tiler = Tiler.new(0, 190)
+    tiler = Tiler.new(0, 190, 0.2)
     tiler.y_offset = 20
     plant_count = 0
     
+    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
+    build_incr_fac = @vegi_data[:build_incr_fac] || 1
+
+
+    # Set up for planting to the left.
     build_base = [:w, :w]
     extra = @vegi_data[:left_build_init]
     if extra
       extra.each {|elt| build_base << elt }
     end
-    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
     num_left = max_plants/2
-    build_incr_fac = @vegi_data[:build_incr_fac] || 1
+    num = num_left
 
-    build_recipe = ([] << build_base).flatten
-    num_left.times do |index|
-      break if plant_count >= max_plants
-      plant_count += 1
-      w, plant_time = plant_and_pin(build_recipe, 'left')
-      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
+    ['left', 'right'].each do |left_right|
 
-      # If we missed it, plow ahead.
-      next unless w
-      tiler.tile(w)
+      build_recipe = ([] << build_base).flatten
+      num.times do |index|
+        break if plant_count >= max_plants
+        plant_count = plant_count +1
+        w, plant_time = plant_and_pin(build_recipe, left_right)
+        build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
 
-      @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-    end
+        # If we missed it, plow ahead.
+        next unless w
 
-    build_base = [:e, :e]
-    extra = @vegi_data[:right_build_init]
-    if extra
-      extra.each {|elt| build_base << elt }
-    end
+        tiler.tile(w)
+        @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
+        sleep 0.001
+      end
 
-    num_right = max_plants - num_left
-    build_recipe = ([] << build_base).flatten
-    num_right.times do |index|
-      break if plant_count >= max_plants
-      plant_count += 1
-      w, plant_time = plant_and_pin(build_recipe, 'right')
-      build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
 
-      # If we missed it, plow ahead.
-      next unless w
-      tiler.tile(w)
-
-      @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
-    end
+      # set up for planting to the right.
+      build_base = [:e, :e]
+      extra = @vegi_data[:right_build_init]
+      if extra
+        extra.each {|elt| build_base << elt }
+      end
     
+
+      num_right = max_plants - num_left
+      build_recipe = ([] << build_base).flatten
+      num = num_right
+    end
 
     @threads.each {|t| t.join}
   end
 
   def plant_and_pin(build_recipe, search_dir)
 
-    builder = BuildMenu.new
-    before = PixelBlock.new(@head_rect)
-    @plant_win.dialog_click(@plant_point)
-    builder.build(build_recipe)
-    plant_time = Time.new
-    after = PixelBlock.new(@head_rect)
+    w = nil
+    plant_time = nil
 
-    x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    # Try to shrink twice.
-    x1 = ImageUtils.shrink(x, 1)
-    x2 = ImageUtils.shrink(x1, 1)
-    x3 = ImageUtils.shrink(x2, 1)
+    with_robot_lock do 
+      builder = BuildMenu.new
+      before = PixelBlock.new(@head_rect)
+      @plant_win.dialog_click(@plant_point)
+      builder.build(build_recipe)
+      plant_time = Time.new
+      after = PixelBlock.new(@head_rect)
 
-    point = ImageUtils.find_largest(x3, search_dir, REACH_RADIUS)
-    point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS) unless point
-    point = ImageUtils.find_largest(x1, search_dir, REACH_RADIUS) unless point
-    point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS) unless point
+      x = ImageUtils.brightness(ImageUtils.xor(before, after))
+      # Try to shrink twice.
+      x1 = ImageUtils.shrink(x, 1)
+      x2 = ImageUtils.shrink(x1, 1)
+      x3 = ImageUtils.shrink(x2, 1)
 
-    return nil, nil unless point
-    
-    spoint = x.to_screen(point)
+      point = ImageUtils.find_largest(x3, search_dir, REACH_RADIUS)
+      point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS) unless point
+      point = ImageUtils.find_largest(x1, search_dir, REACH_RADIUS) unless point
+      point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS) unless point
 
-    w = PinnableWindow.from_screen_click(spoint)
-    w.pin if w
+      return nil, nil unless point
+      
+      spoint = x.to_screen(point)
+
+      w = PinnableWindow.from_screen_click(spoint)
+      w.pin if w
+    end
 
     return w, plant_time
   end

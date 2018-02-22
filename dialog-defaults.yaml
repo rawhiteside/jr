@@ -262,16 +262,7 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    text: |
-      This is a Raeli Oven
-      Only Owners may bake tiles in this Oven
-      Useable by Initiate
-      -----
-      Begin the Baking Process
-      -----
-      Utility. . .
-      Ownership. . .
-      White ?)
+    help: "Watches for a slate icon, and clicks on it.  Move around manually. \n"
 Wood Planes:
   2: Parameter set 1
   1: false
@@ -316,17 +307,17 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Carrots/Osiris'Green Leaf/(2)
-    grow: 3040, -6109
-    water: 3040, -6109
-    head.x: '682'
-    head.y: '400'
-    plant.x: '284'
-    plant.y: '470'
-    repeat: '25'
-    beds: '12'
-    second: '22'
-    third: '34'
+    veggie: Onions/Tears of Sinai/(2)
+    grow: 222, -5949
+    water: 222, -5949
+    head.x: '961'
+    head.y: '549'
+    plant.x: '611'
+    plant.y: '708'
+    repeat: '1'
+    beds: '8'
+    second: '19'
+    third: '29'
 iron_mine:
   2: Parameter set 1
   1: false
