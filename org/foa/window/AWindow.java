@@ -18,7 +18,7 @@ import java.awt.event.*;
 public abstract class AWindow extends ARobot  {
     private Rectangle m_rect;
     private TextReader m_textReader = null;
-    private String m_defaultRefreshLoc = "lc"; 
+    private String m_defaultRefreshLoc = "tc"; 
 
     public AWindow() {
 	super();
@@ -33,7 +33,12 @@ public abstract class AWindow extends ARobot  {
 	return new Insets(4, 4, 5, 5);
     }
 
-    public void setRect(Rectangle rect) { m_rect = rect; }
+    public void setRect(Rectangle rect) { 
+	m_rect = rect; 
+	if (rect == null) {
+	    throw new RuntimeException("Null rectangle. ");
+	}
+    }
     public Rectangle getRect() { return new Rectangle(m_rect); }
 
 

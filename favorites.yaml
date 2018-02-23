@@ -3,7 +3,7 @@ Constitution click: 1
 Endurance click: 1
 Acquire font: 1
 Cutstones: 1
-Firepits: 0
+Firepits: 1
 Flax Comb: 1
 Flimsy Bricks: 1
 Wood planes: 1
@@ -43,3 +43,4 @@ Raeli: 0
 Color Picker: 1
 Casual Clay: 1
 Grow flax: 1
+Time something (change code for target): 1

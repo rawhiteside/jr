@@ -1,0 +1,27 @@
+Timeings of various stuffs:
+
+Full screen capture (via PixelBlock.new)
+Num_times = 1000, total = 33.424, once = 0.033424
+
+get_pixel(10, 10)
+Num_times = 1000, total = 16.686, once = 0.016686
+
+
+*** getpixel only twice as fast as full screen capture. Interesting.
+
+
+------ Probs with rectFromPoint().  Going to minimize screen grabs.  
+Original measure for Self menu:
+Num_times = 100, total = 32.516, once = 0.32516
+
+- Push full ss into findLeftEdge:
+Num_times = 100, total = 34.217, once = 0.34217
+
+- Push into findOrigin
+Num_times = 100, total = 6.674, once = 0.06674000000000001
+
+- Push into findWidth
+Thread for Time something (change code for target) completed.
+
+-Push into findHeight
+Num_times = 100, total = 3.431, once = 0.03431

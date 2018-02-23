@@ -19,19 +19,30 @@ public class PinnableWindow extends AWindow {
      * The left center seems to be preserved.
      */
     private void updateRect() {
+	sleepSec(0.05);
 	Rectangle r = getRect();
 	int x = r.x + 2;
 	int y = r.y + r.height/2;
 	Rectangle rnew = WindowGeom.rectFromPoint(new Point(x, y));
 	for(int i = 0; i < 10; i++) {
 	    if (rnew == null || Math.abs(x - rnew.x) > 4) {
-		sleepSec(0.01);
+		sleepSec(0.05);
 		rnew = WindowGeom.rectFromPoint(new Point(x, y));
 	    } else {
 		break;
 	    }
 	}
-	setRect(rnew);
+	if (rnew == null) {
+	    System.out.println("Update rect failed.");
+	    /*
+	    Rectangle rect = getRect();
+	    PixelBlock pb = new PixelBlock(rect);
+	    ImagePanel.displayImage(pb.bufferedImage(), "Update rect failed.");
+	    throw new RuntimeException("Update rect failed. ");
+	    */
+	} else {
+	    setRect(rnew);
+	}
     }
 
     public Insets textInsets() {
@@ -41,18 +52,55 @@ public class PinnableWindow extends AWindow {
     private static double MIN_DELAY = 0.05;
 
     public void dialogClick(Point p, String refreshLoc, double delay) {
-	//super.dialogClick(p, refreshLoc, Math.max(delay, MIN_DELAY));
-	super.dialogClick(p, refreshLoc, delay);
-	updateRect();
+	dialogClick(p, refreshLoc, delay, false);
+    }
+
+    public void dialogClick(Point p, String refreshLoc, double delay, boolean unpin) {
+	claimRobotLock();
+	try {
+	    super.dialogClick(p, refreshLoc, delay);
+	    if (!unpin) {updateRect();}
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in dialogClick" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
+	finally {releaseRobotLock();}
+
     }
     public AWindow clickOn(String menuPath, String refreshLoc) {
-	AWindow rv = super.clickOn(menuPath, refreshLoc);
-	updateRect();
+	AWindow rv = null;
+	claimRobotLock();
+	try {
+	    rv = super.clickOn(menuPath, refreshLoc);
+	    updateRect();
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in clickOn" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
+	finally {releaseRobotLock();}
+
 	return rv;
     }
+
     public void refresh(String where) {
-	super.refresh(where);
-	updateRect();
+	claimRobotLock();
+	try {
+	    super.refresh(where);
+	    updateRect();
+	}
+	catch(ThreadKilledException e) { throw e; }
+	catch(Exception e) {
+	    System.out.println("Exception: in refresh" + e.toString());
+	    e.printStackTrace();
+	    throw e;
+	}
+	finally {releaseRobotLock();}
     }	
     
     public boolean getPinned() {return m_pinned;}
@@ -65,7 +113,7 @@ public class PinnableWindow extends AWindow {
     }
 
     public void unpin() {
-	dialogClick(new Point(getRect().width - 20, 20), null, 0.05);
+	dialogClick(new Point(getRect().width - 20, 20), null, 0.05, true);
 	m_pinned = false;
     }
 
@@ -192,7 +240,7 @@ public class PinnableWindow extends AWindow {
 	}
 	catch(ThreadKilledException e) { throw e; }
 	catch(Exception e) {
-	    System.out.println("Exception: in clickOn" + e.toString());
+	    System.out.println("Exception: in fromScreenClick" + e.toString());
 	    e.printStackTrace();
 	    throw e;
 	}

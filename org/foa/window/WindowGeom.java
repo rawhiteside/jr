@@ -24,48 +24,30 @@ public class WindowGeom extends ARobot {
     public static Rectangle rectFromPoint(Point p) {
 	return rectFromPoint(p, false);
     }
+
     public static Rectangle rectFromPoint(Point p, boolean debug) {
-	int x = findLeftEdge(p.x, p.y);
+	PixelBlock pb = ARobot.sharedInstance().fullScreenCapture();
+	int x = findLeftEdge(pb, p.x, p.y);
 	if (x < 0) {
 	    if(debug) { System.out.println("Failed to find left edge"); }
 	    return null;
 	}
 	
-	return rectFromLeftEdge(x, p.y, debug);
-    }
-
-    // Wait a while for the edge to appear, if it has not yet.
-    private static void waitForEdge(Rectangle r) {
-	for(int i = 0; i < 10; i++) {
-	    PixelBlock pb = new PixelBlock(r);
-	    Boolean allBlack = true;
-	    for(int yoff = 0; yoff > -10; yoff--) {
-		if (pb.pixelFromScreen(r.x, r.y + yoff) != 0) {
-		    allBlack = false;
-		    break;
-		}
-	    }
-	    if (allBlack) { break; }
-	    ARobot.sharedInstance().sleepSec(0.01);
-	}
+	return rectFromLeftEdge(pb, x, p.y, debug);
     }
 
     
     // From a point on the left edge. 
-    private static Point findOrigin(Point pt) {
+    private static Point findOrigin(PixelBlock pb, Point pt) {
 	int x = pt.x;
 	int y = pt.y;
-	Rectangle edgeRect = new Rectangle(x, 0, 1, y+1);
-	waitForEdge(edgeRect);
 	//
 	// The edge itself is black.  To the right are two pixels of
 	// brownish, then another black.  To the right of *that* is
 	// the window itself, which is non-black.  We'll search
 	// upwards to find the next black pixel, which is the inner
 	// border at the top.
-	edgeRect.x += 4;
 	x += 4;
-	PixelBlock pb = new PixelBlock(edgeRect);
 	// Search up for the corner.
 	while(pb.pixelFromScreen(x, y) != 0) {
 	    y -= 1;
@@ -80,7 +62,7 @@ public class WindowGeom extends ARobot {
     /**
      * Find and return teh width of the window, given the window origin.
      */
-    private static int findWidth(Point pt) {
+    private static int findWidth(PixelBlock pb, Point pt) {
 	int screenWidth = ARobot.sharedInstance().screenSize().width;
 	int xOrig = pt.x;
 	int y = pt.y;
@@ -90,7 +72,6 @@ public class WindowGeom extends ARobot {
 	// right border.
 	x += 4;
 	y += 4;
-	PixelBlock pb = new PixelBlock(new Rectangle(x, y, screenWidth - x, 1));
 	while(pb.pixelFromScreen(x, y) != 0) {
 	    x += 1;
 	    if (x >= screenWidth) { return 0; }
@@ -99,70 +80,15 @@ public class WindowGeom extends ARobot {
 	return x - xOrig;
     }
 
-    // Make sure the height hasn't changed since the last time we
-    // looked at the window.  If it has, then recompute it by looking
-    // at the vertical line through the center of the window.
-    public static Rectangle confirmHeight(Rectangle rect) {
-	ARobot robot = ARobot.sharedInstance();
-	for(int i = 0; i < 5; i++) {
-	    Rectangle r = tryConfirmHeight(rect);
-	    // If the rectangle seems bad, wait and try again. 
-	    if (r.height < 40 || r.height > 600) {
-		robot.sleepSec(0.1);
-	    } else {
-		return r;
-	    }
-	}
-	return rect;
-    }
-
-
-    private static Rectangle tryConfirmHeight(Rectangle rectIn) {
-	Rectangle rect = new Rectangle(rectIn);
-	int x = rect.x + rect.width/2;
-	int y = rect.y;
-	ARobot robot = ARobot.sharedInstance();
-	int screenHeight = robot.screenSize().height;
-
-	PixelBlock pb = new PixelBlock(new Rectangle(x, 0, 1, robot.screenSize().height));
-
-	// Start searching upwards frum the center, looking for the border.
-	int ymin = -1;
-	for (int iy = y + rect.height/2; iy > 3; iy--){
-	    if (pb.pixelFromScreen(x, iy) != 0 ||
-		pb.pixelFromScreen(x, iy - 3) != 0 ) continue;
-	    if (INNER_BROWN != pb.pixelFromScreen(x, iy - 1) ||
-		OUTER_BROWN != pb.pixelFromScreen(x, iy - 2)) continue;
-	    ymin = iy - 3;
-	    break;
-	}
-	
-	// Now, search down to find the bottom.
-	int ymax = -1;
-	for (int iy = y + rect.height/2; iy < screenHeight - 3; iy++){
-	    if (pb.pixelFromScreen(x, iy) != 0 ||
-		pb.pixelFromScreen(x, iy + 3) != 0 ) continue;
-	    if (INNER_BROWN != pb.pixelFromScreen(x, iy + 1) ||
-		OUTER_BROWN != pb.pixelFromScreen(x, iy + 2)) continue;
-	    ymax = iy + 3;
-	    break;
-	}
-	rect.height = ymax - ymin;
-	rect.y = ymin;
-
-	return rect;
-    }
-
     /**
      * Find the height, given the origin of the window.
      */
-    private static int findHeight(int x, int y) {
+    private static int findHeight(PixelBlock pb, int x, int y) {
 	int yStart = y;
-	int screenHeight = ARobot.sharedInstance().screenSize().height;
+
 	// Search along the window proper for the black border pixel at the bottom.
 	y += 4;
 	x += 4;
-	PixelBlock pb = new PixelBlock(new Rectangle(x, y, 1, screenHeight - y + 1));
 	while (pb.pixelFromScreen(x, y) != 0) { y += 1; }
 	// Skip past bottom border
 	y += 3;
@@ -170,14 +96,14 @@ public class WindowGeom extends ARobot {
     }
 
 
-    private static Rectangle rectFromLeftEdge(int x, int y, boolean debug) {
-	Point origin = findOrigin(new Point(x, y));
+    private static Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
+	Point origin = findOrigin(pb, new Point(x, y));
 	if (origin == null) {
 	    if(debug) { System.out.println("Failed to find origin"); }
 	    return null;
 	}
-	int width = findWidth(origin);
-	int height = findHeight(origin.x, origin.y);
+	int width = findWidth(pb, origin);
+	int height = findHeight(pb, origin.x, origin.y);
 
 	if (height <= 10 || width <= 10) {
 	    if(debug) { System.out.println("Rectangle was too small: " + width + ", " + height); }
@@ -190,9 +116,8 @@ public class WindowGeom extends ARobot {
     /**
      * Find the left edge. 
      */
-    private static int findLeftEdge(int x, int y) {
-	int xStart = x;
-	PixelBlock pb = new PixelBlock(new Rectangle(0, y, x+2, 1));
+    private static int findLeftEdge(PixelBlock pb, int x, int y) {
+
 	while (x >= 0 && !isLeftEdgeBorder(pb, x, y)) {
 	    // If we encounter a *right* border, the there was no
 	    // window there, and we've bumped into another.

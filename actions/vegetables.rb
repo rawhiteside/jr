@@ -78,6 +78,10 @@ class Onions < Action
                                @vals['head.y'].to_i - SQUARE_SIZE/2, 
                                SQUARE_SIZE, SQUARE_SIZE)
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
+    if @plant_win.nil?
+      puts "Didn't find plant menu."
+      return
+    end
     @plant_point = Point.new(@plant_win.rect.width/2, @plant_win.rect.height/2)
 
     beds = @vals['beds'].to_i
@@ -105,7 +109,7 @@ class Onions < Action
     yhead = @vals['head.y'].to_i
 
     # Needs to be down below the build menu.
-    tiler = Tiler.new(0, 190, 0.2)
+    tiler = Tiler.new(0, 190, 0.0)
     tiler.y_offset = 20
     plant_count = 0
     

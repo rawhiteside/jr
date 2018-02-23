@@ -273,14 +273,14 @@ Flimsy Bricks:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '101'
-    g.top-left.y: '294'
-    g.bottom-right.x: '749'
-    g.bottom-right.y: '495'
+    g.top-left.x: '776'
+    g.top-left.y: '382'
+    g.bottom-right.x: '1077'
+    g.bottom-right.y: '684'
     g.num-cols: '5'
     g.num-rows: '5'
     repeat: '10'
-    delay: '32'
+    delay: '34'
 Grass:
   2: Parameter set 1
   1: false
@@ -308,14 +308,14 @@ onions:
   1: false
   Parameter set 1:
     veggie: Onions/Tears of Sinai/(2)
-    grow: 222, -5949
-    water: 222, -5949
-    head.x: '961'
-    head.y: '549'
-    plant.x: '611'
-    plant.y: '708'
+    grow: -34, -5839
+    water: 29, -5834
+    head.x: '960'
+    head.y: '552'
+    plant.x: '629'
+    plant.y: '653'
     repeat: '1'
-    beds: '8'
+    beds: '12'
     second: '19'
     third: '29'
 iron_mine:
@@ -333,13 +333,13 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '813'
-    g.top-left.y: '195'
-    g.bottom-right.x: '1142'
-    g.bottom-right.y: '588'
-    g.num-cols: '6'
-    g.num-rows: '6'
-    task: Tend
+    g.top-left.x: '907'
+    g.top-left.y: '449'
+    g.bottom-right.x: '911'
+    g.bottom-right.y: '457'
+    g.num-cols: '1'
+    g.num-rows: '1'
+    task: Burn (light and tend)
 Glazier:
   2: Parameter set 1
   1: false

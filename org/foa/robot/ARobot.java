@@ -31,6 +31,13 @@ public class ARobot {
 
     public void beep() { m_toolkit.beep(); }
 
+    public PixelBlock fullScreenCapture() {
+	Toolkit tk = m_toolkit;
+	int width = tk.getScreenSize().width;
+	int height = tk.getScreenSize().height;
+	return screenRectangle(0, 0, width, height);
+    }
+    
     public PixelBlock screenRectangle(int x, int y, int width, int height) {
 	return screenRectangle(new Rectangle(x, y, width, height));
     }

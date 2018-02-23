@@ -61,6 +61,7 @@ class FlimsyBricks < GridAction
   def brick_rack_brown?(x, y)
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
+    puts "r: #{r} g: #{g}, b: #{b}"
     r_rng = 1..200
     g_rng = 1..150
     b_rng = 1..110
@@ -94,7 +95,8 @@ class FlimsyBricks < GridAction
 
     check_build(pt)
 
-    mm(pt['x'], pt['y'])
+
+   mm(pt['x'], pt['y'])
     sleep_sec 0.2
     send_string('TB')
   end
