@@ -262,25 +262,29 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    help: "Watches for a slate icon, and clicks on it.  Move around manually. \n"
+    help: "Planes wood into boards using a wood plane.\n---------------------------------------------------------------\n\
+      \nHold a bunch of wood and a bunch of slate blades. \n\nMake a stack of the\
+      \ wood plane menus somewhere (I use the lower right corner,\n\nIn the setup\
+      \ dialog drag to a point of the stack that will catch every menu. \n\nEnjoy\
+      \ the boards!\n"
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '472'
-    stack.y: '631'
+    stack.x: '521'
+    stack.y: '748'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '776'
-    g.top-left.y: '382'
-    g.bottom-right.x: '1077'
-    g.bottom-right.y: '684'
+    g.top-left.x: '851'
+    g.top-left.y: '439'
+    g.bottom-right.x: '1135'
+    g.bottom-right.y: '723'
     g.num-cols: '5'
     g.num-rows: '5'
-    repeat: '10'
-    delay: '34'
+    repeat: '100'
+    delay: '36'
 Grass:
   2: Parameter set 1
   1: false
@@ -307,13 +311,13 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Onions/Tears of Sinai/(2)
-    grow: -34, -5839
-    water: 29, -5834
-    head.x: '960'
+    veggie: Garlic/Apep's Crop/(2)
+    grow: 669, -5720
+    water: 669, -5720
+    head.x: '956'
     head.y: '552'
-    plant.x: '629'
-    plant.y: '653'
+    plant.x: '605'
+    plant.y: '673'
     repeat: '1'
     beds: '12'
     second: '19'

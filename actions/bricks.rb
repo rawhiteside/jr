@@ -61,17 +61,12 @@ class FlimsyBricks < GridAction
   def brick_rack_brown?(x, y)
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
-    puts "r: #{r} g: #{g}, b: #{b}"
     r_rng = 1..200
     g_rng = 1..150
     b_rng = 1..110
 
     rv = r_rng.include?(r) && g_rng.include?(g) && b_rng.include?(b) &&
       (r - g) > 5 && (r - b) > 5
-    unless rv
-      puts "Rebuilding on: "
-      p [r, g, b]
-    end
     rv
   end
 
@@ -98,7 +93,9 @@ class FlimsyBricks < GridAction
 
    mm(pt['x'], pt['y'])
     sleep_sec 0.2
-    send_string('TB')
+    send_string('T')
+    sleep_sec 0.1
+    send_string('B')
   end
 
   def build_recipes

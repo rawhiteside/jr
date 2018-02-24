@@ -1,6 +1,6 @@
 require 'java'
 require 'robot'
-require 'atitd'
+require 'buildmenu'
 require 'user-io'
 require 'controllable_thread'
 

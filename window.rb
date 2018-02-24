@@ -1,5 +1,5 @@
 require 'java'
-require 'atitd'
+require 'buildmenu'
 require 'action'
 require 'robot'
 

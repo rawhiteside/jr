@@ -57,3 +57,11 @@ Casual Grass: 'Watches for the grass icon, and clicks on it.  You''ve gotta move
   yourself. '
 Casual Slate: "Watches for a slate icon, and clicks on it.  Move around manually.\
   \ \n"
+Grow vegetables: "F8 x 3\n- Pin the veggie plant button somewhere. \n- Set the two\
+  \ world locs (grow spot, water spot).\n"
+Flimsy Bricks: "Uses a 5x5 array, but can't reach the corners, so those unused. \n\
+  \n- Setup:\n- Hotkeys ON. \n- Hold boards, straw, etc. \n- Put a brickrack 4 small\
+  \ diagonal steps NW.  Also, one 4 small diagonal steps SE.\n- Set the two points\
+  \ defining the 5x5 grid:\n- - The two points should be ON the two brickracks, near\
+  \ the LOWER RIGHT of the brickracks.  This point is visible, even if bricks pile\
+  \ up. \n\n"
