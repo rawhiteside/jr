@@ -311,15 +311,15 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Garlic/Apep's Crop/(2)
-    grow: 669, -5720
-    water: 669, -5720
-    head.x: '956'
-    head.y: '552'
-    plant.x: '605'
-    plant.y: '673'
+    veggie: Cabbage/Bastet's Yielding/(2)
+    grow: 171, -6029
+    water: 171, -6029
+    head.x: '958'
+    head.y: '554'
+    plant.x: '704'
+    plant.y: '685'
     repeat: '1'
-    beds: '12'
+    beds: '1'
     second: '19'
     third: '29'
 iron_mine:

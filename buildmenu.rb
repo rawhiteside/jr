@@ -1,43 +1,35 @@
+require 'window'
 require 'robot'
 
-# XXX This sucks, Bob.
-
-# Definitions for the layout of the Atitd screen. 
-# Current limitations:
-# - Full screen
-# - Large icons.
 # Works the build menu
-class BuildMenu < ARobot
+class BuildMenu < AWindow
 
   BUTTONS = {
-    :n => [59, 77],
-    :w => [36, 101],
-    :e => [82, 101],
-    :s => [59, 124],
-
-    :N => [59, 61],
-    :W => [19, 101],
-    :E => [98, 101],
-    :S => [59, 141],
-
-    :nw => [44, 84],
-    :ne => [75, 84],
-    :sw => [44, 115],
-    :se => [74, 115],
-
-    :NW => [],
-    :NE => [],
-    :SW => [],
-    :SE => [],
-
-    :R => [96, 41],
-    :r => [80, 41],
-    :L => [22, 41],
-    :l => [38, 41],
-
-    :build => [34, 164]
+    :n => [59, 54],
+    :w => [36, 78],
+    :e => [82, 78],
+    :s => [59, 101],
+    :N => [59, 38],
+    :W => [19, 78],
+    :E => [98, 78],
+    :S => [59, 118],
+    :nw => [44, 61],
+    :ne => [75, 61],
+    :sw => [44, 92],
+    :se => [74, 92],
+    :R => [96, 18],
+    :r => [80, 18],
+    :L => [22, 18],
+    :l => [38, 18],
+    :build => [34, 141],
   }
   REVOLVERS = [:r, :l, :R, :L, ]
+
+  def initialize
+    rect = WindowGeom.rectFromPoint(Point.new(50, 100))
+    super(rect)
+  end
+
 
   def build(move)
     sleep_sec 0.1
@@ -47,20 +39,15 @@ class BuildMenu < ARobot
     # Rotations take longer than translations .. the animation on the
     # screen, that is. 
     rdelay = 0.2
-    # wait for the dialog
-    until (get_pixel(3, 138) == 0 &&
-	   get_pixel(3, 137) == 0 &&
-	   get_pixel(4, 137) != 0)
-      sleep_sec(0.1)
-    end
     
     extra_delay = 0
+
     move.each {|dir|
-      rclick_at(*(BUTTONS[dir]));
+      dialog_click(Point.new(*(BUTTONS[dir])))
       sleep_sec(delay)
       extra_delay += rdelay if REVOLVERS.include?(dir)
     }
-    rclick_at(*BUTTONS[:build])
+    dialog_click(Point.new(*BUTTONS[:build]))
     sleep_sec extra_delay
   end
   
@@ -137,6 +124,7 @@ class BuildMenu < ARobot
   def annihilate(h, a, b)
     if h[a] > 0 && h[b] > 0
       h[a] -= 1
+
       h[b] -= 1
     end
   end
@@ -147,9 +135,4 @@ class BuildMenu < ARobot
 
     sum
   end
-end
-
-
-if $0 == __FILE__
-  sleep_sec 3
 end

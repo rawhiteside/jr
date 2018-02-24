@@ -166,9 +166,9 @@ class Onions < Action
     plant_time = nil
 
     with_robot_lock do 
-      builder = BuildMenu.new
       before = PixelBlock.new(@head_rect)
       @plant_win.dialog_click(@plant_point)
+      builder = BuildMenu.new
       builder.build(build_recipe)
       plant_time = Time.new
       after = PixelBlock.new(@head_rect)
