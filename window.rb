@@ -270,11 +270,16 @@ class Tiler < ARobot
     @ymax = 0
     @y_off = 0
     @ovlp = ovlp_fraction
+    @min_width = 0
+  end
+
+  # Set a minimuim width to use when tiling.  Windows can change width. 
+  def min_width=(min_width)
+    @min_width = min_width
   end
 
   # Normally, next row starts just below the previous.
   # Set this for an additional offset, in addition to the above.
-  
   def y_offset=(y_off)
     @y_off = y_off
   end
@@ -299,8 +304,9 @@ class Tiler < ARobot
     s_width = screen_size.width
 
     pinnable.default_refresh_loc = 'tc' if @ovlp > 0.0
+    width = [pinnable.rect.width, @min_width].max
 
-    if (@xtile + pinnable.rect.width) >= s_width
+    if (@xtile + width) >= s_width
       @xtile = 2
       @ytile = (@ymax + 1 + @y_off)
       @ymax = 0
@@ -315,7 +321,7 @@ class Tiler < ARobot
 
       curr_height = pinnable.rect.height
       use_height = [prev_height, curr_height].max
-      @xtile += ((1.0 - @ovlp) * pinnable.rect.width ).to_i
+      @xtile += ((1.0 - @ovlp) * width ).to_i
       @ymax = [@ymax, @ytile + use_height].max
     end
 

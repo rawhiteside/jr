@@ -11,23 +11,23 @@ Weave Linen: 1
 Weave Canvas: 1
 Casual Slate: 1
 Dig Stones: 1
-Grass: 0
+Grass: 1
 Casual Grass: 1
 Slate: 0
-Eat: 0
+Eat: 1
 Focus click: 1
 Inverval tabs: 1
 Strength click: 1
 Grow onions: 1
 Flax Seeds: 1
 Read Window: 1
-Mine iron: 0
+Mine iron: 1
 Grow vegetables: 1
 Tree run: 0
 Test Build Gadget: 1
 Glazier: 0
 Potash: 0
-Clay: 0
+Clay: 1
 Dowse Strontium: 0
 Mine sand: 0
 Take from kettles: 0
@@ -44,3 +44,4 @@ Color Picker: 1
 Casual Clay: 1
 Grow flax: 1
 Time something (change code for target): 1
+Show builder points: 1

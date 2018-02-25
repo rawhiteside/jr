@@ -1,6 +1,7 @@
 require 'action'
 require 'walker'
 require 'jmonitor'
+require 'icons'
 
 class JugCount
   attr_reader :count
@@ -32,11 +33,8 @@ class CasualClay < Action
   end
 
   def act
-    pixel = 0x4f0503
-    xy = [95, 102]
     loop do
-      if pixel == get_pixel(xy[0], xy[1])
-	rclick_at(*xy)
+      if Icons.click_on(:clay)
 	@jug_count.used_one if @jug_count
 	sleep_sec 0.5
       else
@@ -76,6 +74,7 @@ class Clay < Action
     stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'chest'))
     count = @vals['jug_count'].to_i
     @jug_count = JugCount.new(count)
+
     path = WorldLocUtils.parse_world_path(@vals['path'])
     chest_coords = WorldLocUtils.parse_world_location(@vals['chest-coords'])
     water_coords = WorldLocUtils.parse_world_location(@vals['water-coords'])
@@ -98,27 +97,16 @@ class Clay < Action
   end
 
   def stash_it(stash_window, what)
-    # Don't know why this occasionally fails, but it does. 
-    loop do
-      if stash_window.click_on(what)
-        HowMuch.new(:max)
-        break
-      end
-      sleep_sec(1.0)
+    if stash_window.click_on(what)
+      HowMuch.new(:max)
     end
   end
 
 
   def refill
-    with_robot_lock do
-      @jug_count.lock.synchronize do
-	sleep_sec 0.5
-	rclick_at(144, 98)
-	sleep_sec 0.2
-	HowMuch.new(:max)
-	@jug_count.refill
-	sleep_sec 0.1
-      end
+    @jug_count.lock.synchronize do
+      Icons.refill
+      @jug_count.refill
     end
   end
 
@@ -136,12 +124,9 @@ class BackAndForthClay < Clay
   end
 
   def gather
-    pixel = 0xe2967e
     xy = [230, 110]
-    if pixel == get_pixel(*xy)
-      rclick_at(*xy)
-      # Wait for the pixel to change.
-      Thread.pass until pixel != get_pixel(*xy)
+    if Icons.click_on(:clay)
+      sleep_sec 0.5
       return true
     else
       Thread.pass
@@ -167,7 +152,7 @@ class BackAndForthClay < Clay
       gather
       HowMuch.new(:max) if @stash_window.click_on('Stash/Clay')
       HowMuch.new(:max) if @stash_window.click_on('Stash/Flint')
-      refill
+      Icons.refill
     end
       
   end

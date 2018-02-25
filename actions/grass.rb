@@ -8,11 +8,8 @@ class CasualGrass < Action
   end
 
   def act
-    pixel = 0x020ae05
-    xy = [93, 56]
     loop do
-      if pixel == get_pixel(*xy)
-	rclick_at_restore(xy[0], xy[1])
+      if Icons.click_on(:grass)
 	sleep_sec 0.5
       else
 	Thread.pass
@@ -58,9 +55,11 @@ class Grass < Action
       @walker.walk_loop(@path, @path_count)
       @walker.walk_to(@chest_coords)
       @stash_window.refresh
-      @stash_window.click_on('Stash./Grass')
+      unless @stash_window.click_on('Stash./Grass')
+        puts "Stash failed:"
+        puts @stash_window.read_text
+      end
       HowMuch.new(:max)
-      @stash_window.refresh
     end
   end
 

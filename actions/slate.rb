@@ -7,17 +7,11 @@ class CasualSlate < Action
   end
 
   def act
-    pixel = 0xF2F2EE
-    xy = [[226, 51], [226 - 64, 51], [226 - 128, 51]]
     loop do
-      xy.each do |point|
-        if pixel == get_pixel(*point)
-	  rclick_at_restore(point[0], point[1])
-	  sleep_sec 0.1
-          break
-        else
-	  sleep_sec 0.01
-        end
+      if Icons.click_on(:slate)
+	sleep_sec 0.1
+      else
+	Thread.pass
       end
     end
   end

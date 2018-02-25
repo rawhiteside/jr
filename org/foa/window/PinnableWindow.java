@@ -213,7 +213,7 @@ public class PinnableWindow extends AWindow {
 		Rectangle rectangle = null;
 		long startMillis = System.currentTimeMillis();
 		for(int i = 0; i < 50; i++) {
-		    rectangle = WindowGeom.rectFromPoint(pt, kk > 0);
+		    rectangle = WindowGeom.rectFromPoint(pt);
 		    // Did we find it?
 		    if (rectangle != null) {
 			break;

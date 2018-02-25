@@ -9,32 +9,42 @@ class Onions < Action
 
   VEGETABLE_DATA = {
     "Cabbage/Mut's Fruition/(1)" => {:water => 1,
+                                     :min_width => 230,
                                      :left_build_init => [:l,:l],
                                     },
     "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
+                                        :min_width => 230,
                                         :left_build_init => [:l,:l],
                                        },
     
     "Carrots/Osiris's Orange/(1)" => {:water => 1,
+                                      :min_width => 217,
                                      },
     "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
+                                        :min_width => 217,
                                        },
 
 
     "Garlic/Apep's Crop/(2)" => {:water => 2,
+                                 :min_width => 209,
                                 },
     "Garlic/Heket's Reaping/(1)" => {:water => 1,
+                                     :min_width => 209,
                                     },
 
 
     "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3,
+                                            :min_width => 211,
                                            },
     "Leeks/Hapi's Harvest/(1)" => {:water => 1,
+                                   :min_width => 211,
                                   },
 
     "Onions/Amun's Bounty/(1)" => {:water => 1,
+                                   :min_width => 217,
                                   },
     'Onions/Tears of Sinai/(2)' => {:water => 2,
+                                    :min_width => 217,
                                    },
   }
 
@@ -111,10 +121,11 @@ class Onions < Action
     # Needs to be down below the build menu.
     tiler = Tiler.new(0, 190, 0.0)
     tiler.y_offset = 20
+    tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
     build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
-    build_incr_fac = @vegi_data[:build_incr_fac] || 1
+    build_incr_fac = @vegi_data[:build_incr_fac] || 3
 
 
     # Set up for planting to the left.
@@ -199,7 +210,7 @@ class Onions < Action
     # Times in sec (relative to plant time) at which to water.
     #
     # grow_times = [0, 15, 30, 45] # measured.
-    water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
+    water_times = [6, @vals['second'].to_i, @vals['third'].to_i]
     harvest_time = 36
     3.times do |index|
       target_secs = water_times[index]
@@ -210,9 +221,9 @@ class Onions < Action
       with_robot_lock do
         point = nil
         5.times do
-          w.refresh
           point = w.dialogCoordsFor('Water')
           break if point
+          w.refresh
           sleep 0.02
         end
         @vegi_data[:water].times { w.dialogClick(point, nil, 0.0) } if point

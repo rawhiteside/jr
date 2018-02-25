@@ -3,9 +3,9 @@ require 'timer'
 require 'window'
 require 'actions/kettles'
 
-class ATest < Action
+class BuilderTest < Action
 
-  def initialize(name = 'Test Wait for minimized chat')
+  def initialize(name = 'Show builder points')
     super(name, 'Test/Dev')
   end
 
@@ -13,13 +13,21 @@ class ATest < Action
     true
   end
 
+  POINTS = [ :n, :w, :e, :s, :N, :W, :E, :S, :nw, :ne, :sw, :se, :R,
+             :r, :L, :l, ]
+
   def act
-    WindowGeom.wait_for_chat_minimized
+    b = BuildMenu.new
+    POINTS.each do |p|
+      b.build(p)
+      sleep 5
+    end
   end
 end
 
 
-Action.add_action(ATest.new)
+Action.add_action(BuilderTest.new)
+
 
 class TimeTest < Action
 
