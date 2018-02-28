@@ -6,6 +6,10 @@ class TreeRun < Action
     super('Tree run', 'Gather')
   end
 
+  def persistence_name
+    'Trees'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
@@ -19,7 +23,7 @@ class TreeRun < Action
       {:type => :number, :name => 'scan-interval-wm2-1', :label => 'WM2: Angle scan interval 1 (minutes)'},
       {:type => :number, :name => 'scan-interval-wm2-2', :label => 'WM2: Angle scan interval 2 (minutes)'},
     ]
-    @vals = UserIO.prompt(parent, 'Trees', 'Trees', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def stop

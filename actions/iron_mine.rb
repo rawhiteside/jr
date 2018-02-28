@@ -11,6 +11,9 @@ class IronMine < Action
   def initialize
     super('Mine iron', 'Misc')
   end
+  def persistence_name
+    'iron_mine'
+  end
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Show me the stone area', :name => 'area',
@@ -23,7 +26,7 @@ class IronMine < Action
       {:type => :combo, :label => 'Debug level', :name => 'debug',
        :vals => ['0', '1', '2']},
     ]
-    @vals = UserIO.prompt(parent, 'iron_mine', 'Mine Iron', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
   
   def act

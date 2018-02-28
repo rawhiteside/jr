@@ -240,12 +240,15 @@ class PpPaint < Action
     end
   end
 
+  def persistence_name
+    'Paint'
+  end
   def get_vals(parent)
     comps = [
       {:type => :combo, :name => 'color', :label => 'Color: ', :vals => @colors},
       {:type => :number, :name => 'count', :label => 'How many batches? '},
     ]
-    UserIO.prompt(parent, 'Paint', 'Paint', comps)
+    UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def setup(parent)

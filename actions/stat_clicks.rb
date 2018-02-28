@@ -31,7 +31,7 @@ class DigStones < Action
     comps = [
       {:type => :point, :name => 'p', :label => 'Drag to pinned Dig'},
     ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
+    @vals = UserIO.prompt(parent, nil, action_name, comps)
   end
 
   def act

@@ -2,6 +2,7 @@ require 'action'
 require 'window'
 require 'walker'
 require 'image_utils'
+require 'icons'
 
 class Barley < Action
   # 
@@ -36,10 +37,10 @@ class Barley < Action
     w = nil
     with_robot_lock {
       mm(*@plant)
-      sleep_sec 0.1
+      sleep_sec 0.05
       rclick_at(*@plant)
       mm(*pop_coords)
-      sleep_sec 0.2
+      sleep_sec 0.1
       w = PinnableWindow.from_screen_click(Point.new(pop_coords[0], pop_coords[1]))
       w = BarleyWindow.new(w.get_rect)
     }
@@ -63,6 +64,10 @@ class Barley < Action
     super
   end
 
+  def persistence_name
+    'Barley'
+  end
+
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
@@ -70,7 +75,7 @@ class Barley < Action
       {:type => :label, :label => 'Each pass takes 90 water/fert'},
       {:type => :number, :label => 'How many passes?', :name => 'count'}
     ]
-    @vals = UserIO.prompt(parent, 'Barley', 'Barley', comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def act
@@ -89,7 +94,7 @@ class Barley < Action
       @walker.walk_to(WH_LOC)
 
       # Refill the jugs.
-      refill
+      Icons.refill
       # Stash the barley
       warehouse_window.click_on('Stash/Barley')
       HowMuch.new(:max)
@@ -106,13 +111,6 @@ class Barley < Action
     end
   end
 
-  def refill
-    with_robot_lock do
-      rclick_at(341, 86)
-      HowMuch.new(:max)
-      sleep_sec 0.4
-    end
-  end
 
   def grow_one_field
     # ChatLineWindow.new.minimize
@@ -127,19 +125,19 @@ class Barley < Action
     # Keep tending from starting while we plant
     start_lock.synchronize do
       step_patterns.each do |patt|
-	w = plant_and_tile(pop = @pop_for_step[prev_patt])
-	@threads << ControllableThread.new do 
+        w = plant_and_tile(pop = @pop_for_step[prev_patt])
+        @threads << ControllableThread.new do 
 	  w.tend(start_lock)
-	end
-	with_robot_lock { @walker.steps(patt) }
-	prev_patt = patt
+        end
+        with_robot_lock { @walker.steps(patt) }
+        prev_patt = patt
       end
     end
     @threads.each {|t| t.join}
     @walker.walk_to(START_PLANT_LOC)
   end
-  
 end
+
 
 class BarleyWindow < PinnableWindow
   def initialize(g)

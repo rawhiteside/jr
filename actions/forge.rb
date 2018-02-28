@@ -5,13 +5,16 @@ class ForgeAction < Action
     super("Forge", "Buildings")
   end
 
+  def persistence_name
+    'Forge'
+  end
   def setup(parent)
     comps = [
       {:type => :grid, :name => 'g'},
       {:type => :text, :name => 'what', :size => 20,
 	:label => 'Make what? '},
     ]
-    @vals = UserIO.prompt(parent, 'Forge', 'Forge', comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def act

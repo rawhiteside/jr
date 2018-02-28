@@ -7,6 +7,10 @@ class SandMine < AbstractMine
     super('Mine sand', 'Misc')
   end
 
+  def persistence_name
+    'sand_mine'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Ore field', :name => 'field',
@@ -25,7 +29,7 @@ class SandMine < AbstractMine
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
        :vals => ['y', 'n']},
     ]
-    @vals = UserIO.prompt(parent, 'sand_mine', 'Mine sand', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

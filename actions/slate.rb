@@ -28,12 +28,15 @@ class Slate < Action
     @threads << ControllableThread.new { CasualSlate.new.act }
   end
 
+  def persistence_name
+    'Slate'
+  end
   def setup(parent)
     gadgets = 
       [
         :type => :world_path, :label => "Slate path", :name => "coords",
       ]
-    vals = UserIO.prompt(parent, "Slate", "Slate", gadgets)
+    vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
 
     return nil unless vals
 

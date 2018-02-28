@@ -1,3 +1,4 @@
+require 'icons'
 require 'action.rb'
 require 'window'
 
@@ -56,6 +57,10 @@ class Onions < Action
   # head.  Actually, picking up is larger.  Using this value for now. 
   REACH_RADIUS = 40
 
+  def persistence_name
+    'Grow vegetables'
+  end
+  
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'What to grow?:', :name => 'veggie', 
@@ -69,7 +74,7 @@ class Onions < Action
       {:type => :number, :label => 'Second water (~15-30).', :name => 'second'},
       {:type => :number, :label => 'Third water (~30-45).', :name => 'third'},
     ]
-    @vals =  UserIO.prompt(parent, 'onions', 'onions', gadgets)
+    @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def stop
@@ -105,10 +110,7 @@ class Onions < Action
         one_pass(beds)
       end
       walker.walk_to(@water_location)
-      sleep_sec(1)
-      rclick_at(225, 61) #TEMP!  Sort out ICONS
-      HowMuch.new(:max)
-      sleep_sec(3)
+      Icons.refill
     end
 
   end
@@ -124,8 +126,8 @@ class Onions < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, ]
-    build_incr_fac = @vegi_data[:build_incr_fac] || 3
+    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, [:r]*4, [:l]*4, ]
+    build_incr_fac = @vegi_data[:build_incr_fac] || 2
 
 
     # Set up for planting to the left.

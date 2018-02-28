@@ -57,6 +57,9 @@ class Clay < Action
   end
 
 
+  def persistence_name
+    'Clay'
+  end
   def setup(parent)
     comps = [
       {:type => :point, :name => 'chest', :label => 'Stash chest window'},
@@ -65,7 +68,7 @@ class Clay < Action
       {:type => :number, :name => 'jug_count', :label => 'How many jugs? '},
       {:type => :world_path, :label => 'Path to walk', :name => 'path'}
     ]
-    @vals = UserIO.prompt(parent, 'Clay', 'Clay', comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
 
     @vals
   end

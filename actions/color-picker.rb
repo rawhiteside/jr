@@ -15,7 +15,7 @@ class ColorPicker < Action
     gadgets = [
       {:type => :point, :label => 'Location to watch', :name => 'loc'},
     ]
-    @vals = UserIO.prompt(parent, 'color-picker', 'Color', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

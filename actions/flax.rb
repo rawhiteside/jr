@@ -2,252 +2,6 @@ require 'action'
 require 'walker'
 require 'user-io'
 
-# Plant centered aligned with --Jaby-- lines in name.
-class FlaxGrow < Action
-  def initialize
-    super('Grow flax', 'Plants')
-    @threads = []
-    @walker = Walker.new
-  end
-
-  def get_plant_menu(parent, t)
-    # Coords are relative to your head in cart view.
-    gadgets = [
-      {:type => :point, :label => 'Drag onto the pinned plant on your head',
-	:name => 'plant'},
-      {:type => :point, :label => 'Drag the pinned stash dialog',
-	:name => 'stash'},
-      {:type => :number, :label => 'How many crops?',
-	:name => 'count'},
-    ]
-    return UserIO.prompt(parent, t, t, gadgets)
-  end
-
-  def setup(parent)
-    @vals = get_plant_menu(parent, 'flax-grow')
-  end
-
-  FIRST_PLANT_WORLD_COORDS = [4543, -5877]
-  WH_WORLD_COORDS=[4547,-5872]
-  WATER_WORLD_COORDS=[4547,-5866]
-  def act
-    @center = [@vals['plant.x'].to_i, @vals['plant.y'].to_i]
-    @count = @vals['count'].to_i
-    stash_point = point_from_hash(@vals, 'stash')
-    @stash_win = PinnableWindow.from_point(stash_point)
-
-    loop do
-      @count.times {grow_one_crop}
-
-      @walker.walk_to(WH_WORLD_COORDS)
-      @stash_win.refresh
-      @stash_win.click_on('Stash/Flax')
-      HowMuch.new(:max)
-      @stash_win.click_on('Stash/Insect/Stash All')
-      @stash_win.click_on('Stash/Flax See/All')
-      @stash_win.click_on('Take/Flax See/Nile')
-      HowMuch.new(@count * 50)
-      
-      @walker.walk_to(WATER_WORLD_COORDS)
-      refill
-    end
-  end
-
-  def refill
-    with_robot_lock do
-      rclick_at(341, 86)
-      HowMuch.new(:max)
-      sleep_sec 0.4
-    end
-  end
-
-  def step_patterns(size)
-    if size == 2
-      return [ [:right], [:down], [:left], ]
-    elsif size == 3
-      return [
-	[:right], [:right],
-	[:down], [:down],
-	[:left],[:left],
-	[:up],
-	[:right],
-      ]
-    elsif size == 5
-      return [
-	[:right], [:right],[:right], [:right],
-	[:down], [:down],[:down], [:down],
-	[:left],[:left],[:left],[:left],
-	[:up],[:up],[:up],
-	[:right],
-      ] + step_patterns(3)
-    elsif size == 7
-      return [
-	[:right], [:right],[:right], [:right],
-	[:right], [:right],
-	[:down], [:down],[:down], [:down],[:down],
-	[:down],
-	[:left],[:left],[:left],[:left],[:left],
-	[:left],
-	[:up],[:up],[:up],[:up],[:up],
-	[:right],
-      ] + step_patterns(5)
-    end
-  end
-
-  # An array of :ne, :nw, :se, :sw, indicating
-  # the best place to pop the menu for this bed
-  # 
-  # Sometimes the plants overlap, because walking isn't
-  # perfect.  This prevents popping the wrong bed.
-  def pop_locations(size)
-      # Don't include the *first* bed in the list
-      # Just 48 plants.
-    symbols = [
-      [:ne] * 6, # right
-      [:se] * 6, # down
-      [:sw] * 6, # left
-      [:nw] * 4, :sw, # up to first row.
-      [:se] * 4, :sw, # right
-      [:sw] * 3, :nw, # down
-      [:nw] * 3, :ne, # right
-      [:ne] * 2, :se, # up
-      [:se] * 2, :sw, # right
-      :sw, :nw, # down
-      :nw, :ne, # left
-      :se, # up
-      :sw, # right
-    ].flatten
-    if symbols.size != 48
-      return nil
-    end
-    coords = {
-      :ne => [@center[0] + 60, @center[1] - 60], 
-      :se => [@center[0] + 60, @center[1] + 60], 
-
-      :nw => [@center[0] - 60, @center[1] - 60], 
-      :sw => [@center[0] - 60, @center[1] + 60], 
-
-    }
-    return symbols.collect {|s| coords[s]}
-  end
-
-
-  
-  # Time to hold down the key to take a good step.
-  KEY_DELAY = 0.01
-
-  def grow_one_crop
-    @walker.walk_to(FIRST_PLANT_WORLD_COORDS)
-    size = 7
-    plots = step_patterns(size)
-    dlg_locs = tile_locations
-    pop_locs = pop_locations(7)
-
-    @threads = []
-
-    # Plant the first one
-    spawn(plant([@center[0]+60, @center[1] - 60], dlg_locs.shift))
-
-    plots.each do |s|
-      @walker.steps(s, KEY_DELAY)
-      spawn(plant(pop_locs.shift, dlg_locs.shift))
-    end
-
-    @threads.each {|t| t.join }
-  end
-
-  def spawn(dlg)
-    @threads << ControllableThread.new do
-      dlg.tend
-    end
-  end
-
-  def tile_locations
-    row = []
-    7.times {|i| row << [i * 173, 26] }
-    locs = []
-    # Four rows
-    4.times do |y|
-      locs += row.collect {|e| [e[0], 26 + 101 * y] }
-    end
-    # Then a gap, and three more rows.
-    3.times do |y|
-      locs += row.collect {|e| [e[0], 615 + 101 * y] }
-    end
-
-    locs
-  end
-
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
-
-  def plant(pop_loc, dlg_loc)
-    plant = @center
-    rclick_at(*plant)
-
-    dlg = nil
-    with_robot_lock do
-      dlg = PinnableWindow.from_screen_click(Point.new(pop_loc[0], pop_loc[1])).pin
-      dlg = FlaxPlantWindow.new(dlg.get_rect)
-      dlg.drag_to(Point.new(dlg_loc[0], dlg_loc[1]))
-    end
-    return dlg
-  end
-
-end
-
-class FlaxPlantWindow < PinnableWindow
-
-  # First water/weed is at ~35 seconds (seeds at 50)
-  FIRST_WAIT = 35
-  SECOND_WAIT = 16
-  THIRD_WAIT = 15
-  W_PROBE = [11, 72-26]
-  H_PROBE = [10, 79-26]
-
-  # Returns when the flax bed is gone.
-  def tend
-    done = tend_once(FIRST_WAIT, W_PROBE, H_PROBE)
-    done ||= tend_once(SECOND_WAIT, W_PROBE, H_PROBE)
-    done ||= tend_once(THIRD_WAIT, H_PROBE, H_PROBE)
-    unpin
-  end
-
-  # we start doing this while walking.  Thus, the
-  # dialog may look OK, but then by the time we
-  # click on the menu, we've walked out of range.
-  #
-  # Loop until we click, and the dialog looks OK afterward
-  # then return false.
-  # If we see the harvest probe return true
-  def tend_once(initial_wait, probe, harvest_probe)
-    # A black spot in the dialog title
-    dialog_OK = [136, 40 - 25]
-      
-    # Wait for the "water/weed" to appear
-    sleep_sec(initial_wait)
-    all_done = false
-    loop do
-      refresh
-      until dialog_pixel(Point.new(*probe)) == 0
-	if dialog_pixel(Point.new(*harvest_probe)) == 0
-	  all_done = true
-	  break
-	end
-	sleep_sec 3;
-	refresh;
-      end
-      dialog_click(Point.new(*probe))
-      # See if the dialog now looks OK.
-      sleep_sec 3
-      return all_done if all_done || dialog_pixel(Point.new(*dialog_OK)) == 0
-    end
-  end
-
-end
-
 FLAX_DATA = {
   'Constitution Peak' => {},
   "Jacob's Field" => {},
@@ -255,8 +9,186 @@ FLAX_DATA = {
   "Old Dog" => {},
   "Old Egypt" => {},
   "Sunset Pond" => {},
-  "Symphony Ridge Gold" => {},
+  "Symphony Ridge Gold" => {:water => 0},
 }
+
+# Plant centered aligned with --Jaby-- lines in name.
+class FlaxGrow < Action
+
+
+
+  def initialize
+    super('Grow flax', 'Plants')
+    @walker = Walker.new
+  end
+
+  def persistence_name
+    'Grow flax'
+  end
+
+  def setup(parent)
+    # Coords are relative to your head in cart view.
+    gadgets = [
+      {:type => :combo, :label => 'What type of flax?', :name => 'flax-type', 
+       :vals => FLAX_DATA.keys.sort},
+      {:type => :point, :label => 'Drag onto the pinned plant.', :name => 'plant'},
+      {:type => :point, :label => 'Drag onto your head.', :name => 'head'},
+      {:type => :point, :label => 'Drag the pinned stash dialog', :name => 'stash'},
+      {:type => :number, :label => 'How many crops?', :name => 'count'},
+      {:type => :number, :label => 'How many rows?', :name => 'rows'},
+      {:type => :number, :label => 'How many columns?', :name => 'cols'},
+      {:type => :world_loc, :label => 'Grow starting location', :name => 'grow'},
+      {:type => :world_loc, :label => 'Location of water', :name => 'water'},
+      {:type => :world_loc, :label => 'Location near stash', :name => 'stash'},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+
+  # Flax bed pop locations for the previous step
+  def pop_points_for_previous_step(center)
+    {
+      # When no previous step
+      :none => Point.new(center[0] + 60, center[1]), 
+      :right => Point.new(center[0] + 60, center[1]), 
+      :left => Point.new(center[0] - 60, center[1]), 
+      :down => Point.new(center[0], center[1] + 60), 
+    }
+  end
+
+
+  def act
+
+    center = [@vals['head.x'].to_i, @vals['head.y'].to_i]
+    pop_points = pop_points_for_previous_step(center)
+
+    count = @vals['count'].to_i
+    stash_point = point_from_hash(@vals, 'stash')
+    stash_win = PinnableWindow.from_point(stash_point)
+    plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
+    @flax_type = @vals['flax-type']
+    @plant_point = plant_win.coords_for(@flax_type)
+                                           
+
+    water_count = FLAX_DATA[@flax_type][:water]
+    @plant_wl = WorldLocUtils.parse_world_location(@vals['grow'])
+    @water_wl = WorldLocUtils.parse_world_location(@vals['water']) if water_count > 0
+    @stash_wl = WorldLocUtils.parse_world_location(@vals['stash'])
+    @rows = @vals['rows'].to_i
+    @cols = @vals['cols'].to_i
+
+    loop do
+      count.times {grow_one_batch(pop_points)}
+
+      stash_and_get(stash_win)
+
+      # Refill with water.
+      if water_count > 0
+        @walker.walk_to(@water_wl)
+        refill
+      end
+    end
+  end
+
+  # Walk to chess, Stash the flax, and get seeds for another round
+  def stash_and_get(stash_win)
+      @walker.walk_to(@stash_wl)
+      stash_win.refresh
+      stash_win.click_on('Stash/Flax')
+      HowMuch.new(:max)
+      stash_win.click_on('Stash/Insect/Stash All')
+      stash_win.click_on('Stash/Flax See/All')
+      stash_win.click_on('Take/Flax See/Nile')
+      HowMuch.new(count * @rows * @cols + 1)
+  end
+
+  def refill
+    with_robot_lock do
+      Icons.refill
+    end
+  end
+
+  def step_patterns(rows, cols)
+    steps = [:none]
+    rows.times do |irow|
+      if (irow % 2 == 0)
+        steps << [:right] * (cols-1)
+      else
+        steps << [:left] * (cols-1)
+      end
+      steps << [:down] unless irow == rows - 1
+    end
+    
+    return steps.flatten
+  end
+
+
+  
+  # Time to hold down the key to take a good step.
+  KEY_DELAY = 0.01
+  
+  def grow_one_batch(pop_points)
+    @walker.walk_to(@plant_wl)
+    windows = []
+
+    tiler = Tiler.new(0, 35, 0.0)
+    tiler.min_width = 288
+
+
+    tiler.min_height = (153 - 23)
+    tiler.y_offset = 10
+
+    plots = step_patterns(@rows, @cols)
+    plots.each do |s|
+      @walker.steps([s], KEY_DELAY) unless s == :none
+      dlg = plant(pop_points[s])
+      tiler.tile(dlg)
+      windows << dlg
+    end
+    # Tend the beds in sequence.
+    # Will need some error-handling...
+    all_done = false
+    until windows.size == 0 do
+      active_windows = []
+      windows.each do |w|
+        active_windows << w if tend(w) 
+      end
+      windows = active_windows
+    end
+  end
+
+  # Do something useful to the flax bed.
+  # true if there's more to do later.
+  # false if you harvest
+  def tend(dlg)
+    loop do
+      # Make sure the dialog is still there.
+      dlg.refresh
+      text = dlg.read_text
+      break unless text.include?("Flax")
+      return true if dlg.click_on("Water") || dlg.click_on("Weed")
+      dlg.click_on("Harvest")
+      # Don't return yet.  Wait for the harvest to take effect, and dialog text to be empty.
+      sleep_sec 1.0
+    end
+
+    # Dialog went away.  
+    dlg.unpin
+    return false
+  end
+
+                
+
+  def plant(pop_point)
+    rclick_at(@plant_point)
+
+    dlg = nil
+    with_robot_lock do
+      dlg = PinnableWindow.from_screen_click(pop_point).pin
+    end
+    return dlg
+  end
+
+end
 
 class FlaxSeeds < Action
   HARVEST_DELAY = 0.2
@@ -265,7 +197,9 @@ class FlaxSeeds < Action
     super('Flax Seeds', 'Plants')
     @walker = Walker.new
   end
-
+  def persistence_name
+    'flax-seeds'
+  end
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
@@ -281,7 +215,7 @@ class FlaxSeeds < Action
       {:type => :world_loc, :label => 'Location near the stash cest', :name => 'stash_location'},
     ]
 
-    @vals =  UserIO.prompt(parent, 'flax-seeds', 'flax-seeds', gadgets)
+    @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

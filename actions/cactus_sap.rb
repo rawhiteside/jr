@@ -6,13 +6,16 @@ class CactusRun < Action
     super('Cactus run', 'Gather')
   end
 
+  def persistence_name
+    'Cactus'
+  end
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', :aux => ['Collect', 'Stash']},
       {:type => :point, :name => 'warehouse', :label => 'Warehouse'},
       {:type => :point, :name => 'win-stack', :label => 'Stack of pinned cactus windows.'},
     ]
-    @vals = UserIO.prompt(parent, 'Cactus', 'Cactus', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def tile_windows

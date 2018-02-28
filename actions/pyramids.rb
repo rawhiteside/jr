@@ -5,6 +5,11 @@ class PyramidPushStack < Action
   def initialize
     super('Pyramid push', 'Misc')
   end
+
+  def persistence_name
+    'push-pyramid-block'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :point, :label => 'Drag to stack of Rolling blocks', :name => 'win'},
@@ -12,7 +17,7 @@ class PyramidPushStack < Action
        :vals => ['North', 'South', 'East', 'West'],
       },
     ]
-    @vals = UserIO.prompt(parent, 'block', 'Block', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

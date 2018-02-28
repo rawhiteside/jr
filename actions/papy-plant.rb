@@ -6,6 +6,9 @@ class PlantPapy < Action
     super('Plant Papyrus', 'Plants')
   end
 
+  def persistence_name
+    'PapyPlant'
+  end
   def setup(parent)
     gadgets = 
       [
@@ -14,7 +17,7 @@ class PlantPapy < Action
         {:type => :number, :name => 'delay', :label => 'Delay secs'},
       ]
 
-    @vals = UserIO.prompt(parent, "PapyPlant", "PapyPlant", gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
 
   end
 

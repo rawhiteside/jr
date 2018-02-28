@@ -57,11 +57,14 @@ class ThornRun < Action
     end
   end
 
+  def persistence_name
+    'Thorns'
+  end
   def get_drop_window(parent)
     comps = [
       {:type => :point, :name => 'drop', :label => 'Pinned drop menu'},
     ]
-    vals = UserIO.prompt(parent, 'Thorns', 'Thorns', comps)
+    vals = UserIO.prompt(parent, persistence_name, action_name, comps)
     return nil unless vals
     w = PinnableWindow.from_point(point_from_hash(vals, 'drop'))
     return w

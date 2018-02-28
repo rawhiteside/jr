@@ -6,11 +6,15 @@ class WoodPlane < Action
     @threads = []
   end
 
+  def persistence_name
+    'Wood Planes'
+  end
+
   def setup(parent)
     gadgets = [
       { :type => :point, :name => 'stack', :label => 'Drag to the stack of menus' }
     ]
-    @vals = UserIO.prompt(parent, 'Wood Planes', 'Wood Planes', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
   
   def find_windows

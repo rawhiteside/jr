@@ -6,6 +6,9 @@ class Wheat < Action
     super('Wheat', 'Plants')
   end
 
+  def persistence_name
+    'wheat'
+  end
   def setup(parent)
     gadgets = [
       {:type => :world_loc, :name => 'grow_loc', :label => 'NW corner of the growing region', },
@@ -16,7 +19,7 @@ class Wheat < Action
       {:type => :point , :name => 'stash_win', :label => 'Pinned stash window', }, 
       {:type => :point , :name => 'plant_win', :label => 'Pinned plant window', }, 
     ]
-    @vals = UserIO.prompt(parent, 'wheat', 'Wheat', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

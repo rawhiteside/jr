@@ -7,6 +7,10 @@ class SiltAction < Action
     super('Silt', 'Gather')
   end
 
+  def persistence_name
+    'silt'
+  end
+
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
@@ -15,7 +19,7 @@ class SiltAction < Action
       {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
       {:type => :world_path, :label => 'Path to walk', :name => 'path', :aux => "Silt"},
     ]
-    @vals = UserIO.prompt(parent, 'silt', 'Silt', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act

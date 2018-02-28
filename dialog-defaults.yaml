@@ -4,16 +4,16 @@ flax-seeds:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    head.x: '958'
-    head.y: '549'
-    stash.x: '107'
-    stash.y: '437'
+    head.x: '959'
+    head.y: '550'
+    stash.x: '148'
+    stash.y: '684'
     repeat: '2'
     max_wait_secs: '30'
     harvest_reps: '3'
     row_len: '15'
-    start_location: 3185, -6273
-    stash_location: 3186, -6263
+    start_location: 175, -6009
+    stash_location: 168, -6035
 Barley:
   2: Parameter set 1
   1: false
@@ -262,8 +262,8 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    p.x: '376'
-    p.y: '736'
+    help: |
+      Pin plant just below ---Jaby---
 Wood Planes:
   2: Parameter set 1
   1: false
@@ -308,14 +308,14 @@ onions:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Cabbage/Bastet's Yielding/(2)
-    grow: 219, -5958
-    water: 219, -5958
-    head.x: '962'
-    head.y: '553'
-    plant.x: '625'
-    plant.y: '765'
-    repeat: '2'
+    veggie: Onions/Tears of Sinai/(2)
+    grow: 210, -5984
+    water: 210, -5984
+    head.x: '963'
+    head.y: '549'
+    plant.x: '343'
+    plant.y: '629'
+    repeat: '1'
     beds: '12'
     second: '19'
     third: '29'
@@ -788,5 +788,48 @@ color-picker:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    loc.x: '115'
-    loc.y: '97'
+    loc.x: '388'
+    loc.y: '402'
+flax-grow:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    plant.x: '953'
+    plant.y: '568'
+    stash.x: '65'
+    stash.y: '545'
+    count: '1'
+    size: '3'
+    grow: 176, -6013
+    water: 176, -6013
+    stash: 176, -6013
+Grow Flax:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    plant.x: ''
+    plant.y: ''
+    stash.x: ''
+    stash.y: ''
+    count: ''
+    size: ''
+    grow: ''
+    water: ''
+    stash: ''
+Grow flax:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    flax-type: Symphony Ridge Gold
+    plant.x: '122'
+    plant.y: '942'
+    head.x: '962'
+    head.y: '555'
+    stash.x: '465'
+    stash.y: '913'
+    count: '2'
+    rows: '3'
+    cols: '3'
+    grow: 177, -6014
+    water: 177, -6014
+    stash: 168, -6035

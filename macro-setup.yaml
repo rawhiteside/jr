@@ -39,7 +39,9 @@ Background Get: |-
   Stretch an empty Main chatwindow out to full screen.
   Drag a rectangle holding only background pixels.
 Flax Seeds: "Start with 50 seeds.\nPin plant upper left corner.\nF8F8 view. \nMinize\
-  \ chat.\n"
+  \ chat.\n\nThis macro:\n- Runs to storage site.\n- Stashes any seeds in the storage,\
+  \ then takes what it needs. \n- Runs to grow site.\n- Grows and harvests seeds as\
+  \ specified.\n- Repeat. \n"
 Dig Stones: ''
 flax-seeds: sdfsdf
 Constitution click: |
@@ -58,10 +60,15 @@ Casual Grass: 'Watches for the grass icon, and clicks on it.  You''ve gotta move
 Casual Slate: "Watches for a slate icon, and clicks on it.  Move around manually.\
   \ \n"
 Grow vegetables: "F8 x 3\n- Pin the veggie plant button somewhere. \n- Set the two\
-  \ world locs (grow spot, water spot).\n"
+  \ world locs (grow spot, water spot).\n\nThie macro:\n- Runs to the growing spot.\n\
+  - Grows veggies for the specific number of rounds.\n- Runs to water spot & refills.\n\
+  - Repeat"
 Flimsy Bricks: "Uses a 5x5 array, but can't reach the corners, so those unused. \n\
   \n- Setup:\n- Hotkeys ON. \n- Hold boards, straw, etc. \n- Put a brickrack 4 small\
   \ diagonal steps NW.  Also, one 4 small diagonal steps SE.\n- Set the two points\
   \ defining the 5x5 grid:\n- - The two points should be ON the two brickracks, near\
   \ the LOWER RIGHT of the brickracks.  This point is visible, even if bricks pile\
   \ up. \n\n"
+Color Picker: "Forget why I wrote this.\n\nPick a point, then start the macro. \n\
+  It watches that point, and pops a dialog, which updates itself with the color values\
+  \ of that point. \n\nProbably seemed like a good idea at the time. "

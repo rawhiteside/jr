@@ -5,7 +5,7 @@ require 'actions/kettles'
 
 class BuilderTest < Action
 
-  def initialize(name = 'Show builder points')
+  def initialize(name = 'Builder: 30 x small rotate')
     super(name, 'Test/Dev')
   end
 
@@ -13,15 +13,11 @@ class BuilderTest < Action
     true
   end
 
-  POINTS = [ :n, :w, :e, :s, :N, :W, :E, :S, :nw, :ne, :sw, :se, :R,
-             :r, :L, :l, ]
 
   def act
     b = BuildMenu.new
-    POINTS.each do |p|
-      b.build(p)
-      sleep 5
-    end
+    elapsed = Timer.time_this { b.build([:e, :w] * 10)}
+    puts "elapsed: #{elapsed}"
   end
 end
 

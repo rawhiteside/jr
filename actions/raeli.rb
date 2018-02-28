@@ -6,12 +6,16 @@ class Raeli < Action
     super('Raeli', 'Buildings')
   end
 
+  def persistence_name
+    'raeli'
+  end
+
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag to pinned Raeli', :name => 'w'},
       {:type => :combo, :label => "Task", :name => 'task', :vals => ['Watch', 'Burn and watch'], },
     ]
-    @vals = UserIO.prompt(parent, @name, @name, comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def act

@@ -5,6 +5,9 @@ class WaterMineAction < Action
     super('Water mine', 'Buildings')
   end
 
+  def persistence_name
+    'water-mine'
+  end
   def setup(parent)
     gadgets = [
       {:type => :point, :name => 'water-mine', :label => 'Water mine'},
@@ -12,7 +15,7 @@ class WaterMineAction < Action
       {:type => :number, :name => 'scan-interval-1', :label => 'Angle scan interval 1 (minutes)'},
       {:type => :number, :name => 'scan-interval-2', :label => 'Angle scan interval 2 (minutes)'},
     ]
-    @vals = UserIO.prompt(parent, 'water-mine', 'Water mine', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
 
   end
 

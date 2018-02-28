@@ -5,11 +5,14 @@ class Weave < Action
     super(n, 'Buildings')
   end
 
+  def persistence_name
+    'Loom'
+  end
   def setup(parent)
     comps = [
       {:type => :point, :name => 'loom', :label => 'Pinned loom.'},
     ]
-    @vals = UserIO.prompt(parent, 'Loom', 'Loom', comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def act

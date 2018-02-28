@@ -10,7 +10,7 @@ class ReadWindow < Action
 
   def setup(parent)
     gadgets = [{:type => :point, :label => 'Drag to location', :name => 'xy'}]
-    @vals = UserIO.prompt(parent, nil, 'Read a pinnable', gadgets)
+    @vals = UserIO.prompt(parent, nil, action_name, gadgets)
   end
 
   def act

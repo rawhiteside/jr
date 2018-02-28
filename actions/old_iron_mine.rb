@@ -8,6 +8,11 @@ class OldIronMine < Action
   def initialize
     super('Mine iron (old)', 'Misc')
   end
+
+  def persistence_name
+    'old-min-iron'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Show me the stone area', :name => 'area',
@@ -20,7 +25,7 @@ class OldIronMine < Action
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
 	:vals => ['y', 'n']},
     ]
-    @vals = UserIO.prompt(parent, 'iron_mine', 'Mine Iron', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
   
   def act

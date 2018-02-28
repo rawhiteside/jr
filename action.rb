@@ -28,6 +28,14 @@ class Action  < ARobot
     @@action_list.sort{|a,b| a.name.downcase <=> b.name.downcase}
   end
 
+  # Just for clarity.  Bob gets comfused. 
+  def persistence_name
+    @name
+  end
+  def action_name
+    @name
+  end
+
   # If your macro itself is multi-threaded, you should override this
   # method, and kill all of your threads, then dispatch to this super.
   def stop

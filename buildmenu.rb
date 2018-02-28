@@ -4,6 +4,9 @@ require 'robot'
 # Works the build menu
 class BuildMenu < AWindow
 
+  # Number of small rations that equals a large one.
+  ROT_STEPS = 30
+
   BUTTONS = {
     :n => [59, 56],
     :w => [36, 76],
@@ -23,7 +26,8 @@ class BuildMenu < AWindow
     :l => [40, 18],
     :build => [34, 141],
   }
-  REVOLVERS = [:r, :l, :R, :L, ]
+  BIG_R = [:R, :L, ]
+  LITTLE_R = [:r, :l, ]
 
   def initialize
     rect = WindowGeom.rectFromPoint(Point.new(50, 100))
@@ -35,17 +39,20 @@ class BuildMenu < AWindow
     sleep_sec 0.1
     move = [move] unless move.kind_of?(Array)
     move = optimize_moves(move)
-    delay = 0.1
+    delay = 0.02
     # Rotations take longer than translations .. the animation on the
     # screen, that is. 
-    rdelay = 0.2
-    
+    big_delay = 0.1
+    little_delay = 0.05
+    t_delay = 0.05
     extra_delay = 0
 
     move.each {|dir|
       dialog_click(Point.new(*(BUTTONS[dir])))
       sleep_sec(delay)
-      extra_delay += rdelay if REVOLVERS.include?(dir)
+      extra_delay += big_delay if BIG_R.include?(dir)
+      extra_delay += little_delay if LITTLE_R.include?(dir)
+      extra_delay += t_delay unless (LITTLE_R.include?(dir) || BIG_R.include?(dir))
     }
     dialog_click(Point.new(*BUTTONS[:build]))
     sleep_sec extra_delay
@@ -54,6 +61,7 @@ class BuildMenu < AWindow
   # Look at the rotations, and optimize them.
   # Especially the rotations, which are slow.
   def optimize_moves(orig)
+    p orig
     # Put counts of each item into a hash.
     m = Hash.new(0)
     orig.each {|e| m[e] += 1}
@@ -64,27 +72,27 @@ class BuildMenu < AWindow
     while curr_count != prev_count
       annihilate(m, :R, :L)
       annihilate(m, :r, :l)
-      # :r * 6 --> :R
-      if m[:r] >= 6
-	m[:r] -= 6
+      # :r * ROT_STEPS --> :R
+      if m[:r] >= ROT_STEPS
+	m[:r] -= ROT_STEPS
 	m[:R] += 1
       end
-      # :l * 6 --> :L
-      if m[:l] >= 6
-	m[:l] -= 6
+      # :l * ? --> :L
+      if m[:l] >= ROT_STEPS
+	m[:l] -= ROT_STEPS
 	m[:L] += 1
       end
       # [:r, :r, :r, :r] --> [:R, :l, :l]
-      if m[:r] > 3
-	m[:r] -= 4
+      if m[:r] > ROT_STEPS/2
+	m[:r] -= (ROT_STEPS/2 + 1)
 	m[:R] += 1
-	m[:l] += 2
+	m[:l] += (ROT_STEPS/2 - 1)
       end
       # [:l, :l, :l, :l] --> [:L, :r, :r]
-      if m[:l] > 3
-	m[:l] -= 4
+      if m[:l] > ROT_STEPS/2
+	m[:l] -= (ROT_STEPS/2 + 1)
 	m[:L] += 1
-	m[:r] += 2
+	m[:r] += (ROT_STEPS/2 - 1)
       end
       # 
       # 12 big revolves is the identity
@@ -111,13 +119,14 @@ class BuildMenu < AWindow
     trans_arr = []
     rot_arr = []
     m.each_key {|k|
-      if REVOLVERS.include?(k)
+      if BIG_R.include?(k) || LITTLE_R.include?(k)
 	m[k].times {|i| rot_arr << k}
       else
 	m[k].times {|i| trans_arr << k}
       end
     }
 
+    p rot_arr + trans_arr
     rot_arr + trans_arr
   end
 

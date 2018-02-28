@@ -6,6 +6,10 @@ class Firepits < Action
     @threads = []
   end
 
+  def persistence_name
+    'Firepits'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :grid, :name => 'g', :label => 'Show me the grid of firepits.'},
@@ -14,7 +18,7 @@ class Firepits < Action
       }
     ]
 
-    @vals = UserIO.prompt(parent, 'Firepits', 'Firepits', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def stop

@@ -32,6 +32,10 @@ class Grass < Action
   end
 
 
+  def persistence_name
+    'Grass'
+  end
+
   def setup(parent)
     gadgets = [
       {:type => :point, :name => 'chest', :label => 'Stash chest window'},
@@ -39,7 +43,7 @@ class Grass < Action
       {:type => :number, :name => 'count', :label => 'How many loops till stash? '},
       {:type => :world_path, :label => 'Path to walk', :name => 'path'}
     ]
-    @vals = UserIO.prompt(parent, 'Grass', 'Grass', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
     return nil unless @vals
     @path_count = @vals['count'].to_i
     @path = WorldLocUtils.parse_world_path(@vals['path'])

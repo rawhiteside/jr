@@ -6,12 +6,16 @@ class Quarry < Action
     super('Quarry', 'Buildings')
   end
 
+  def persistence_name
+    'Quarry'
+  end
+
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag to pinned dialog', :name => 'point'},
-      {:type => :number, :label => 'What humner are you (1-4)', :name => 'number'}
+      {:type => :number, :label => 'What number are you (1-4)', :name => 'number'}
     ]
-    @vals = UserIO.prompt(parent, 'Quarry', 'Quarry', comps)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def act

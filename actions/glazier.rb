@@ -255,6 +255,10 @@ class Glazier < Action
     super
   end
 
+  def persistence_name
+    'Glaziers'
+  end
+
   def get_ui_vals(parent)
     choices = [
       'Make a Glass Jar',
@@ -272,7 +276,7 @@ class Glazier < Action
       {:type => :combo, :name => 'what', :vals => choices,
 	:label => 'What do you want to make?'},
     ]
-    vals = UserIO.prompt(parent, 'Glazier', 'Glazier', comps)
+    vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
 
   def setup(parent)

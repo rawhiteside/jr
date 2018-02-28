@@ -5,6 +5,9 @@ class HarvestPapy < Action
     super(name, group)
   end
 
+  def persistence_name
+    'papyrus'
+  end
   def get_uvals(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
@@ -15,7 +18,7 @@ class HarvestPapy < Action
       {:type => :point, :label => 'Drag to the pinned WH menu.',
 	:name => 'stash'},
     ]
-    return UserIO.prompt(parent, 'papyrus', 'papyrus', gadgets)
+    return UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def gather(origin, width, height)

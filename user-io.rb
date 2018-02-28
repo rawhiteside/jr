@@ -36,6 +36,7 @@ class UserIO
   end
 
   def self.show_help(topic, center_here)
+    puts "XXX: topic ls: #{topic}"
     HelpForTopic.show_help(topic, center_here)
   end
 
