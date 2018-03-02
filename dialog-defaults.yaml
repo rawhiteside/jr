@@ -66,25 +66,13 @@ Slate:
       4566, -5788
   T& camp:
     coords: |
-      3188, -6262
-      3194, -6259
-      3197, -6257
-      3197, -6255
-      3200, -6252
-      3199, -6248
-      3202, -6245
-      3201, -6238
-      3198, -6236
-      3196, -6234
-      3195, -6232
-      3195, -6234
-      3197, -6236
-      3201, -6249
-      3198, -6251
-      3198, -6254
-      3192, -6259
-      3192, -6261
-      3188, -6260
+      -402, -6717
+      -393, -6717
+      -384, -6718
+      -381, -6727
+      -383, -6735
+      -385, -6738
+      -387, -6740
   T7 camp:
     coords: |
       3639, -5274
@@ -103,7 +91,7 @@ Slate:
       3644, -5275
 Trees:
   2: In camp
-  1: true
+  1: false
   Parameter set 1:
     path: |
       4470, -5902
@@ -119,6 +107,14 @@ Trees:
     bonfire.y: '647'
     win-stack.x: '1255'
     win-stack.y: '454'
+    water-mine-1.x: ''
+    water-mine-1.y: ''
+    scan-interval-wm1-1: ''
+    scan-interval-wm1-2: ''
+    water-mine-2.x: ''
+    water-mine-2.y: ''
+    scan-interval-wm2-1: ''
+    scan-interval-wm2-2: ''
   Near UArch:
     path: |
       3202, -6234
@@ -153,44 +149,44 @@ Trees:
     bonfire.y: '912'
     win-stack.x: '611'
     win-stack.y: '971'
+    water-mine-1.x: ''
+    water-mine-1.y: ''
+    scan-interval-wm1-1: ''
+    scan-interval-wm1-2: ''
+    water-mine-2.x: ''
+    water-mine-2.y: ''
+    scan-interval-wm2-1: ''
+    scan-interval-wm2-2: ''
   In camp:
-    path: |
-      3200, -6240
-      Water Mine 1
-      3202, -6234
-      Gather Wood
-      Gather Wood
-      3205, -6233
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      3191, -6220
-      Gather Wood
-      3179, -6225
-      Water Mine 2
-      3191, -6224
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      3191, -6229
-      Gather Wood
-      Gather Wood
-      3194, -6231
-      Gather Wood
-      Gather Wood
-      3202, -6234
+    path: |+
+      -410, -6701
       Bonfire Stash
-    bonfire.x: '554'
-    bonfire.y: '596'
-    win-stack.x: '1027'
-    win-stack.y: '474'
+      -409, -6701
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      -392, -6652
+      Gather Wood
+      -393, -6652
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+
+    bonfire.x: '1156'
+    bonfire.y: '701'
+    win-stack.x: '26'
+    win-stack.y: '752'
+    water-mine-1-p: N
     water-mine-1.x: '297'
     water-mine-1.y: '597'
     scan-interval-wm1-1: '4'
     scan-interval-wm1-2: '15'
+    water-mine-2-p: N
     water-mine-2.x: '826'
     water-mine-2.y: '586'
     scan-interval-wm2-1: '4'
@@ -207,6 +203,14 @@ Trees:
     bonfire.y: '810'
     win-stack.x: '926'
     win-stack.y: '568'
+    water-mine-1.x: ''
+    water-mine-1.y: ''
+    scan-interval-wm1-1: ''
+    scan-interval-wm1-2: ''
+    water-mine-2.x: ''
+    water-mine-2.y: ''
+    scan-interval-wm2-1: ''
+    scan-interval-wm2-2: ''
   double-water-mine:
     path: |
       3200, -6240

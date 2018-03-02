@@ -13,7 +13,7 @@ Casual Slate: 1
 Dig Stones: 1
 Grass: 1
 Casual Grass: 1
-Slate: 0
+Slate: 1
 Eat: 1
 Focus click: 1
 Inverval tabs: 1
@@ -23,7 +23,7 @@ Flax Seeds: 1
 Read Window: 1
 Mine iron: 1
 Grow vegetables: 1
-Tree run: 0
+Tree run: 1
 Test Build Gadget: 1
 Glazier: 0
 Potash: 0
@@ -34,7 +34,7 @@ Take from kettles: 0
 Plant Papyrus: 0
 Pottery Wheels: 1
 Pyramid push: 0
-Silt: 0
+Silt: 1
 Cactus run: 0
 Water mine: 0
 Kilns: 1
@@ -46,3 +46,5 @@ Grow flax: 1
 Time something (change code for target): 1
 Show builder points: 1
 'Builder: 30 x small rotate': 1
+Thorn run 2: 1
+Thorns: 1

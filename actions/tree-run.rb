@@ -14,11 +14,15 @@ class TreeRun < Action
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
        :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash']},
-      {:type => :point, :name => 'bonfire', :label => 'Bonfire'},
-      {:type => :point, :name => 'win-stack', :label => 'Stack of pinned tree windows.'},
+      {:type => :point, :name => 'bonfire', :label => 'Drag to pinned bonfire'},
+      {:type => :point, :name => 'win-stack', :label => 'Drag to stack of pinned tree windows.'},
+
+      {:type => :combo, :name => 'water-mine-1-p', :label => 'Work Water mine 1?', :vals => ["Y", "N"]},
+
       {:type => :point, :name => 'water-mine-1', :label => 'Water mine 1'},
       {:type => :number, :name => 'scan-interval-wm1-1', :label => 'WM1: Angle scan interval 1 (minutes)'},
       {:type => :number, :name => 'scan-interval-wm1-2', :label => 'WM1: Angle scan interval 2 (minutes)'},
+      {:type => :combo, :name => 'water-mine-2-p', :label => 'Work Water mine 2?', :vals => ["Y", "N"]},
       {:type => :point, :name => 'water-mine-2', :label => 'Water mine 2'},
       {:type => :number, :name => 'scan-interval-wm2-1', :label => 'WM2: Angle scan interval 1 (minutes)'},
       {:type => :number, :name => 'scan-interval-wm2-2', :label => 'WM2: Angle scan interval 2 (minutes)'},
@@ -35,8 +39,10 @@ class TreeRun < Action
   def tile_windows
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
-    tiler = Tiler.new(2, 85)
-    tiler.y_offset = 10
+    tiler = Tiler.new(2, 85, 0.0)
+    tiler.y_offset = 20
+    tiler.min_width = 380
+    tiler.min_height = 80
     @windows = tiler.tile_stack(x, y, 0.1)
   end
 
@@ -45,15 +51,21 @@ class TreeRun < Action
 
     @bonfire = PinnableWindow.from_point(point_from_hash(@vals, 'bonfire'))
 
-    water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
-    scan_interval_1 = @vals['scan-interval-wm1-1'].to_i
-    scan_interval_2 = @vals['scan-interval-wm1-2'].to_i
-    @mine_worker1 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
+    @mine_worker1 = nil
+    if @vals['water-mine-1-p'] == "Y"
+      water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
+      scan_interval_1 = @vals['scan-interval-wm1-1'].to_i
+      scan_interval_2 = @vals['scan-interval-wm1-2'].to_i
+      @mine_worker1 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
+    end
 
-    water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
-    scan_interval_1 = @vals['scan-interval-wm2-1'].to_i
-    scan_interval_2 = @vals['scan-interval-wm2-2'].to_i
-    @mine_worker2 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
+    @mine_worker2 = nil
+    if @vals['water-mine-2-p'] == "Y"
+      water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
+      scan_interval_1 = @vals['scan-interval-wm2-1'].to_i
+      scan_interval_2 = @vals['scan-interval-wm2-2'].to_i
+      @mine_worker2 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
+    end
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
 
@@ -70,7 +82,7 @@ class TreeRun < Action
 
   def secs_to_wait(w)
     w.refresh
-    sleep_sec 0.5
+    sleep_sec 0.05
     text = w.read_text
     match = Regexp.new('no Wood for ([0-9]+) ').match(text)
 
@@ -80,7 +92,6 @@ class TreeRun < Action
   def gather(w)
     loop do
       return if (secs = secs_to_wait(w)) > 15
-      w.refresh
       break if w.click_on('Gather')
       sleep_sec 2
     end
@@ -91,9 +102,9 @@ class TreeRun < Action
 
   def wait_for_fert(w)
     loop do
-      sleep_sec 0.5
       w.refresh
       return if w.read_text =~ /Fertilize/
+      sleep_sec 0.5
     end
   end
 
@@ -122,8 +133,6 @@ class TreeRun < Action
   end
 
   def bonfire_stash(bonfire)
-    bonfire.refresh
-    sleep 0.2
     bonfire.refresh
     sleep 0.2
     HowMuch.new(:max) if bonfire.click_on('Add')

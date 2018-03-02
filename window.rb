@@ -263,7 +263,7 @@ end
 class Tiler < ARobot
   # Overlap must not be 0.5 or greater, or 
   # pinnables will be invisible!
-  def initialize(x, y, ovlp_fraction = 0.4)
+  def initialize(x, y, ovlp_fraction = 0.0)
     super()
     @xtile = [x,2].max
     @ytile = y
@@ -294,7 +294,6 @@ class Tiler < ARobot
     point = Point.new(x, y)
     windows = []
     loop do
-      # XXX
       w = PinnableWindow.from_point(point)
       break unless w
       windows << w
