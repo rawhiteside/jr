@@ -130,12 +130,10 @@ class FlaxGrow < Action
     @walker.walk_to(@plant_wl)
     windows = []
 
-    tiler = Tiler.new(0, 35, 0.1)
+    tiler = Tiler.new(0, 35, 0.4)
     tiler.min_width = 250
-
-
     tiler.min_height = (153 - 23)
-    tiler.y_offset = 10
+    tiler.y_offset = 5
 
     plots = step_patterns(@rows, @cols)
     plots.each do |s|

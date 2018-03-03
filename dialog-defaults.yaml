@@ -841,15 +841,15 @@ Grow flax:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    plant.x: '68'
-    plant.y: '925'
-    head.x: '963'
-    head.y: '550'
-    stash.x: '227'
-    stash.y: '879'
+    plant.x: '67'
+    plant.y: '655'
+    head.x: '681'
+    head.y: '395'
+    stash.x: '78'
+    stash.y: '656'
     count: '3'
     rows: '4'
-    cols: '5'
-    grow: 132, -5994
-    water: 132, -5994
-    stash: 132, -5994
+    cols: '4'
+    grow: 131, -5991
+    water: 131, -5991
+    stash: 131, -5991
