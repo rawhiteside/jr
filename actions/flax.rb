@@ -295,8 +295,10 @@ class FlaxSeeds < Action
   end
 
   def plant(head)
-    @tiler = Tiler.new(0, 77, 0.45)
-    @tiler.y_offset = 17
+    @tiler = Tiler.new(0, 77, 0.4)
+    @tiler.min_width = 363
+    @tiler.min_height = 151 - 23
+    @tiler.y_offset = 10
     @windows = []
     # 
     # Plant a row to the right.
