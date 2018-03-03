@@ -4,16 +4,16 @@ flax-seeds:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    head.x: '959'
-    head.y: '550'
-    stash.x: '148'
-    stash.y: '684'
+    head.x: '963'
+    head.y: '553'
+    stash.x: '93'
+    stash.y: '961'
     repeat: '2'
     max_wait_secs: '30'
     harvest_reps: '3'
     row_len: '15'
-    start_location: 175, -6009
-    stash_location: 168, -6035
+    start_location: 98, -6012
+    stash_location: 98, -6012
 Barley:
   2: Parameter set 1
   1: false
@@ -73,6 +73,22 @@ Slate:
       -383, -6735
       -385, -6738
       -387, -6740
+      -387, -6739
+      -385, -6737
+      -383, -6734
+      -383, -6733
+      -383, -6727
+      -382, -6726
+      -383, -6725
+      -384, -6720
+      -385, -6718
+      -387, -6716
+      -390, -6717
+      -390, -6716
+      -392, -6717
+      -395, -6716
+      -397, -6717
+      -401, -6718
   T7 camp:
     coords: |
       3639, -5274
@@ -825,15 +841,15 @@ Grow flax:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    plant.x: '122'
-    plant.y: '942'
-    head.x: '962'
-    head.y: '555'
-    stash.x: '465'
-    stash.y: '913'
-    count: '2'
-    rows: '3'
-    cols: '3'
-    grow: 177, -6014
-    water: 177, -6014
-    stash: 168, -6035
+    plant.x: '68'
+    plant.y: '925'
+    head.x: '963'
+    head.y: '550'
+    stash.x: '227'
+    stash.y: '879'
+    count: '3'
+    rows: '4'
+    cols: '5'
+    grow: 132, -5994
+    water: 132, -5994
+    stash: 132, -5994

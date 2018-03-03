@@ -79,7 +79,7 @@ class FlaxGrow < Action
     loop do
       count.times {grow_one_batch(pop_points)}
 
-      stash_and_get(stash_win)
+      stash_and_get(stash_win) if stash_win
 
       # Refill with water.
       if water_count > 0
@@ -130,8 +130,8 @@ class FlaxGrow < Action
     @walker.walk_to(@plant_wl)
     windows = []
 
-    tiler = Tiler.new(0, 35, 0.0)
-    tiler.min_width = 288
+    tiler = Tiler.new(0, 35, 0.1)
+    tiler.min_width = 250
 
 
     tiler.min_height = (153 - 23)
@@ -235,10 +235,12 @@ class FlaxSeeds < Action
     loop do
       # 
       # Go stash whatever you have, and pick up seeds.
-      walker.walk_to(@stash_location)
-      stash_chest.click_on('Stash./Flax/All')
-      stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
-      HowMuch.new(2*@row_len + 1)
+      if stash_chest
+        walker.walk_to(@stash_location)
+        stash_chest.click_on('Stash./Flax/All')
+        stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
+        HowMuch.new(2*@row_len + 1)
+      end
 
       # Plant and harvest. 
       repeat.times do
