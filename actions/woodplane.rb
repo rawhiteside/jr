@@ -22,6 +22,7 @@ class WoodPlane < Action
     y = @vals['stack.y'].to_i
     tiler = Tiler.new(2, 70, 0)
     tiler.y_offset = 10
+    tiler.min_width = 386
     @windows = tiler.tile_stack(x, y)
   end
   
