@@ -13,8 +13,8 @@ class TreeRun < Action
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
-       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash']},
-      {:type => :point, :name => 'bonfire', :label => 'Drag to pinned bonfire'},
+       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash', 'Storage Stash']},
+      {:type => :point, :name => 'storage', :label => 'Drag to pinned bonfire or storage'},
       {:type => :point, :name => 'win-stack', :label => 'Drag to stack of pinned tree windows.'},
 
       {:type => :combo, :name => 'water-mine-1-p', :label => 'Work Water mine 1?', :vals => ["Y", "N"]},
@@ -49,7 +49,7 @@ class TreeRun < Action
   def init_stuff
     tile_windows
 
-    @bonfire = PinnableWindow.from_point(point_from_hash(@vals, 'bonfire'))
+    @storage = PinnableWindow.from_point(point_from_hash(@vals, 'storage'))
 
     @mine_worker1 = nil
     if @vals['water-mine-1-p'] == "Y"
@@ -123,7 +123,9 @@ class TreeRun < Action
         elsif c == 'Water Mine 2'
           @mine_worker2.tend
         elsif c == 'Bonfire Stash'
-          bonfire_stash(@bonfire)
+          bonfire_stash(@storage)
+        elsif c == 'Storage Stash'
+          storage_stash(@storage)
         end
       end
       
@@ -136,6 +138,12 @@ class TreeRun < Action
     bonfire.refresh
     sleep 0.2
     HowMuch.new(:max) if bonfire.click_on('Add')
+  end
+
+  def storage_stash(storage)
+    storage.refresh
+    sleep 0.2
+    HowMuch.new(:max) if storage.click_on('Stash./Wood')
   end
 end
 Action.add_action(TreeRun.new)
