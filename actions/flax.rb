@@ -164,10 +164,20 @@ class FlaxGrow < Action
       text = dlg.read_text
       break unless text.include?("Flax")
       return true if dlg.click_on("Water") || dlg.click_on("Weed")
-      dlg.click_on("Harvest")
-      # Don't return yet.  Wait for the harvest to take effect, and dialog text to be empty.
+      break if dlg.click_on("Harvest")
       sleep_sec 1.0
     end
+
+    # Wait for the dialog to be empty. 
+    loop do
+      dlg.refresh
+      text = dlg.read_text
+      break unless text.include?("Harvest")
+      sleep_sec 1.0
+    end
+
+    # Finally, if somethign messed up, and we just harvested seeds up there. rip it out.
+    dlg.click_on('Util/Rip')
 
     # Dialog went away.  
     dlg.unpin
