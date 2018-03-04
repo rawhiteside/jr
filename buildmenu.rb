@@ -61,7 +61,6 @@ class BuildMenu < AWindow
   # Look at the rotations, and optimize them.
   # Especially the rotations, which are slow.
   def optimize_moves(orig)
-    p orig
     # Put counts of each item into a hash.
     m = Hash.new(0)
     orig.each {|e| m[e] += 1}
@@ -126,7 +125,6 @@ class BuildMenu < AWindow
       end
     }
 
-    p rot_arr + trans_arr
     rot_arr + trans_arr
   end
 
