@@ -77,6 +77,7 @@ class FlimsyBricks < GridAction
     key = [p['ix'],p['iy']]
     recipe = @recipes[key]
     BuildMenu.new.build(recipe)
+    sleep_sec(1)
   end
 
   def act_at(pt)
@@ -92,10 +93,11 @@ class FlimsyBricks < GridAction
 
 
    mm(pt['x'], pt['y'])
-    sleep_sec 0.2
+    sleep_sec 0.3
     send_string('T')
-    sleep_sec 0.1
+    sleep_sec 0.3
     send_string('B')
+    sleep_sec 0.3
   end
 
   def build_recipes
