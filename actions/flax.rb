@@ -6,7 +6,7 @@ FLAX_DATA = {
   'Constitution Peak' => {},
   "Jacob's Field" => {},
   "Nile Green" => {},
-  "Old Dog" => {},
+  "Old Dog" => {:water => 2},
   "Old Egypt" => {},
   "Sunset Pond" => {},
   "Symphony Ridge Gold" => {:water => 0},
@@ -79,7 +79,7 @@ class FlaxGrow < Action
     loop do
       count.times {grow_one_batch(pop_points)}
 
-      stash_and_get(stash_win) if stash_win
+      stash_and_get(stash_win, count * @rows * @cols) if stash_win
 
       # Refill with water.
       if water_count > 0
@@ -90,15 +90,15 @@ class FlaxGrow < Action
   end
 
   # Walk to chess, Stash the flax, and get seeds for another round
-  def stash_and_get(stash_win)
+  def stash_and_get(stash_win, count)
       @walker.walk_to(@stash_wl)
       stash_win.refresh
-      stash_win.click_on('Stash/Flax')
+      stash_win.click_on('Stash./Flax')
       HowMuch.new(:max)
-      stash_win.click_on('Stash/Insect/Stash All')
-      stash_win.click_on('Stash/Flax See/All')
-      stash_win.click_on('Take/Flax See/Nile')
-      HowMuch.new(count * @rows * @cols + 1)
+      stash_win.click_on('Stash./Insect/Stash All')
+      stash_win.click_on('Stash./Flax See/All')
+      stash_win.click_on("Take/Flax See/#{@flax_type}")
+      HowMuch.new(count + 1)
   end
 
   def refill
@@ -130,8 +130,8 @@ class FlaxGrow < Action
     @walker.walk_to(@plant_wl)
     windows = []
 
-    tiler = Tiler.new(0, 35, 0.4)
-    tiler.min_width = 250
+    tiler = Tiler.new(0, 35, 0.3)
+    tiler.min_width = 282
     tiler.min_height = (153 - 23)
     tiler.y_offset = 5
 
