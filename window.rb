@@ -67,7 +67,6 @@ class HowMuch < Window
 
   # Click on the cancel button.
   def self.cancel(w)
-    puts 'Cancelling a HowMuch'
     rect = w.rect
     w.dialog_click(Point.new(170, rect.height - 20))
   end
@@ -330,7 +329,6 @@ class Tiler < ARobot
 
     pinnable.default_refresh_loc = 'tc' if @ovlp > 0.0
     width = [pinnable.rect.width, @min_width].max
-
     if (@xtile + width) >= s_width
       @xtile = 2
       @ytile = (@ymax + 1 + @y_off)
@@ -339,14 +337,19 @@ class Tiler < ARobot
 
     # Grab the window height now, before we move it.  The window may
     # shrink when we move it.  If so, track the max y using the max of
-    # the two heights.
+    # the two heights.  Same with width.
+    #
+    # XXX Need to know, actually, the "minimum width" for the window,
+    # so we can make sure it's refresh-able even at min size, with
+    # max-size neighbors.
     prev_height = pinnable.rect.height
     with_robot_lock do
       pinnable.drag_to(Point.new(@xtile, @ytile))
 
       curr_height = pinnable.rect.height
       use_height = [prev_height, curr_height, @min_height].max
-      @xtile += ((1.0 - @ovlp) * width ).to_i
+      x_incr = ((1.0 - @ovlp) * width ).to_i
+      @xtile += x_incr
       @ymax = [@ymax, @ytile + use_height].max
     end
 
