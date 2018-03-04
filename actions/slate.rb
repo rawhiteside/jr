@@ -10,6 +10,7 @@ class CasualSlate < Action
     loop do
       if Icons.click_on(:slate)
 	sleep_sec 0.1
+        HowMuch.cancel_if_present
       else
 	Thread.pass
       end
