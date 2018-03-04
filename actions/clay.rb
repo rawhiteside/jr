@@ -25,6 +25,23 @@ class JugCount
 
 end
 
+
+class CasualWater < Action
+  def initialize
+    super('Casual Water', 'Gather')
+  end
+
+  def act
+    loop do
+      if Icons.click_on(:water)
+	sleep_sec 0.1
+      else
+	Thread.pass
+      end
+    end
+  end
+end
+
 class CasualClay < Action
   attr_accessor :jug_count
   def initialize
@@ -166,3 +183,4 @@ end
 Action.add_action(BackAndForthClay.new)
 Action.add_action(Clay.new)
 Action.add_action(CasualClay.new)
+Action.add_action(CasualWater.new)
