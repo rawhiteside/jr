@@ -38,7 +38,7 @@ class HowMuch < Window
       @win = nil
       sleep_sec(0.1)
       5.times do
-        @win = find_win
+        @win = HowMuch.find_win
 	break if @win 
 	sleep_sec 0.1
       end
@@ -55,7 +55,7 @@ class HowMuch < Window
       end
       # Wait until it's gone.
       5.times do 
-        got = find_win
+        got = HowMuch.find_win
         break unless got
 	sleep_sec 0.1
       end
