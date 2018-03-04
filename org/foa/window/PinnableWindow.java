@@ -33,7 +33,7 @@ public class PinnableWindow extends AWindow {
 	    }
 	}
 	if (rnew == null) {
-	    System.out.println("Update rect failed.");
+	    // System.out.println("Update rect failed.");
 	    /*
 	    Rectangle rect = getRect();
 	    PixelBlock pb = new PixelBlock(rect);
