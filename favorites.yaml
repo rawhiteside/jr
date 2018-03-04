@@ -35,7 +35,7 @@ Plant Papyrus: 0
 Pottery Wheels: 1
 Pyramid push: 0
 Silt: 1
-Cactus run: 0
+Cactus run: 1
 Water mine: 0
 Kilns: 1
 Stir: 0
@@ -48,3 +48,5 @@ Show builder points: 1
 'Builder: 30 x small rotate': 1
 Thorn run 2: 1
 Thorns: 1
+Dig dirt: 1
+Casual Water: 1

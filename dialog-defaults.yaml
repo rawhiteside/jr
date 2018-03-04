@@ -4,16 +4,16 @@ flax-seeds:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    head.x: '963'
-    head.y: '553'
-    stash.x: '93'
-    stash.y: '961'
-    repeat: '2'
+    head.x: '957'
+    head.y: '550'
+    stash.x: '1639'
+    stash.y: '976'
+    repeat: '3'
     max_wait_secs: '30'
     harvest_reps: '3'
-    row_len: '15'
-    start_location: 98, -6012
-    stash_location: 98, -6012
+    row_len: '14'
+    start_location: -372, -6740
+    stash_location: -378, -6733
 Barley:
   2: Parameter set 1
   1: false
@@ -107,7 +107,7 @@ Slate:
       3644, -5275
 Trees:
   2: In camp
-  1: false
+  1: true
   Parameter set 1:
     path: |
       4470, -5902
@@ -174,29 +174,32 @@ Trees:
     scan-interval-wm2-1: ''
     scan-interval-wm2-2: ''
   In camp:
-    path: |+
-      -410, -6701
-      Bonfire Stash
-      -409, -6701
+    path: |
+      -410, -6727
       Gather Wood
       Gather Wood
       Gather Wood
       Gather Wood
-      -392, -6652
+      -409, -6730
       Gather Wood
-      -393, -6652
+      -411, -6720
       Gather Wood
-      Gather Wood
-      Gather Wood
-      Gather Wood
-      Gather Wood
+      -411, -6701
+      -408, -6701
       Gather Wood
       Gather Wood
-
-    bonfire.x: '1156'
-    bonfire.y: '701'
-    win-stack.x: '26'
-    win-stack.y: '752'
+      Gather Wood
+      Gather Wood
+      -413, -6704
+      -413, -6720
+      -408, -6725
+      -404, -6724
+      Storage Stash
+      -410, -6727
+    storage.x: '1190'
+    storage.y: '746'
+    win-stack.x: '510'
+    win-stack.y: '886'
     water-mine-1-p: N
     water-mine-1.x: '297'
     water-mine-1.y: '597'
@@ -278,30 +281,46 @@ Trees:
     water-mine-2.y: '678'
     scan-interval-wm2-1: '6'
     scan-interval-wm2-2: '15'
+  UoW:
+    path: ''
+    storage.x: ''
+    storage.y: ''
+    win-stack.x: '342'
+    win-stack.y: '819'
+    water-mine-1-p: N
+    water-mine-1.x: ''
+    water-mine-1.y: ''
+    scan-interval-wm1-1: ''
+    scan-interval-wm1-2: ''
+    water-mine-2-p: N
+    water-mine-2.x: ''
+    water-mine-2.y: ''
+    scan-interval-wm2-1: ''
+    scan-interval-wm2-2: ''
 ?
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    help: |
-      Pin plant just below ---Jaby---
+    p.x: '136'
+    p.y: '687'
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '521'
-    stack.y: '748'
+    stack.x: '545'
+    stack.y: '762'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '851'
-    g.top-left.y: '439'
-    g.bottom-right.x: '1135'
-    g.bottom-right.y: '723'
+    g.top-left.x: '837'
+    g.top-left.y: '436'
+    g.bottom-right.x: '1140'
+    g.bottom-right.y: '737'
     g.num-cols: '5'
     g.num-rows: '5'
     repeat: '100'
-    delay: '36'
+    delay: '37'
 Grass:
   2: Parameter set 1
   1: false
@@ -389,16 +408,14 @@ Clay:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '97'
-    chest.y: '666'
+    chest.x: '962'
+    chest.y: '51'
     chest-coords: 173, -6031
-    water-coords: 178, -6042
-    jug_count: '10'
+    water-coords: -420, -6670
+    jug_count: '1000'
     path: |
-      175, -6040
-      172, -6034
-      175, -6033
-      172, -6040
+      -422, -6672
+      -420, -6670
 Cutstones:
   2: Parameter set 1
   1: false
@@ -841,15 +858,15 @@ Grow flax:
   1: false
   Parameter set 1:
     flax-type: Symphony Ridge Gold
-    plant.x: '67'
-    plant.y: '655'
-    head.x: '681'
-    head.y: '395'
-    stash.x: '78'
-    stash.y: '656'
-    count: '3'
+    plant.x: '96'
+    plant.y: '996'
+    head.x: '952'
+    head.y: '552'
+    stash.x: '74'
+    stash.y: '1042'
+    count: '8'
     rows: '4'
-    cols: '4'
-    grow: 131, -5991
-    water: 131, -5991
-    stash: 131, -5991
+    cols: '5'
+    grow: 133, -5994
+    water: 133, -5994
+    stash: 133, -5994
