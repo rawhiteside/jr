@@ -29,42 +29,64 @@ class Window < AWindow
 end
 
 class HowMuch < Window
+
   # Answer the "How Much" / "How Many" popup
-  # Arg can either a number, or one of [:max, :ok]
+  # Arg can either a number, or one of [:max, :ok, :cancel]
   def initialize(quant)
     super(Rectangle.new(0,0,0,0))
     with_robot_lock do
-      dim = screen_size
-      wid, height = dim.width, dim.height
-      win = nil
+      @win = nil
       sleep_sec(0.1)
-      5.times do 
-	win = Window.from_point(Point.new(wid/2, height/2))
-	break if win && win.read_text =~ /(H|h)ow (much|many)/
+      5.times do
+        @win = find_win
+	break if @win 
 	sleep_sec 0.1
       end
 
-      raise(Exception.new("The How Much dialg didn't appear")) unless win
+      raise(Exception.new("The How Much dialg didn't appear")) unless @win
 
-      rect = win.rect
-      win.dialog_click(Point.new(110, rect.height - 30)) if quant == :max
-      win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
+      rect = @win.rect
+      @win.dialog_click(Point.new(110, rect.height - 30)) if quant == :max
+      @win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
         robot = ARobot.sharedInstance
 	robot.send_string(quant.to_i.to_s)
-	win.dialog_click(Point.new(170, rect.height - 45))
+	@win.dialog_click(Point.new(170, rect.height - 45))
       end
       # Wait until it's gone.
       5.times do 
-	win = Window.from_point(Point.new(wid/2, height/2))
-        break unless win
-        break unless rect == win.rect
+        got = find_win
+        break unless got
 	sleep_sec 0.1
       end
 
     end
     
     sleep_sec 0.1
+  end
+
+  # Click on the cancel button.
+  def self.cancel(w)
+    puts 'Cancelling a HowMuch'
+    rect = w.rect
+    w.dialog_click(Point.new(170, rect.height - 20))
+  end
+
+  def self.cancel_if_present
+    w = find_win
+    cancel(w) if w
+  end
+
+  def self.find_win
+    dim = ARobot.sharedInstance.screen_size
+    wid, height = dim.width, dim.height
+    win = Window.from_point(Point.new(wid/2, height/2))
+    if win && win.read_text =~ /(H|h)ow (much|many)/
+      return win
+    else
+      return nil
+    end
+
   end
 end
 
