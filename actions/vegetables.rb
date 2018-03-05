@@ -18,10 +18,10 @@ class Onions < Action
                                         :left_build_init => [:l,:l],
                                        },
     
-    "Carrots/Osiris's Orange/(1)" => {:water => 1,
+    "Carrots/Osiris' Orange/(1)" => {:water => 1,
                                       :min_width => 217,
                                      },
-    "Carrots/Osiris'Green Leaf/(2)" => {:water => 2,
+    "Carrots/Green Leaf/(2)" => {:water => 2,
                                         :min_width => 217,
                                        },
 
@@ -34,9 +34,9 @@ class Onions < Action
                                     },
 
 
-    "Leeks/Horus' Grain/(2- 3 waters!)" => {:water => 3,
-                                            :min_width => 211,
-                                           },
+    "Leeks/Horus' Grain/(3 waters!)" => {:water => 3,
+                                         :min_width => 211,
+                                        },
     "Leeks/Hapi's Harvest/(1)" => {:water => 1,
                                    :min_width => 211,
                                   },
@@ -97,7 +97,7 @@ class Onions < Action
       puts "Didn't find plant menu."
       return
     end
-    @plant_point = Point.new(@plant_win.rect.width/2, @plant_win.rect.height/2)
+    p @plant_win.read_text
 
     beds = @vals['beds'].to_i
 
@@ -107,6 +107,7 @@ class Onions < Action
       walker.down
       sleep_sec(1)
       repeat.times do
+        @plant_win.refresh
         one_pass(beds)
       end
       walker.walk_to(@water_location)
@@ -180,7 +181,8 @@ class Onions < Action
 
     with_robot_lock do 
       before = PixelBlock.new(@head_rect)
-      @plant_win.dialog_click(@plant_point)
+      @plant_win.click_on(@vegi_name)
+      p @vegi_name
       builder = BuildMenu.new
       builder.build(build_recipe)
       plant_time = Time.new
@@ -228,7 +230,7 @@ class Onions < Action
           w.refresh
           sleep 0.02
         end
-        @vegi_data[:water].times { w.dialogClick(point, nil, 0.0) } if point
+        @vegi_data[:water].times { w.dialogClick(point, nil, 0.1) } if point
       end
     end
     sleep_sec(harvest_time - (Time.new - plant_time))
