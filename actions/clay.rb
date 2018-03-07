@@ -117,7 +117,6 @@ class Clay < Action
   end
 
   def stash_it(stash_window, what)
-    sleep_sec 0.5
     if stash_window.click_on(what)
       HowMuch.new(:max)
     end
@@ -126,6 +125,7 @@ class Clay < Action
 
   def refill
     @jug_count.lock.synchronize do
+      sleep_sec 0.5
       Icons.refill
       @jug_count.refill
     end
