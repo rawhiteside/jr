@@ -117,6 +117,7 @@ class Clay < Action
   end
 
   def stash_it(stash_window, what)
+    sleep_sec 0.5
     if stash_window.click_on(what)
       HowMuch.new(:max)
     end
