@@ -39,11 +39,9 @@ class TreeRun < Action
   def tile_windows
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
-    tiler = Tiler.new(2, 85, 0.0)
-    tiler.y_offset = 20
-    tiler.min_width = 380
-    tiler.min_height = 80
-    @windows = tiler.tile_stack(x, y, 0.1)
+
+    @piler = Piler.new
+    @windows = @piler.pile_stack(x, y)
   end
 
   def init_stuff
@@ -90,11 +88,15 @@ class TreeRun < Action
   end    
 
   def gather(w)
+
+    # Wait for wood to be available, then gather it
+    # If it's going to be over 15 sec, then skip it.
     loop do
       return if (secs = secs_to_wait(w)) > 15
       break if w.click_on('Gather')
       sleep_sec 2
     end
+
     # Wait for the gather before we start walking.  The menu will turn
     # to "Fertilize"
     wait_for_fert(w)
@@ -113,11 +115,14 @@ class TreeRun < Action
     walker = Walker.new
     loop do
       windows = @windows.reverse
+      @piler.swap
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
         elsif c == 'Gather Wood'
-          gather(windows.shift)
+          w = windows.shift
+          gather(w)
+          @piler.pile(w)
         elsif c == 'Water Mine 1'
           @mine_worker1.tend
         elsif c == 'Water Mine 2'
