@@ -10,6 +10,7 @@ class Icons
     :clay => {:x => 40, :y => 84, :pixel => 0xd06c55},
     :slate => {:x => 285, :y => 95 - 23, :pixel => 0x797978},
     :grass => {:x => 220, :y => (86 - 23), :pixel => 0x2bc00e},
+    :dowse => {:x => 94, :y => (64 - 23), :pixel => 0xa67b44},
   }
   # what to do next?: 2 wide
   # Pyramid, mud, water, (sand|grass|..), slate, just-in-case
