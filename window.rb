@@ -279,6 +279,72 @@ end
 
 
 
+# Manages a pair of window piles on the screen.
+#
+# Lifecycle:
+# Create a Plier, then use +pile(w)+ to add +w+ to the "current" pile.
+# These will be piled atop each other, with only a few pixels of each window
+# visible on the left side.
+#
+# Later, call +swap()+, and subsequent calls to +pile+ will make a
+# similar pile on the second pile.  Another call to +swap+ sets the
+# target for subsequent +pile+ calls.
+
+class Piler < ARobot
+
+  PILE_OFFSET = 5
+  def initialize
+    dim = ARobot.shared_instance.screen_size
+
+    height= dim.height
+    @y1 = height / 5
+    @y2 = @y1 + @y1
+    @current = Point.new(PILE_OFFSET, @y1)
+    @other = Point.new(PILE_OFFSET, @y2)
+  end
+
+
+  def pile_stack(x, y)
+    point = Point.new(x, y)
+    windows = []
+    loop do
+      w = PinnableWindow.from_point(point)
+      break unless w
+
+      w.set_default_refresh_loc('lc')
+      windows << w
+      pile(w)
+    end
+    windows    
+  end
+  
+
+  def swap
+    t = @current
+    @current = @other
+    @other = t
+    @current.x = PILE_OFFSET
+  end
+
+  # Add a window to the "current" pile.
+  def pile(w)
+    w.drag_to(@current)
+    @current.x += PILE_OFFSET
+  end
+end
+
+class Pile
+
+  def initialize(y_start, min_height)
+  end
+
+  # Add to pile.  Drag it to new screen location.
+  def put(w)
+  end
+
+end
+
+
 # This class does the tiling, computing coordinates at which
 # to place dialogs.
 class Tiler < ARobot
