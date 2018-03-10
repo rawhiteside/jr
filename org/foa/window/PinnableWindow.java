@@ -196,7 +196,6 @@ public class PinnableWindow extends AWindow {
 	    double delay = 0.05;
 	    // May need to try several times.
 	    for(int kk = 0; kk < 5; kk++) {
-		System.out.println("A");
 		robot.mm(new Point(pt.x, pt.y - 1), delay);
 		robot.sleepSec(postDismissDelay);
 		robot.mm(pt, delay);
@@ -207,7 +206,6 @@ public class PinnableWindow extends AWindow {
 		Rectangle rectangle = null;
 		long startMillis = System.currentTimeMillis();
 		for(int i = 0; i < 50; i++) {
-		    System.out.println("  b");
 		    rectangle = WindowGeom.rectFromPoint(pt);
 		    // Did we find it?
 		    if (rectangle != null) {
