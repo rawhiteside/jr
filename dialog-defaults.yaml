@@ -104,7 +104,7 @@ Slate:
       3652, -5275
       3644, -5275
 Trees:
-  2: In camp
+  2: North run
   1: true
   Parameter set 1:
     path: |
@@ -208,20 +208,21 @@ Trees:
     scan-interval-wm2-2: '20'
   Test in camp:
     path: |
-      3202, -6233
+      -408, -6727
       Gather Wood
       Gather Wood
-      3207, -6232
       Gather Wood
-      3201, -6233
-    bonfire.x: '562'
-    bonfire.y: '810'
-    win-stack.x: '926'
-    win-stack.y: '568'
+      Gather Wood
+    storage.x: ''
+    storage.y: ''
+    win-stack.x: '38'
+    win-stack.y: '1047'
+    water-mine-1-p: N
     water-mine-1.x: ''
     water-mine-1.y: ''
     scan-interval-wm1-1: ''
     scan-interval-wm1-2: ''
+    water-mine-2-p: N
     water-mine-2.x: ''
     water-mine-2.y: ''
     scan-interval-wm2-1: ''
@@ -283,6 +284,39 @@ Trees:
     storage.y: ''
     win-stack.x: '342'
     win-stack.y: '819'
+    water-mine-1-p: N
+    water-mine-1.x: ''
+    water-mine-1.y: ''
+    scan-interval-wm1-1: ''
+    scan-interval-wm1-2: ''
+    water-mine-2-p: N
+    water-mine-2.x: ''
+    water-mine-2.y: ''
+    scan-interval-wm2-1: ''
+    scan-interval-wm2-2: ''
+  North run:
+    path: |
+      -395, -6648
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Storage Stash
+      -406, -6667
+      -406, -6697
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      Gather Wood
+      -406, -6662
+      -396, -6652
+    storage.x: '1536'
+    storage.y: '911'
+    win-stack.x: '25'
+    win-stack.y: '1058'
     water-mine-1-p: N
     water-mine-1.x: ''
     water-mine-1.y: ''
