@@ -29,7 +29,8 @@ class Firepits < Action
   def load_firepits
     # Fill up each firepit
     GridHelper.new(@vals, 'g').each_point do |p|
-      w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+      pt = Point.new(p['x'], p['y'])
+      w = PinnableWindow.from_screen_click(pt)
       w.pin
       while w.click_on('Add')
 	HowMuch.new(:max)
@@ -41,7 +42,7 @@ class Firepits < Action
         w.refresh
         sleep_sec(0.1)
       end
-      w.refresh while w.click_on('Place', 'lc')
+      w.refresh('lc') while w.click_on('Place', 'lc')
 
       w.refresh
       sleep_sec(0.1)
@@ -49,7 +50,9 @@ class Firepits < Action
         HowMuch.new(4)
       end
 
+      puts 'unpin'
       w.unpin
+      sleep_sec 0.5
     end
   end
 
