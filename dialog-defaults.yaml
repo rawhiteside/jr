@@ -30,24 +30,22 @@ Loom:
     loom.x: '987'
     loom.y: '159'
 Slate:
-  2: T& camp
+  2: Parameter set 1
   1: true
   Parameter set 1:
     coords: |
-      3103, -6186
-      3107, -6189
-      3109, -6193
-      3107, -6197
-      3108, -6202
-      3105, -6207
-      3106, -6204
-      3106, -6200
-      3108, -6195
-      3108, -6192
-      3108, -6190
-      3104, -6187
-      3101, -6185
-      3097, -6184
+      -382, -6735
+      -385, -6736
+      -386, -6741
+      -388, -6738
+      -388, -6737
+      -385, -6739
+      -385, -6740
+      -383, -6732
+      -384, -6732
+      -384, -6738
+      -389, -6738
+      -386, -6741
   T6 camp north:
     coords: |
       4568, -5788
@@ -175,7 +173,7 @@ Trees:
     scan-interval-wm2-2: ''
   In camp:
     path: |
-      -410, -6727
+      -409, -6727
       Gather Wood
       Gather Wood
       Gather Wood
@@ -184,22 +182,20 @@ Trees:
       Gather Wood
       -411, -6720
       Gather Wood
-      -411, -6701
-      -408, -6701
+      -411, -6700
+      -409, -6700
       Gather Wood
       Gather Wood
       Gather Wood
       Gather Wood
-      -413, -6704
-      -413, -6720
-      -408, -6725
+      -411, -6703
+      -411, -6721
       -404, -6724
       Storage Stash
-      -410, -6727
-    storage.x: '1190'
-    storage.y: '746'
-    win-stack.x: '510'
-    win-stack.y: '886'
+    storage.x: '1066'
+    storage.y: '588'
+    win-stack.x: '30'
+    win-stack.y: '727'
     water-mine-1-p: N
     water-mine-1.x: '297'
     water-mine-1.y: '597'
@@ -301,14 +297,14 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    p.x: '136'
-    p.y: '687'
+    p.x: '58'
+    p.y: '429'
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '545'
-    stack.y: '762'
+    stack.x: '442'
+    stack.y: '590'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
@@ -336,8 +332,9 @@ Flax Comb:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    w.x: '704'
-    w.y: '326'
+    count: '9999'
+    w.x: '42'
+    w.y: '65'
 Interval tab:
   2: Parameter set 1
   1: false
@@ -408,14 +405,14 @@ Clay:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '962'
-    chest.y: '51'
-    chest-coords: 173, -6031
-    water-coords: -420, -6670
-    jug_count: '1000'
+    chest.x: '1078'
+    chest.y: '610'
+    chest-coords: -392, -6638
+    water-coords: -397, -6640
+    jug_count: '100'
     path: |
-      -422, -6672
-      -420, -6670
+      -395, -6636
+      -395, -6629
 Cutstones:
   2: Parameter set 1
   1: false
@@ -473,15 +470,16 @@ Pottery Wheels:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '512'
-    g.top-left.y: '247'
-    g.bottom-right.x: '825'
-    g.bottom-right.y: '561'
+    g.top-left.x: '504'
+    g.top-left.y: '278'
+    g.bottom-right.x: '859'
+    g.bottom-right.y: '349'
     g.num-cols: '6'
-    g.num-rows: '6'
+    g.num-rows: '2'
     repeat: '99999'
     delay: '75'
     string: j
+    key-delay: ''
 block:
   2: Parameter set 1
   1: false
@@ -857,16 +855,31 @@ Grow flax:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    flax-type: Symphony Ridge Gold
-    plant.x: '96'
-    plant.y: '996'
-    head.x: '952'
-    head.y: '552'
-    stash.x: '74'
-    stash.y: '1042'
-    count: '8'
+    flax-type: Old Dog
+    plant.x: '391'
+    plant.y: '705'
+    head.x: '681'
+    head.y: '399'
+    stash.x: '648'
+    stash.y: '629'
+    count: '4'
     rows: '4'
-    cols: '5'
-    grow: 133, -5994
-    water: 133, -5994
-    stash: 133, -5994
+    cols: '4'
+    grow: -378, -6741
+    water: -383, -6733
+    stash: -378, -6733
+Grow vegetables:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    veggie: Garlic/Apep's Crop/(2)
+    grow: 74, -6514
+    water: 74, -6514
+    head.x: '684'
+    head.y: '402'
+    plant.x: '400'
+    plant.y: '695'
+    repeat: '6'
+    beds: '2'
+    second: '20'
+    third: '38'
