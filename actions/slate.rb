@@ -1,6 +1,19 @@
 require 'action'
 require 'walker'
 
+class CasualDowse < Action
+  def initialize
+    super('Casual Dowse', 'Gather')
+  end
+
+  def act
+    loop do
+      Icons.click_on(:dowse)
+      sleep_sec 1
+    end
+  end
+end
+
 class CasualSlate < Action
   def initialize
     super('Casual Slate', 'Gather')
@@ -60,3 +73,4 @@ end
 
 Action.add_action(Slate.new)
 Action.add_action(CasualSlate.new)
+Action.add_action(CasualDowse.new)
