@@ -19,19 +19,11 @@ public class PinnableWindow extends AWindow {
      * The left center seems to be preserved.
      */
     private void updateRect() {
-	sleepSec(0.05);
+	sleepSec(0.08);
 	Rectangle r = getRect();
 	int x = r.x + 2;
 	int y = r.y + r.height/2;
 	Rectangle rnew = WindowGeom.rectFromPoint(new Point(x, y));
-	for(int i = 0; i < 10; i++) {
-	    if (rnew == null || Math.abs(x - rnew.x) > 4) {
-		sleepSec(0.05);
-		rnew = WindowGeom.rectFromPoint(new Point(x, y));
-	    } else {
-		break;
-	    }
-	}
 	if (rnew == null) {
 	    // System.out.println("Update rect failed.");
 	    /*
@@ -113,6 +105,7 @@ public class PinnableWindow extends AWindow {
     }
 
     public void unpin() {
+	updateRect();
 	dialogClick(new Point(getRect().width - 20, 20), null, 0.05, true);
 	m_pinned = false;
     }
@@ -203,6 +196,7 @@ public class PinnableWindow extends AWindow {
 	    double delay = 0.05;
 	    // May need to try several times.
 	    for(int kk = 0; kk < 5; kk++) {
+		System.out.println("A");
 		robot.mm(new Point(pt.x, pt.y - 1), delay);
 		robot.sleepSec(postDismissDelay);
 		robot.mm(pt, delay);
@@ -213,6 +207,7 @@ public class PinnableWindow extends AWindow {
 		Rectangle rectangle = null;
 		long startMillis = System.currentTimeMillis();
 		for(int i = 0; i < 50; i++) {
+		    System.out.println("  b");
 		    rectangle = WindowGeom.rectFromPoint(pt);
 		    // Did we find it?
 		    if (rectangle != null) {

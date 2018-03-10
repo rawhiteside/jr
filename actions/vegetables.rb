@@ -97,7 +97,6 @@ class Onions < Action
       puts "Didn't find plant menu."
       return
     end
-    p @plant_win.read_text
 
     beds = @vals['beds'].to_i
 
@@ -182,7 +181,6 @@ class Onions < Action
     with_robot_lock do 
       before = PixelBlock.new(@head_rect)
       @plant_win.click_on(@vegi_name)
-      p @vegi_name
       builder = BuildMenu.new
       builder.build(build_recipe)
       plant_time = Time.new
@@ -221,7 +219,6 @@ class Onions < Action
       delta = (Time.new - plant_time)
       delay = target_secs - delta
       sleep_sec(delay)
-      # puts "plant #{plant_number} watering #{index} at time #{(Time.new - plant_time)}"
       with_robot_lock do
         point = nil
         5.times do
@@ -235,7 +232,6 @@ class Onions < Action
     end
     sleep_sec(harvest_time - (Time.new - plant_time))
 
-    #puts "hargesting #{plant_number}"
 
     harvest_and_unpin(w)
   end
