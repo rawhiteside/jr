@@ -92,7 +92,7 @@ class TreeRun < Action
     # Wait for wood to be available, then gather it
     # If it's going to be over 15 sec, then skip it.
     loop do
-      return if (secs = secs_to_wait(w)) > 15
+      return if (secs = secs_to_wait(w)) > 45
       break if w.click_on('Gather')
       sleep_sec 2
     end
