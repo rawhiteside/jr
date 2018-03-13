@@ -115,14 +115,18 @@ public class PinnableWindow extends AWindow {
      */
     private boolean isDialogAt(Point p) {
 	Rectangle rect = WindowGeom.rectFromPoint(p);
-	if(rect == null) { return false; }
+	if(rect == null) { 
+	    System.out.println("IsDialogPresent: No window at destination.");
+	    return false; 
+	}
 
-	// Make sure the edge is not far away from expected.
+	// Make sure the edge is where expected.
 	// If looks good, update rectangle
-	if (Math.abs(p.x - rect.x) <= 2) {
+	if (p.x == rect.x) {
 	    setRect(rect);
 	    return true;
 	} else {
+	    System.out.println("IsDialogPresent: Wrong window at destination.");
 	    return false;
 	}
 	
@@ -144,7 +148,7 @@ public class PinnableWindow extends AWindow {
 	try {
 	    /**
 	     * Dialog can change shape on move.  The left center of
-	     * the dialog is preserved.  Let's grab that noe, then
+	     * the dialog is preserved.  Let's grab that now, then
 	     * confirm there's a dialog at the destination.
 	     */
 	    Rectangle rect = getRect();
@@ -154,7 +158,6 @@ public class PinnableWindow extends AWindow {
 
 	    mm(rect.x, rect.y, delay);
 	    rbd();
-	    // sleepSec(delay);
 	    mm(p, delay);
 	    rbu();
 	    sleepSec(delay);
@@ -176,8 +179,6 @@ public class PinnableWindow extends AWindow {
     public PinnableWindow dragTo(Point p, double delay) {
 	for(int i = 0; i < 5; i++) {
 	    if(attemptDrag(p, delay)) {break;}
-	    // I've found this print to be helpful.
-	    System.out.println("Trying again to drag");
 	}
 
 	return this;
