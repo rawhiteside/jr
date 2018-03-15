@@ -90,6 +90,7 @@ class HowMuch < Window
 end
 
 
+
 # A window with a message that pops up in the middle of the screen
 class PopupWindow < Window
   def self.find
@@ -121,6 +122,20 @@ class PopupWindow < Window
   end
   
 end
+
+# Confirmation window: Yes/No answer
+class ConfirmationWindow < PopupWindow
+  def self.yes
+    w = self.find
+    w.click_on('Yes')
+  end
+
+  def self.no
+    w = self.find
+    w.click_on('No')
+  end
+end
+
 
 class FixedWindow < Window
 

@@ -6,21 +6,16 @@ import org.foa.text.TextReader;
 import org.foa.robot.ARobot;
 
 public class ClockLocWindow extends AWindow {
-    private static ClockLocWindow s_instance = null;
 
     public ClockLocWindow(Rectangle rect) {
 	super(rect);
     }
     // Find the clock loc window at its default place.
+    // Not really a singleton anymore. 
     public static ClockLocWindow instance() {
-	if (s_instance == null) { s_instance = createInstance(); }
-	return s_instance;
+	return createInstance();
     }
 
-    public static ClockLocWindow resetInstance() {
-	s_instance = createInstance();
-	return s_instance;
-    }
 
     private static ClockLocWindow createInstance() {
 	int screenWidth = new ARobot().screenSize().width;
@@ -74,14 +69,13 @@ public class ClockLocWindow extends AWindow {
 		System.out.println("Coords failed with \"" + text + "\" Retrying.");
 	    }
 	    sleepSec(0.1);
-	    ClockLocWindow.resetInstance();
 	}
 	return null;
     }
 
     private int[] attemptCoords(String text) {
 	String[] lines = text.split("\n");
-	String position = lines[lines.length - 2];
+	String position = lines[1];
 	String[] chunks = position.split(":");
 	String[] words = chunks[1].split(" ");
 	int y = Integer.parseInt(words[words.length - 1]);
