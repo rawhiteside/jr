@@ -55,7 +55,8 @@ class Bullets < Action
         if (w.click_on("Load the Bullet Furnace with #{ore_type} Ore"))
           HowMuch.new(ore_amount)
         end
-        sleep_sec 1
+
+        sleep_sec 4
         
         w.refresh
         w.click_on('Fire')
