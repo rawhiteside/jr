@@ -50,7 +50,8 @@ class HowMuch < Window
       @win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
         robot = ARobot.sharedInstance
-	robot.send_string(quant.to_i.to_s)
+	robot.send_string(quant.to_i.to_s, 0.1)
+        sleep_sec(0.5)
 	@win.dialog_click(Point.new(170, rect.height - 45))
       end
       # Wait until it's gone.
