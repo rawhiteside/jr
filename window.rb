@@ -128,7 +128,7 @@ end
 class ConfirmationWindow < PopupWindow
   def self.yes
     w = self.find
-    w.click_on('Yes')
+    w.dialog_click(Point.new(115, 151 - 23))
   end
 
   def self.no
