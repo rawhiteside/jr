@@ -74,7 +74,7 @@ class Bullets < Action
       text = w.read_text
 
       return unless text.include?('Reaction')
-      if text.include?('Fuel Remaining: 0')
+      if text.include?('FireTime: 5')
         w.click_on('Open')
         sleep 1
         ConfirmationWindow.yes
