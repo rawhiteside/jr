@@ -10,43 +10,47 @@ class Onions < Action
 
   VEGETABLE_DATA = {
     "Cabbage/Mut's Fruition/(1)" => {:water => 1,
-                                     :min_width => 230,
-                                     :left_build_init => [:l,:l],
-                                    },
+      :min_width => 230,
+      :left_build_init => [:l,:l],
+    },
     "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
-                                        :min_width => 230,
-                                        :left_build_init => [:l,:l],
-                                       },
+      :min_width => 230,
+      :left_build_init => [:l,:l],
+    },
     
+
     "Carrots/Osiris' Orange/(1)" => {:water => 1,
-                                      :min_width => 217,
-                                     },
+      :build_incr_fac => 10,
+      :min_width => 217,
+    },
     "Carrots/Green Leaf/(2)" => {:water => 2,
-                                        :min_width => 217,
-                                       },
+      :build_incr_fac => 10,
+      :min_width => 217,
+    },
 
 
     "Garlic/Apep's Crop/(2)" => {:water => 2,
-                                 :min_width => 209,
-                                },
+      :min_width => 209,
+    },
     "Garlic/Heket's Reaping/(1)" => {:water => 1,
-                                     :min_width => 209,
-                                    },
+      :min_width => 209,
+    },
 
 
     "Leeks/Horus' Grain/(3 waters!)" => {:water => 3,
-                                         :min_width => 211,
-                                        },
+      :min_width => 211,
+    },
     "Leeks/Hapi's Harvest/(1)" => {:water => 1,
-                                   :min_width => 211,
-                                  },
+      :min_width => 211,
+    },
+
 
     "Onions/Amun's Bounty/(1)" => {:water => 1,
-                                   :min_width => 217,
-                                  },
+      :min_width => 217,
+    },
     'Onions/Tears of Sinai/(2)' => {:water => 2,
-                                    :min_width => 217,
-                                   },
+      :min_width => 217,
+    },
   }
 
   # Size of a side of the square we look at to detect plants. Square
