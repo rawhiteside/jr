@@ -142,13 +142,13 @@ class TreeRun < Action
   def bonfire_stash(bonfire)
     bonfire.refresh
     sleep 0.2
-    HowMuch.new(:max) if bonfire.click_on('Add')
+    HowMuch.max if bonfire.click_on('Add')
   end
 
   def storage_stash(storage)
     storage.refresh
     sleep 0.2
-    HowMuch.new(:max) if storage.click_on('Stash./Wood')
+    HowMuch.max if storage.click_on('Stash./Wood')
   end
 end
 Action.add_action(TreeRun.new)
