@@ -50,7 +50,7 @@ class HowMuch < Window
       @win.dialog_click(Point.new(110, rect.height - 30)) if quant == :max
       @win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
-        robot = ARobot.sharedInstance
+        robot = ARobot.shared_instance
 	robot.send_string(quant.to_i.to_s, 0.05)
         sleep_sec(0.1)
 	@win.dialog_click(Point.new(170, rect.height - 45))
@@ -76,7 +76,7 @@ class HowMuch < Window
     5.times do
       win = HowMuch.find_win
       break if @win 
-      sleep_sec 0.1
+      ARobot.shared_instance.sleep_sec 0.1
     end
 
     win
