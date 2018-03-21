@@ -28,6 +28,7 @@ class Window < AWindow
   end
 end
 
+# This class is poorly designed.  Slowly improving.
 class HowMuch < Window
 
   # Answer the "How Much" / "How Many" popup
@@ -50,8 +51,8 @@ class HowMuch < Window
       @win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
       if quant.kind_of?(Numeric)
         robot = ARobot.sharedInstance
-	robot.send_string(quant.to_i.to_s, 0.1)
-        sleep_sec(0.5)
+	robot.send_string(quant.to_i.to_s, 0.05)
+        sleep_sec(0.1)
 	@win.dialog_click(Point.new(170, rect.height - 45))
       end
       # Wait until it's gone.
@@ -66,22 +67,52 @@ class HowMuch < Window
     sleep_sec 0.1
   end
 
-  # Click on the cancel button.
-  def self.cancel(w)
-    rect = w.rect
-    w.dialog_click(Point.new(170, rect.height - 20))
+  # Find the HowMuch window, waiting for .5 sec if necessary.  Returns
+  # the window, or nil.
+  private
+  def self.wait_for_win
+    win = nil
+    sleep_sec(0.1)
+    5.times do
+      win = HowMuch.find_win
+      break if @win 
+      sleep_sec 0.1
+    end
+
+    win
   end
 
+  # Click on the Max button.  Returns +true+ on success, or +nil+ if
+  # the window doesn't appear.
+  public
+  def self.max
+    win = wait_for_win
+    return nil unless win
+    win.dialog_click(Point.new(110, win.rect.height - 30))
+    
+    true
+  end
+
+  # Click on the cancel button.
+  private
+  def self.cancel(w)
+    w.dialog_click(Point.new(170, w.rect.height - 20))
+  end
+
+  
+  # Cancel the dialog if it is found. 
+  public
   def self.cancel_if_present
     w = find_win
     cancel(w) if w
   end
 
+  private
   def self.find_win
     dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
     win = Window.from_point(Point.new(wid/2, height/2))
-    if win && win.read_text =~ /(H|h)ow (much|many)/
+    if win && win.read_text =~ /(much|many)/
       return win
     else
       return nil
