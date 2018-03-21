@@ -72,7 +72,7 @@ class HowMuch < Window
   private
   def self.wait_for_win
     win = nil
-    sleep_sec(0.1)
+    ARobot.shared_instance.sleep_sec(0.1)
     5.times do
       win = HowMuch.find_win
       break if @win 
