@@ -78,7 +78,7 @@ class SandMine < AbstractMine
       y2 = stone_rect.y + stone_rect.height - xoff
       bounds = Bounds.new([x1, y1], [x2, y2])
       bounds.spiral.each do |xy|
-        color = @stones_image.color(xy[0], xy[1])
+        color = @stones_image.color_from_screen(xy[0], xy[1])
         sym = Clr.color_symbol(color, @gem_color, @debug)
         if (sym)
           ore_stone.color_symbol = sym
@@ -129,7 +129,11 @@ class SandMine < AbstractMine
         UserIO.show_image(@diff_image)
       end
     end
-    globs.each { |g| stones << points_to_stone(g) }
+    globs.each { |g| 
+      # Stones will hold the sets of points.  These points will be in
+      # screen coordinates.
+      stones << points_to_stone(@stones_image, g) 
+    }
 
     stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
 
@@ -142,6 +146,8 @@ class SandMine < AbstractMine
   end
 
   def get_globs(brightness, threshold)
+    # A +glob+ is just a hash with points as keys.  Points are in the
+    # coord system of the +brightness+ image.
     got = ImageUtils.globify(brightness, threshold)
     # Convert from java land to ruby land.
     globs = []
@@ -157,8 +163,11 @@ class SandMine < AbstractMine
 
 
   # Input here is a hash with Points as a key.
+  # Input points are in the coordinate system of +pb+.
+  # Points stored into the stone will be screen coordinates.
   # Returns an OreStone, which just has a bunch of attrs.
-  def points_to_stone(points)
+  def points_to_stone(pb, points)
+    points.collect!{|p| pb.to_screen(p)}
     xmin = ymin = 99999999
     xmax = ymax = 0
     xsum = ysum = 0
@@ -176,6 +185,7 @@ class SandMine < AbstractMine
 
     stone = OreStone.new(@stones_image)
     stone.points = points
+    stone.point_set = Set.new(points)
     stone.min_point = Point.new(xmin, ymin)
     stone.max_point = Point.new(xmax, ymax)
     stone.centroid = Point.new(xsum / points.size, ysum / points.size)
@@ -267,8 +277,6 @@ class SandMine < AbstractMine
   def run_recipe(recipes, stones_by_name, delay)
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
-      # Fixes issue with the very first orestone in a workload?
-      sleep_sec(0.5) 
     end
   end
 
@@ -288,7 +296,6 @@ class SandMine < AbstractMine
       # from the highlight circle.
       if i == 0
         stone_1 = stone
-        
         blue_point = find_highlight_point(stone)
         # First stone funny? Visually, it looks like this somethines
         # doesn't work.
@@ -320,34 +327,46 @@ class SandMine < AbstractMine
     end
     
     wait_for_highlight_gone(stone_1)
+    dismiss_strange_windows    
   end
 
 
   def wait_for_highlight_gone(stone)
     start = Time.new
+
+    sleep_sec 0.5
+    return if dismiss_strange_windows    
+
     until find_highlight_point(stone).nil?
+
+
       sleep_sec 0.5
-      break if (Time.new - start) > 6
+      if dismiss_strange_windows
+        log_result 'strange window'
+        return
+      end
+      if (Time.new - start) > 6
+        log_result "highlight wait time-out"
+        return
+      end
     end
+
   end
 
   def highlight_blue?(color)
     r, g, b = color.red, color.green, color.blue
-    return b > 100 && (b - r) > 40 && (g - r) > 30
+    return b > 100 && (b - r) > 40 && (b - g) < 30
   end
 
-  def find_highlight_point(stone)
+  def find_highlight_point(stone, dbg = false)
     rect = stone.rectangle
-    puts rect.to_s
     pb = PixelBlock.new(rect)
     rect.width.times do |x|
       rect.height.times do |y|
         point = Point.new(x, y)
-        puts point.to_s
-        if !stone.points.include?(point)
-          color = pb.color(point)
-          puts color.to_s
-          return point if highlight_blue?(color)
+        color = pb.color(point)
+        if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
+          return point
         end
       end
     end
@@ -391,17 +410,17 @@ Action.add_action(SandMine.new)
 
 class OreStone
   attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol, :gem_type
+  attr_accessor :color_symbol, :gem_type, :point_set
 
   def initialize(pb)
     @pb = pb
   end
 
   def x
-    @pb.to_screen(@centroid).x
+    @centroid.x
   end
   def y
-    @pb.to_screen(@centroid).y
+    @centroid.y
   end
 
   def to_s
