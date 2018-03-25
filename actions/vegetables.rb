@@ -9,6 +9,15 @@ class Onions < Action
   end
 
   VEGETABLE_DATA = {
+    "Peppers/Ptah's Breed/(1)" => {:water => 2,
+      :min_width => 230,
+      :left_build_init => [:l,:l],
+    },
+    "Peppers/Ra's Fire/(1)" => {:water => 1,
+      :min_width => 230,
+      :left_build_init => [:l,:l],
+    },
+
     "Cabbage/Mut's Fruition/(1)" => {:water => 1,
       :min_width => 230,
       :left_build_init => [:l,:l],
