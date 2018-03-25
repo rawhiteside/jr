@@ -274,6 +274,7 @@ class SandMine < AbstractMine
 
   def run_one_workload(recipe, stones_by_name, delay)
     blue_point = nil
+    stone_1 = nil
     recipe.each_index do |i|
       name = recipe[i]
       stone = stones_by_name[name]
@@ -285,7 +286,6 @@ class SandMine < AbstractMine
 
       # If this was the first stone, find a resulting blue pixel
       # from the highlight circle.
-      stone_1 = nil
       if i == 0
         stone_1 = stone
         
@@ -338,11 +338,16 @@ class SandMine < AbstractMine
 
   def find_highlight_point(stone)
     rect = stone.rectangle
+    puts rect.to_s
     pb = PixelBlock.new(rect)
     rect.width.times do |x|
       rect.height.times do |y|
+        point = Point.new(x, y)
+        puts point.to_s
         if !stone.points.include?(point)
-          return Point.new(x, y) if highlight_blue?(pb.color(x, y))
+          color = pb.color(point)
+          puts color.to_s
+          return point if highlight_blue?(color)
         end
       end
     end
