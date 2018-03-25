@@ -26,6 +26,9 @@ class SandMine < AbstractMine
 
       {:type => :text, :label => 'Key delay?', :name => 'delay',},
 
+      {:type => :combo, :label => 'Gem color', :name => 'gem_color',
+       :vals => ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow',],},
+
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
        :vals => ['y', 'n']},
     ]
@@ -38,8 +41,10 @@ class SandMine < AbstractMine
     height = @vals['field.lr.y'].to_i - origin.y
     @field_rect = Rectangle.new(origin.x, origin.y, width, height)
     @debug = @vals['debug'] == 'y'
+    puts "Debug = #{@debug}"
     @stone_count = @vals['stone-count'].to_i
     @delay = @vals['delay'].to_f
+    @gem_color = @vals['gem_color']
     
     w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
 
@@ -74,14 +79,22 @@ class SandMine < AbstractMine
       bounds = Bounds.new([x1, y1], [x2, y2])
       bounds.spiral.each do |xy|
         color = @stones_image.color(xy[0], xy[1])
-        sym = Clr.color_symbol(color)
+        sym = Clr.color_symbol(color, @gem_color, @debug)
         if (sym)
           ore_stone.color_symbol = sym
           break
         end
       end
-      ore_stone.color_symbol ||= :black
+
+      unless ore_stone.color_symbol
+        ore_stone.color_symbol = @gem_color.to_sym
+      end
+      
     end
+    if @debug
+      p stones.collect {|s| s.color_symbol}
+    end
+
   end
 
   
@@ -100,7 +113,7 @@ class SandMine < AbstractMine
 
     @empty_image = PixelBlock.new(@field_rect)
     w.click_on('Work this Mine', 'tc')
-    sleep_sec(5.0)
+    sleep_sec(10.0)
     @stones_image = PixelBlock.new(@field_rect)
 
     @diff_image = ImageUtils.xor(@empty_image, @stones_image)
@@ -117,6 +130,8 @@ class SandMine < AbstractMine
       end
     end
     globs.each { |g| stones << points_to_stone(g) }
+
+    stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
 
     if (@debug)
       mouse_over_stones(stones)
@@ -173,7 +188,7 @@ class SandMine < AbstractMine
   def mouse_over_stones(stones)
     stones.each do |s|
       mm(s.x, s.y)
-      sleep_sec @delay
+      sleep_sec 1.0
     end
   end
 
