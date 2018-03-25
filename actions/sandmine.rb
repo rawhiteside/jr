@@ -339,6 +339,19 @@ class SandMine < AbstractMine
   end
 
   def find_highlight_point(stone)
+    rect = stone.rectangle
+    rect.width.times do |x|
+      rect.height.times do |y|
+        local_point = Point.new(x, y)
+        if !stone.points.include?(local_point)
+          point = @stones_image.to_screen(local_point)
+          return point if highlight_blue?(getColor(point))
+        end
+      end
+    end
+    return nil
+        
+        
     y = stone.centroid.y
     x = stone.centroid.x
     colors = []
@@ -352,8 +365,6 @@ class SandMine < AbstractMine
         return point if highlight_blue?(color)
       end
     end
-
-    puts "didn't find highlights "
 
     nil
 
