@@ -285,7 +285,10 @@ class SandMine < AbstractMine
 
       # If this was the first stone, find a resulting blue pixel
       # from the highlight circle.
+      stone_1 = nil
       if i == 0
+        stone_1 = stone
+        
         blue_point = find_highlight_point(stone)
         # First stone funny? Visually, it looks like this somethines
         # doesn't work.
@@ -315,22 +318,17 @@ class SandMine < AbstractMine
         end
       end
     end
-
-    wait_for_highlight_gone(blue_point)
+    
+    wait_for_highlight_gone(stone_1)
   end
 
 
-  def wait_for_highlight_gone(p)
-    if p.nil?
-      sleep 3
-      return
-    end
+  def wait_for_highlight_gone(stone)
     start = Time.new
-    until !highlight_blue?(getColor(p))
+    until find_highlight_point(stone).nil?
       sleep_sec 0.5
       break if (Time.new - start) > 6
     end
-    sleep_sec @delay
   end
 
   def highlight_blue?(color)
@@ -340,17 +338,16 @@ class SandMine < AbstractMine
 
   def find_highlight_point(stone)
     rect = stone.rectangle
+    pb = PixelBlock.new(rect)
     rect.width.times do |x|
       rect.height.times do |y|
-        local_point = Point.new(x, y)
-        if !stone.points.include?(local_point)
-          point = @stones_image.to_screen(local_point)
-          return point if highlight_blue?(getColor(point))
+        if !stone.points.include?(point)
+          return Point.new(x, y) if highlight_blue?(pb.color(x, y))
         end
       end
     end
     return nil
-        
+    
         
     y = stone.centroid.y
     x = stone.centroid.x
