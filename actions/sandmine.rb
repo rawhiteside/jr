@@ -190,6 +190,19 @@ class SandMine < AbstractMine
     stone.max_point = Point.new(xmax, ymax)
     stone.centroid = Point.new(xsum / points.size, ysum / points.size)
 
+    # Desparately needs a refactor.  Add any highlight colors in the
+    # rectangle to the stone points.
+    rect = stone.rectangle
+    rect.width.times do |x|
+      rect.height.times do |y|
+        point = Point.new(x, y)
+        color = pb.color(point)
+        if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
+          stone_point_set.add(@stones_image.to_screen(point))
+        end
+      end
+    end
+
     stone
 
   end
@@ -297,24 +310,19 @@ class SandMine < AbstractMine
       # from the highlight circle.
       if i == 0
         stone_1 = stone
-        blue_point = find_highlight_point(stone)
         # First stone funny? Visually, it looks like this somethines
         # doesn't work.
-        if blue_point.nil?
-          puts "No highlight.  Waiting..."
+        if stone_highlight?(stone)
           sleep_sec 0.5
-          blue_point = find_highlight_point(stone)
-          if blue_point
+          if stone_highlight?(stone)
             puts "It's there now!"
           else
             puts "waiting didn't help.  Sending again."
             send_string_at(stone.x, stone.y, key, delay)
-            blue_point = find_highlight_point(stone)
-            if blue_point.nil?
+            if stone_highlight?(stone)
               puts "STILL No highlight.  Sending again!" 
               send_string_at(stone.x, stone.y, key, delay)
-              blue_point = find_highlight_point(stone)
-              if blue_point
+              if stone_highlight?(stone)
                 puts "Yay!  Got it that time."
               else
                 puts "Never found it.  Going with nil"
@@ -339,7 +347,7 @@ class SandMine < AbstractMine
     sleep_sec 0.5
     return if dismiss_strange_windows    
 
-    until find_highlight_point(stone).nil?
+    while stone_highlight?(stone)
 
       log_result " checking again."
 
@@ -364,37 +372,29 @@ class SandMine < AbstractMine
     return b > 100 && (b - r) > 40 && (b - g) < 30
   end
 
-  def find_highlight_point(stone, dbg = false)
+  def stone_highlight?(stone)
+    count = count_highlight_points(stone)
+    rect = stone.rectangle
+    total = rect.height * rect.width
+    fract = count.to_f/total
+    return fract > 0.01
+  end
+
+  def count_highlight_points(stone)
     rect = stone.rectangle
     pb = PixelBlock.new(rect)
+    count= 0
     rect.width.times do |x|
       rect.height.times do |y|
         point = Point.new(x, y)
         color = pb.color(point)
         if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
-          return point
+          count += 1
         end
       end
     end
-    return nil
-    
-        
-    y = stone.centroid.y
-    x = stone.centroid.x
-    colors = []
-    stone.rectangle.width.times do |offset|
-      # Examine only points NOT on the stone.
-      local_point = Point.new(x + offset, y)
-      if !stone.points.include?(local_point)
-        point = @stones_image.to_screen(local_point)
-        color = getColor(point)
-        colors << color
-        return point if highlight_blue?(color)
-      end
-    end
 
-    nil
-
+    return count
   end
 
   def send_string_at(x, y, str, delay)
