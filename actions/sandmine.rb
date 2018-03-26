@@ -27,7 +27,7 @@ class SandMine < AbstractMine
       {:type => :text, :label => 'Key delay?', :name => 'delay',},
 
       {:type => :combo, :label => 'Gem color', :name => 'gem_color',
-       :vals => ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow',],},
+       :vals => ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'black'],},
 
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
        :vals => ['y', 'n']},
@@ -312,23 +312,17 @@ class SandMine < AbstractMine
         stone_1 = stone
         # First stone funny? Visually, it looks like this somethines
         # doesn't work.
-        if stone_highlight?(stone)
+        if !stone_highlight?(stone)
           sleep_sec 0.5
-          if stone_highlight?(stone)
-            puts "It's there now!"
-          else
-            puts "waiting didn't help.  Sending again."
+          if !stone_highlight?(stone)
             send_string_at(stone.x, stone.y, key, delay)
-            if stone_highlight?(stone)
-              puts "STILL No highlight.  Sending again!" 
+            if !stone_highlight?(stone)
               send_string_at(stone.x, stone.y, key, delay)
               if stone_highlight?(stone)
                 puts "Yay!  Got it that time."
               else
                 puts "Never found it.  Going with nil"
               end
-            else
-              puts "Found it."
             end
           end
         end

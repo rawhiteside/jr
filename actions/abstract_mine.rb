@@ -74,7 +74,7 @@ class Clr
     nil
   end
 
-    def self.mine_color?(r, g, b)
+  def self.mine_color?(r, g, b)
     red?(r, g, b) || green?(r, g, b) || blue?(r, g, b) ||
       cyan?(r, g, b) ||yellow?(r, g, b) ||magenta?(r, g, b) ||
       grey?(r, g, b)
