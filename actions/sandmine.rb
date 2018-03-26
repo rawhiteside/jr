@@ -219,7 +219,7 @@ class SandMine < AbstractMine
     if win = PopupWindow.find
       log_strange_window(win)
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep_sec 3
+      sleep_sec 0.01
       return true
     end
     return false
@@ -352,7 +352,6 @@ class SandMine < AbstractMine
       end
       if (Time.new - start) > 6
         log_result "highlight wait time-out"
-        # UserIO.show_image PixelBlock.new(stone.rectangle)
         return
       end
     end
