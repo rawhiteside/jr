@@ -278,6 +278,7 @@ class SandMine < AbstractMine
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
     end
+    sleep_sec 4
   end
 
   def run_one_workload(recipe, stones_by_name, delay)
@@ -332,6 +333,7 @@ class SandMine < AbstractMine
 
 
   def wait_for_highlight_gone(stone)
+    log_result "waiting for highlight gone."
     start = Time.new
 
     sleep_sec 0.5
@@ -339,6 +341,7 @@ class SandMine < AbstractMine
 
     until find_highlight_point(stone).nil?
 
+      log_result " checking again."
 
       sleep_sec 0.5
       if dismiss_strange_windows
@@ -347,9 +350,12 @@ class SandMine < AbstractMine
       end
       if (Time.new - start) > 6
         log_result "highlight wait time-out"
+        # UserIO.show_image PixelBlock.new(stone.rectangle)
         return
       end
     end
+
+    log_result " Highlight gone."
 
   end
 
