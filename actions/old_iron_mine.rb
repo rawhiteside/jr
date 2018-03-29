@@ -19,7 +19,7 @@ class OldIronMine < Action
 	:gadgets => [
 	  {:type => :point, :label => 'UL corner', :name => 'ul'},
 	  {:type => :point, :label => 'LR corner', :name => 'lr'},
-	]
+	],
       },
       {:type => :point, :label => 'Pinned mine dialog', :name => 'mine'},
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
