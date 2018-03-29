@@ -196,9 +196,9 @@ class SandMine < AbstractMine
     rect.width.times do |x|
       rect.height.times do |y|
         point = Point.new(x, y)
-        color = pb.color_from_screen(point)
+        color = pb.color(point)
         if highlight_blue?(color)
-          stone.point_set.add(point)
+          stone.point_set.add(pb.to_screen(point))
         end
       end
     end
