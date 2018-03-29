@@ -205,8 +205,6 @@ class SandMine < AbstractMine
       end
     end
 
-    puts "After adding highlight stone: count = #{count}"
-
     stone
 
   end
@@ -372,23 +370,15 @@ class SandMine < AbstractMine
     rect = stone.rectangle
     pb = PixelBlock.new(rect)
     count = 0
-    tot_count = 0
-    s_count = 0
     rect.width.times do |x|
       rect.height.times do |y|
         point = Point.new(x, y)
         color = pb.color(point)
-        # XXX
-        tot_count += 1
-        s_count += 1 if !stone.point_set.include?(pb.to_screen(point))
-        # /XXX
         if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
           count += 1
         end
       end
     end
-    puts "in count_highlights: tot = #{tot_count}, s = #{s_count}, count = #{count}"
-
     return count
   end
 
