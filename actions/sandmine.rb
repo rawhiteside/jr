@@ -198,7 +198,7 @@ class SandMine < AbstractMine
         point = Point.new(x, y)
         color = pb.color(point)
         if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
-          stone_point_set.add(@stones_image.to_screen(point))
+          stone.point_set.add(@stones_image.to_screen(point))
         end
       end
     end
@@ -335,29 +335,20 @@ class SandMine < AbstractMine
 
 
   def wait_for_highlight_gone(stone)
-    log_result "waiting for highlight gone."
     start = Time.new
 
-    sleep_sec 0.5
+    sleep_sec 0.2
     return if dismiss_strange_windows    
 
     while stone_highlight?(stone)
+      sleep_sec 0.2
+      return if dismiss_strange_windows
 
-      log_result " checking again."
-
-      sleep_sec 0.5
-      if dismiss_strange_windows
-        log_result 'strange window'
-        return
-      end
       if (Time.new - start) > 6
         log_result "highlight wait time-out"
         return
       end
     end
-
-    log_result " Highlight gone."
-
   end
 
   def highlight_blue?(color)
@@ -376,15 +367,22 @@ class SandMine < AbstractMine
   def count_highlight_points(stone)
     rect = stone.rectangle
     pb = PixelBlock.new(rect)
-    count= 0
+    count = 0
+    tot_count = 0
+    s_count = 0
     rect.width.times do |x|
       rect.height.times do |y|
         point = Point.new(x, y)
         color = pb.color(point)
+        # XXX
+        tot_count += 1
+        s_count += 1 if !stone.point_set.include?(pb.to_screen(point))
+        # /XXX
         if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
           count += 1
         end
       end
+      puts "in count_highlights: tot = #{tot_count}, s = #{s_count}, count = #{count}"
     end
 
     return count
