@@ -198,7 +198,7 @@ class SandMine < AbstractMine
         point = Point.new(x, y)
         color = pb.color(point)
         if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
-          stone.point_set.add(@stones_image.to_screen(point))
+          stone.point_set.add(pb.to_screen(point))
         end
       end
     end
