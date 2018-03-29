@@ -382,8 +382,8 @@ class SandMine < AbstractMine
           count += 1
         end
       end
-      puts "in count_highlights: tot = #{tot_count}, s = #{s_count}, count = #{count}"
     end
+    puts "in count_highlights: tot = #{tot_count}, s = #{s_count}, count = #{count}"
 
     return count
   end
