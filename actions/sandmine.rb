@@ -183,7 +183,7 @@ class SandMine < AbstractMine
       ysum += y
     end
 
-    stone = OreStone.new(@stones_image)
+    stone = OreStone.new
     stone.points = points
     stone.point_set = Set.new(points)
     stone.min_point = Point.new(xmin, ymin)
@@ -409,8 +409,8 @@ class OreStone
   attr_accessor :points, :min_point, :max_point, :centroid
   attr_accessor :color_symbol, :gem_type, :point_set
 
-  def initialize(pb)
-    @pb = pb
+  def initialize
+
   end
 
   def x
