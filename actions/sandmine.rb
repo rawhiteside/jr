@@ -192,16 +192,20 @@ class SandMine < AbstractMine
 
     # Desparately needs a refactor.  Add any highlight colors in the
     # rectangle to the stone points.
+    count = 0
     rect = stone.rectangle
     rect.width.times do |x|
       rect.height.times do |y|
-        point = Point.new(x, y)
-        color = pb.color(point)
+        point = Point.new(rect.x + x, rect.y + y)
+        color = pb.color_from_screen(point)
         if highlight_blue?(color)
-          stone.point_set.add(pb.to_screen(point))
+          stone.point_set.add(point)
+          count += 1
         end
       end
     end
+
+    puts "After adding highlight stone: count = #{count}"
 
     stone
 
