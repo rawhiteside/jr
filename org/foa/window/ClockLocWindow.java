@@ -65,7 +65,7 @@ public class ClockLocWindow extends AWindow {
 	for(int i = 0; i < 5; i++) {
 	    String text = ClockLocWindow.instance().readText();
 	    try { return attemptCoords(text); }
-	    catch (NumberFormatException e) {
+	    catch (Exception e) {
 		System.out.println("Coords failed with \"" + text + "\" Retrying.");
 	    }
 	    sleepSec(0.1);
