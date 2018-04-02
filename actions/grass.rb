@@ -63,7 +63,7 @@ class Grass < Action
         puts "Stash failed:"
         puts @stash_window.read_text
       end
-      HowMuch.new(:max)
+      HowMuch.max
     end
   end
 

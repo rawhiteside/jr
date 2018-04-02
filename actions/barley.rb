@@ -7,11 +7,11 @@ require 'icons'
 class Barley < Action
   # 
   # World coordinates at which you shoudl plant the first bed
-  START_PLANT_LOC = [4548, -5878]
+  START_PLANT_LOC = [-415, -6738]
   # 
   # World coordinates that get you access to water, and
   # within reach of the warehouse.
-  WH_LOC = [4561, -5875]
+  WH_LOC = [-406, -6738]
 
   def initialize
     super('Barley', 'Plants')
@@ -50,11 +50,11 @@ class Barley < Action
 
   def step_patterns
     [
-      [:right], [:right], [:right], [:right],
+      [:right], [:right], [:right], 
       [:down],
-      [:left], [:left], [:left], [:left],
+      [:left], [:left], [:left], 
       [:down],
-      [:right], [:right], [:right], [:right],
+      [:right], [:right], [:right], 
       [],
     ]
   end
@@ -97,15 +97,15 @@ class Barley < Action
       Icons.refill
       # Stash the barley
       warehouse_window.click_on('Stash/Barley')
-      HowMuch.new(:max)
+      HowMuch.max
       # take enough back to plant (plus a buffer)
       if warehouse_window.click_on('Take/Barley')
-	HowMuch.new(15 * count + 5)
+	HowMuch.amount(15 * count + 5)
       end
       sleep_sec 0.1
       # Take 270 grain fert
       if warehouse_window.click_on('Take/Grain')
-	HowMuch.new(90 * count)
+	HowMuch.amount(90 * count)
       end
 
     end
@@ -113,7 +113,6 @@ class Barley < Action
 
 
   def grow_one_field
-    # ChatLineWindow.new.minimize
     #
     ControllableThread.check_for_pause
     @walker.walk_to(START_PLANT_LOC)
@@ -170,9 +169,9 @@ class BarleyWindow < PinnableWindow
 	done = false
       else
 	mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
-	dialog_click(Point.new(*@locs['Water']), delay_sec)
-	mm(to_screen_coords(Point.new(*@locs['Fert'])),delay_sec)
-	dialog_click(Point.new(*@locs['Fert']), delay_sec)
+	dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
+#	mm(to_screen_coords(Point.new(*@locs['Fert'])),delay_sec)
+#	dialog_click(Point.new(*@locs['Fert']), 'tc', delay_sec)
 	done = true
       end
     end
@@ -184,12 +183,12 @@ class BarleyWindow < PinnableWindow
       # Sometimes misses.
       delay_sec = 0.01
       mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
-      dialog_click(Point.new(*@locs['Water']), delay_sec)
-      dialog_click(Point.new(*@locs['Water']), delay_sec)
-      # Sometimes misses.
-      mm(to_screen_coords(Point.new(*@locs['Fert'])), delay_sec)
-      dialog_click(Point.new(*@locs['Fert']), delay_sec)
-      dialog_click(Point.new(*@locs['Fert']), delay_sec)
+      dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
+      dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
+#      # Sometimes misses.
+#      mm(to_screen_coords(Point.new(*@locs['Fert'])), delay_sec)
+#      dialog_click(Point.new(*@locs['Fert']), delay_sec)
+#      dialog_click(Point.new(*@locs['Fert']), delay_sec)
     end
 
     # Just pass through the lock before starting.
@@ -229,4 +228,4 @@ class BarleyWindow < PinnableWindow
     return nil
   end
 end
-# Action.add_action(Barley.new)
+Action.add_action(Barley.new)

@@ -1,4 +1,5 @@
 require 'action'
+require 'window'
 
 class Firepits < Action
   def initialize
@@ -33,12 +34,12 @@ class Firepits < Action
       w = PinnableWindow.from_screen_click(pt)
       w.pin
       while w.click_on('Add')
-	HowMuch.new(:max)
+	HowMuch.max
         w.refresh
         sleep_sec(0.1)
       end
       while w.click_on('Grill')
-	HowMuch.new(:max)
+	HowMuch.max
         w.refresh
         sleep_sec(0.1)
       end
@@ -47,7 +48,7 @@ class Firepits < Action
       w.refresh
       sleep_sec(0.1)
       if w.click_on('Take./Limestone')
-        HowMuch.new(4)
+        HowMuch.amount(4)
       end
 
       puts 'unpin'

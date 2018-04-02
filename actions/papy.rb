@@ -99,7 +99,7 @@ class HarvestPapyEast < HarvestPapy
   def stash
     stash_loc = [994, -2266]
     Walker.new.walk_to(stash_loc)
-    HowMuch.new(:max) if @stash_window.click_on('Stash/Papyrus')
+    HowMuch.max if @stash_window.click_on('Stash/Papyrus')
     @stash_window.click_on('Stash/Insect/Stash All')
   end
   
@@ -146,7 +146,7 @@ class HarvestPapyWest < HarvestPapy
 
   # Go to the warehouse and stash.
   def stash
-    HowMuch.new(:max) if @stash_window.click_on('Stash/Papyrus')
+    HowMuch.max if @stash_window.click_on('Stash/Papyrus')
     @stash_window.click_on('Stash/Insect/Stash All')
   end
 

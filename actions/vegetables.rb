@@ -19,11 +19,11 @@ class Onions < Action
     },
 
     "Cabbage/Mut's Fruition/(1)" => {:water => 1,
-      :min_width => 230,
+      :min_width => 232,
       :left_build_init => [:l,:l],
     },
     "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
-      :min_width => 230,
+      :min_width => 232,
       :left_build_init => [:l,:l],
     },
     

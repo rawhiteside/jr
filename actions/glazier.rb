@@ -203,7 +203,7 @@ class GlazierWindow < PinnableWindow
     with_robot_lock do
       refresh
       click_on("Melt/Into #{glass_type}")
-      HowMuch.new(:max)
+      HowMuch.max
       AWindow.dismiss_all
     end
   end

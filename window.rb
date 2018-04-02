@@ -16,7 +16,7 @@ import java.awt.Insets
 
 # Adds a factory method that's useful in Ruby.
 class Window < AWindow
-  def initialize(rect = nil)
+  def initialize(rect = Rectangle.new(0, 0, 0, 0))
     super(rect)
   end
 
@@ -33,38 +33,8 @@ class HowMuch < Window
 
   # Answer the "How Much" / "How Many" popup
   # Arg can either a number, or one of [:max, :ok, :cancel]
-  def initialize(quant)
+  def initialize
     super(Rectangle.new(0,0,0,0))
-    with_robot_lock do
-      @win = nil
-      sleep_sec(0.1)
-      5.times do
-        @win = HowMuch.find_win
-	break if @win 
-	sleep_sec 0.1
-      end
-
-      raise(Exception.new("The How Much dialg didn't appear")) unless @win
-
-      rect = @win.rect
-      @win.dialog_click(Point.new(110, rect.height - 30)) if quant == :max
-      @win.dialog_click(Point.new(170, rect.height - 45)) if quant == :ok
-      if quant.kind_of?(Numeric)
-        robot = ARobot.shared_instance
-	robot.send_string(quant.to_i.to_s, 0.05)
-        sleep_sec(0.1)
-	@win.dialog_click(Point.new(170, rect.height - 45))
-      end
-      # Wait until it's gone.
-      5.times do 
-        got = HowMuch.find_win
-        break unless got
-	sleep_sec 0.1
-      end
-
-    end
-    
-    sleep_sec 0.1
   end
 
   # Find the HowMuch window, waiting for .5 sec if necessary.  Returns
@@ -75,24 +45,49 @@ class HowMuch < Window
     ARobot.shared_instance.sleep_sec(0.1)
     5.times do
       win = HowMuch.find_win
-      break if @win 
+      break if win 
       ARobot.shared_instance.sleep_sec 0.1
     end
 
     win
   end
 
+  def self.wait_till_gone
+   # Wait until it's gone.
+    5.times do 
+      got = HowMuch.find_win
+      break unless got
+      ARobot.shared_instance.sleep_sec(0.1)
+    end
+  end
   # Click on the Max button.  Returns +true+ on success, or +nil+ if
   # the window doesn't appear.
   public
   def self.max
-    win = wait_for_win
+    win = nil
+    puts Timer.time_this {win = wait_for_win}
     return nil unless win
     win.dialog_click(Point.new(110, win.rect.height - 30))
-    
+    wait_till_gone
+
     true
   end
 
+  # Send the provided amount  Returns +true+ on success, or +nil+ if
+  # the window doesn't appear.
+  public
+  def self.amount(amt)
+    win = wait_for_win
+    return nil unless win
+    robot = ARobot.shared_instance
+    robot.send_string(amt.to_i.to_s, 0.05)
+    ARobot.shared_instance.sleep_sec(0.1)
+    win.dialog_click(Point.new(170, win.rect.height - 45))
+    wait_till_gone
+    
+    true
+  end
+  
   # Click on the cancel button.
   private
   def self.cancel(w)
@@ -109,9 +104,12 @@ class HowMuch < Window
 
   private
   def self.find_win
+    puts 'fid_din'
     dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
     win = Window.from_point(Point.new(wid/2, height/2))
+    # XXX
+    puts win.read_text if win
     if win && win.read_text =~ /(much|many)/
       return win
     else

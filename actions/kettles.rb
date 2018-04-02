@@ -176,7 +176,7 @@ class Potash < KettleAction
       sleep_sec(0.1)
     end
     w.click_button('ignite')
-    HowMuch.new(:max)
+    HowMuch.max
     w.unpin
   end
 
@@ -212,7 +212,7 @@ class Potash < KettleAction
 
       # fill jugs
       rclick_at(224, 60)
-      HowMuch.new(:max)
+      HowMuch.max
     end
   end
 

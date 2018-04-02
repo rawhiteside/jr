@@ -44,7 +44,7 @@ class Bullets < Action
 
         w.refresh
         if (w.click_on('Load the Bullet Furnace with Charcoal'))
-          HowMuch.new(cc_amount)
+          HowMuch.amount(cc_amount)
         end
         sleep_sec 1
 
@@ -52,7 +52,7 @@ class Bullets < Action
         sleep_sec(0.1)
         w.refresh
         if (w.click_on("Load the Bullet Furnace with #{ore_type} Ore"))
-          HowMuch.new(ore_amount)
+          HowMuch.amount(ore_amount)
         end
 
         sleep_sec 4

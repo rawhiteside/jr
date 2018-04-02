@@ -82,7 +82,7 @@ class CactusRun < Action
 
   def stash
     @warehouse.refresh
-    HowMuch.new(:max) if @warehouse.click_on('Stash/Cactus')
+    HowMuch.max if @warehouse.click_on('Stash/Cactus')
   end
 
 end

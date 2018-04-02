@@ -118,7 +118,7 @@ class Clay < Action
 
   def stash_it(stash_window, what)
     if stash_window.click_on(what)
-      HowMuch.new(:max)
+      HowMuch.max
     end
   end
 
@@ -171,8 +171,8 @@ class BackAndForthClay < Clay
 
       @walker.walk_to(@stash_loc)
       gather
-      HowMuch.new(:max) if @stash_window.click_on('Stash/Clay')
-      HowMuch.new(:max) if @stash_window.click_on('Stash/Flint')
+      HowMuch.max if @stash_window.click_on('Stash/Clay')
+      HowMuch.max if @stash_window.click_on('Stash/Flint')
       Icons.refill
     end
       
