@@ -141,11 +141,13 @@ class TreeRun < Action
     end
   end
 
-  # Just send "H" near the center of the screen.  Should be standing
+  # Just spam "H" near the center of the screen.  Should be standing
   # in the GH, and the whole area is active.
   def harvest_greenhouse
     dim = screen_size
-    mm(dim.width/2 + 20, dim.height/2)
+    mm(dim.width/2, dim.height/2 + 100)
+    send_string 'h'
+    mm(dim.width/2, dim.height/2 - 100)
     send_string 'h'
   end
   
