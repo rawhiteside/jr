@@ -104,12 +104,9 @@ class HowMuch < Window
 
   private
   def self.find_win
-    puts 'fid_din'
     dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
     win = Window.from_point(Point.new(wid/2, height/2))
-    # XXX
-    puts win.read_text if win
     if win && win.read_text =~ /(much|many)/
       return win
     else
