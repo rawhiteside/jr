@@ -13,7 +13,7 @@ class TreeRun < Action
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
-       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash', 'Storage Stash']},
+       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash', 'Storage Stash', 'Greenhouse']},
       {:type => :point, :name => 'storage', :label => 'Drag to pinned bonfire or storage'},
       {:type => :point, :name => 'win-stack', :label => 'Drag to stack of pinned tree windows.'},
 
@@ -125,6 +125,8 @@ class TreeRun < Action
           @piler.pile(w)
         elsif c == 'Water Mine 1'
           @mine_worker1.tend
+        elsif c == 'Greenhouse'
+          harvest_greenhouse
         elsif c == 'Water Mine 2'
           @mine_worker2.tend
         elsif c == 'Bonfire Stash'
@@ -139,6 +141,14 @@ class TreeRun < Action
     end
   end
 
+  # Just send "H" near the center of the screen.  Should be standing
+  # in the GH, and the whole area is active.
+  def harvest_greenhouse
+    dim = screen_size
+    mm(dim.width/2 + 20, dim.height/2)
+    send_string 'h'
+  end
+  
   def bonfire_stash(bonfire)
     bonfire.refresh
     sleep 0.2
