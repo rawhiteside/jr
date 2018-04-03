@@ -36,7 +36,12 @@ class BuildMenu < AWindow
       break if rect
       sleep 0.1
     end
-    super(rect)
+    if rect
+      super(rect)
+    else
+      puts 'Build menu not found'
+      super(Rectangle.new(0, 0, 0, 0))
+    end
   end
 
 
