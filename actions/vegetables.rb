@@ -10,11 +10,11 @@ class Onions < Action
 
   VEGETABLE_DATA = {
     "Peppers/Ptah's Breed/(2)" => {:water => 2,
-      :min_width => 230,
+      :min_width => 240,
       :left_build_init => [:l,:l],
     },
     "Peppers/Ra's Fire/(1)" => {:water => 1,
-      :min_width => 230,
+      :min_width => 240,
       :left_build_init => [:l,:l],
     },
 
