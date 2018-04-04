@@ -64,8 +64,7 @@ class HowMuch < Window
   # the window doesn't appear.
   public
   def self.max
-    win = nil
-    puts Timer.time_this {win = wait_for_win}
+    win = wait_for_win
     return nil unless win
     win.dialog_click(Point.new(110, win.rect.height - 30))
     wait_till_gone
