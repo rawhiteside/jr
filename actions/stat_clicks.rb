@@ -118,7 +118,7 @@ class StrengthClick < Action
     loop do
       stat_wait('Str')
       rclick_at(*xy)
-      sleep_sec 5
+      sleep_sec 3
     end
   end
 end
