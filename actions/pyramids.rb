@@ -37,6 +37,7 @@ class PyramidPushStack < Action
         sleep_sec 1.0
       else
         win.unpin
+        sleep_sec 1.0
         break
       end
     end
