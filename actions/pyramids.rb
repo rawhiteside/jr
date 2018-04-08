@@ -87,7 +87,9 @@ class PyramidDigStack < Action
       end
     end
     win.unpin
+    sleep_sec 0.1
   end
+
 end
 
 Action.add_action(PyramidDigStack.new)
