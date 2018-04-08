@@ -74,6 +74,7 @@ class PyramidDigStack < Action
       text = win.read_text
       if text
         stat_wait('End')
+        win.refresh
         if win.click_on("Dig")
           win.refresh
           win.click_on("Slide")
@@ -85,7 +86,7 @@ class PyramidDigStack < Action
         break
       end
     end
-      win.unpin
+    win.unpin
   end
 end
 
