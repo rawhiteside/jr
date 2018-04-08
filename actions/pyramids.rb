@@ -44,3 +44,49 @@ class PyramidPushStack < Action
 end
 
 Action.add_action(PyramidPushStack.new)
+
+
+class PyramidDigStack < Action
+  def initialize
+    super('Pyramid dig', 'Misc')
+  end
+
+  def persistence_name
+    'dig-pyramid-block'
+  end
+
+  def setup(parent)
+    gadgets = [
+      {:type => :point, :label => 'Drag to stack of Excavations', :name => 'win'},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+
+  def act
+    while win = PinnableWindow.from_point(point_from_hash(@vals, 'win'))
+      dig(win)
+    end
+  end
+
+  def dig(win)
+    loop do
+      win.refresh
+      text = win.read_text
+      if text
+        stat_wait('End')
+        if win.click_on("Dig")
+          win.refresh
+          win.click_on("Slide")
+        else
+          break
+        end
+        sleep_sec 1.0
+      else
+        break
+      end
+    end
+      win.unpin
+  end
+end
+
+Action.add_action(PyramidDigStack.new)
