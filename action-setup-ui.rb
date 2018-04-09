@@ -409,7 +409,7 @@ class WorldLocUtils
 
   # Create a Button that will get the current world coordinates and
   # put them in the target text box.
-  def self.current_location_button(target_gadget, append)
+  def self.current_location_button(target_gadget, insert)
     butt = JButton.new("Current Loc")
     butt.add_action_listener do |e|
       add_this = "Could not get coordinates."
@@ -422,10 +422,9 @@ class WorldLocUtils
       rescue Exception => e
       end
 
-      if append
+      if insert
         add_this = add_this + "\n"
-        target_gadget.append(add_this)
-        target_gadget.caret_position = target_gadget.text.size
+        target_gadget.insert(add_this, target_gadget.caret_position)
       else
         target_gadget.text = add_this
       end
@@ -534,8 +533,7 @@ class SetupWorldLocationGadget < JPanel
     box = Box.create_horizontal_box
     # Text box
     val_key = prefix + h[:name].to_s
-    size = h[:size]
-    size = 13 unless size
+    size = h[:size] || 13
     txt_box = SetupTextField.new(val_key, size.to_i, data_gets, data_puts)
     box.add(txt_box)
     # CurrentLoc button
@@ -578,8 +576,7 @@ class SetupWorldPathGadget < JPanel
       auxs.each do |aux|
         aux_button = JButton.new(aux)
         aux_button.add_action_listener do |e|
-          area.append(aux + "\n")
-          area.caret_position = area.text.size
+          area.insert(aux + "\n", area.caret_position)
         end
         button_box.add(aux_button)
       end
