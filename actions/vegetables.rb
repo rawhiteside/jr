@@ -60,6 +60,10 @@ class Onions < Action
     'Onions/Tears of Sinai/(2)' => {:water => 2,
       :min_width => 228,
     },
+
+    'Watermelons/Geb\'s Produce/(1)' => {:water => 1,
+      :min_width => 272,
+    },
   }
 
   # Size of a side of the square we look at to detect plants. Square
