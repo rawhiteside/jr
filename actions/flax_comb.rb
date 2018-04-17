@@ -51,6 +51,7 @@ class FlaxComb < Action
     loop do
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
+      w.default_refresh_loc = 'lc'
       process(w, max_clean)
       # 
       # Dismiss the box telling me the comb died. 
