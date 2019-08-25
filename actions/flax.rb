@@ -98,7 +98,10 @@ class FlaxGrow < Action
       stash_win.click_on('Stash./Insect/Stash All')
       stash_win.click_on('Stash./Flax See/All')
       stash_win.click_on("Take/Flax See/#{@flax_type}")
-      HowMuch.new(count + 1)
+	 sleep_sec 1.0
+	 HowMuch.new(:max)
+
+     #HowMuch.new(count + 1)
   end
 
   def refill

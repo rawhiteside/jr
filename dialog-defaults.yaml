@@ -331,8 +331,8 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    p.x: '58'
-    p.y: '429'
+    w.x: '1168'
+    w.y: '38'
 Wood Planes:
   2: Parameter set 1
   1: false
@@ -889,19 +889,19 @@ Grow flax:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    flax-type: Old Dog
-    plant.x: '391'
-    plant.y: '705'
-    head.x: '681'
-    head.y: '399'
-    stash.x: '648'
-    stash.y: '629'
-    count: '4'
+    flax-type: Symphony Ridge Gold
+    plant.x: '1821'
+    plant.y: '816'
+    head.x: '1285'
+    head.y: '715'
+    stash.x: '2169'
+    stash.y: '846'
+    count: '8'
     rows: '4'
     cols: '4'
-    grow: -378, -6741
-    water: -383, -6733
-    stash: -378, -6733
+    grow: -375, -6738
+    water: -375, -6738
+    stash: -375, -6738
 Grow vegetables:
   2: Parameter set 1
   1: false
@@ -917,3 +917,27 @@ Grow vegetables:
     beds: '2'
     second: '20'
     third: '38'
+Tend Vines:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    ulTend.x: '881'
+    ulTend.y: '393'
+    lrTend.x: '1999'
+    lrTend.y: '1105'
+    ul.x: '-1180'
+    ul.y: '-6730'
+    lr.x: '-900'
+    lr.y: '-6820'
+    interval.x: '10'
+    interval.y: '10'
+    cuttingsSetting: 'No'
+    vHarvest: '11'
+    harvestSetting: 'No'
+    vineType: Balance
+Color Picker:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    loc.x: '1155'
+    loc.y: '62'
