@@ -26,6 +26,9 @@ class SandMine < AbstractMine
 
       {:type => :text, :label => 'Key delay?', :name => 'delay',},
 
+      {:type => :combo, :label => 'Gem color', :name => 'gem_color',
+       :vals => ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'black'],},
+
       {:type => :combo, :label => 'Debug mode?', :name => 'debug',
        :vals => ['y', 'n']},
     ]
@@ -38,8 +41,10 @@ class SandMine < AbstractMine
     height = @vals['field.lr.y'].to_i - origin.y
     @field_rect = Rectangle.new(origin.x, origin.y, width, height)
     @debug = @vals['debug'] == 'y'
+    puts "Debug = #{@debug}"
     @stone_count = @vals['stone-count'].to_i
     @delay = @vals['delay'].to_f
+    @gem_color = @vals['gem_color']
     
     w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
 
@@ -73,15 +78,23 @@ class SandMine < AbstractMine
       y2 = stone_rect.y + stone_rect.height - xoff
       bounds = Bounds.new([x1, y1], [x2, y2])
       bounds.spiral.each do |xy|
-        color = @stones_image.color(xy[0], xy[1])
-        sym = Clr.color_symbol(color)
+        color = @stones_image.color_from_screen(xy[0], xy[1])
+        sym = Clr.color_symbol(color, @gem_color, @debug)
         if (sym)
           ore_stone.color_symbol = sym
           break
         end
       end
-      ore_stone.color_symbol ||= :black
+
+      unless ore_stone.color_symbol
+        ore_stone.color_symbol = @gem_color.to_sym
+      end
+      
     end
+    if @debug
+      p stones.collect {|s| s.color_symbol}
+    end
+
   end
 
   
@@ -100,7 +113,7 @@ class SandMine < AbstractMine
 
     @empty_image = PixelBlock.new(@field_rect)
     w.click_on('Work this Mine', 'tc')
-    sleep_sec(5.0)
+    sleep_sec(10.0)
     @stones_image = PixelBlock.new(@field_rect)
 
     @diff_image = ImageUtils.xor(@empty_image, @stones_image)
@@ -116,7 +129,13 @@ class SandMine < AbstractMine
         UserIO.show_image(@diff_image)
       end
     end
-    globs.each { |g| stones << points_to_stone(g) }
+    globs.each { |g| 
+      # Stones will hold the sets of points.  These points will be in
+      # screen coordinates.
+      stones << points_to_stone(@stones_image, g) 
+    }
+
+    stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
 
     if (@debug)
       mouse_over_stones(stones)
@@ -127,6 +146,8 @@ class SandMine < AbstractMine
   end
 
   def get_globs(brightness, threshold)
+    # A +glob+ is just a hash with points as keys.  Points are in the
+    # coord system of the +brightness+ image.
     got = ImageUtils.globify(brightness, threshold)
     # Convert from java land to ruby land.
     globs = []
@@ -142,8 +163,11 @@ class SandMine < AbstractMine
 
 
   # Input here is a hash with Points as a key.
+  # Input points are in the coordinate system of +pb+.
+  # Points stored into the stone will be screen coordinates.
   # Returns an OreStone, which just has a bunch of attrs.
-  def points_to_stone(points)
+  def points_to_stone(pb, points)
+    points.collect!{|p| pb.to_screen(p)}
     xmin = ymin = 99999999
     xmax = ymax = 0
     xsum = ysum = 0
@@ -159,11 +183,27 @@ class SandMine < AbstractMine
       ysum += y
     end
 
-    stone = OreStone.new(@stones_image)
+    stone = OreStone.new
     stone.points = points
+    stone.point_set = Set.new(points)
     stone.min_point = Point.new(xmin, ymin)
     stone.max_point = Point.new(xmax, ymax)
     stone.centroid = Point.new(xsum / points.size, ysum / points.size)
+
+    # Desparately needs a refactor.  Add any highlight colors in the
+    # rectangle to the stone points.
+    count = 0
+    rect = stone.rectangle
+    rect.width.times do |x|
+      rect.height.times do |y|
+        point = Point.new(rect.x + x, rect.y + y)
+        color = pb.color_from_screen(point)
+        if highlight_blue?(color)
+          stone.point_set.add(point)
+          count += 1
+        end
+      end
+    end
 
     stone
 
@@ -173,7 +213,7 @@ class SandMine < AbstractMine
   def mouse_over_stones(stones)
     stones.each do |s|
       mm(s.x, s.y)
-      sleep_sec @delay
+      sleep_sec 1.0
     end
   end
 
@@ -181,7 +221,7 @@ class SandMine < AbstractMine
     if win = PopupWindow.find
       log_strange_window(win)
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep_sec 3
+      sleep_sec 0.01
       return true
     end
     return false
@@ -252,13 +292,13 @@ class SandMine < AbstractMine
   def run_recipe(recipes, stones_by_name, delay)
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
-      # Fixes issue with the very first orestone in a workload?
-      sleep_sec(0.5) 
     end
+    sleep_sec 4
   end
 
   def run_one_workload(recipe, stones_by_name, delay)
     blue_point = nil
+    stone_1 = nil
     recipe.each_index do |i|
       name = recipe[i]
       stone = stones_by_name[name]
@@ -271,77 +311,75 @@ class SandMine < AbstractMine
       # If this was the first stone, find a resulting blue pixel
       # from the highlight circle.
       if i == 0
-        blue_point = find_highlight_point(stone)
+        stone_1 = stone
         # First stone funny? Visually, it looks like this somethines
         # doesn't work.
-        if blue_point.nil?
-          puts "No highlight.  Waiting..."
+        if !stone_highlight?(stone)
           sleep_sec 0.5
-          blue_point = find_highlight_point(stone)
-          if blue_point
-            puts "It's there now!"
-          else
-            puts "waiting didn't help.  Sending again."
+          if !stone_highlight?(stone)
             send_string_at(stone.x, stone.y, key, delay)
-            blue_point = find_highlight_point(stone)
-            if blue_point.nil?
-              puts "STILL No highlight.  Sending again!" 
+            if !stone_highlight?(stone)
               send_string_at(stone.x, stone.y, key, delay)
-              blue_point = find_highlight_point(stone)
-              if blue_point
+              if stone_highlight?(stone)
                 puts "Yay!  Got it that time."
               else
                 puts "Never found it.  Going with nil"
               end
-            else
-              puts "Found it."
             end
           end
         end
       end
     end
-
-    wait_for_highlight_gone(blue_point)
+    
+    wait_for_highlight_gone(stone_1)
+    dismiss_strange_windows    
   end
 
 
-  def wait_for_highlight_gone(p)
-    if p.nil?
-      sleep 3
-      return
-    end
+  def wait_for_highlight_gone(stone)
     start = Time.new
-    until !highlight_blue?(getColor(p))
-      sleep_sec 0.5
-      break if (Time.new - start) > 6
+
+    sleep_sec 0.2
+    return if dismiss_strange_windows    
+
+    while stone_highlight?(stone)
+      sleep_sec 0.2
+      return if dismiss_strange_windows
+
+      if (Time.new - start) > 6
+        log_result "highlight wait time-out"
+        return
+      end
     end
-    sleep_sec @delay
   end
 
   def highlight_blue?(color)
     r, g, b = color.red, color.green, color.blue
-    return b > 100 && (b - r) > 40 && (g - r) > 30
+    return b > 100 && (b - r) > 40 && (b - g) < 30
   end
 
-  def find_highlight_point(stone)
-    y = stone.centroid.y
-    x = stone.centroid.x
-    colors = []
-    stone.rectangle.width.times do |offset|
-      # Examine only points NOT on the stone.
-      local_point = Point.new(x + offset, y)
-      if !stone.points.include?(local_point)
-        point = @stones_image.to_screen(local_point)
-        color = getColor(point)
-        colors << color
-        return point if highlight_blue?(color)
+  def stone_highlight?(stone)
+    count = count_highlight_points(stone)
+    rect = stone.rectangle
+    total = rect.height * rect.width
+    fract = count.to_f/total
+    return fract > 0.01
+  end
+
+  def count_highlight_points(stone)
+    rect = stone.rectangle
+    pb = PixelBlock.new(rect)
+    count = 0
+    rect.width.times do |x|
+      rect.height.times do |y|
+        point = Point.new(x, y)
+        color = pb.color(point)
+        if highlight_blue?(color) && !stone.point_set.include?(pb.to_screen(point))
+          count += 1
+        end
       end
     end
-
-    puts "didn't find highlights "
-
-    nil
-
+    return count
   end
 
   def send_string_at(x, y, str, delay)
@@ -363,17 +401,17 @@ Action.add_action(SandMine.new)
 
 class OreStone
   attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol, :gem_type
+  attr_accessor :color_symbol, :gem_type, :point_set
 
-  def initialize(pb)
-    @pb = pb
+  def initialize
+
   end
 
   def x
-    @pb.to_screen(@centroid).x
+    @centroid.x
   end
   def y
-    @pb.to_screen(@centroid).y
+    @centroid.y
   end
 
   def to_s

@@ -45,7 +45,7 @@ class Icons
   def self.refill
       ARobot.shared_instance.with_robot_lock do
         if (click_on(:water))
-          HowMuch.new(:max)
+          HowMuch.max
 	  ARobot.shared_instance.sleep_sec 0.1 
         else
           UserIO.error("Didn't find the water icon.")

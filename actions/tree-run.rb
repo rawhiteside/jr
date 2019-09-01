@@ -12,20 +12,18 @@ class TreeRun < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :world_path, :label => 'Path to walk.', :name => 'path', 
-       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Bonfire Stash', 'Storage Stash']},
+      {:type => :world_path, :label => 'Path to walk.', :name => 'path',
+       :rows => 20,
+       :aux => ['Gather Wood', 'Water Mine 1', 'Water Mine 2', 'Water Mine 3', 'Bonfire Stash', 'Storage Stash', 'Greenhouse']},
       {:type => :point, :name => 'storage', :label => 'Drag to pinned bonfire or storage'},
       {:type => :point, :name => 'win-stack', :label => 'Drag to stack of pinned tree windows.'},
 
-      {:type => :combo, :name => 'water-mine-1-p', :label => 'Work Water mine 1?', :vals => ["Y", "N"]},
 
       {:type => :point, :name => 'water-mine-1', :label => 'Water mine 1'},
-      {:type => :number, :name => 'scan-interval-wm1-1', :label => 'WM1: Angle scan interval 1 (minutes)'},
-      {:type => :number, :name => 'scan-interval-wm1-2', :label => 'WM1: Angle scan interval 2 (minutes)'},
-      {:type => :combo, :name => 'water-mine-2-p', :label => 'Work Water mine 2?', :vals => ["Y", "N"]},
       {:type => :point, :name => 'water-mine-2', :label => 'Water mine 2'},
-      {:type => :number, :name => 'scan-interval-wm2-1', :label => 'WM2: Angle scan interval 1 (minutes)'},
-      {:type => :number, :name => 'scan-interval-wm2-2', :label => 'WM2: Angle scan interval 2 (minutes)'},
+      {:type => :point, :name => 'water-mine-3', :label => 'Water mine 3'},
+      {:type => :number, :name => 'scan-interval-1', :label => 'WM2: Angle scan interval 1 (minutes)'},
+      {:type => :number, :name => 'scan-interval-2', :label => 'WM2: Angle scan interval 2 (minutes)'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -33,6 +31,7 @@ class TreeRun < Action
   def stop
     @mine_worker1.log_action('Stop') if @mine_worker1
     @mine_worker2.log_action('Stop') if @mine_worker2
+    @mine_worker3.log_action('Stop') if @mine_worker3
     super
   end
 
@@ -45,24 +44,40 @@ class TreeRun < Action
   end
 
   def init_stuff
-    tile_windows
+    @windows = []
+    path_text = @vals['path']
 
-    @storage = PinnableWindow.from_point(point_from_hash(@vals, 'storage'))
+    if path_text.include?('Gather')
+      tile_windows
+    end
+      
+
+    if path_text.include?('Stash')
+      @storage = PinnableWindow.from_point(point_from_hash(@vals, 'storage'))
+    end
 
     @mine_worker1 = nil
-    if @vals['water-mine-1-p'] == "Y"
+    if path_text.include? 'Water Mine 1'
       water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-1'))
-      scan_interval_1 = @vals['scan-interval-wm1-1'].to_i
-      scan_interval_2 = @vals['scan-interval-wm1-2'].to_i
+      scan_interval_1 = @vals['scan-interval-1'].to_i
+      scan_interval_2 = @vals['scan-interval-2'].to_i
       @mine_worker1 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
     end
 
     @mine_worker2 = nil
-    if @vals['water-mine-2-p'] == "Y"
+    if path_text.include? 'Water Mine 2'
       water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-2'))
-      scan_interval_1 = @vals['scan-interval-wm2-1'].to_i
-      scan_interval_2 = @vals['scan-interval-wm2-2'].to_i
+      scan_interval_1 = @vals['scan-interval-1'].to_i
+      scan_interval_2 = @vals['scan-interval-2'].to_i
       @mine_worker2 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
+    end
+
+    @mine_worker3 = nil
+    if path_text.include? 'Water Mine 3'
+      water_mine = PinnableWindow.from_point(point_from_hash(@vals, 'water-mine-3'))
+      scan_interval_1 = @vals['scan-interval-1'].to_i
+      scan_interval_2 = @vals['scan-interval-2'].to_i
+      @mine_worker3 = WaterMineWorker.new(water_mine, scan_interval_1 * 60, scan_interval_2 * 60)
     end
 
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
@@ -92,7 +107,7 @@ class TreeRun < Action
     # Wait for wood to be available, then gather it
     # If it's going to be over 15 sec, then skip it.
     loop do
-      return if (secs = secs_to_wait(w)) > 15
+      return if (secs = secs_to_wait(w)) > 20
       break if w.click_on('Gather')
       sleep_sec 2
     end
@@ -114,8 +129,10 @@ class TreeRun < Action
     return unless init_stuff
     walker = Walker.new
     loop do
-      windows = @windows.reverse
-      @piler.swap
+      if @windows.size > 0
+        windows = @windows.reverse
+        @piler.swap
+      end
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
@@ -127,28 +144,45 @@ class TreeRun < Action
           @mine_worker1.tend
         elsif c == 'Water Mine 2'
           @mine_worker2.tend
+        elsif c == 'Water Mine 3'
+          @mine_worker3.tend
+        elsif c == 'Greenhouse'
+          harvest_greenhouse
         elsif c == 'Bonfire Stash'
           bonfire_stash(@storage)
         elsif c == 'Storage Stash'
           storage_stash(@storage)
         end
       end
-      
-
-
     end
   end
 
+  # Just spam "H" near the center of the screen.  Should be standing
+  # in the GH, and the whole area is active.
+  def harvest_greenhouse
+    dim = screen_size
+    sleep_sec 0.1
+    mm(dim.width/2, dim.height/2 + 100)
+    sleep_sec 0.1
+    send_string 'h'
+    sleep_sec 0.1
+    mm(dim.width/2, dim.height/2 - 100)
+    sleep_sec 0.1
+    send_string 'h'
+    sleep_sec 0.1
+  end
+  
   def bonfire_stash(bonfire)
     bonfire.refresh
     sleep 0.2
-    HowMuch.new(:max) if bonfire.click_on('Add')
+    HowMuch.max if bonfire.click_on('Add')
   end
 
   def storage_stash(storage)
     storage.refresh
     sleep 0.2
-    HowMuch.new(:max) if storage.click_on('Stash./Wood')
+    HowMuch.max if storage.click_on('Stash./Wood')
+    storage.click_on('Stash./Insect/All')
   end
 end
 Action.add_action(TreeRun.new)

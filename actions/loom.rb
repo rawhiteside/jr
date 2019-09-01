@@ -52,13 +52,13 @@ class Linen < Weave
         loom.refresh
         sleep_sec(0.5)
         if loom.click_on('Load the Loom with Twine')
-          HowMuch.new(:max)
+          HowMuch.max
         end
       end
 
       loom.refresh
       if loom.click_on('Load the Loom with Thread')
-	HowMuch.new(:max)
+	HowMuch.max
       end
       p = PopupWindow.find
       p.dismiss if p

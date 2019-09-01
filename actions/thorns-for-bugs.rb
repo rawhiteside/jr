@@ -113,7 +113,7 @@ class ThornRun < Action
       end
       @drop.refresh
       @drop.click_on('Thorns')
-      HowMuch.new(:max)
+      HowMuch.max
     end
     
   end

@@ -5,6 +5,16 @@ class AbstractMine < Action
 end
 
 class Clr
+
+  METHOD_MAP = {
+    'red' => :red?,
+    'green' => :green?,
+    'blue' => :blue?,
+    'cyan' => :cyan?,
+    'magenta' => :magenta?,
+    'yellow' => :yellow?,
+  }
+
   # Main color(s) must be this high
   CTHRESH = 150
   # Diff between max and min must be this large
@@ -35,21 +45,33 @@ class Clr
     r > CTHRESH && g > CTHRESH && (r - b) > CDIFF && (r - g).abs < CDIFF2
   end
 
+  def self.black?(r, g, b)
+    cmax = [r, g, b].max
+    cmin = [r, g, b].min
+    return false if (cmax - cmin) > 10
+    return false if cmax > 50 || cmax < 35
+    return true
+  end
+
   def self.grey?(r, g, b)
     max = [r, g, b].max
     min = [r, g, b].min
     min > 50 && max < 210 && (max - min) < 30
   end
 
-  def self.color_symbol(color)
+  def self.color_symbol(color, gem_color = 'none', debug = false)
     r, g, b = color.getRed(), color.getGreen(), color.getBlue()
-    return :red if self.red?(r, g, b)
-    return :green if self.green?(r, g, b)
-    return :blue if self.blue?(r, g, b)
-    return :yellow if self.yellow?(r, g, b)
-    return :cyan if self.cyan?(r, g, b)
-    return :magenta if self.magenta?(r, g, b)
-    return nil
+
+    METHOD_MAP.each_key do |k|
+      if gem_color != k
+        if self.send(METHOD_MAP[k], r, g, b)
+          puts "Stone color #{k} from [#{r}, #{g}, #{b}]" if debug
+          return k.to_sym
+        end
+      end
+    end
+
+    nil
   end
 
   def self.mine_color?(r, g, b)
@@ -59,4 +81,3 @@ class Clr
   end
 
 end
-

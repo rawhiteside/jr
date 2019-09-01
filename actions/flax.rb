@@ -94,14 +94,11 @@ class FlaxGrow < Action
       @walker.walk_to(@stash_wl)
       stash_win.refresh
       stash_win.click_on('Stash./Flax')
-      HowMuch.new(:max)
+      HowMuch.max
       stash_win.click_on('Stash./Insect/Stash All')
       stash_win.click_on('Stash./Flax See/All')
       stash_win.click_on("Take/Flax See/#{@flax_type}")
-	 sleep_sec 1.0
-	 HowMuch.new(:max)
-
-     #HowMuch.new(count + 1)
+      HowMuch.amount(count + 1)
   end
 
   def refill
@@ -250,7 +247,7 @@ class FlaxSeeds < Action
         walker.walk_to(@stash_location)
         stash_chest.click_on('Stash./Flax/All')
         stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
-        HowMuch.new(2*@row_len + 1)
+        HowMuch.amount(2*@row_len + 1)
       end
 
       # Plant and harvest. 

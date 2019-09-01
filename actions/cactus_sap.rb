@@ -21,9 +21,8 @@ class CactusRun < Action
   def tile_windows
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
-    tiler = Tiler.new(2, 85)
-    tiler.y_offset = 5
-    @windows = tiler.tile_stack(x, y, 0.1)
+    @piler = Piler.new
+    @windows = @piler.pile_stack(x, y, 0.1)
   end
 
   def init_stuff
@@ -55,7 +54,7 @@ class CactusRun < Action
 
   def wait_for_collect(w)
     w.refresh
-    until w.read_text =~ /(2|3) drops/
+    until w.read_text =~ /(2|3|4|5|6) drops/
       sleep_sec(3)
       w.refresh
     end
@@ -66,22 +65,24 @@ class CactusRun < Action
     walker = Walker.new
     loop do
       windows = @windows.reverse
+      @piler.swap
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
         elsif c == 'Stash'
           stash
         else
-          gather(windows.shift)
+          w = windows.shift
+          gather(w)
+          @piler.pile(w)
         end
       end
-
     end
   end
 
   def stash
     @warehouse.refresh
-    HowMuch.new(:max) if @warehouse.click_on('Stash/Cactus')
+    HowMuch.max if @warehouse.click_on('Stash/Cactus')
   end
 
 end

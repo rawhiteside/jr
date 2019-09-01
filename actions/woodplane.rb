@@ -30,7 +30,14 @@ class WoodPlane < Action
     loop do
       w.refresh
       w.refresh if w.click_on('Repair')
-      break if w.click_on('Plane')
+      if w.click_on('Plane')
+        w.refresh
+        if w.click_on('Repair')
+          w.refresh
+          w.click_on('Plane')
+        end
+        break
+      end
     end
   end
 

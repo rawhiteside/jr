@@ -30,8 +30,18 @@ class BuildMenu < AWindow
   LITTLE_R = [:r, :l, ]
 
   def initialize
-    rect = WindowGeom.rectFromPoint(Point.new(50, 100))
-    super(rect)
+    rect = nil
+    3.times do
+      rect = WindowGeom.rectFromPoint(Point.new(50, 100))
+      break if rect
+      sleep 0.1
+    end
+    if rect
+      super(rect)
+    else
+      puts 'Build menu not found'
+      super(Rectangle.new(0, 0, 0, 0))
+    end
   end
 
 
@@ -43,7 +53,7 @@ class BuildMenu < AWindow
     # Rotations take longer than translations .. the animation on the
     # screen, that is. 
     big_delay = 0.1
-    little_delay = 0.05
+    little_delay = 0.08
     t_delay = 0.05
     extra_delay = 0
 

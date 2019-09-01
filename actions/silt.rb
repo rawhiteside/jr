@@ -43,7 +43,7 @@ class SiltAction < Action
           last_coord = coord
         elsif coord == 'Stash'
           @stash_window.refresh
-          HowMuch.new(:max) if @stash_window.click_on('Stash/Silt')
+          HowMuch.max if @stash_window.click_on('Stash/Silt')
         else
           sleep_sec(0.2)
           gather_at(walker, last_coord, sub_boxes)

@@ -18,17 +18,17 @@ Barley:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    head.x: '175'
-    head.y: '155'
-    wh.x: '308'
-    wh.y: '182'
-    count: ''
+    head.x: '956'
+    head.y: '552'
+    wh.x: '253'
+    wh.y: '953'
+    count: '1'
 Loom:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    loom.x: '987'
-    loom.y: '159'
+    loom.x: '210'
+    loom.y: '319'
 Slate:
   2: Parameter set 1
   1: true
@@ -331,14 +331,14 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    w.x: '1168'
-    w.y: '38'
+    p.x: '256'
+    p.y: '561'
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '442'
-    stack.y: '590'
+    stack.x: '304'
+    stack.y: '798'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
@@ -366,14 +366,14 @@ Flax Comb:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    count: '9999'
-    w.x: '42'
-    w.y: '65'
+    count: '14'
+    w.x: '250'
+    w.y: '454'
 Interval tab:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    interval: '5'
+    interval: '10'
 onions:
   2: Parameter set 1
   1: false
@@ -404,13 +404,13 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '907'
-    g.top-left.y: '449'
-    g.bottom-right.x: '911'
-    g.bottom-right.y: '457'
-    g.num-cols: '1'
-    g.num-rows: '1'
-    task: Burn (light and tend)
+    g.top-left.x: '1146'
+    g.top-left.y: '416'
+    g.bottom-right.x: '1346'
+    g.bottom-right.y: '659'
+    g.num-cols: '4'
+    g.num-rows: '4'
+    task: Load
 Glazier:
   2: Parameter set 1
   1: false
@@ -426,21 +426,21 @@ Potash:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '535'
-    g.top-left.y: '228'
-    g.bottom-right.x: '874'
-    g.bottom-right.y: '568'
-    g.num-cols: '7'
-    g.num-rows: '7'
-    repeat: '2'
-    delay: '1'
+    g.top-left.x: '1125'
+    g.top-left.y: '463'
+    g.bottom-right.x: '1407'
+    g.bottom-right.y: '691'
+    g.num-cols: '6'
+    g.num-rows: '5'
+    repeat: '4'
+    delay: '60'
     action: Start and tend
 Clay:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '1078'
-    chest.y: '610'
+    chest.x: '1270'
+    chest.y: '840'
     chest-coords: -392, -6638
     water-coords: -397, -6640
     jug_count: '100'
@@ -463,25 +463,26 @@ sand_mine:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    field.ul.x: '103'
-    field.ul.y: '59'
-    field.lr.x: '1315'
-    field.lr.y: '587'
-    mine.x: '1103'
-    mine.y: '643'
+    field.ul.x: '385'
+    field.ul.y: '87'
+    field.lr.x: '1672'
+    field.lr.y: '838'
+    mine.x: '302'
+    mine.y: '917'
     stone-count: '7'
     delay: '0.1'
+    gem_color: black
     debug: n
 Take from kettles:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '549'
-    g.top-left.y: '232'
-    g.bottom-right.x: '869'
-    g.bottom-right.y: '551'
-    g.num-cols: '7'
-    g.num-rows: '7'
+    g.top-left.x: '1102'
+    g.top-left.y: '455'
+    g.bottom-right.x: '1338'
+    g.bottom-right.y: '514'
+    g.num-cols: '5'
+    g.num-rows: '2'
     repeat: '1'
     delay: '1'
 PapyPlant:
@@ -827,11 +828,11 @@ water-mine:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    water-mine.x: '356'
-    water-mine.y: '425'
+    water-mine.x: '527'
+    water-mine.y: '389'
     check-freq: '20'
-    scan-interval-1: '4'
-    scan-interval-2: '15'
+    scan-interval-1: '400'
+    scan-interval-2: '1500'
 Kilns:
   2: Parameter set 1
   1: false
@@ -889,55 +890,55 @@ Grow flax:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    flax-type: Symphony Ridge Gold
-    plant.x: '1821'
-    plant.y: '816'
-    head.x: '1285'
-    head.y: '715'
-    stash.x: '2169'
-    stash.y: '846'
-    count: '8'
+    flax-type: Old Dog
+    plant.x: '391'
+    plant.y: '705'
+    head.x: '681'
+    head.y: '399'
+    stash.x: '648'
+    stash.y: '629'
+    count: '4'
     rows: '4'
     cols: '4'
-    grow: -375, -6738
-    water: -375, -6738
-    stash: -375, -6738
+    grow: -378, -6741
+    water: -383, -6733
+    stash: -378, -6733
 Grow vegetables:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Garlic/Apep's Crop/(2)
-    grow: 74, -6514
-    water: 74, -6514
-    head.x: '684'
-    head.y: '402'
-    plant.x: '400'
-    plant.y: '695'
-    repeat: '6'
-    beds: '2'
-    second: '20'
-    third: '38'
-Tend Vines:
+    veggie: Cabbage/Bastet's Yielding/(2)
+    grow: -484, -6911
+    water: -484, -6911
+    head.x: '961'
+    head.y: '556'
+    plant.x: '296'
+    plant.y: '799'
+    repeat: '2'
+    beds: '8'
+    second: '18'
+    third: '31'
+Walk:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    ulTend.x: '881'
-    ulTend.y: '393'
-    lrTend.x: '1999'
-    lrTend.y: '1105'
-    ul.x: '-1180'
-    ul.y: '-6730'
-    lr.x: '-900'
-    lr.y: '-6820'
-    interval.x: '10'
-    interval.y: '10'
-    cuttingsSetting: 'No'
-    vHarvest: '11'
-    harvestSetting: 'No'
-    vineType: Balance
+    dest_x: '-1100'
+    dest_y: '-1500'
+Bullets:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '1182'
+    g.top-left.y: '443'
+    g.bottom-right.x: '1354'
+    g.bottom-right.y: '720'
+    g.num-cols: '3'
+    g.num-rows: '5'
+    cc: '5'
+    ore: '150'
 Color Picker:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    loc.x: '1197'
-    loc.y: '62'
+    loc.x: '1129'
+    loc.y: '542'

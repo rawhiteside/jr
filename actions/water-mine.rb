@@ -46,6 +46,7 @@ class WaterMineWorker
   POST_WIND_WAIT = 60 * 10
   def initialize(w, scan_interval1, scan_interval2)
     @win = w
+    @win.default_refresh_loc = 'lc'
     @last_wind_time = nil
     log_action('Start')
     @scan_interval1 = scan_interval1
@@ -88,12 +89,7 @@ class WaterMineWorker
     ang = 10 if ang > 30
     ang = 30 if ang < 10
     @win.refresh
-    # Need to figure out why click_on sometimes fails on the laptop. 
-    5.times do
-      break if @win.click_on("Set/Angle of #{ang}")
-      p @win.read_text
-      sleep 0.2
-    end
+    @win.click_on("Set/Angle of #{ang}")
     @win.refresh
     log_action("Pitch angle #{ang}")
   end
@@ -101,7 +97,14 @@ class WaterMineWorker
   def angle
     @win.refresh
     text = @win.read_text
-    Regexp.new('Pitch Angle is ([0-9]+)').match(text)[1].to_i
+    match = Regexp.new('Pitch Angle is ([0-9]+)').match(text)
+    if match 
+      return match[1].to_i
+    else
+      puts "Failed to find angle in: #{text}"
+      return 18
+    end
+
   end
     
   def wind
@@ -111,15 +114,12 @@ class WaterMineWorker
   end
 
   def tend
-    @win.refresh
-    @angle = angle
-
-    @win.refresh
-    wind if @last_wind_time.nil? || ((Time.new - @last_wind_time) > WIND_INTERVAL)
-
-    ARobot.new.sleep_sec(0.2)
+    puts "water mine: #{@win.default_refresh_loc}"
     @win.refresh
     take
+    @angle = angle
+
+    wind if @last_wind_time.nil? || ((Time.new - @last_wind_time) > WIND_INTERVAL)
 
     scan_angle
   end

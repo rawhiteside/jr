@@ -44,7 +44,7 @@ class DigStones < Action
       p = mouse_pos
       w.click_on('Dig')
       mm(p)
-      sleep_sec(5)  # MAGIC.  Dig happens server side and lag.
+      sleep_sec(10)  # MAGIC.  Dig happens server side and lag.
     end
   end
 end
@@ -67,7 +67,7 @@ class EnduranceClick < Action
     loop do
       stat_wait('End')
       rclick_at(*xy)
-      sleep_sec 1
+      sleep_sec 10
     end
   end
 end
@@ -93,7 +93,7 @@ class Stir < Action
       stat_wait('Str')
       win.refresh
       unless win.click_on('Stir the')
-	sleep_sec 1
+	sleep_sec 5
       end
       sleep_sec 1
     end
@@ -118,7 +118,7 @@ class StrengthClick < Action
     loop do
       stat_wait('Str')
       rclick_at(*xy)
-      sleep_sec 1
+      sleep_sec 3
     end
   end
 end

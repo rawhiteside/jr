@@ -6,7 +6,6 @@ class Cutstones < GridAction
   end
 
   def act
-    # ChatLineWindow.new.minimize
     super
   end
 
