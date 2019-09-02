@@ -24,15 +24,6 @@ class ReadWindow < Action
     ]
     UserIO.prompt(nil, nil, 'Read this text', comps)
 
-    if @window.respond_to?(:read_data)
-      data = @window.read_data
-
-      comps = [
-        {:type => :big_text, :value => data, :name => 'text', :label => 'Data'}
-      ]
-      UserIO.prompt(nil, nil, 'Read this data', comps)
-    end
-
     cl = ClockLocWindow.instance
     puts cl.read_text
     puts cl.date_time
