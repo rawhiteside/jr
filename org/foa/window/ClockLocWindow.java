@@ -25,7 +25,7 @@ public class ClockLocWindow extends AWindow {
 		//New system is 150 wide and 60 tall and not a rectangle but can probably be models as such.
 		//  It is immovable and 30 pixels off the top on my system other milage may vary.
 		System.out.println("Creating new cloc manual window");
-		Rectangle rect = new Rectangle(screenWidth/2 - 100, 30, 200, 60);
+		Rectangle rect = new Rectangle(screenWidth/2 - 100, 37, 200, 39);
 		if (rect == null) {
 			System.out.println("Failed to find clock loc window.");
 			return null;

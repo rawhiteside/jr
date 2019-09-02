@@ -4,6 +4,8 @@ import org.foa.robot.ARobot;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.imageio.*;
+import java.io.*;
 
 public class InkSpots {
     public int[] origin;
@@ -82,6 +84,9 @@ public class InkSpots {
     public String color() {
 	Rectangle rect = new Rectangle(this.origin[0], this.origin[1], this.width, this.height);
 	BufferedImage bi = new ARobot().createScreenCapture(rect);
+
+			
+
 	for(int y = 0; y < this.height; y++) {
 	    for(int x = 0; x < this.width; x++) {
 		Color c = new Color(bi.getRGB(x, y));
@@ -96,6 +101,10 @@ public class InkSpots {
 		}
 	    }
 	}
+
+	
+
+
 	return "unknown";
     }
 
@@ -105,19 +114,47 @@ public class InkSpots {
 
     public static InkSpots fromScreen(Rectangle rect) {
 	BufferedImage bi = new ARobot().createScreenCapture(rect);
+
+	//Debug
+	try {
+		File outputfile = new File("saved.png");
+	ImageIO.write(bi, "png", outputfile);
+	} catch (Exception e) {
+		//TODO: handle exception
+	}
 	ArrayList newRows = new ArrayList();
 	for(int y = 0; y < rect.height; y++) {
 	    StringBuffer row = new StringBuffer();
 	    for(int x = 0; x < rect.width; x++) {
 		Color c = new Color(bi.getRGB(x, y));
-		if (c.getRed() < RMIN || c.getGreen() < GMIN || c.getBlue() < BMIN) {
-		    row.append("0");
+		if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) 
+			{
+				row.append("0");
+			}
+			
+		else if (c.getRed() < RMIN || c.getGreen() < GMIN || c.getBlue() < BMIN) {
+		    row.append("1");
 		} else {
 		    row.append("1");
 		}
 	    }
 	    newRows.add(row.toString());
 	}
+
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("debug.txt"));
+			
+			for (int debugCount = 0; debugCount < newRows.size(); debugCount++)
+			{
+				writer.write(newRows.get(debugCount).toString());
+				writer.newLine();
+			}
+			writer.close();
+		} catch (Exception e) {
+			//TODO: handle exception
+		}
+
+
 	return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]));
     }
 }
