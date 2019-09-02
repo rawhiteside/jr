@@ -55,10 +55,10 @@ public class AFont {
     }
 
     public String textFor(String[] rows) {
-		ArrayList l = new ArrayList(Arrays.asList(rows));
-		
-		String val = (String) m_map.get(l);
-		return val == null ? UNKNOWN_GLYPH : val;
+	ArrayList l = new ArrayList(Arrays.asList(rows));
+	
+	String val = (String) m_map.get(l);
+	return val == null ? UNKNOWN_GLYPH : val;
     }
 
     private boolean isDuplicate(ArrayList rows, String str) {
