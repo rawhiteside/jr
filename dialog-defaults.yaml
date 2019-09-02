@@ -331,10 +331,8 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    answer: '2'
-    glyph: " .  . @@@@ . \n . @ .  .  . @@\n@ .  .  .  .  . @\n .  .  .  .  .  . @\n\
-      \ .  .  .  . @@ . \n .  . @@ .  .  . \n . @@ .  .  .  . \n@@ .  .  .  .  . \n\
-      @@@@@@@\n"
+    w.x: '1178'
+    w.y: '50'
 Wood Planes:
   2: Parameter set 1
   1: false
