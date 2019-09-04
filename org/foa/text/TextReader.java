@@ -8,13 +8,14 @@ public class TextReader {
     public InkSpots[][] glyphs;
     public String[] lineText;
 
-    private TextReader(Rectangle rect) {
+    public TextReader(Rectangle rect) {
 		InkSpots bits = InkSpots.fromScreen(rect);
 		InkSpots[] lines =  findLines(bits);
 		glyphs = new InkSpots[lines.length][];
 
 		for(int i = 0; i < lines.length; i++) {
 			InkSpots[] glyphLine = findGlyphs(lines[i]);
+			
 			for (int j = 0; j < glyphLine.length; j++) {
 			glyphLine[j] = trimGlyph(glyphLine[j]);
 			}
