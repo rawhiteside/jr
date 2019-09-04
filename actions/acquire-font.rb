@@ -32,7 +32,7 @@ class AcquireFont < Action
     elsif  x < 60 && y > 940
       puts 'Items/Skills'
       return SkillsWindow.new
-    elsif  y < 64 && x > 830 && x  < 1000
+    elsif  y < 64
       puts 'ClockLoc'
       return ClockLocWindow.instance
     else
