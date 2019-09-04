@@ -85,7 +85,7 @@ public class ClockLocWindow extends AWindow {
 				System.out.println("Text of " + text);
 			}
 			sleepSec(0.1);
-			ClockLocWindow.resetInstance();
+			// ClockLocWindow.resetInstance();
 		}
 		return null;
     }

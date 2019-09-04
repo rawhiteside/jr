@@ -44,8 +44,8 @@ class FlowerFert < KettleAction
 
   def act_at(g)
     w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
-    # w.dialog_click(Point.new(*@locs['Take']))
-    # sleep_sec 0.1
+    w.dialog_click(Point.new(*@locs['Take']))
+    sleep_sec 0.1
     w.dialog_click(Point.new(*@locs['Flower Fert']))
     sleep_sec 0.1
     w.dialog_click(Point.new(*@locs['Begin']))
@@ -54,6 +54,24 @@ class FlowerFert < KettleAction
   end
 end
 Action.add_action(FlowerFert.new)
+
+class Salt < KettleAction
+  def initialize
+    super('Salt')
+  end
+
+  def act_at(g)
+    w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
+    w.dialog_click(Point.new(*@locs['Take']))
+    sleep_sec 0.1
+    w.dialog_click(Point.new(*@locs['Salt']))
+    sleep_sec 0.1
+    w.dialog_click(Point.new(*@locs['Begin']))
+    sleep_sec 0.1
+    AWindow.dismiss_all
+  end
+end
+Action.add_action(Salt.new)
 
 
 class TakeFromKettles < KettleAction

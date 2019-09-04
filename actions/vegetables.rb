@@ -9,59 +9,66 @@ class Onions < Action
   end
 
   VEGETABLE_DATA = {
-    "Peppers/Ptah's Breed/(2)" => {:water => 2,
+    "Peppers/Ptah's Breed/(2)" => {
+      :water => 2,
       :min_width => 240,
-      :left_build_init => [:l,:l],
     },
-    "Peppers/Ra's Fire/(1)" => {:water => 1,
+    "Peppers/Ra's Fire/(1)" => {
+      :water => 1,
       :min_width => 240,
-      :left_build_init => [:l,:l],
     },
 
-    "Cabbage/Mut's Fruition/(1)" => {:water => 1,
+    "Cabbage/Mut's Fruition/(1)" => {
+      :water => 1,
       :min_width => 241,
-      :left_build_init => [:l,:l],
     },
-    "Cabbage/Bastet's Yielding/(2)" => {:water => 2,
+    "Cabbage/Bastet's Yielding/(2)" => {
+      :water => 2,
       :min_width => 241,
-      :left_build_init => [:l,:l],
     },
     
 
-    "Carrots/Osiris' Orange/(1)" => {:water => 1,
-      :build_incr_fac => 10,
-      :min_width => 217,
+    "Carrots/Osiris' Orange/(1)" => {
+      :water => 1,
+      :min_width => 235,
     },
-    "Carrots/Green Leaf/(2)" => {:water => 2,
-      :build_incr_fac => 10,
-      :min_width => 217,
+    "Carrots/Green Leaf/(2)" => {
+      :water => 2,
+      :min_width => 235,
     },
 
 
-    "Garlic/Apep's Crop/(2)" => {:water => 2,
+    "Garlic/Apep's Crop/(2)" => {
+      :water => 2,
       :min_width => 209,
     },
-    "Garlic/Heket's Reaping/(1)" => {:water => 1,
+    "Garlic/Heket's Reaping/(1)" => {
+      :water => 1,
       :min_width => 209,
     },
 
 
-    "Leeks/Horus' Grain/(3 waters!)" => {:water => 3,
+    "Leeks/Horus' Grain/(3 waters!)" => {
+      :water => 3,
       :min_width => 211,
     },
-    "Leeks/Hapi's Harvest/(1)" => {:water => 1,
+    "Leeks/Hapi's Harvest/(1)" => {
+      :water => 1,
       :min_width => 211,
     },
 
 
-    "Onions/Amun's Bounty/(1)" => {:water => 1,
+    "Onions/Amun's Bounty/(1)" => {
+      :water => 1,
       :min_width => 228,
     },
-    'Onions/Tears of Sinai/(2)' => {:water => 2,
+    'Onions/Tears of Sinai/(2)' => {
+      :water => 2,
       :min_width => 228,
     },
 
-    'Watermelons/Geb\'s Produce/(1)' => {:water => 1,
+    'Watermelons/Geb\'s Produce/(1)' => {
+      :water => 1,
       :min_width => 272,
     },
   }
@@ -143,51 +150,30 @@ class Onions < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_incr_list = [:r, :l, [:r]*2, [:l]*2, [:r]*3, [:l]*3, [:r]*4, [:l]*4, ]
-    build_incr_fac = @vegi_data[:build_incr_fac] || 2
-
-
     # Set up for planting to the left.
-    build_base = [:w, :w]
-    extra = @vegi_data[:left_build_init]
-    if extra
-      extra.each {|elt| build_base << elt }
-    end
-    num_left = max_plants/2
+    num_left = 
     num = num_left
 
-    ['left', 'right'].each do |left_right|
+    build_recipe_left = [[:w], [:w, :w], [:nw], [:nw, :r], [:sw], [:sw, :r], ]
+    build_recipe_right = [[:e], [:e, :e], [:ne], [:ne, :r], [:se], [:se, :r], ]
+    
+    plant_side(max_plants/2, tiler, build_recipe_left, 'left')
+    plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
 
-      build_recipe = ([] << build_base).flatten
+    @threads.each {|t| t.join}
+  end
+
+  def plant_side(num, tiler, build_recipe, left_right)
       num.times do |index|
-        break if plant_count >= max_plants
-        plant_count = plant_count +1
-        w, plant_time = plant_and_pin(build_recipe, left_right)
-        build_recipe = ([] << build_base << [build_incr_list[index]] * build_incr_fac).flatten
+        w, plant_time = plant_and_pin(build_recipe[index], left_right)
 
         # If we missed it, plow ahead.
         next unless w
 
         tiler.tile(w)
-        @threads << ControllableThread.new { tend(w, plant_count, plant_time) }
+        @threads << ControllableThread.new { tend(w, plant_time) }
         sleep 0.001
       end
-
-
-      # set up for planting to the right.
-      build_base = [:e, :e]
-      extra = @vegi_data[:right_build_init]
-      if extra
-        extra.each {|elt| build_base << elt }
-      end
-    
-
-      num_right = max_plants - num_left
-      build_recipe = ([] << build_base).flatten
-      num = num_right
-    end
-
-    @threads.each {|t| t.join}
   end
 
   def plant_and_pin(build_recipe, search_dir)
@@ -225,11 +211,11 @@ class Onions < Action
     return w, plant_time
   end
   
-  def tend(w, plant_number, plant_time)
+  def tend(w, plant_time)
     # Times in sec (relative to plant time) at which to water.
     #
     # grow_times = [0, 15, 30, 45] # measured.
-    water_times = [6, @vals['second'].to_i, @vals['third'].to_i]
+    water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
     harvest_time = 36
     3.times do |index|
       target_secs = water_times[index]
@@ -237,14 +223,14 @@ class Onions < Action
       delay = target_secs - delta
       sleep_sec(delay)
       with_robot_lock do
-        point = nil
-        5.times do
-          point = w.dialogCoordsFor('Water')
-          break if point
-          w.refresh
-          sleep 0.02
+        # At first, maybe have to wait for the menu to initialize itself.
+        if index == 0
+          until w.dialog_coords_for('Water')
+            sleep_sec 0.5 
+            w.refresh
+          end
         end
-        @vegi_data[:water].times { w.dialogClick(point, nil, 0.1) } if point
+        @vegi_data[:water].times { w.click_on('Water') }
       end
     end
     sleep_sec(harvest_time - (Time.new - plant_time))

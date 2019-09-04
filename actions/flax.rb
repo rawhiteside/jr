@@ -215,13 +215,16 @@ class FlaxSeeds < Action
        :vals => FLAX_DATA.keys.sort},
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
       {:type => :point, :label => 'Drag onto warehouse menu', :name => 'stash'},
+      {:type => :point, :label => 'Drag onto plant menu', :name => 'plant'},
       {:type => :number, :label => 'How many major loops? (3 for carry 500)', :name => 'repeat'},
       {:type => :number, :label => 'Max wait seconds for harvest', :name => 'max_wait_secs'},
       {:type => :number, :label => "How many havests from each plant?", :name => 'harvest_reps'},
       {:type => :number, :label => 'Length of each of the two rows', :name => 'row_len'},
       {:type => :world_loc, :label => 'Start planting here (Eastwards)', :name => 'start_location'},
       {:type => :world_loc, :label => 'Location near the stash cest', :name => 'stash_location'},
-    ]
+      {:type => :combo, :name => 'first_dir', :label => 'Starting direction:',
+       :vals => ['left', 'right']},
+      ]
 
     @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -236,7 +239,8 @@ class FlaxSeeds < Action
     @stash_location = WorldLocUtils.parse_world_location(@vals['stash_location'])
     @max_wait_secs = @vals['max_wait_secs'].to_i
 
-    @w_plant = get_plant_window
+
+    @w_plant = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     stash_chest = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
     return unless @w_plant
     walker = Walker.new
@@ -250,11 +254,14 @@ class FlaxSeeds < Action
         HowMuch.amount(2*@row_len + 1)
       end
 
+      
       # Plant and harvest. 
+      first_dir = @vals['first_dir']
       repeat.times do
+        @piler = Piler.new
 	walker.walk_to(@start_location)
 	sleep_sec 0.5
-	plant(head)
+	plant(head, first_dir)
 	harvest
 	sleep_sec 1
       end
@@ -276,12 +283,20 @@ class FlaxSeeds < Action
   end
 
   def harvest
-    (@harvest_reps - 1).times { @windows.each {|w| harvest_one(w)}}
+    (@harvest_reps - 1).times do
+      @piler.swap
+      @windows.each do |w|
+        harvest_one(w)
+        @piler.pile(w)
+      end
+    end
+
     @windows.each do |w|
       harvest_one(w)
       rip_out(w)
       w.refresh
       w.unpin
+      sleep_sec 0.1
     end
     
   end
@@ -304,11 +319,7 @@ class FlaxSeeds < Action
     sleep_sec HARVEST_DELAY
   end
 
-  def plant(head)
-    @tiler = Tiler.new(0, 77, 0.4)
-    @tiler.min_width = 363
-    @tiler.min_height = 151 - 23
-    @tiler.y_offset = 10
+  def plant(head, first_dir)
     @windows = []
     # 
     # Plant a row to the right.
@@ -316,7 +327,7 @@ class FlaxSeeds < Action
     loc = [head[0] + 100, head[1]]
     (@row_len-1).times {
       plant_and_pin(loc)
-      @walker.right
+      first_dir == 'right' ? @walker.right : @walker.left 
       sleep_sec(0.1)
     }
 
@@ -329,7 +340,7 @@ class FlaxSeeds < Action
     loc = [head[0] - 100, head[1] + 100]
     @row_len.times {
       plant_and_pin(loc)
-      @walker.left
+      first_dir == 'left' ? @walker.right : @walker.left 
     }
   end
 
@@ -340,16 +351,9 @@ class FlaxSeeds < Action
     @w_plant.click_on(@flax_type)
     w = PinnableWindow.from_screen_click(Point.new(loc[0], loc[1]))
     w.pin
-    @tiler.tile(w)
+    @piler.pile(w)
     @windows << w
   end
-
-  def get_plant_window
-    w = PinnableWindow.from_point(Point.new(93, 30))
-    UserIO.error('Did not find plant menu in upper left corner') unless w
-    w
-  end
-
 
 end
 

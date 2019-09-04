@@ -370,6 +370,7 @@ class Piler < ARobot
   # Add a window to the "current" pile.
   def pile(w)
     w.drag_to(@current)
+    w.set_default_refresh_loc('lc')
     @current.x += PILE_OFFSET
   end
 end
