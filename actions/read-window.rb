@@ -30,7 +30,7 @@ class ReadWindow < Action
     puts cl.date
     puts cl.time
 
-    puts SkillsWindow.new.read_text
+    # puts SkillsWindow.new.read_text
   end
 end
 
