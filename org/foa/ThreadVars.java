@@ -6,20 +6,20 @@ package org.foa;
 
 public class ThreadVars {
 
-    public static void set(String key, Object value) {
-	Thread t = Thread.currentThread();
-	if (t instanceof ControllableThread) {
-	    ControllableThread ct = (ControllableThread) t;
-	    ct.threadVars().put(key, value);
+	public static void set(String key, Object value) {
+		Thread t = Thread.currentThread();
+		if (t instanceof ControllableThread) {
+			ControllableThread ct = (ControllableThread) t;
+			ct.threadVars().put(key, value);
+		}
 	}
-    }
-    
-    public static Object get(String key) {
-	Thread t = Thread.currentThread();
-	if (t instanceof ControllableThread) {
-	    ControllableThread ct = (ControllableThread) t;
-	    return ct.threadVars().get(key);
+
+	public static Object get(String key) {
+		Thread t = Thread.currentThread();
+		if (t instanceof ControllableThread) {
+			ControllableThread ct = (ControllableThread) t;
+			return ct.threadVars().get(key);
+		}
+		return null;
 	}
-	return null;
-    }
 }

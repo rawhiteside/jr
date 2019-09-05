@@ -18,64 +18,64 @@ import java.util.HashMap;
  * 
  */
 public class ControllableThread extends Thread {
-    private static ReentrantLock s_pauseLock = new ReentrantLock();
-    boolean m_killed = false;
-    /* A place for thread-local info usable from Java or Ruby. */
-    private HashMap m_thread_vars = new HashMap();
+	private static ReentrantLock s_pauseLock = new ReentrantLock();
+	boolean m_killed = false;
+	/* A place for thread-local info usable from Java or Ruby. */
+	private HashMap m_thread_vars = new HashMap();
 
-    public ControllableThread(Runnable runnable) {
-	super(runnable);
-	start();
-    }
-    public ControllableThread(String name, Runnable runnable) {
-	super(runnable, name);
-	start();
-    }
-    public void kill() {
-	m_killed = true;
-	interrupt();
-    }
-
-    public static void pauseAll() {
-	s_pauseLock.lock();
-    }
-
-    public static void resumeAll() {
-	s_pauseLock.unlock();
-    }
-
-    public static void checkForPause() {
-
-	if(!(Thread.currentThread() instanceof ControllableThread)) { return; }
-
-	if(((ControllableThread)Thread.currentThread()).m_killed) {
-	    throw new ThreadKilledException();
+	public ControllableThread(Runnable runnable) {
+		super(runnable);
+		start();
 	}
-	try {
-	    s_pauseLock.lockInterruptibly();
-	    s_pauseLock.unlock();
-	} catch(Exception e) {
-	    throw new ThreadKilledException();
+	public ControllableThread(String name, Runnable runnable) {
+		super(runnable, name);
+		start();
 	}
-    }
-
-    public static void sleepSec(int seconds) {
-	sleepSec((double)seconds);
-    }
-
-    public static void sleepSec(float seconds) {
-	sleepSec((double)seconds);
-    }
-
-    public static void sleepSec(double seconds) {
-	checkForPause();
-	try {
-	    if (seconds > 0.0) {
-		Thread.sleep((int)(1000 * seconds));
-	    }
-	} catch(Exception e) {
-	    throw new ThreadKilledException();
+	public void kill() {
+		m_killed = true;
+		interrupt();
 	}
-    }
-    public HashMap threadVars() { return m_thread_vars; }
+
+	public static void pauseAll() {
+		s_pauseLock.lock();
+	}
+
+	public static void resumeAll() {
+		s_pauseLock.unlock();
+	}
+
+	public static void checkForPause() {
+
+		if(!(Thread.currentThread() instanceof ControllableThread)) { return; }
+
+		if(((ControllableThread)Thread.currentThread()).m_killed) {
+			throw new ThreadKilledException();
+		}
+		try {
+			s_pauseLock.lockInterruptibly();
+			s_pauseLock.unlock();
+		} catch(Exception e) {
+			throw new ThreadKilledException();
+		}
+	}
+
+	public static void sleepSec(int seconds) {
+		sleepSec((double)seconds);
+	}
+
+	public static void sleepSec(float seconds) {
+		sleepSec((double)seconds);
+	}
+
+	public static void sleepSec(double seconds) {
+		checkForPause();
+		try {
+			if (seconds > 0.0) {
+				Thread.sleep((int)(1000 * seconds));
+			}
+		} catch(Exception e) {
+			throw new ThreadKilledException();
+		}
+	}
+	public HashMap threadVars() { return m_thread_vars; }
 }
