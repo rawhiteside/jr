@@ -104,7 +104,7 @@ public class InkSpots {
 		return "unknown";
 	}
 
-	public static InkSpots fromScreen(Rectangle rect, InkDetector inkDetector) {
+	public static InkSpots fromScreen(Rectangle rect, ITextHelper textHelper) {
 		BufferedImage bi = new ARobot().createScreenCapture(rect);
 
 		//Debug
@@ -119,7 +119,7 @@ public class InkSpots {
 			StringBuffer row = new StringBuffer();
 			for(int x = 0; x < rect.width; x++) {
 				Color c = new Color(bi.getRGB(x, y));
-				if (inkDetector.isInk(c)) {
+				if (textHelper.isInk(c)) {
 					row.append("0"); // 0 = black = ink
 				} else {
 					row.append("1"); // 1 = white = background

@@ -23,7 +23,6 @@ public class ClockLocWindow extends AWindow {
 		//Rectangle rect = WindowGeom.rectFromPoint(new Point(screenWidth/2, 50));
 		//New system is 150 wide and 60 tall and not a rectangle but can probably be models as such.
 		//  It is immovable and 30 pixels off the top on my system other milage may vary.
-		System.out.println("Creating new cloc manual window");
 		Rectangle rect = new Rectangle(screenWidth/2 - 110, 37, 220, 39);
 		if (rect == null) {
 			System.out.println("Failed to find clock loc window.");
@@ -37,13 +36,17 @@ public class ClockLocWindow extends AWindow {
 		return new Insets(5, 5, 5, 5);
 	}
 
+	// ITextHelper methods
 	public boolean isInk(Color c) {
-		if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) 
-			{
-				return true;
-			} else {
+		//if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) {
+		if (c.getBlue() > 50) {
+			return true;
+		} else {
 			return false;
 		}
+	}
+	public int spacePixelCount() {
+		return 5;
 	}
 
 	public TextReader textReader() {
@@ -78,7 +81,6 @@ public class ClockLocWindow extends AWindow {
 		// the output here will let me figure it out.
 		for(int i = 0; i < 5; i++) {
 			String text = ClockLocWindow.instance().readText();
-			System.out.println("Text clock debug : " + text);
 			try 
 				{ 
 					return attemptCoords(text); 
@@ -100,9 +102,8 @@ public class ClockLocWindow extends AWindow {
 	private int[] attemptCoords(String text) {
 		String[] lines = text.split("\n");
 		String position = lines[lines.length - 1];
-		System.out.println(position);
 		String[] chunks = position.split(":");
-		String[] words = chunks[1].split(",");
+		String[] words = chunks[1].split("[.,]");
 		int y = Integer.parseInt(words[words.length - 1].replaceAll(" ",""));
 
 		String xstring = words[words.length - 2].replaceAll(",", "").replaceAll(" ","");

@@ -8,13 +8,13 @@ public class TextReader {
 	public InkSpots[][] glyphs;
 	public String[] lineText;
 
-	public TextReader(Rectangle rect, InkDetector inkDetector) {
-		InkSpots bits = InkSpots.fromScreen(rect, inkDetector);
+	public TextReader(Rectangle rect, ITextHelper textHelper) {
+		InkSpots bits = InkSpots.fromScreen(rect, textHelper);
 		InkSpots[] lines =  findLines(bits);
 		glyphs = new InkSpots[lines.length][];
 
 		for(int i = 0; i < lines.length; i++) {
-			InkSpots[] glyphLine = findGlyphs(lines[i]);
+			InkSpots[] glyphLine = findGlyphs(lines[i], textHelper.spacePixelCount());
 			
 			for (int j = 0; j < glyphLine.length; j++) {
 				glyphLine[j] = trimGlyph(glyphLine[j]);
@@ -84,7 +84,7 @@ public class TextReader {
 	 * split this into "glyphs", which are blots separated by empty
 	 * vertical columns of pixels.
 	 **/
-	public InkSpots[] findGlyphs(InkSpots line) {
+	public InkSpots[] findGlyphs(InkSpots line, int spacePixelCount) {
 		ArrayList<InkSpots> glyphs = new ArrayList<InkSpots>();
 		int x = 0;
 		if (x >= line.width) {
@@ -120,7 +120,7 @@ public class TextReader {
 				}
 			}
 			// Insert a space glyph if there was lots of whitespace.
-			if ((x - xStart) >= 3) {
+			if ((x - xStart) >= spacePixelCount) {
 				glyphs.add(line.slice(xStart, 0, 0, 0));
 			}
 		}

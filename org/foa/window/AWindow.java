@@ -15,7 +15,7 @@ import java.awt.event.*;
  *
  */
 
-public abstract class AWindow extends ARobot implements InkDetector {
+public abstract class AWindow extends ARobot implements ITextHelper {
 	private Rectangle m_rect;
 	private TextReader m_textReader = null;
 	private String m_defaultRefreshLoc = "tc"; 
@@ -118,6 +118,7 @@ public abstract class AWindow extends ARobot implements InkDetector {
 	private static int GMIN = 0xb4;
 	private static int BMIN = 0x81;
 
+	// ITextHelper methods.
 	public boolean isInk(Color c) {
 		//if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) 
 		//	{
@@ -129,6 +130,9 @@ public abstract class AWindow extends ARobot implements InkDetector {
 		} else {
 			return false;
 		}
+	}
+	public int spacePixelCount() {
+		return 3;
 	}
 
 	public String readText() 
