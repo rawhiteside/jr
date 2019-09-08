@@ -46,7 +46,7 @@ public class ClockLocWindow extends AWindow {
 		}
 	}
 	public int spacePixelCount() {
-		return 5;
+		return 6;
 	}
 
 	public TextReader textReader() {
