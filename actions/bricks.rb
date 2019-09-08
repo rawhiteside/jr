@@ -7,42 +7,18 @@ class Bricks < GridAction
     super('Bricks', 'Buildings')
   end
 
+  def get_gadgets
+    add = [ {:type => :text, :label => 'String to send', :name => 'string'}]
+    super + add
+  end
+
   def act_at(p)
     mm(p['x'],p['y'])
     sleep_sec 0.2
-    send_string('tb')
+    send_string(@user_vals['string'], 0.3)
   end
 end
 Action.add_action(Bricks.new)
-
-class ClayBricks < GridAction
-  def initialize
-    super('Clay Bricks', 'Buildings')
-  end
-
-  def act_at(p)
-    mm(p['x'],p['y'])
-    sleep_sec 0.2
-    send_string('tc')
-  end
-end
-
-Action.add_action(ClayBricks.new)
-
-class FireBricks < GridAction
-  def initialize
-    super('Fire Bricks', 'Buildings')
-  end
-
-  def act_at(p)
-    mm(p['x'],p['y'])
-    sleep_sec 0.2
-    send_string('tf')
-  end
-end
-
-Action.add_action(FireBricks.new)
-
 
 class FlimsyBricks < GridAction
 
@@ -54,7 +30,7 @@ class FlimsyBricks < GridAction
 
   def get_gadgets
     add = [ {:type => :label, :label => 'Cols and Rosw must be 5!!'}, ]
-    add + super
+    add + super + [ {:type => :text, :label => 'String to send', :name => 'string'}]
   end
 
   # Is the pixel a brickrack color?
@@ -73,7 +49,7 @@ class FlimsyBricks < GridAction
   def check_build(p)
     mm(p['x'], p['y'])
     return if brick_rack_brown?(p['x'], p['y'])
-    @project_menu.click_on('Build a Brick Rack')
+    @project_menu.click_on('Build a Flimsy')
     key = [p['ix'],p['iy']]
     recipe = @recipes[key]
     BuildMenu.new.build(recipe)
@@ -85,18 +61,16 @@ class FlimsyBricks < GridAction
     
     raise Exception.new('Expected projects menu pinned UL') unless @project_menu
 
-    skip_these = [ [0,0], [0, 4], [4, 4], [4, 0], [2, 2], ]
+    skip_these = [ [2, 2], ]
     ij = [pt['ix'], pt['iy']]
     return if skip_these.index(ij)
 
     check_build(pt)
 
 
-   mm(pt['x'], pt['y'])
+    mm(pt['x'], pt['y'])
     sleep_sec 0.3
-    send_string('T')
-    sleep_sec 0.3
-    send_string('B')
+    send_string(@user_vals['string'], 0.3)
     sleep_sec 0.3
   end
 
@@ -113,18 +87,22 @@ class FlimsyBricks < GridAction
     h[[2, 3]] = [:s, :s]
     h[[3, 3]] = [:se, :se]
 
+    h[[0, 0]] = [:nw, :nw, :nw, :nw, ]
     h[[0, 1]] = [:w, :w] + h[[1, 1]]
     h[[0, 2]] = [:w, :w] + h[[1, 2]]
     h[[0, 3]] = [:w, :w] + h[[1, 3]]
 
+    h[[4, 0]] = [:ne, :ne, :ne, :ne]
     h[[4, 1]] = [:e, :e] + h[[3, 1]]
     h[[4, 2]] = [:e, :e] + h[[3, 2]]
     h[[4, 3]] = [:e, :e] + h[[3, 3]]
+    h[[4, 4]] = [:se, :se, :se, :se, ]
 
     h[[1, 0]] = [:n, :n] + h[[1, 1]]
     h[[2, 0]] = [:n, :n] + h[[2, 1]]
     h[[3, 0]] = [:n, :n] + h[[3, 1]]
 
+    h[[0, 4]] = [:sw, :sw, :sw, :sw, ]
     h[[1, 4]] = [:s, :s] + h[[1, 3]]
     h[[2, 4]] = [:s, :s] + h[[2, 3]]
     h[[3, 4]] = [:s, :s] + h[[3, 3]]
