@@ -15,6 +15,9 @@ class ReadWindow < Action
 
   def act
 
+    dim = screen_size
+    puts dim.width/2
+    puts dim.height
     w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
     @window = KettleWindow.new(w.rect)
 

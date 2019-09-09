@@ -3,14 +3,20 @@ require 'window.rb'
 # Handes the Icons that appear in the UL.
 class Icons
 
-  # Y coords are in "atitd window" coords, not screen.
-  # x coords are offsets within the 64-bit icon. 
+  REF_CENTER_X = 960
+  REF_HEIGHT = 1080
+
   ICON_DATA = {
-    :water => { :x => 17, :y => 74, :pixel => 0x5d81c1},
-    :clay => {:x => 40, :y => 84, :pixel => 0xd06c55},
-    :slate => {:x => 285, :y => 95 - 23, :pixel => 0x797978},
-    :grass => {:x => 220, :y => (86 - 23), :pixel => 0x2bc00e},
-    :dowse => {:x => 94, :y => (64 - 23), :pixel => 0xa67b44},
+    :grass => {:x => 713 - REF_CENTER_X, :y => 1015 - REF_HEIGHT, :hot_key => '1'},
+    :sand => {:hot_key => '2' },
+    :mud => {:hot_key => '3' },
+    :clay => {:x => 920 - REF_CENTER_X, :y => 1039 - REF_HEIGHT, :hot_key => '4'},
+    :dirt => {:hot_key => '5'},
+    :limestone => {:hot_key => '6'},
+    :water => { :hot_key => '7' },
+    :slate => {:x => 1191 - REF_CENTER_X, :y => 1004 - REF_HEIGHT, :hot_key => '8'},
+    :dowse => {:hot_key => '9' },
+    
   }
   # what to do next?: 2 wide
   # Pyramid, mud, water, (sand|grass|..), slate, just-in-case
@@ -19,6 +25,11 @@ class Icons
   def self.to_screen(y)
     @@y_off ||= compute_y_off
     y + @@y_off
+  end
+
+
+  def self.hotkey_for(which)
+    ICON_DATA[which][:hot_key]
   end
 
   # Try to find the icon and click on it if it's found.  Returns
@@ -43,14 +54,12 @@ class Icons
 
   # Specifically for filling water jugs.
   def self.refill
-      ARobot.shared_instance.with_robot_lock do
-        if (click_on(:water))
-          HowMuch.max
-	  ARobot.shared_instance.sleep_sec 0.1 
-        else
-          UserIO.error("Didn't find the water icon.")
-        end
-      end
+    robot = ARobot.shared_instance
+    robot.with_robot_lock do
+      robot.send_string(hotkey_for(:water))
+      HowMuch.max
+      robot.sleep_sec 0.1 
+    end
   end
 
 

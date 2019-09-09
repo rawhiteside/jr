@@ -150,12 +150,8 @@ class Onions < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    # Set up for planting to the left.
-    num_left = 
-    num = num_left
-
-    build_recipe_left = [[:w], [:w, :w], [:nw], [:nw, :r], [:sw], [:sw, :r], ]
-    build_recipe_right = [[:e], [:e, :e], [:ne], [:ne, :r], [:se], [:se, :r], ]
+    build_recipe_left = [[:w], [:w, :w], [:nw], [:nw, :w], [:sw], [:sw, :w], ]
+    build_recipe_right = [[:e], [:e, :e], [:ne], [:ne, :e], [:se], [:se, :e], ]
     
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')

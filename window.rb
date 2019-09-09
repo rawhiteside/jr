@@ -267,7 +267,7 @@ class ChatLineWindow < ChatWindow
   end
 end
 
-class SkillsWindow < ChatWindow
+class SkillsWindow < AWindow
   def initialize
     super(Rectangle.new(0,0,0,0))
     set_rect(compute_rect)
@@ -275,7 +275,7 @@ class SkillsWindow < ChatWindow
 
   def textInsets
     # { :right => 3, :left => 0, :top => 0, :bottom => 0 }
-    Insets.new(0, 0, 0, 3)
+    Insets.new(0, 0, 0, 0)
   end
 
   def compute_rect

@@ -21,7 +21,7 @@ public class PinnableWindow extends AWindow {
 	private void updateRect() {
 		sleepSec(0.08);
 		Rectangle r = getRect();
-		int x = r.x + 2;
+		int x = r.x + 4;
 		int y = r.y + r.height/2;
 		Rectangle rnew = WindowGeom.rectFromPoint(new Point(x, y));
 		if (rnew == null) {
@@ -114,7 +114,8 @@ public class PinnableWindow extends AWindow {
 	 * See if there's a dialog at the point (after dragging)
 	 */
 	private boolean isDialogAt(Point p) {
-		Rectangle rect = WindowGeom.rectFromPoint(p);
+		Point inner = new Point(p.x + 4, p.y);
+		Rectangle rect = WindowGeom.rectFromPoint(inner);
 		if(rect == null) { 
 			System.out.println("IsDialogPresent: No window at destination.");
 			return false; 
@@ -207,7 +208,8 @@ public class PinnableWindow extends AWindow {
 				Rectangle rectangle = null;
 				long startMillis = System.currentTimeMillis();
 				for(int i = 0; i < 50; i++) {
-					rectangle = WindowGeom.rectFromPoint(pt);
+					Point inside = new Point(pt.x + 4, pt.y);
+					rectangle = WindowGeom.rectFromPoint(inside);
 					// Did we find it?
 					if (rectangle != null) {
 						break;
