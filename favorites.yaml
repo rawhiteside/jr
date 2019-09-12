@@ -1,7 +1,7 @@
 ---
 Constitution click: 1
 Endurance click: 1
-Acquire font: 0
+Acquire font: 1
 Cutstones: 1
 Firepits: 1
 Flax Comb: 1
@@ -20,7 +20,7 @@ Inverval tabs: 1
 Strength click: 1
 Grow onions: 1
 Flax Seeds: 1
-Read Window: 0
+Read Window: 1
 Mine iron: 1
 Grow vegetables: 1
 Tree run: 1
@@ -51,7 +51,7 @@ Thorns: 1
 Dig dirt: 1
 Casual Water: 1
 Casual Dowse: 1
-Walkto: 0
+Walkto: 1
 Walk: 1
 Bullets: 1
 Barley: 1

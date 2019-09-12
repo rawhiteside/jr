@@ -75,7 +75,7 @@ class Onions < Action
 
   # Size of a side of the square we look at to detect plants. Square
   # will be centered on your head.
-  SQUARE_SIZE = 200
+  SQUARE_SIZE = 300
 
   # The distance out that Jaby's arm reaches from the center of her
   # head.  Actually, picking up is larger.  Using this value for now. 
@@ -108,6 +108,7 @@ class Onions < Action
 
   def act
     walker = Walker.new
+    @vegi_choice =  @vals['veggie']
     @vegi_name = @vals['veggie'].split('/')[1].strip
     @vegi_data = VEGETABLE_DATA[@vals['veggie']]
     @repeat = @vals['repeat'].to_i
@@ -150,8 +151,8 @@ class Onions < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_recipe_left = [[:w], [:w, :w], [:nw], [:nw, :w], [:sw], [:sw, :w], ]
-    build_recipe_right = [[:e], [:e, :e], [:ne], [:ne, :e], [:se], [:se, :e], ]
+    build_recipe_left = [ [:nw], [:w], [:w, :w], [:nw, :w], [:sw], [:sw, :w], ]
+    build_recipe_right = [ [:ne], [:e], [:e, :e], [:ne, :e], [:se], [:se, :e], ]
     
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
@@ -176,33 +177,42 @@ class Onions < Action
 
     w = nil
     plant_time = nil
-
+    before = nil
+    
     with_robot_lock do 
       before = PixelBlock.new(@head_rect)
       @plant_win.click_on(@vegi_name)
       builder = BuildMenu.new
       builder.build(build_recipe)
       plant_time = Time.new
-      after = PixelBlock.new(@head_rect)
-
-      x = ImageUtils.brightness(ImageUtils.xor(before, after))
-      # Try to shrink twice.
-      x1 = ImageUtils.shrink(x, 1)
-      x2 = ImageUtils.shrink(x1, 1)
-      x3 = ImageUtils.shrink(x2, 1)
-
-      point = ImageUtils.find_largest(x3, search_dir, REACH_RADIUS)
-      point = ImageUtils.find_largest(x2, search_dir, REACH_RADIUS) unless point
-      point = ImageUtils.find_largest(x1, search_dir, REACH_RADIUS) unless point
-      point = ImageUtils.find_largest(x, search_dir, REACH_RADIUS) unless point
-
-      return nil, nil unless point
-      
-      spoint = x.to_screen(point)
-
-      w = PinnableWindow.from_screen_click(spoint)
-      w.pin if w
     end
+
+
+    # Carrots are slow to render
+    sleep_sec(3.5) if @vegi_choice.start_with?('Carrot')
+
+    after = PixelBlock.new(@head_rect)
+
+    x = ImageUtils.brightness(ImageUtils.xor(before, after))
+    # Shrink until there's no largest.
+
+    point = nil
+    point_count = 0
+    while true
+      xnew = ImageUtils.shrink(x, 1)
+      point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
+      break if point_new.nil?
+      x = xnew
+      point_count += 1
+      point = point_new
+    end
+
+    return nil, nil unless point
+    
+    spoint = x.to_screen(point)
+
+    w = PinnableWindow.from_screen_click(spoint)
+    w.pin if w
 
     return w, plant_time
   end

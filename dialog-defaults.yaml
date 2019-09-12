@@ -331,8 +331,25 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    w.x: '1178'
-    w.y: '50'
+    text: |
+      Citizen Jaby
+      Initiate of the Kush
+      Elder in Followers of Anubis
+      -----
+      Equipment. . .
+      -----
+      Appearance. . .
+      Drop. . .
+      Emote. . .
+      Navigation. . .
+      Projects. . .
+      Skills. . .
+      Special. . .
+      Talents. . .
+      Starting Spots. . .
+      Tests. . .
+      -----
+      Utility. . .
 Wood Planes:
   2: Parameter set 1
   1: false
@@ -343,14 +360,15 @@ Flimsy Bricks:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '837'
-    g.top-left.y: '436'
-    g.bottom-right.x: '1140'
-    g.bottom-right.y: '737'
+    g.top-left.x: '830'
+    g.top-left.y: '385'
+    g.bottom-right.x: '1133'
+    g.bottom-right.y: '687'
     g.num-cols: '5'
     g.num-rows: '5'
     repeat: '100'
-    delay: '37'
+    delay: '60'
+    string: tf
 Grass:
   2: Parameter set 1
   1: false
@@ -907,15 +925,15 @@ Grow vegetables:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Cabbage/Bastet's Yielding/(2)
-    grow: -484, -6911
-    water: -484, -6911
-    head.x: '961'
-    head.y: '556'
-    plant.x: '296'
-    plant.y: '799'
-    repeat: '2'
-    beds: '8'
+    veggie: Carrots/Green Leaf/(2)
+    grow: -1033, -6750
+    water: -1030, -6789
+    head.x: '958'
+    head.y: '545'
+    plant.x: '72'
+    plant.y: '443'
+    repeat: '10'
+    beds: '4'
     second: '18'
     third: '31'
 Walk:
@@ -923,7 +941,7 @@ Walk:
   1: false
   Parameter set 1:
     dest_x: '-1100'
-    dest_y: '-1500'
+    dest_y: '-6825'
 Bullets:
   2: Parameter set 1
   1: false
@@ -940,5 +958,5 @@ Color Picker:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    loc.x: '1129'
-    loc.y: '542'
+    loc.x: '916'
+    loc.y: '86'
