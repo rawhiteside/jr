@@ -148,6 +148,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		return m_textReader;
 	}
 
+
 	public void flushTextReader() { m_textReader = null; }
 
 	public String textColor(String s) {
@@ -285,5 +286,9 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		}
 		finally {releaseRobotLock();}
 		return w;
+	}
+	
+	public void displayToUser(String title) {
+		ImagePanel.displayImage(createScreenCapture(textRectangle()), title);
 	}
 }
