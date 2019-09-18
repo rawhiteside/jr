@@ -73,8 +73,6 @@ class Firepits < Action
   
   def light_firepits
 
-    WindowGeom.wait_for_chat_minimized
-
     # Light the fires.
     GridHelper.new(@vals, 'g').each_point do |p|
       w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))

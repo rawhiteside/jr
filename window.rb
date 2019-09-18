@@ -268,6 +268,7 @@ class ChatLineWindow < ChatWindow
 end
 
 class SkillsWindow < AWindow
+
   def initialize
     super(Rectangle.new(0,0,0,0))
     set_rect(compute_rect)
@@ -278,20 +279,47 @@ class SkillsWindow < AWindow
     Insets.new(0, 0, 0, 0)
   end
 
-  def compute_rect
-    s_height = screen_size.height
-    y_bottom = s_height - 50
-    x_left = 10
-    y_top = find_top_edge(x_left, y_bottom)
-    y_top += 1
+  def isInk(color)
+    !background?(color)
+  end
 
-    # Don't search along the top:  no border to stop the search.
-    # Instead, search below the "weight/bulk" line.
-    x_right = find_right_edge(x_left, y_top + 25)
-    
-    Rectangle.new(x_left, y_top,
-		  x_right - x_left,
-		  y_bottom - y_top)
+  def background?(color)
+    color.red < 75 &&
+    color.red > 35 &&
+    color.green < 95 &&
+    color.green > 50 &&
+    color.blue < 95 &&
+    color.blue > 50 
+  end
+
+  def compute_rect
+    height = screen_size.height
+    width = screen_size.width
+    pb = PixelBlock.new(Rectangle.new(0, 0, width/2, height))
+
+    # Start at the right edge, search right until first background color
+
+    pt = Point.new(0, height - 100)
+    pt.x += 1 until background?(pb.color(pt))
+    left = pt.x + 1
+
+    # Search up for top
+    pt.y -= 1 while background?(pb.color(pt))
+    pt.y += 1
+    top = pt.y + 1
+
+    # and for the bottom and right
+    pt.y += 1 while background?(pb.color(pt))
+    pt.y -= 1
+    bottom = pt.y
+
+    pt.x += 1 while background?(pb.color(pt))
+    pt.x -= 1
+    right = pt.x
+
+    Rectangle.new(left - 1, top - 1, 
+                  right - left + 2,
+                  bottom - top + 2)
   end
   
 end

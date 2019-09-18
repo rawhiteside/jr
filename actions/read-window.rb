@@ -28,11 +28,13 @@ class ReadWindow < Action
     UserIO.prompt(nil, nil, 'Read this text', comps)
 
     cl = ClockLocWindow.instance
-    puts cl.coords[0]
-    puts cl.coords[1]
+    puts "World coordinates: (#{cl.coords[0]}, #{cl.coords[1]})"
     
 
-    # puts SkillsWindow.new.read_text
+    skills = SkillsWindow.new
+    skills.display_to_user("Skills window")
+    puts skills.read_text
+
   end
 end
 
