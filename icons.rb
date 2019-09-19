@@ -23,9 +23,11 @@ class Icons
 
   # Click on the icon if it's there.  Returns success-p
   def self.hotkey_if_active(icon)
+    robot = ARobot.shared_instance
+    dim = robot.screen_size
     data = ICON_DATA[icon]
-    if lit_up(data[:x], data[:y])
-      ARobot.shared_instance.send_string(data[:hot_key])
+    if lit_up(data[:x] + dim.width / 2, data[:y] + dim.height)
+      robot.send_string(data[:hot_key])
       return true
     end
 
@@ -37,16 +39,24 @@ class Icons
     rect = Rectangle.new(x-2, y-2, 5, 5)
     pb = PixelBlock.new(rect)
 
+
     5.times do |i|
       5.times do |j|
         return true if bright?(pb.color(i, j))
       end
     end
+    return false
   end
 
   BRIGHT_THRESH = 400
   def self.bright?(color)
-    ((color.red + color.green + color.blue) > BRIGHT_THRESH) ? true : false
+    b = color.red + color.green + color.blue
+    if (b > BRIGHT_THRESH)
+      return true
+    else
+      false
+    end
+                         
   end
 
   # Specifically for filling water jugs.
