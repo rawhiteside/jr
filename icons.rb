@@ -23,8 +23,9 @@ class Icons
 
   # Click on the icon if it's there.  Returns success-p
   def self.hotkey_if_active(icon)
+    dim = ARobot.shared_instance.screen_size
     data = ICON_DATA[icon]
-    if lit_up(data[:x], data[:y])
+    if lit_up(data[:x] + dim.width / 2, data[:y] + dim.height)
       ARobot.shared_instance.send_string(data[:hot_key])
       return true
     end
