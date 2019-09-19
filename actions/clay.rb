@@ -33,7 +33,7 @@ class CasualWater < Action
 
   def act
     loop do
-      if Icons.click_on(:water)
+      if Icons.hotkey_if_active(:water)
 	sleep_sec 0.1
       else
 	Thread.pass
@@ -51,7 +51,7 @@ class CasualClay < Action
 
   def act
     loop do
-      if Icons.click_on(:clay)
+      if Icons.hotkey_if_active(:clay)
 	@jug_count.used_one if @jug_count
 	sleep_sec 0.5
       else
@@ -146,7 +146,7 @@ class BackAndForthClay < Clay
 
   def gather
     xy = [230, 110]
-    if Icons.click_on(:clay)
+    if Icons.hotkey_if_active(:clay)
       sleep_sec 0.5
       return true
     else

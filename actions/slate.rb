@@ -8,7 +8,7 @@ class CasualDowse < Action
 
   def act
     loop do
-      Icons.click_on(:dowse)
+      Icons.hotkey_if_active(:dowse)
       sleep_sec 1
     end
   end
@@ -21,9 +21,8 @@ class CasualSlate < Action
 
   def act
     loop do
-      if Icons.click_on(:slate)
+      if Icons.hotkey_if_active(:slate)
 	sleep_sec 0.1
-        HowMuch.cancel_if_present
       else
 	Thread.pass
       end

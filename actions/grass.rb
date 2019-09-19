@@ -9,7 +9,7 @@ class CasualGrass < Action
 
   def act
     loop do
-      if Icons.click_on(:grass)
+      if Icons.hotkey_if_active(:grass)
 	sleep_sec 0.5
       else
 	Thread.pass

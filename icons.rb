@@ -1,8 +1,9 @@
 require 'window.rb'
 
-# Handes the Icons that appear in the UL.
+# Handes the Icons that appear on the action bar
 class Icons
 
+  # Center bottom on my screen, the reference. 
   REF_CENTER_X = 960
   REF_HEIGHT = 1080
 
@@ -18,38 +19,34 @@ class Icons
     :dowse => {:hot_key => '9' },
     
   }
-  # what to do next?: 2 wide
-  # Pyramid, mud, water, (sand|grass|..), slate, just-in-case
-  MAX_ICONS = 8
   
-  def self.to_screen(y)
-    @@y_off ||= compute_y_off
-    y + @@y_off
-  end
 
-
-  def self.hotkey_for(which)
-    ICON_DATA[which][:hot_key]
-  end
-
-  # Try to find the icon and click on it if it's found.  Returns
-  # whether successful.
-  def self.try_click(x, y, pixel)
-    x = find_icon(x, y, pixel)
-    if x
-      ARobot.shared_instance.rclick_at_restore(x, y)
+  # Click on the icon if it's there.  Returns success-p
+  def self.hotkey_if_active(icon)
+    data = ICON_DATA[icon]
+    if lit_up(data[:x], data[:y])
+      ARobot.shared_instance.send_string(data[:hot_key])
       return true
     end
+
     return false
   end
 
-  # Click on the icon if it's there.  Returns success-p
-  def self.click_on(icon)
-    data = ICON_DATA[icon]
-    y = to_screen(data[:y])
-    x = data[:x] % 64
+  def self.lit_up(x, y)
+    # Look at a little 5x5 patch for bright things.
+    rect = Rectangle.new(x-2, y-2, 5, 5)
+    pb = PixelBlock.new(rect)
 
-    try_click(x, y, data[:pixel])
+    5.times do |i|
+      5.times do |j|
+        return true if bright?(pb.color(i, j))
+      end
+    end
+  end
+
+  BRIGHT_THRESH = 400
+  def self.bright?(color)
+    ((color.red + color.green + color.blue) > BRIGHT_THRESH) ? true : false
   end
 
   # Specifically for filling water jugs.
@@ -61,25 +58,4 @@ class Icons
       robot.sleep_sec 0.1 
     end
   end
-
-
-  # Searches for the provided pixel along the provided y value.
-  # X is the mod 64 value for the x coord.
-  def self.find_icon(x, y, pixel)
-    rect = Rectangle.new(0, y, 64*MAX_ICONS, 1)
-    pb = PixelBlock.new(rect)
-    MAX_ICONS.times do
-      return x if pb.pixel(x, 0) == pixel
-      x += 64
-    end
-
-    nil
-  end
-
-  # Is this a hack?  I think it's a hack.  The ClockLoc window is at
-  # the top of the ATITD client area.
-  def self.compute_y_off
-    ClockLocWindow.instance.rect.y
-  end
-
 end
