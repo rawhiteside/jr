@@ -108,4 +108,7 @@ public class PixelBlock extends ARobot {
 		return m_rect.height;
 	}
 
+	public void displayToUser(String title) {
+		ImagePanel.displayImage(m_bufferedImage, title);
+	}
 }
