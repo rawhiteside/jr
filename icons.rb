@@ -62,7 +62,6 @@ class Icons
   # Specifically for filling water jugs.
   def self.refill
     data = ICON_DATA[:water]
-    p data
     robot = ARobot.shared_instance
     robot.with_robot_lock do
       robot.send_string(data[:hot_key])
