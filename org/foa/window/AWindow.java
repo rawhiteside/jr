@@ -19,6 +19,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 	private Rectangle m_rect;
 	private TextReader m_textReader = null;
 	private String m_defaultRefreshLoc = "tc"; 
+	private String m_notation = null;  // An extra note for use as needed.
 
 	public AWindow() {
 		super();
@@ -31,6 +32,14 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 	// A default one. You will prolly want to over-ride this.
 	public Insets textInsets(){
 		return new Insets(4, 4, 5, 5);
+	}
+
+	// Just a note that can be attached to the window as needed.
+	public void setNotation(String note) {
+		m_notation = note;
+	}
+	public String getNotation() {
+		return m_notation;
 	}
 
 	public void setRect(Rectangle rect) { 
