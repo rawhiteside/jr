@@ -46,12 +46,13 @@ class FlaxGrow < Action
 
   # Flax bed pop locations for the previous step
   def pop_points_for_previous_step(center)
+    offset = 100
     {
       # When no previous step
-      :none => Point.new(center[0] + 60, center[1]), 
-      :right => Point.new(center[0] + 60, center[1]), 
-      :left => Point.new(center[0] - 60, center[1]), 
-      :down => Point.new(center[0], center[1] + 60), 
+      :none => Point.new(center[0] + offset, center[1]), 
+      :right => Point.new(center[0] + offset, center[1]), 
+      :left => Point.new(center[0] - offset, center[1]), 
+      :down => Point.new(center[0], center[1] + offset), 
     }
   end
 
@@ -130,7 +131,7 @@ class FlaxGrow < Action
     @walker.walk_to(@plant_wl)
     windows = []
 
-    tiler = Tiler.new(0, 35, 0.3)
+    tiler = Tiler.new(0, 100)
     tiler.min_width = 282
     tiler.min_height = (153 - 23)
     tiler.y_offset = 5
