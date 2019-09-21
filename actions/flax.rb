@@ -191,10 +191,16 @@ class FlaxGrow < Action
 
   def plant(pop_point)
     rclick_at(@plant_point)
-
     dlg = nil
-    with_robot_lock do
-      dlg = PinnableWindow.from_screen_click(pop_point).pin
+    3.times do
+      with_robot_lock do
+        dlg = PinnableWindow.from_screen_click(pop_point).pin
+      end
+      text = dlg.read_text
+      break if text.include?('This is your Flax Bed')
+      dlg.unpin
+      puts 'Hit avatar instead of flax bed.  Retrying.'
+      sleep 0.2
     end
     return dlg
   end
