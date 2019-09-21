@@ -157,14 +157,18 @@ class FlaxGrow < Action
   # true if there's more to do later.
   # false if you harvest
   def tend(dlg)
-    loop do
-      # Make sure the dialog is still there.
-      dlg.refresh
-      text = dlg.read_text
-      break unless text.include?("Flax")
-      return true if dlg.click_on("Water") || dlg.click_on("Weed")
-      break if dlg.click_on("Harvest")
-      sleep_sec 1.0
+    if dlg.notation != 'Harvested'
+      loop do
+        # Make sure the dialog is still there.
+        dlg.refresh
+        text = dlg.read_text
+        return true if dlg.click_on("Water") || dlg.click_on("Weed")
+        if dlg.click_on("Harvest")
+          dlg.notation = 'Harvested'
+          return true
+        end
+        sleep_sec 1.0
+      end
     end
 
     # Wait for the dialog to be empty. 
