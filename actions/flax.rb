@@ -46,7 +46,7 @@ class FlaxGrow < Action
 
   # Flax bed pop locations for the previous step
   def pop_points_for_previous_step(center)
-    offset = 100
+    offset = 120
     {
       # When no previous step
       :none => Point.new(center[0] + offset, center[1]), 
@@ -144,8 +144,6 @@ class FlaxGrow < Action
       windows << dlg
     end
     # Tend the beds in sequence.
-    # Will need some error-handling...
-    all_done = false
     until windows.size == 0 do
       active_windows = []
       windows.each do |w|
