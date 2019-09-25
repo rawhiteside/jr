@@ -34,6 +34,37 @@ public class PixelBlock extends ARobot {
 		return m_bufferedImage;
 	}
 
+	/** 
+	 * Find a patch of color. Patch is size x size.
+	 */
+	public Point findPatch(Color cmin, Color cmax, int size) {
+		for(int y = 0; y < m_rect.height - size; y++) {
+			for(int x = 0; x < m_rect.width - size; x++) {
+				Point p = matchingPatchCenter(x, y, cmin, cmax, size);
+				if (p != null) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
+
+	/* If (x, y) is the TL corner of the matching patch, return a
+	 * point to the patch center.
+	 */
+	private Point matchingPatchCenter(int x, int y, Color cmin, Color cmax, int size) {
+		for(int i = 0; i < size; i++) {
+			for(int j = 0; j < size; j++) {
+				Color c = color(x+i, y+j);
+				if (c.getRed() < cmin.getRed() || c.getGreen() < cmin.getGreen() || c.getBlue() < cmin.getBlue() ||
+					c.getRed() > cmax.getRed() || c.getGreen() > cmax.getGreen() || c.getBlue() > cmax.getBlue()) {
+					return null;
+				}
+			}
+		}
+		return new Point(x + size / 2, y + size / 2);
+	}
+
 	/**
 	 * Coordinates are image coords, not screen coords.
 	 */
