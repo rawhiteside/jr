@@ -34,18 +34,17 @@ Slate:
   1: true
   Parameter set 1:
     coords: |
-      -382, -6735
-      -385, -6736
-      -386, -6741
-      -388, -6738
-      -388, -6737
-      -385, -6739
-      -385, -6740
-      -383, -6732
-      -384, -6732
-      -384, -6738
-      -389, -6738
-      -386, -6741
+      -980, -6779
+      -980, -6789
+      -978, -6791
+      -975, -6791
+      -971, -6795
+      -973, -6795
+      -975, -6793
+      -975, -6791
+      -977, -6791
+      -980, -6788
+      -980, -6778
   T6 camp north:
     coords: |
       4568, -5788
@@ -331,25 +330,8 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    text: |
-      Citizen Jaby
-      Initiate of the Kush
-      Elder in Followers of Anubis
-      -----
-      Equipment. . .
-      -----
-      Appearance. . .
-      Drop. . .
-      Emote. . .
-      Navigation. . .
-      Projects. . .
-      Skills. . .
-      Special. . .
-      Talents. . .
-      Starting Spots. . .
-      Tests. . .
-      -----
-      Utility. . .
+    p.x: '421'
+    p.y: '912'
 Wood Planes:
   2: Parameter set 1
   1: false
@@ -373,25 +355,25 @@ Grass:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '60'
-    chest.y: '675'
-    chest-coords: 173, -6030
-    count: '1'
+    chest.x: '318'
+    chest.y: '627'
+    chest-coords: -1017, -6796
+    count: '20'
     path: |
-      175, -6017
-      176, -6009
+      -1017, -6796
+      -1017, -6798
 Flax Comb:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    count: '14'
-    w.x: '250'
-    w.y: '454'
+    count: '140'
+    w.x: '189'
+    w.y: '346'
 Interval tab:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    interval: '10'
+    interval: '8'
 onions:
   2: Parameter set 1
   1: false
@@ -422,13 +404,13 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '1146'
-    g.top-left.y: '416'
-    g.bottom-right.x: '1346'
-    g.bottom-right.y: '659'
-    g.num-cols: '4'
-    g.num-rows: '4'
-    task: Load
+    g.top-left.x: '1355'
+    g.top-left.y: '316'
+    g.bottom-right.x: '1556'
+    g.bottom-right.y: '550'
+    g.num-cols: '3'
+    g.num-rows: '3'
+    task: Tend
 Glazier:
   2: Parameter set 1
   1: false
@@ -457,14 +439,14 @@ Clay:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '1270'
-    chest.y: '840'
-    chest-coords: -392, -6638
-    water-coords: -397, -6640
-    jug_count: '100'
+    chest.x: '210'
+    chest.y: '740'
+    chest-coords: -1069, -6899
+    water-coords: -1069, -6899
+    jug_count: '300'
     path: |
-      -395, -6636
-      -395, -6629
+      -1069, -6899
+      -1070, -6915
 Cutstones:
   2: Parameter set 1
   1: false
@@ -523,12 +505,12 @@ Pottery Wheels:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '504'
-    g.top-left.y: '278'
-    g.bottom-right.x: '859'
-    g.bottom-right.y: '349'
+    g.top-left.x: '734'
+    g.top-left.y: '360'
+    g.bottom-right.x: '1169'
+    g.bottom-right.y: '798'
     g.num-cols: '6'
-    g.num-rows: '2'
+    g.num-rows: '6'
     repeat: '99999'
     delay: '75'
     string: j
@@ -855,15 +837,15 @@ Kilns:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '617'
-    g.top-left.y: '318'
-    g.bottom-right.x: '744'
-    g.bottom-right.y: '485'
+    g.top-left.x: '440'
+    g.top-left.y: '273'
+    g.bottom-right.x: '736'
+    g.bottom-right.y: '769'
     g.num-cols: '4'
-    g.num-rows: '4'
+    g.num-rows: '5'
     repeat: '9999'
-    delay: '155'
-    string: tbwf
+    delay: '165'
+    string: tjwf
     key-delay: '1.1'
 Raeli:
   2: Parameter set 1
@@ -909,39 +891,39 @@ Grow flax:
   1: false
   Parameter set 1:
     flax-type: Old Dog
-    plant.x: '391'
-    plant.y: '705'
-    head.x: '681'
-    head.y: '399'
-    stash.x: '648'
-    stash.y: '629'
-    count: '4'
+    plant.x: '494'
+    plant.y: '856'
+    head.x: '957'
+    head.y: '546'
+    stash.x: '327'
+    stash.y: '716'
+    count: '10'
     rows: '4'
     cols: '4'
-    grow: -378, -6741
-    water: -383, -6733
-    stash: -378, -6733
+    grow: -1056, -6856
+    water: -1056, -6861
+    stash: -1056, -6861
 Grow vegetables:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    veggie: Carrots/Green Leaf/(2)
-    grow: -1033, -6750
-    water: -1030, -6789
+    veggie: Cabbage/Bastet's Yielding/(2)
+    grow: 196, -6645
+    water: 196, -6645
     head.x: '958'
     head.y: '545'
-    plant.x: '72'
-    plant.y: '443'
-    repeat: '10'
-    beds: '4'
+    plant.x: '54'
+    plant.y: '426'
+    repeat: '5'
+    beds: '6'
     second: '18'
     third: '31'
 Walk:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    dest_x: '-1100'
-    dest_y: '-6825'
+    dest_x: '1093'
+    dest_y: '-4553'
 Bullets:
   2: Parameter set 1
   1: false
@@ -960,3 +942,209 @@ Color Picker:
   Parameter set 1:
     loc.x: '916'
     loc.y: '86'
+run_and_do:
+  2: Parameter set 1
+  1: true
+  Parameter set 1:
+    path: |
+      -920, -6750
+      Apiary
+      -920, -6747
+      Apiary
+      -920, -6744
+      Apiary
+      -920, -6741
+      Apiary
+      -920, -6738
+      Apiary
+      -920, -6735
+      Apiary
+      -920, -6732
+      Apiary
+      -920, -6729
+      Apiary
+      -920, -6726
+      Apiary
+      -920, -6723
+      Apiary
+      -920, -6720
+      Apiary
+      -920, -6717
+      Apiary
+      -920, -6714
+      Apiary
+      -920, -6711
+      Apiary
+      -920, -6708
+      Apiary
+      -920, -6705
+      Apiary
+      -920, -6702
+      Apiary
+      -920, -6699
+      Apiary
+      -920, -6696
+      Apiary
+      -920, -6693
+      Apiary
+      -920, -6690
+      Apiary
+      -920, -6687
+      Apiary
+      -920, -6684
+      Apiary
+      -920, -6681
+      Apiary
+      -920, -6678
+      Apiary
+      -920, -6675
+      Apiary
+      -920, -6672
+      Apiary
+      -920, -6669
+      Apiary
+      -920, -6666
+      Apiary
+      -920, -6663
+      Apiary
+      -920, -6660
+      Apiary
+      -920, -6657
+      Apiary
+      -920, -6654
+      Apiary
+      -920, -6651
+      Apiary
+      -920, -6648
+      Apiary
+      -920, -6645
+      Apiary
+      -920, -6642
+      Apiary
+      -920, -6639
+      Apiary
+      -920, -6636
+      Apiary
+      -920, -6633
+      Apiary
+      -920, -6630
+      Apiary
+      -920, -6627
+      Apiary
+      -920, -6624
+      Apiary
+      -920, -6621
+      Apiary
+      -920, -6618
+      Apiary
+      -920, -6615
+      Apiary
+      -920, -6612
+      Apiary
+      -920, -6609
+      Apiary
+      -920, -6606
+      Apiary
+      -920, -6603
+      Apiary
+      -930, -6603
+      Apiary
+      -930, -6606
+      Apiary
+      -930, -6609
+      Apiary
+      -930, -6612
+      Apiary
+      -930, -6615
+      Apiary
+      -930, -6618
+      Apiary
+      -930, -6621
+      Apiary
+      -930, -6624
+      Apiary
+      -930, -6627
+      Apiary
+      -930, -6630
+      Apiary
+      -930, -6633
+      Apiary
+      -930, -6636
+      Apiary
+      -930, -6639
+      Apiary
+      -930, -6642
+      Apiary
+      -930, -6645
+      Apiary
+      -930, -6648
+      Apiary
+      -930, -6651
+      Apiary
+      -930, -6654
+      Apiary
+      -930, -6657
+      Apiary
+      -930, -6660
+      Apiary
+      -930, -6663
+      Apiary
+      -930, -6666
+      Apiary
+      -930, -6669
+      Apiary
+      -930, -6672
+      Apiary
+      -930, -6675
+      Apiary
+      -930, -6678
+      Apiary
+      -930, -6681
+      Apiary
+      -930, -6684
+      Apiary
+      -930, -6687
+      Apiary
+      -930, -6689
+      Apiary
+      -930, -6693
+      Apiary
+      -930, -6696
+      Apiary
+      -930, -6699
+      Apiary
+      -930, -6702
+      Apiary
+      -930, -6705
+      Apiary
+      -930, -6708
+      Apiary
+      -930, -6711
+      Apiary
+      -930, -6714
+      Apiary
+      -930, -6717
+      Apiary
+      -930, -6720
+      Apiary
+      -930, -6723
+      Apiary
+      -930, -6726
+      Apiary
+      -930, -6729
+      Apiary
+      -930, -6732
+      Apiary
+      -930, -6735
+      Apiary
+      -930, -6738
+      Apiary
+      -930, -6741
+      Apiary
+      -930, -6744
+      Apiary
+      -930, -6747
+      Apiary
+      -930, -6750
+      Apiary
+  Apiaries: {}
