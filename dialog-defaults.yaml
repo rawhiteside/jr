@@ -922,8 +922,8 @@ Walk:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    dest_x: '1093'
-    dest_y: '-4553'
+    dest_x: '3750'
+    dest_y: '-4000'
 Bullets:
   2: Parameter set 1
   1: false
@@ -943,7 +943,7 @@ Color Picker:
     loc.x: '916'
     loc.y: '86'
 run_and_do:
-  2: Parameter set 1
+  2: Chaiot to UArch
   1: true
   Parameter set 1:
     path: |
@@ -1147,4 +1147,41 @@ run_and_do:
       Apiary
       -930, -6750
       Apiary
-  Apiaries: {}
+  Apiaries:
+    path: ''
+  Camp to Chariot:
+    path: |
+      -974, -6810
+      -946, -6838
+      -946, -7044
+      -912, -7044
+      -907, -7040
+      14, -7040
+  Chaiot to UArch:
+    path: |
+      14, -7040
+      161, -7040
+      172, -7051
+      231, -7051
+      241, -7061
+      339, -7061
+      364, -7085
+      406, -7085
+      416, -7096
+      463, -7096
+      471, -7088
+      502, -7088
+      506, -7084
+      539, -7084
+      542, -7087
+      552, -7087
+      555, -7090
+      590, -7090
+      602, -7103
+      790, -7103
+      795, -7098
+      825, -7098
+      827, -7100
+      998, -7100
+      1020, -7121
+      1020, -7130
