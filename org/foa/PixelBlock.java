@@ -2,6 +2,8 @@ package org.foa;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import javax.imageio.ImageIO;
+import java.io.*;
 
 import org.foa.robot.ARobot;
 
@@ -35,34 +37,56 @@ public class PixelBlock extends ARobot {
 	}
 
 	/** 
-	 * Find a patch of color. Patch is size x size.
+	 * Search within self for the best mach for the subimage pb
 	 */
-	public Point findPatch(Color cmin, Color cmax, int size) {
-		for(int y = 0; y < m_rect.height - size; y++) {
-			for(int x = 0; x < m_rect.width - size; x++) {
-				Point p = matchingPatchCenter(x, y, cmin, cmax, size);
-				if (p != null) {
-					return p;
+	public Point findPatch(PixelBlock pb) {
+		//		double bestDeltaSq = Double.MAX_VALUE;
+		double bestDeltaSq = 5000.0;
+		Point bestOrigin = null;
+		System.out.println("The patcch: " + pb.rect().toString());
+		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
+			//System.out.println("y val " + y);
+			for(int x = 0; x < m_rect.width - pb.getWidth(); x++) {
+				// System.out.println("x val " + x);
+				double deltaSq = deltaSquared(x, y, pb, bestDeltaSq);
+				if (deltaSq < bestDeltaSq) {
+					bestDeltaSq = deltaSq;
+					System.out.println("New best: " + bestDeltaSq);
+					bestOrigin = new Point(x, y);
 				}
 			}
 		}
-		return null;
+		System.out.println("Best: " + bestDeltaSq);
+		System.out.println("secondBestDeltaSq: " + secondBestDeltaSq);
+
+		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
+		return bestOrigin;
 	}
 
-	/* If (x, y) is the TL corner of the matching patch, return a
-	 * point to the patch center.
+	/* Compute the average color distance between the two images.
 	 */
-	private Point matchingPatchCenter(int x, int y, Color cmin, Color cmax, int size) {
-		for(int i = 0; i < size; i++) {
-			for(int j = 0; j < size; j++) {
-				Color c = color(x+i, y+j);
-				if (c.getRed() < cmin.getRed() || c.getGreen() < cmin.getGreen() || c.getBlue() < cmin.getBlue() ||
-					c.getRed() > cmax.getRed() || c.getGreen() > cmax.getGreen() || c.getBlue() > cmax.getBlue()) {
-					return null;
+	private double deltaSquared(int x, int y, PixelBlock pb, double bestSoFar) {
+		bestSoFar = bestSoFar * (pb.getWidth() * pb.getHeight());
+		double totalDist = 0;
+		for(int i = 0; i < pb.getWidth(); i++) {
+			//System.out.println("i val " + i);
+			for(int j = 0; j < pb.getHeight(); j++) {
+				Color c1 = pb.color(i, j);
+				Color c2 = this.color(x + i, y + j);
+				totalDist += colorDistanceSq(c1, c2);
+				if(totalDist > bestSoFar) {
+					return totalDist/ (pb.getWidth() * pb.getHeight());
 				}
 			}
 		}
-		return new Point(x + size / 2, y + size / 2);
+		return totalDist / (pb.getWidth() * pb.getHeight());
+	}
+
+	private double colorDistanceSq(Color c1, Color c2) {
+		int rdiff = c1.getRed() - c2.getRed();
+		int gdiff = c1.getGreen() - c2.getGreen();
+		int bdiff = c1.getBlue() - c2.getBlue();
+		return rdiff * rdiff + gdiff * gdiff + bdiff * bdiff;
 	}
 
 	/**
@@ -141,5 +165,25 @@ public class PixelBlock extends ARobot {
 
 	public void displayToUser(String title) {
 		ImagePanel.displayImage(m_bufferedImage, title);
+	}
+
+	public void saveImage(String filename) {
+		try {
+			File f = new File(filename);
+			ImageIO.write(m_bufferedImage, "png", f);
+		} catch(IOException e) {
+			System.out.println("image save failed:" + e.toString());
+		}
+	}
+
+	public static PixelBlock loadImage(String filename) {
+		BufferedImage b = null;
+		try {
+			b = ImageIO.read(new File(filename));
+		} catch(IOException e) {
+			System.out.println("image load failed:" + e.toString());
+		}
+
+		return new PixelBlock(new Point(0, 0), b);
 	}
 }
