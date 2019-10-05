@@ -96,12 +96,20 @@ class RunAndDo < Action
   def apiary
     sleep(0.5)
     pb = full_screen_capture
-    color_min = Color.new(121, 119, 95)
-    color_max = Color.new(145, 141, 114)
-    point = pb.find_patch(color_min, color_max, 3)
+    color_min = Color.new(75, 61, 62)
+    color_max = Color.new(80, 68, 72)
+    pb_apiary = PixelBlock.load_image('patches/Stardew.png')
+    point = pb.find_patch(pb_apiary)
     if point
-      mm(point, 0.1)
-      send_string('tc')
+      with_robot_lock do
+        mm(point, 0.1)
+        sleep 1 # xxx
+        # xxx send_string('tc')
+        popup = PopupWindow.find
+        if popup
+          popup.dismiss
+        end
+      end
     else
       puts "No apiary found."
     end
