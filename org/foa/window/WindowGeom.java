@@ -22,7 +22,7 @@ public class WindowGeom extends ARobot {
 	}
 
 	public static Rectangle rectFromPoint(Point p) {
-		return rectFromPoint(p, true);
+		return rectFromPoint(p, false);
 	}
 
 	public static Rectangle rectFromPoint(Point p, boolean debug) {
