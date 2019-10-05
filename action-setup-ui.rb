@@ -701,7 +701,13 @@ class DialogDefaultsManager < Box
   def initialize_dialog
     set_name = current_selection_name
     vals = @dialog_defaults[set_name]
-    @data_puts.each { |k, v| v.call(vals[k]) if vals[k] }
+    @data_puts.each do |k, v|
+      if vals[k] 
+        v.call(vals[k])
+      else
+        v.call('')
+      end
+    end
   end
 
   # Switch to multi-parameter-set view.
@@ -756,9 +762,18 @@ class DialogDefaultsManager < Box
     box.add(copy_button)
 
     delete_set = JButton.new('Delete')
+    delete_set.add_action_listener {|e| delete_current_set}
     box.add(delete_set)
     box
   end
+  
+  def delete_current_set
+    curr = current_selection_name
+    @combo.remove_item(curr)
+    @dialog_defaults.delete(curr)
+    current_selection_changed
+  end
+
   
   def parameter_set_names
     @dialog_defaults.keys.delete_if {|k| !k.instance_of? String}.sort
@@ -791,18 +806,12 @@ class DialogDefaultsManager < Box
     # See if it's a new name.
     if keys.include?(item)
       # Selection changed to an existing one
-      vals = @dialog_defaults[item]
-      # Fill in the dialog with new values
-      @data_puts.each do |k, v|
-        if vals[k]
-          v.call(vals[k])
-        else
-          v.call('')
-        end
-      end
-
-      # Update the cached current selection
       @dialog_defaults[CURRENT_SELECTION] = item
+      vals = @dialog_defaults[item]
+
+      # Fill in the dialog with new values
+      initialize_dialog
+
     else
       # It's a new item.  This is from either the 'Copy' or tne 'New'
       # button.
@@ -813,6 +822,9 @@ class DialogDefaultsManager < Box
       new_vals = {}
       new_vals = current_dialog_values if @last_button_text == 'Copy'
       @dialog_defaults[new_name] = new_vals
+      @dialog_defaults[CURRENT_SELECTION] = new_name
+      initialize_dialog
+
       # Update the combo box model
       @combo.set_model(DefaultComboBoxModel.new(parameter_set_names.to_java))
       @combo.selected_item = new_name
