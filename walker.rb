@@ -185,33 +185,3 @@ class Walker < ARobot
   end
 end
 
-class WalkerDirectionTest < Action
-  def initialize
-    super('Walkto', 'Test/Dev')
-  end
-
-  def get_target_coords
-    comps = [
-      {:type => :number, :label => 'X', :name => 'x'},
-      {:type => :number, :label => 'Y', :name => 'y'},
-    ]
-    vals = UserIO.prompt(nil, 'walk-test', 'Coordinates to walk to', comps)
-    return nil unless vals
-    [vals['x'].to_i, vals['y'].to_i]
-
-  end
-
-  def act
-    path = [
-      [-2442, 384], 
-      [-2443, 379], 
-      [-2442, 376], 
-      [-2441, 374],
-      [-2433, 373],
-    ]
-    ControllableThread.check_for_pause
-    Walker.new.walk_back_and_forth(path, 3)
-  end
-
-end
-Action.add_action(WalkerDirectionTest.new)
