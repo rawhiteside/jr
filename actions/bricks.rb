@@ -37,9 +37,9 @@ class FlimsyBricks < GridAction
   def brick_rack_brown?(x, y)
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
-    r_rng = 1..200
-    g_rng = 1..150
-    b_rng = 1..110
+    r_rng = 1..120
+    g_rng = 1..100
+    b_rng = 1..100
 
     rv = r_rng.include?(r) && g_rng.include?(g) && b_rng.include?(b) &&
       (r - g) > 5 && (r - b) > 5
@@ -47,8 +47,8 @@ class FlimsyBricks < GridAction
   end
 
   def check_build(p)
-    mm(p['x'], p['y'])
     return if brick_rack_brown?(p['x'], p['y'])
+
     @project_menu.click_on('Build a Flimsy')
     key = [p['ix'],p['iy']]
     recipe = @recipes[key]
@@ -69,9 +69,7 @@ class FlimsyBricks < GridAction
 
 
     mm(pt['x'], pt['y'])
-    sleep_sec 0.3
-    send_string(@user_vals['string'], 0.3)
-    sleep_sec 0.3
+    send_string(@user_vals['string'], 0.4)
   end
 
   def build_recipes
