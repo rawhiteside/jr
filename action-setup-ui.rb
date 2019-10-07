@@ -7,6 +7,7 @@ import javax.swing.SwingUtilities
 import java.awt.GraphicsEnvironment
 import java.awt.GraphicsDevice
 import java.awt.Cursor
+import java.awt.Font
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -53,7 +54,7 @@ class SetupDialog
   # A text field:
   # {:type => :text, :label => 'A label', :name => 'the_text'}
   # The allowed types:
-  #    :text, :number, :group, :point, :grid, :big_text, :label, :combo, :world_loc, :world_path
+  #    :text, :number, :frame, :point, :grid, :big_text, :label, :combo, :world_loc, :world_path
   def initialize(parent_win, name, title, gadgets)
     @parent_win = parent_win
     @name = name
@@ -67,7 +68,7 @@ class SetupDialog
   def execute
     # These hashes, added to by the various gadget creators, of
     # field-name=>Proc.  Calling the get proc will return the field value
-    # that was in the dialog. Calling the put proc sill set the value.
+    # that was in the dialog. Calling the put proc will set the value.
     @data_get_hash = {}
     @data_put_hash = {}
 
@@ -343,7 +344,9 @@ end
 class SetupBigTextGadget < JPanel
   def initialize(prefix, initial_value, h, data_gets, data_puts)
     super()
+
     area = JTextArea.new
+    area.setFont(Font.new("monospaced", Font::PLAIN, 12))
 
     val_key = prefix + h[:name].to_s
     editable = (h.has_key?(:editable) ? h[:editable] : true)
@@ -359,7 +362,7 @@ class SetupBigTextGadget < JPanel
       area.caret_position = 0
     end
 
-    area.line_wrap = true
+    area.line_wrap = false
     area.wrap_style_word = true
     area.text = initial_value
     area.caret_position = 0
@@ -571,6 +574,33 @@ class SetupWorldPathGadget < JPanel
     button_box = Box.create_vertical_box
     area = scroll.text_area
     button_box.add(WorldLocUtils.current_location_button(area, true))
+
+    custom_box = Box.create_vertical_box
+    info1 = { :label => 'Text', :size => 10, :name => 'custom_text_1'}
+    custom_box.add(SetupTextGadget.new('', info1, data_gets, data_puts))
+    cb1 = JButton.new('Insert')
+    cb1.add_action_listener do |e|
+      t = data_gets[info1[:name]].call
+      cb1.set_text t.capitalize
+      area.insert(t + "\n", area.caret_position)
+    end
+    custom_box.add(cb1)
+    button_box.add(custom_box)
+    button_box.add(Box.create_vertical_glue)
+    
+    info2 = { :label => 'Text', :size => 10, :name => 'custom_text_2'}
+    custom_box = Box.create_vertical_box
+    custom_box.add(SetupTextGadget.new('', info2, data_gets, data_puts))
+    cb2 = JButton.new('Insert')
+    cb2.add_action_listener do |e|
+      t = data_gets[info2[:name]].call
+      cb2.set_text t.capitalize
+      area.insert(t + "\n", area.caret_position)
+    end
+    custom_box.add(cb2)
+    button_box.add(custom_box)
+    button_box.add(Box.create_vertical_glue)
+
     if h[:aux]
       auxs = h[:aux].kind_of?(Array) ? h[:aux] : [h[:aux]]
       auxs.each do |aux|
@@ -588,6 +618,7 @@ class SetupWorldPathGadget < JPanel
     add(box)
 
   end
+
 end
 
 # A grid-picker.  It needs the top-left screen point, the
