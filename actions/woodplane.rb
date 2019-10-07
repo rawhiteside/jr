@@ -20,7 +20,7 @@ class WoodPlane < Action
   def find_windows
     x = @vals['stack.x'].to_i
     y = @vals['stack.y'].to_i
-    tiler = Tiler.new(2, 70, 0)
+    tiler = Tiler.new(2, 90, 0)
     tiler.y_offset = 10
     tiler.min_width = 386
     @windows = tiler.tile_stack(x, y)
@@ -28,8 +28,9 @@ class WoodPlane < Action
   
   def plane(w)
     loop do
+      stat_wait('End')
       w.refresh
-      w.refresh if w.click_on('Repair')
+      w.refresh if (w.click_on('Repair') || w.click_on('Install'))
       if w.click_on('Plane')
         w.refresh
         if w.click_on('Repair')
