@@ -34,6 +34,9 @@ public class WindowGeom extends ARobot {
 		}
 	
 		Rectangle rv = rectFromLeftEdge(pb, x, p.y, debug);
+		if (rv == null) {
+			return null;
+		}
 		// Need to fix, but this returns the rectangle inner border.
 		// We're expected to return the whole window, which is 3
 		// pixels larger alll 'round.  Fix that.
@@ -50,6 +53,9 @@ public class WindowGeom extends ARobot {
 		x += 1;
 		while(!isLeftEdgeBorder(pb, x, y)) {
 			y = y - 1;
+			if (y < 0) {
+				return null;
+			}
 		}
 
 		return new Point(x-1, y);
@@ -128,7 +134,6 @@ public class WindowGeom extends ARobot {
 
 	public static Color INNER_BROWN = new Color(107, 69, 41);
 	public static Color OUTER_BROWN = new Color(163, 116, 64);
-
 
 
 

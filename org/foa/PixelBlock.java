@@ -11,6 +11,7 @@ public class PixelBlock extends ARobot {
 	private BufferedImage m_bufferedImage;
 	private Point m_origin;
 	private Rectangle m_rect;
+	private static int[][] s_diffSq = null;
 
 	public PixelBlock(Rectangle rect) {
 		m_bufferedImage = createScreenCapture(rect);
@@ -36,12 +37,23 @@ public class PixelBlock extends ARobot {
 		return m_bufferedImage;
 	}
 
+	private int[][] diffSqLookup() {
+		if (s_diffSq == null) {
+			s_diffSq = new int[256][256];
+			for(int i = 0; i < 256; i++) {
+				for(int j = 0; j < 256; j++) {
+					s_diffSq[i][j] = (i - j) * (i - j);
+				}
+			}
+		}
+		return s_diffSq;
+	}
+
 	/** 
 	 * Search within self for the best mach for the subimage pb
 	 */
 	public Point findPatch(PixelBlock pb) {
-		//		double bestDeltaSq = Double.MAX_VALUE;
-		double bestDeltaSq = 5000.0;
+		double bestDeltaSq = Double.MAX_VALUE;
 		Point bestOrigin = null;
 		System.out.println("The patcch: " + pb.rect().toString());
 		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
@@ -51,13 +63,13 @@ public class PixelBlock extends ARobot {
 				double deltaSq = deltaSquared(x, y, pb, bestDeltaSq);
 				if (deltaSq < bestDeltaSq) {
 					bestDeltaSq = deltaSq;
-					System.out.println("New best: " + bestDeltaSq);
+					// System.out.println("New best: " + bestDeltaSq);
 					bestOrigin = new Point(x, y);
 				}
 			}
 		}
+
 		System.out.println("Best: " + bestDeltaSq);
-		System.out.println("secondBestDeltaSq: " + secondBestDeltaSq);
 
 		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
 		return bestOrigin;
@@ -83,10 +95,19 @@ public class PixelBlock extends ARobot {
 	}
 
 	private double colorDistanceSq(Color c1, Color c2) {
-		int rdiff = c1.getRed() - c2.getRed();
-		int gdiff = c1.getGreen() - c2.getGreen();
-		int bdiff = c1.getBlue() - c2.getBlue();
-		return rdiff * rdiff + gdiff * gdiff + bdiff * bdiff;
+		int mask = 0xff;
+		int v1 = c1.getRGB();
+		int v2 = c2.getRGB();
+		int[][] table = diffSqLookup();
+		int rdiffSq = table[v1 & mask][v2 & mask];
+		v1 = v1 >> 8;
+		v2 = v2 >> 8;
+		int gdiffSq = table[v1 & mask][v2 & mask];
+		v1 = v1 >> 8;
+		v2 = v2 >> 8;
+		int bdiffSq = table[v1 & mask][v2 & mask];
+
+		return rdiffSq + gdiffSq + bdiffSq;
 	}
 
 	/**

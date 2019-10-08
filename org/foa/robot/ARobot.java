@@ -31,11 +31,15 @@ public class ARobot {
 
 	public void beep() { m_toolkit.beep(); }
 
+	public Point findSubImage(String imageName) {
+		PixelBlock screen = fullScreenCapture();
+		PixelBlock sub = PixelBlock.loadImage("images/" + imageName + ".png");
+		return screen.findPatch(sub);
+	}
+
 	public PixelBlock fullScreenCapture() {
-		Toolkit tk = m_toolkit;
-		int width = tk.getScreenSize().width;
-		int height = tk.getScreenSize().height;
-		return screenRectangle(0, 0, width, height);
+		Dimension dim = screenSize();
+		return screenRectangle(0, 0, dim.width, dim.height);
 	}
 
 	public PixelBlock screenRectangle(int x, int y, int width, int height) {
