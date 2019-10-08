@@ -348,6 +348,7 @@ class SetupBigTextGadget < JPanel
     area = JTextArea.new
     area.setFont(Font.new("monospaced", Font::PLAIN, 12))
 
+
     val_key = prefix + h[:name].to_s
     editable = (h.has_key?(:editable) ? h[:editable] : true)
     area.rows = h[:rows] || 5
@@ -358,13 +359,16 @@ class SetupBigTextGadget < JPanel
       area.text
     end
     data_puts[val_key] = Proc.new do |val|
-      area.text = val
-      area.caret_position = 0
+      if !val.nil? && val.size > 0
+        area.text = val
+        area.caret_position = 0
+      end
     end
 
     area.line_wrap = false
     area.wrap_style_word = true
     area.text = initial_value
+    
     area.caret_position = 0
     scroll = JScrollPane.new(area)
     scroll.vertical_scroll_bar_policy = JScrollPane::VERTICAL_SCROLLBAR_AS_NEEDED
