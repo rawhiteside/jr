@@ -132,7 +132,7 @@ class FlaxGrow < Action
     windows = []
 
     tiler = Tiler.new(0, 100)
-    tiler.min_width = 282
+    tiler.min_width = 312
     tiler.min_height = (153 - 23)
     tiler.y_offset = 5
 
@@ -163,7 +163,12 @@ class FlaxGrow < Action
         dlg.refresh
         text = dlg.read_text
         return true if dlg.click_on("Water") || dlg.click_on("Weed")
-        if dlg.click_on("Harvest")
+        if dlg.click_on("Harvest seeds")
+          dlg.click_on("Util/Rip")
+          dlg.unpin
+          return false
+        end
+        if dlg.click_on("Harvest this")
           dlg.notation = 'Harvested'
           return true
         end
@@ -175,7 +180,11 @@ class FlaxGrow < Action
     loop do
       dlg.refresh
       text = dlg.read_text
-      break unless text.include?("Harvest")
+      if text.include?("Harvest")
+        dlg.click_on("Harvest")
+      else
+        break
+      end
       sleep_sec 1.0
     end
 

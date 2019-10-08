@@ -19,9 +19,8 @@ class ReadWindow < Action
     puts dim.width/2
     puts dim.height
     w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
-    @window = KettleWindow.new(w.rect)
 
-    text = @window.read_text
+    text = w.read_text
     comps = [
       {:type => :big_text, :value => text, :name => 'text', :label => 'Text'}
     ]
