@@ -52,7 +52,7 @@ class FindPatchTest < Action
 
 
   def act
-    filename = "patches/#{@vals['name']}.png"
+    filename = "images/#{@vals['name']}.png"
     pb_patch = PixelBlock.load_image(filename)
     pb_full = full_screen_capture
     puts "finding"
