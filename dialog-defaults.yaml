@@ -34,7 +34,7 @@ Slate:
   1: true
   Parameter set 1:
     coords: |
-      -980, -6779
+      -979, -6779
       -980, -6789
       -978, -6791
       -975, -6791
@@ -45,6 +45,8 @@ Slate:
       -977, -6791
       -980, -6788
       -980, -6778
+    custom_text_1: ''
+    custom_text_2: ''
   T6 camp north:
     coords: |
       4568, -5788
@@ -330,26 +332,26 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    name: Apiary
+    name: Warehouse
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '304'
-    stack.y: '798'
+    stack.x: '402'
+    stack.y: '616'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '830'
-    g.top-left.y: '385'
-    g.bottom-right.x: '1133'
-    g.bottom-right.y: '687'
+    g.top-left.x: '836'
+    g.top-left.y: '418'
+    g.bottom-right.x: '1139'
+    g.bottom-right.y: '725'
     g.num-cols: '5'
     g.num-rows: '5'
     repeat: '100'
-    delay: '60'
-    string: tf
+    delay: '50'
+    string: tb
 Grass:
   2: Parameter set 1
   1: false
@@ -403,13 +405,13 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '1355'
-    g.top-left.y: '316'
-    g.bottom-right.x: '1556'
-    g.bottom-right.y: '550'
-    g.num-cols: '3'
-    g.num-rows: '3'
-    task: Tend
+    g.top-left.x: '1331'
+    g.top-left.y: '439'
+    g.bottom-right.x: '1576'
+    g.bottom-right.y: '719'
+    g.num-cols: '4'
+    g.num-rows: '4'
+    task: Light
 Glazier:
   2: Parameter set 1
   1: false
@@ -450,12 +452,12 @@ Cutstones:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '495'
-    g.top-left.y: '122'
-    g.bottom-right.x: '890'
-    g.bottom-right.y: '620'
-    g.num-cols: '4'
-    g.num-rows: '7'
+    g.top-left.x: '708'
+    g.top-left.y: '428'
+    g.bottom-right.x: '1234'
+    g.bottom-right.y: '674'
+    g.num-cols: '8'
+    g.num-rows: '6'
     repeat: '999'
     delay: '223'
 sand_mine:
@@ -890,12 +892,12 @@ Grow flax:
   1: false
   Parameter set 1:
     flax-type: Old Dog
-    plant.x: '494'
-    plant.y: '856'
+    plant.x: '273'
+    plant.y: '755'
     head.x: '957'
     head.y: '546'
-    stash.x: '327'
-    stash.y: '716'
+    stash.x: '448'
+    stash.y: '858'
     count: '10'
     rows: '4'
     cols: '4'
@@ -921,8 +923,8 @@ Walk:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    dest_x: '2923'
-    dest_y: --300
+    dest_x: '-980'
+    dest_y: '-6779'
 Bullets:
   2: Parameter set 1
   1: false
@@ -942,212 +944,217 @@ Color Picker:
     loc.x: '916'
     loc.y: '86'
 run_and_do:
-  2: Apiary Test
+  2: Tree run
   1: true
   Parameter set 1:
     path: ''
   Apiaries:
+    code.code: "def apiary\n  sleep 0.5  # Wait for running to stop. \n\n  pt = find_sub_image\
+      \ 'Apiary'\n  mm pt\n  sleep 0.1\n  send_string 'tc'\n\n  pw = PopupWindow.find\n\
+      \  pw.dismiss if pw\nend\n"
     path: |
       -920, -6750
-      Apiary
+      apiary
       -920, -6747
-      Apiary
+      apiary
       -920, -6744
-      Apiary
+      apiary
       -920, -6741
-      Apiary
+      apiary
       -920, -6738
-      Apiary
+      apiary
       -920, -6735
-      Apiary
+      apiary
       -920, -6732
-      Apiary
+      apiary
       -920, -6729
-      Apiary
+      apiary
       -920, -6726
-      Apiary
+      apiary
       -920, -6723
-      Apiary
+      apiary
       -920, -6720
-      Apiary
+      apiary
       -920, -6717
-      Apiary
+      apiary
       -920, -6714
-      Apiary
+      apiary
       -920, -6711
-      Apiary
+      apiary
       -920, -6708
-      Apiary
+      apiary
       -920, -6705
-      Apiary
+      apiary
       -920, -6702
-      Apiary
+      apiary
       -920, -6699
-      Apiary
+      apiary
       -920, -6696
-      Apiary
+      apiary
       -920, -6693
-      Apiary
+      apiary
       -920, -6690
-      Apiary
+      apiary
       -920, -6687
-      Apiary
+      apiary
       -920, -6684
-      Apiary
+      apiary
       -920, -6681
-      Apiary
+      apiary
       -920, -6678
-      Apiary
+      apiary
       -920, -6675
-      Apiary
+      apiary
       -920, -6672
-      Apiary
+      apiary
       -920, -6669
-      Apiary
+      apiary
       -920, -6666
-      Apiary
+      apiary
       -920, -6663
-      Apiary
+      apiary
       -920, -6660
-      Apiary
+      apiary
       -920, -6657
-      Apiary
+      apiary
       -920, -6654
-      Apiary
+      apiary
       -920, -6651
-      Apiary
+      apiary
       -920, -6648
-      Apiary
+      apiary
       -920, -6645
-      Apiary
+      apiary
       -920, -6642
-      Apiary
+      apiary
       -920, -6639
-      Apiary
+      apiary
       -920, -6636
-      Apiary
+      apiary
       -920, -6633
-      Apiary
+      apiary
       -920, -6630
-      Apiary
+      apiary
       -920, -6627
-      Apiary
+      apiary
       -920, -6624
-      Apiary
+      apiary
       -920, -6621
-      Apiary
+      apiary
       -920, -6618
-      Apiary
+      apiary
       -920, -6615
-      Apiary
+      apiary
       -920, -6612
-      Apiary
+      apiary
       -920, -6609
-      Apiary
+      apiary
       -920, -6606
-      Apiary
+      apiary
       -920, -6603
-      Apiary
+      apiary
       -930, -6603
-      Apiary
+      apiary
       -930, -6606
-      Apiary
+      apiary
       -930, -6609
-      Apiary
+      apiary
       -930, -6612
-      Apiary
+      apiary
       -930, -6615
-      Apiary
+      apiary
       -930, -6618
-      Apiary
+      apiary
       -930, -6621
-      Apiary
+      apiary
       -930, -6624
-      Apiary
+      apiary
       -930, -6627
-      Apiary
+      apiary
       -930, -6630
-      Apiary
+      apiary
       -930, -6633
-      Apiary
+      apiary
       -930, -6636
-      Apiary
+      apiary
       -930, -6639
-      Apiary
+      apiary
       -930, -6642
-      Apiary
+      apiary
       -930, -6645
-      Apiary
+      apiary
       -930, -6648
-      Apiary
+      apiary
       -930, -6651
-      Apiary
+      apiary
       -930, -6654
-      Apiary
+      apiary
       -930, -6657
-      Apiary
+      apiary
       -930, -6660
-      Apiary
+      apiary
       -930, -6663
-      Apiary
+      apiary
       -930, -6666
-      Apiary
+      apiary
       -930, -6669
-      Apiary
+      apiary
       -930, -6672
-      Apiary
+      apiary
       -930, -6675
-      Apiary
+      apiary
       -930, -6678
-      Apiary
+      apiary
       -930, -6681
-      Apiary
+      apiary
       -930, -6684
-      Apiary
+      apiary
       -930, -6687
-      Apiary
-      -930, -6689
-      Apiary
+      apiary
+      -930, -6690
+      apiary
       -930, -6693
-      Apiary
+      apiary
       -930, -6696
-      Apiary
+      apiary
       -930, -6699
-      Apiary
+      apiary
       -930, -6702
-      Apiary
+      apiary
       -930, -6705
-      Apiary
+      apiary
       -930, -6708
-      Apiary
+      apiary
       -930, -6711
-      Apiary
+      apiary
       -930, -6714
-      Apiary
+      apiary
       -930, -6717
-      Apiary
+      apiary
       -930, -6720
-      Apiary
+      apiary
       -930, -6723
-      Apiary
+      apiary
       -930, -6726
-      Apiary
+      apiary
       -930, -6729
-      Apiary
+      apiary
       -930, -6732
-      Apiary
+      apiary
       -930, -6735
-      Apiary
+      apiary
       -930, -6738
-      Apiary
+      apiary
       -930, -6741
-      Apiary
+      apiary
       -930, -6744
-      Apiary
+      apiary
       -930, -6747
-      Apiary
+      apiary
       -930, -6750
-      Apiary
+      apiary
+    custom_text_1: apiary
+    custom_text_2: ''
   Camp to Chariot:
     path: |
       -974, -6810
@@ -1185,10 +1192,45 @@ run_and_do:
       1020, -7121
       1020, -7130
   Apiary Test:
+    code.code: |2
+
+      def apiary
+          puts "Apiary ran"
+      end
     path: |
-      Apiary
+      apiary
+      apiary
+    custom_text_1: apiary
+    custom_text_2: text2
+  Tree run:
+    code.code: |
+      def tree
+        dim = screen_size
+        grid = 10
+        x_size = dim.width/grid
+        y_size = dim.height/grid
+        1.upto(grid - 1) do |y|
+          1.upto(grid - 1) do |x|
+            mm x * x_size, y * y_size
+            send_string 'g'
+          end
+        end
+
+        sleep 1
+      end
+    path: |
+      -1103, -6877
+      tree
+      -1103, -6885
+      -1071, -6917
+      -1071, -6923
+      -1058, -6923
+      -1058, -6902
+      tree
+    custom_text_1: tree
+    custom_text_2: ''
 Travel paths:
-  2: Jaby Campsite to Guildhall
+  2: Bricks CP to Charcoal CP
   1: true
   Parameter set 1:
     path: ''
@@ -1382,8 +1424,18 @@ Travel paths:
       -994, -6801
       -984, -6811
       -974, -6811
+    custom_text_1: ''
+    custom_text_2: ''
+  Bricks CP to Charcoal CP:
+    path: |
+      -1013, -6795
+      -1003, -6795
+      -985, -6777
+      -978, -6777
+    custom_text_1: ''
+    custom_text_2: ''
 Travel:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    destination: Chariot
+    destination: Bricks CP
