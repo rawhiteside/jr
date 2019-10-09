@@ -96,7 +96,7 @@ class Travel < Action
       r[:distance] = dist
     end
     route_infos.sort! {|a, b| a[:distance] <=> b[:distance]}
-    print_routes(route_infos, "Final")
+    #  print_routes(route_infos, "Final")
 
     Walker.new.walk_path(route_infos[0][:path])
   end
