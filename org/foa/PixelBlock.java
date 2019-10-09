@@ -55,7 +55,7 @@ public class PixelBlock extends ARobot {
 	public Point findPatch(PixelBlock pb) {
 		double bestDeltaSq = Double.MAX_VALUE;
 		Point bestOrigin = null;
-		System.out.println("The patcch: " + pb.rect().toString());
+		// System.out.println("The patcch: " + pb.rect().toString());
 		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
 			//System.out.println("y val " + y);
 			for(int x = 0; x < m_rect.width - pb.getWidth(); x++) {
@@ -69,7 +69,7 @@ public class PixelBlock extends ARobot {
 			}
 		}
 
-		System.out.println("Best: " + bestDeltaSq);
+		// System.out.println("Best: " + bestDeltaSq);
 
 		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
 		return bestOrigin;
