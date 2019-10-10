@@ -1,0 +1,15 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  flax-type: Symphony Ridge Gold
+  head.x: '957'
+  head.y: '550'
+  stash.x: '1639'
+  stash.y: '976'
+  repeat: '3'
+  max_wait_secs: '30'
+  harvest_reps: '3'
+  row_len: '14'
+  start_location: -372, -6740
+  stash_location: -378, -6733

@@ -1,0 +1,12 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  chest.x: '210'
+  chest.y: '740'
+  chest-coords: -1069, -6899
+  water-coords: -1069, -6899
+  jug_count: '300'
+  path: |
+    -1069, -6899
+    -1070, -6915

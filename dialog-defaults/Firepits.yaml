@@ -1,0 +1,11 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  g.top-left.x: '1219'
+  g.top-left.y: '352'
+  g.bottom-right.x: '1463'
+  g.bottom-right.y: '626'
+  g.num-cols: '4'
+  g.num-rows: '4'
+  task: Light

@@ -1,0 +1,15 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  veggie: Cabbage/Bastet's Yielding/(2)
+  grow: 196, -6645
+  water: 196, -6645
+  head.x: '958'
+  head.y: '545'
+  plant.x: '54'
+  plant.y: '426'
+  repeat: '5'
+  beds: '6'
+  second: '18'
+  third: '31'

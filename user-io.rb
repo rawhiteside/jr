@@ -107,29 +107,3 @@ class HelpForTopic
     HelpForTopic.instance[topic]
   end
 end
-
-
-if __FILE__ == $0
-  puts 'Starting'
-  gadgets = [
-    {:type => :world_path, :label => 'Take a walk?', :name => 'walk-path'},
-
-    {:type => :world_loc, :label => 'Where in the world?', :name => 'coords'},
-    {:type => :text, :label => 'How many?', :name => 'count'},
-    {:type => :label, :label => 'Ima Label'},
-    {:type => :point, :label => 'Show me a point', :name => 'place'},
-    {:type => :frame, :label => 'Ima frame', :name => 'frame',
-      :gadgets => [
-	{:type => :label, :label => 'inner label'},
-	{:type => :combo, :label => 'What color?', :vals => ['red', 'green', 'blue'], :name => 'color'},
-      ],
-    },
-    {:type => :grid, :label => 'Show me the array', :name => 'my-grid'},
-    {:type => :big_text, :label => 'Type some stuff', :name => 'help-text', :editable => true },
-  ]
-  rv = UserIO.prompt(nil, 'a name', 'a title', gadgets)
-  p rv
-  puts 'done'
-  exit
-end
-

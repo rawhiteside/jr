@@ -1,0 +1,17 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  flax-type: Old Dog
+  plant.x: '273'
+  plant.y: '755'
+  head.x: '957'
+  head.y: '546'
+  stash.x: '448'
+  stash.y: '858'
+  count: '10'
+  rows: '4'
+  cols: '4'
+  grow: -1056, -6856
+  water: -1056, -6861
+  stash: -1056, -6861

@@ -1,0 +1,13 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  g.top-left.x: '836'
+  g.top-left.y: '418'
+  g.bottom-right.x: '1139'
+  g.bottom-right.y: '725'
+  g.num-cols: '5'
+  g.num-rows: '5'
+  repeat: '100'
+  delay: '50'
+  string: tb

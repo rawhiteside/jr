@@ -141,8 +141,13 @@ class ActionButton < JPanel
   
   # Favorite checkbox as a key pointing to action button.
   # These tables don't really belong here...
+  FAVORITES = 'favorites.yaml'
   @@fav_to_action = {}
-  @@favorites = PersistentHash.new('favorites.yaml')
+  if File.exist?(FAVORITES)
+    @@favorites = YAML.load_file(FAVORITES)
+  else
+    @@favorites = {}
+  end
   
   def initialize(action)
     super()
@@ -161,13 +166,16 @@ class ActionButton < JPanel
 
   def make_favorites_checkbox(action)
     check_box = JCheckBox.new('')
+
     check_box.add_action_listener do |event|
       if check_box.selected
         @@favorites[action.name] = 1
       else
         @@favorites[action.name] = 0
       end
+      File.open(FAVORITES, 'w') {|f| YAML.dump(@@favorites, f)}
     end
+
     check_box.selected = (@@favorites[action.name] == 1)
     check_box.tool_tip_text = 'Mark this action as a favorite.'
     @@fav_to_action[check_box] = self

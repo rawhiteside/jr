@@ -1,0 +1,13 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  plant.x: '953'
+  plant.y: '568'
+  stash.x: '65'
+  stash.y: '545'
+  count: '1'
+  size: '3'
+  grow: 176, -6013
+  water: 176, -6013
+  stash: 176, -6013

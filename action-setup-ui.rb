@@ -164,21 +164,25 @@ end
 # Persists a hash holding defaults for dialogs.
 # The hash looks like {'name' => {hash-of-defaults}}
 class DialogDefaults
-  @@instance = nil
-  @@lock = Monitor.new
-  def self.instance
-    @@lock.synchronize {
-      @@instance = PersistentHash.new('dialog-defaults.yaml') if @@instance.nil?
-    }
-    @@instance
+  def self.get_defaults(name)
+    full_file = filename_for(name)
+    if File.exist?(full_file)
+      return YAML.load_file(full_file)
+    else
+      return {}
+    end
   end
 
-  def self.get_defaults(name)
-    instance[name] || {}
+  def self.filename_for(name)
+    # Spaces in filenames are sometimes a pain.
+    # Let's don't use them. 
+    file = name.gsub(' ', '_')
+    return "dialog-defaults/#{file}.yaml"
   end
   
   def self.save_defaults(name, h)
-    instance[name] = h
+    full_file = filename_for(name)
+    File.open(full_file, 'w') {|f| YAML.dump(h, f)}
   end
 end
 
@@ -557,7 +561,7 @@ end
 # Beside the text area is a "CurrentLoc" button, which will append
 # the current world coordinates to the text area.
 # 
-# Uses: (:type), :label, :rows, :cols, :name, :aux
+# Uses: (:type), :label, :rows, :cols, :name, :custom_buttons (=> nil, true)
 #
 class SetupWorldPathGadget < JPanel
   def initialize(prefix, h, data_gets, data_puts)
@@ -574,56 +578,44 @@ class SetupWorldPathGadget < JPanel
 
     box.add(scroll)
 
-    # CurrentLoc button and aux button
+    # CurrentLoc button
     button_box = Box.create_vertical_box
     area = scroll.text_area
     button_box.add(WorldLocUtils.current_location_button(area, true))
 
-    custom_panel = JPanel.new
-    border = TitledBorder.new(LineBorder.create_black_line_border, 'Custom text inserter')
-    custom_panel.set_border(border)
-
-    custom_box = Box.create_vertical_box
-    info1 = { :label => 'Text', :size => 10, :name => 'custom_text_1'}
-    custom_box.add(SetupTextGadget.new('', info1, data_gets, data_puts))
-    cb1 = JButton.new('Insert')
-    cb1.add_action_listener do |e|
-      t = data_gets[info1[:name]].call
-      if !t.nil? && t.size > 0
-        cb1.set_text t.capitalize
-        area.insert(t + "\n", area.caret_position)
-      end
-    end
-    custom_box.add(cb1)
-    custom_panel.add(custom_box)
-    button_box.add(custom_panel)
-    button_box.add(Box.create_vertical_glue)
+    if h[:custom_buttons]
+      button_box.add(custom_text_inserter('custom_text_1', area, data_gets, data_puts))
+      button_box.add(Box.create_vertical_glue)
     
-    custom_panel = JPanel.new
-    border = TitledBorder.new(LineBorder.create_black_line_border, 'Custom text inserter')
-    custom_panel.set_border(border)
-
-    info2 = { :label => 'Text', :size => 10, :name => 'custom_text_2'}
-    custom_box = Box.create_vertical_box
-    custom_box.add(SetupTextGadget.new('', info2, data_gets, data_puts))
-    cb2 = JButton.new('Insert')
-    cb2.add_action_listener do |e|
-      t = data_gets[info2[:name]].call
-      if !t.nil? && t.size > 0
-        cb2.set_text t.capitalize
-        area.insert(t + "\n", area.caret_position)
-      end
+      button_box.add(custom_text_inserter('custom_text_2', area, data_gets, data_puts))
+      button_box.add(Box.create_vertical_glue)
     end
-    custom_box.add(cb2)
-    custom_panel.add(custom_box)
-    button_box.add(custom_panel)
-    button_box.add(Box.create_vertical_glue)
-
     box.add(Box.create_horizontal_glue)
     box.add(button_box)
     box.add(Box.create_horizontal_glue)
     add(box)
 
+  end
+
+  def custom_text_inserter(name, area, data_gets, data_puts)
+    custom_panel = JPanel.new
+    border = TitledBorder.new(LineBorder.create_black_line_border, 'Custom text inserter')
+    custom_panel.set_border(border)
+
+    custom_box = Box.create_vertical_box
+    info = { :label => 'Text', :size => 10, :name => name}
+    custom_box.add(SetupTextGadget.new('', info, data_gets, data_puts))
+    cb = JButton.new('Insert')
+    cb.add_action_listener do |e|
+      t = data_gets[info[:name]].call
+      if !t.nil? && t.size > 0
+        cb.set_text t.capitalize
+        area.insert(t + "\n", area.caret_position)
+      end
+    end
+    custom_box.add(cb)
+    custom_panel.add(custom_box)
+    return custom_panel
   end
 
 end

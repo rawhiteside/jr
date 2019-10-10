@@ -1,0 +1,324 @@
+---
+2: Apiaries
+1: true
+Parameter set 1:
+  path: ''
+Apiaries:
+  code.code: "# a comment\ndef apiary\n  sleep 0.5  # Wait for running to stop. \n\
+    puts 'I ran'\n\n  pt = find_sub_image 'Apiary'\n  mm pt\n  sleep 0.1\n  send_string\
+    \ 'tc'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef stash\n  win\
+    \ = find_and_pin 'Warehouse'\n  HowMuch.max if win.click_on 'Stash/Honey'\n  HowMuch.max\
+    \ if win.click_on 'Stash/Beeswax'\n  win.unpin\nend\n\n"
+  repeat: One time
+  path: |
+    -920, -6750
+    apiary
+    -920, -6747
+    apiary
+    -920, -6744
+    apiary
+    -920, -6741
+    apiary
+    -920, -6738
+    apiary
+    -920, -6735
+    apiary
+    -920, -6732
+    apiary
+    -920, -6729
+    apiary
+    -920, -6726
+    apiary
+    -920, -6723
+    apiary
+    -920, -6720
+    apiary
+    -920, -6717
+    apiary
+    -920, -6714
+    apiary
+    -920, -6711
+    apiary
+    -920, -6708
+    apiary
+    -920, -6705
+    apiary
+    -920, -6702
+    apiary
+    -920, -6699
+    apiary
+    -920, -6696
+    apiary
+    -920, -6693
+    apiary
+    -920, -6690
+    apiary
+    -920, -6687
+    apiary
+    -920, -6684
+    apiary
+    -920, -6681
+    apiary
+    -920, -6678
+    apiary
+    -920, -6675
+    apiary
+    -920, -6672
+    apiary
+    -920, -6669
+    apiary
+    -920, -6666
+    apiary
+    -920, -6663
+    apiary
+    -920, -6660
+    apiary
+    -920, -6657
+    apiary
+    -920, -6654
+    apiary
+    -920, -6651
+    apiary
+    -920, -6648
+    apiary
+    -920, -6645
+    apiary
+    -920, -6642
+    apiary
+    -920, -6639
+    apiary
+    -920, -6636
+    apiary
+    -920, -6633
+    apiary
+    -920, -6630
+    apiary
+    -920, -6627
+    apiary
+    -920, -6624
+    apiary
+    -920, -6621
+    apiary
+    -920, -6618
+    apiary
+    -920, -6615
+    apiary
+    -920, -6612
+    apiary
+    -920, -6609
+    apiary
+    -920, -6606
+    apiary
+    -920, -6603
+    apiary
+    -930, -6603
+    apiary
+    -930, -6606
+    apiary
+    -930, -6609
+    apiary
+    -930, -6612
+    apiary
+    -930, -6615
+    apiary
+    -930, -6618
+    apiary
+    -930, -6621
+    apiary
+    -930, -6624
+    apiary
+    -930, -6627
+    apiary
+    -930, -6630
+    apiary
+    -930, -6633
+    apiary
+    -930, -6636
+    apiary
+    -930, -6639
+    apiary
+    -930, -6642
+    apiary
+    -930, -6645
+    apiary
+    -930, -6648
+    apiary
+    -930, -6651
+    apiary
+    -930, -6654
+    apiary
+    -930, -6657
+    apiary
+    -930, -6660
+    apiary
+    -930, -6663
+    apiary
+    -930, -6666
+    apiary
+    -930, -6669
+    apiary
+    -930, -6672
+    apiary
+    -930, -6675
+    apiary
+    -930, -6678
+    apiary
+    -930, -6681
+    apiary
+    -930, -6684
+    apiary
+    -930, -6687
+    apiary
+    -930, -6690
+    apiary
+    -930, -6693
+    apiary
+    -930, -6696
+    apiary
+    -930, -6699
+    apiary
+    -930, -6702
+    apiary
+    -930, -6705
+    apiary
+    -930, -6708
+    apiary
+    -930, -6711
+    apiary
+    -930, -6714
+    apiary
+    -930, -6717
+    apiary
+    -930, -6720
+    apiary
+    -930, -6723
+    apiary
+    -930, -6726
+    apiary
+    -930, -6729
+    apiary
+    -930, -6732
+    apiary
+    -930, -6735
+    apiary
+    -930, -6738
+    apiary
+    -930, -6741
+    apiary
+    -930, -6744
+    apiary
+    -930, -6747
+    apiary
+    -930, -6750
+    apiary
+    -924, -6676
+    stash
+    -920, -6750
+  custom_text_1: apiary
+  custom_text_2: ''
+Camp to Chariot:
+  path: |
+    -974, -6810
+    -946, -6838
+    -946, -7044
+    -912, -7044
+    -907, -7040
+    14, -7040
+Chaiot to UArch:
+  path: |
+    14, -7040
+    161, -7040
+    172, -7051
+    231, -7051
+    241, -7061
+    339, -7061
+    364, -7085
+    406, -7085
+    416, -7096
+    463, -7096
+    471, -7088
+    502, -7088
+    506, -7084
+    539, -7084
+    542, -7087
+    552, -7087
+    555, -7090
+    590, -7090
+    602, -7103
+    790, -7103
+    795, -7098
+    825, -7098
+    827, -7100
+    998, -7100
+    1020, -7121
+    1020, -7130
+Apiary Test:
+  code.code: |+
+    def stash
+      win = find_and_pin 'Warehouse'
+      HowMuch.max if win.click_on 'Stash/Honey'
+      HowMuch.max if win.click_on 'Stash/Beeswax'
+      win.unpin
+    end
+
+  repeat: One time
+  path: |
+    -924, -6676
+    stash
+  custom_text_1: apiary
+  custom_text_2: text2
+Tree run:
+  code.code: |
+    def tree
+      sleep 0.5
+
+      dim = screen_size
+      grid = 10
+      x_size = dim.width/grid
+      y_size = dim.height/grid
+      1.upto(grid - 1) do |y|
+        1.upto(grid - 1) do |x|
+          mm x * x_size, y * y_size
+          send_string 'g', 0.005
+        end
+      end
+
+      sleep 1
+    end
+  repeat: Repeat
+  path: |
+    -1013, -6817
+    tree
+    -1008, -6828
+    tree
+    -1010, -6842
+    tree
+    -1005, -6845
+    tree
+    -1010, -6858
+    tree
+    -1005, -6862
+    tree
+    -1006, -6868
+    tree
+    -1006, -6872
+    tree
+    -1002, -6877
+    -1002, -6884
+    -1006, -6884
+    -1021, -6869
+    -1031, -6868
+    -1031, -6866
+    -1035, -6866
+    tree
+    -1036, -6859
+    tree
+    -1036, -6822
+    -1029, -6815
+    -1021, -6822
+    tree
+    -1018, -6823
+    tree
+    -1017, -6815
+  custom_text_1: tree
+  custom_text_2: ''
