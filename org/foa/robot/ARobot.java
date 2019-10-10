@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import org.foa.ControllableThread;
 import org.foa.*;
+import org.foa.window.*;
 
 public class ARobot {
 	private static final double MOUSE_MOVE_DELAY = 0.01;
@@ -30,6 +31,11 @@ public class ARobot {
 	}
 
 	public void beep() { m_toolkit.beep(); }
+
+	public PinnableWindow findAndPin(String imageName) {
+		Point pt = findSubImage(imageName);
+		return PinnableWindow.fromScreenClick(pt).pin();
+	}
 
 	public Point findSubImage(String imageName) {
 		PixelBlock screen = fullScreenCapture();

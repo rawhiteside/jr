@@ -21,6 +21,8 @@ class RunAndDo < Action
           },
         ]
       },
+      {:type => :combo, :name => 'repeat', :label => 'Repeat?', 
+       :vals => ['Repeat', 'One time']},
       {:type => :world_path, :label => 'Path to walk.', :name => 'path',
        :rows => 10,}
     ]
@@ -43,12 +45,15 @@ class RunAndDo < Action
     return unless init_stuff
 
     walker = Walker.new
-    @coords.each do |c|
-      if c.kind_of? Array
-        walker.walk_to(c)
-      else
-        instance_eval(c)
+    loop do
+      @coords.each do |c|
+        if c.kind_of? Array
+          walker.walk_to(c)
+        else
+          instance_eval(c)
+        end
       end
+      break if @vals['repeat'] == 'One time'
     end
   end
 

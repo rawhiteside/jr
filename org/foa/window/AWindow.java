@@ -232,14 +232,24 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		}
 		robot.withRobotLock(new Runnable() {
 				public void run() {
+					// Grab a few pixeld, so we can see what changes when we send ESC.
+					Rectangle rect = new Rectangle(p.x, p.y - 1, 1, 3);
+					PixelBlock pb1 = new PixelBlock(rect);
 					// Force a delay.  We're probably here because things are laggy.
 					robot.mm(p, 0.1);
 					robot.sendVk(KeyEvent.VK_ESCAPE);
-					// Now, look to see if the pixel turned black.
+					// Now, look to see if the pixels changed
 					// This happens when there wasn't anything to dismiss, so the
 					// self menu appeared.  If so, dismiss that.
 					robot.mm(p, 0.1);
-					if (robot.getPixel(p) == 0) {
+					PixelBlock pb2 = new PixelBlock(rect);
+					int count = 0;
+					for(int iy = 0; iy < rect.height; iy++) {
+						if(pb1.color(0, iy) != pb2.color(0, iy)) {
+							count += 1;
+						}
+					}
+					if (count > 2) {
 						robot.sendVk(KeyEvent.VK_ESCAPE);
 					}
 				}

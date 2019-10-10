@@ -62,6 +62,7 @@ public class PinnableWindow extends AWindow {
 		finally {releaseRobotLock();}
 
 	}
+
 	public AWindow clickOn(String menuPath, String refreshLoc) {
 		AWindow rv = null;
 		claimRobotLock();

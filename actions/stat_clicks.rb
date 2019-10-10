@@ -190,7 +190,7 @@ class FocusClick < Action
     loop do
       stat_wait('Foc')
       rclick_at_restore(x, y)
-      sleep_sec 1
+      sleep_sec 5
     end
   end
 end
@@ -214,7 +214,7 @@ class ConClick < Action
     loop do
       stat_wait('Con')
       rclick_at_restore(x, y)
-      sleep_sec 1
+      sleep_sec 5
     end
   end
 

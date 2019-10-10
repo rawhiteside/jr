@@ -579,42 +579,45 @@ class SetupWorldPathGadget < JPanel
     area = scroll.text_area
     button_box.add(WorldLocUtils.current_location_button(area, true))
 
+    custom_panel = JPanel.new
+    border = TitledBorder.new(LineBorder.create_black_line_border, 'Custom text inserter')
+    custom_panel.set_border(border)
+
     custom_box = Box.create_vertical_box
     info1 = { :label => 'Text', :size => 10, :name => 'custom_text_1'}
     custom_box.add(SetupTextGadget.new('', info1, data_gets, data_puts))
     cb1 = JButton.new('Insert')
     cb1.add_action_listener do |e|
       t = data_gets[info1[:name]].call
-      cb1.set_text t.capitalize
-      area.insert(t + "\n", area.caret_position)
+      if !t.nil? && t.size > 0
+        cb1.set_text t.capitalize
+        area.insert(t + "\n", area.caret_position)
+      end
     end
     custom_box.add(cb1)
-    button_box.add(custom_box)
+    custom_panel.add(custom_box)
+    button_box.add(custom_panel)
     button_box.add(Box.create_vertical_glue)
     
+    custom_panel = JPanel.new
+    border = TitledBorder.new(LineBorder.create_black_line_border, 'Custom text inserter')
+    custom_panel.set_border(border)
+
     info2 = { :label => 'Text', :size => 10, :name => 'custom_text_2'}
     custom_box = Box.create_vertical_box
     custom_box.add(SetupTextGadget.new('', info2, data_gets, data_puts))
     cb2 = JButton.new('Insert')
     cb2.add_action_listener do |e|
       t = data_gets[info2[:name]].call
-      cb2.set_text t.capitalize
-      area.insert(t + "\n", area.caret_position)
-    end
-    custom_box.add(cb2)
-    button_box.add(custom_box)
-    button_box.add(Box.create_vertical_glue)
-
-    if h[:aux]
-      auxs = h[:aux].kind_of?(Array) ? h[:aux] : [h[:aux]]
-      auxs.each do |aux|
-        aux_button = JButton.new(aux)
-        aux_button.add_action_listener do |e|
-          area.insert(aux + "\n", area.caret_position)
-        end
-        button_box.add(aux_button)
+      if !t.nil? && t.size > 0
+        cb2.set_text t.capitalize
+        area.insert(t + "\n", area.caret_position)
       end
     end
+    custom_box.add(cb2)
+    custom_panel.add(custom_box)
+    button_box.add(custom_panel)
+    button_box.add(Box.create_vertical_glue)
 
     box.add(Box.create_horizontal_glue)
     box.add(button_box)
