@@ -332,13 +332,14 @@ Trees:
 : 2: Parameter set 1
   1: false
   Parameter set 1:
-    name: Warehouse
+    p.x: '491'
+    p.y: '871'
 Wood Planes:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    stack.x: '402'
-    stack.y: '616'
+    stack.x: '937'
+    stack.y: '641'
 Flimsy Bricks:
   2: Parameter set 1
   1: false
@@ -368,8 +369,8 @@ Flax Comb:
   1: false
   Parameter set 1:
     count: '140'
-    w.x: '189'
-    w.y: '346'
+    w.x: '1095'
+    w.y: '457'
 Interval tab:
   2: Parameter set 1
   1: false
@@ -405,10 +406,10 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '1331'
-    g.top-left.y: '439'
-    g.bottom-right.x: '1576'
-    g.bottom-right.y: '719'
+    g.top-left.x: '1219'
+    g.top-left.y: '352'
+    g.bottom-right.x: '1463'
+    g.bottom-right.y: '626'
     g.num-cols: '4'
     g.num-rows: '4'
     task: Light
@@ -944,14 +945,17 @@ Color Picker:
     loc.x: '916'
     loc.y: '86'
 run_and_do:
-  2: Tree run
+  2: Apiaries
   1: true
   Parameter set 1:
     path: ''
   Apiaries:
     code.code: "def apiary\n  sleep 0.5  # Wait for running to stop. \n\n  pt = find_sub_image\
       \ 'Apiary'\n  mm pt\n  sleep 0.1\n  send_string 'tc'\n\n  pw = PopupWindow.find\n\
-      \  pw.dismiss if pw\nend\n"
+      \  pw.dismiss if pw\nend\n\ndef stash\n  win = find_and_pin 'Warehouse'\n  HowMuch.max\
+      \ if win.click_on 'Stash/Honey'\n  HowMuch.max if win.click_on 'Stash/Beeswax'\n\
+      \  win.unpin\nend\n\n"
+    repeat: One time
     path: |
       -920, -6750
       apiary
@@ -1153,6 +1157,9 @@ run_and_do:
       apiary
       -930, -6750
       apiary
+      -924, -6676
+      stash
+      -920, -6750
     custom_text_1: apiary
     custom_text_2: ''
   Camp to Chariot:
@@ -1192,19 +1199,25 @@ run_and_do:
       1020, -7121
       1020, -7130
   Apiary Test:
-    code.code: |2
-
-      def apiary
-          puts "Apiary ran"
+    code.code: |+
+      def stash
+        win = find_and_pin 'Warehouse'
+        HowMuch.max if win.click_on 'Stash/Honey'
+        HowMuch.max if win.click_on 'Stash/Beeswax'
+        win.unpin
       end
+
+    repeat: One time
     path: |
-      apiary
-      apiary
+      -924, -6676
+      stash
     custom_text_1: apiary
     custom_text_2: text2
   Tree run:
     code.code: |
       def tree
+        sleep 0.5
+
         dim = screen_size
         grid = 10
         x_size = dim.width/grid
@@ -1212,25 +1225,51 @@ run_and_do:
         1.upto(grid - 1) do |y|
           1.upto(grid - 1) do |x|
             mm x * x_size, y * y_size
-            send_string 'g'
+            send_string 'g', 0.005
           end
         end
 
         sleep 1
       end
+    repeat: Repeat
     path: |
-      -1103, -6877
+      -1013, -6817
       tree
-      -1103, -6885
-      -1071, -6917
-      -1071, -6923
-      -1058, -6923
-      -1058, -6902
+      -1008, -6828
       tree
+      -1010, -6842
+      tree
+      -1005, -6845
+      tree
+      -1010, -6858
+      tree
+      -1005, -6862
+      tree
+      -1006, -6868
+      tree
+      -1006, -6872
+      tree
+      -1002, -6877
+      -1002, -6884
+      -1006, -6884
+      -1021, -6869
+      -1031, -6868
+      -1031, -6866
+      -1035, -6866
+      tree
+      -1036, -6859
+      tree
+      -1036, -6822
+      -1029, -6815
+      -1021, -6822
+      tree
+      -1018, -6823
+      tree
+      -1017, -6815
     custom_text_1: tree
     custom_text_2: ''
 Travel paths:
-  2: Bricks CP to Charcoal CP
+  2: Charcoal CP to Apiaries
   1: true
   Parameter set 1:
     path: ''
@@ -1434,8 +1473,15 @@ Travel paths:
       -978, -6777
     custom_text_1: ''
     custom_text_2: ''
+  Charcoal CP to Apiaries:
+    path: |
+      -978, -6777
+      -952, -6750
+      -923, -6750
+    custom_text_1: ''
+    custom_text_2: ''
 Travel:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    destination: Bricks CP
+    destination: Chariot
