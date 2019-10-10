@@ -3,17 +3,20 @@ flax-seeds:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    flax-type: Symphony Ridge Gold
+    flax-type: Old Dog
     head.x: '957'
     head.y: '550'
-    stash.x: '1639'
-    stash.y: '976'
+    stash.x: '225'
+    stash.y: '771'
+    plant.x: '483'
+    plant.y: '926'
     repeat: '3'
     max_wait_secs: '30'
     harvest_reps: '3'
-    row_len: '14'
-    start_location: -372, -6740
-    stash_location: -378, -6733
+    row_len: '18'
+    start_location: -1066, -6847
+    stash_location: -1057, -6861
+    first_dir: right
 Barley:
   2: Parameter set 1
   1: false
@@ -356,13 +359,15 @@ Grass:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    chest.x: '318'
-    chest.y: '627'
+    chest.x: '286'
+    chest.y: '699'
     chest-coords: -1017, -6796
     count: '20'
     path: |
       -1017, -6796
       -1017, -6798
+    custom_text_1: ''
+    custom_text_2: ''
 Flax Comb:
   2: Parameter set 1
   1: false
@@ -405,13 +410,13 @@ Firepits:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    g.top-left.x: '1331'
-    g.top-left.y: '439'
-    g.bottom-right.x: '1576'
-    g.bottom-right.y: '719'
+    g.top-left.x: '1360'
+    g.top-left.y: '372'
+    g.bottom-right.x: '1660'
+    g.bottom-right.y: '720'
     g.num-cols: '4'
     g.num-rows: '4'
-    task: Light
+    task: Tend
 Glazier:
   2: Parameter set 1
   1: false
@@ -909,13 +914,13 @@ Grow vegetables:
   1: false
   Parameter set 1:
     veggie: Cabbage/Bastet's Yielding/(2)
-    grow: 196, -6645
-    water: 196, -6645
+    grow: -955, -6839
+    water: -954, -6807
     head.x: '958'
     head.y: '545'
-    plant.x: '54'
-    plant.y: '426'
-    repeat: '5'
+    plant.x: '297'
+    plant.y: '790'
+    repeat: '6'
     beds: '6'
     second: '18'
     third: '31'
@@ -1230,7 +1235,7 @@ run_and_do:
     custom_text_1: tree
     custom_text_2: ''
 Travel paths:
-  2: Bricks CP to Charcoal CP
+  2: Guildhall to UArt
   1: true
   Parameter set 1:
     path: ''
@@ -1434,8 +1439,27 @@ Travel paths:
       -978, -6777
     custom_text_1: ''
     custom_text_2: ''
+  Guildhall to UArt:
+    path: |
+      -974, -6811
+      -946, -6839
+      -946, -7043
+      -1439, -7043
+    custom_text_1: ''
+    custom_text_2: ''
 Travel:
   2: Parameter set 1
   1: false
   Parameter set 1:
-    destination: Bricks CP
+    destination: Kitchens CP
+Forge:
+  2: Parameter set 1
+  1: false
+  Parameter set 1:
+    g.top-left.x: '692'
+    g.top-left.y: '385'
+    g.bottom-right.x: '842'
+    g.bottom-right.y: '541'
+    g.num-cols: '2'
+    g.num-rows: '2'
+    what: Straps/Make Copper
