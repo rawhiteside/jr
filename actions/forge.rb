@@ -29,13 +29,10 @@ class ForgeAction < Action
 	loop do
 	  w.refresh
 	  text = w.read_text
-	  if text =~ /Make a/
-	    w.unpin
-	    w = PinnableWindow.from_screen_click(Point.new(p['x'].to_i, p['y'].to_i))
-	    break
-	  end
+	  break if text =~ /Make a/
 	  sleep_sec 5.0
 	end
+
 	# Click on the item
 	w.click_on(@vals['what'])
 	w.unpin
