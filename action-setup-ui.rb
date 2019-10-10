@@ -166,7 +166,7 @@ end
 class DialogDefaults
   def self.get_defaults(name)
     full_file = filename_for(name)
-    if File.exist?(full_file)
+    if !full_file.nil? && File.exist?(full_file)
       return YAML.load_file(full_file)
     else
       return {}
@@ -174,6 +174,7 @@ class DialogDefaults
   end
 
   def self.filename_for(name)
+    return nil if name.nil?
     # Spaces in filenames are sometimes a pain.
     # Let's don't use them. 
     file = name.gsub(' ', '_')
@@ -181,6 +182,7 @@ class DialogDefaults
   end
   
   def self.save_defaults(name, h)
+    return if name.nil?
     full_file = filename_for(name)
     File.open(full_file, 'w') {|f| YAML.dump(h, f)}
   end
