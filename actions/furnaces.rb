@@ -15,7 +15,6 @@ class BlastFurnaces < Action
   end
 
   def act
-    first_time = true
 
     loop do
       GridHelper.new(@vals, 'g').each_point do |p|
@@ -31,14 +30,12 @@ class BlastFurnaces < Action
         ConfirmationWindow.yes if w.click_on('Open')
         
         sleep 3
-        w.refresh
-        w.refresh
-        sleep 1
-        w.click_on('Take/Every')
-        sleep 1
-        w.refresh
-        sleep 1
-        w.click_on('Take/Every')
+        # why does this fail sometimes?!?
+        2.times do
+          w.refresh
+          sleep 1
+          w.click_on('Take/Every')
+        end
         
         w.refresh
         sleep 1
@@ -50,12 +47,11 @@ class BlastFurnaces < Action
         w.click_on('Load the Blast Furnace with Iron')
         HowMuch.amount 991
 
+        # Delay needed.  "Blast furnace is busy."  Bah! 
         w.refresh
-        sleep 1
+        sleep 5
+        w.refresh
         w.click_on('Fire')
-
-        # Get them spread out a bit.
-        sleep 30 if first_time
 
         w.unpin
       end
@@ -69,6 +65,7 @@ class BlastFurnaces < Action
       w.refresh
       text = w.read_text
       return if text.include? 'Chamber: 54 Iron'
+      return if text.include? 'FireTime: 9 minutes'
       return if text.include? 'Fire the Blast'
       sleep 3
     end
