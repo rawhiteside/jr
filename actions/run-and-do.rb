@@ -16,7 +16,7 @@ class RunAndDo < Action
         :gadgets => [
           {
             :type => :big_text, :label => 'Setup Ruby code', :name => 'code',
-            :value => 'Type code here, then OK.  Takes effect the next time.',
+            :value => '# Type Ruby code here.',
             :rows => 15, :cols => 50
           },
         ]
@@ -24,7 +24,7 @@ class RunAndDo < Action
       {:type => :combo, :name => 'repeat', :label => 'Repeat?', 
        :vals => ['Repeat', 'One time']},
       {:type => :world_path, :label => 'Path to walk.', :name => 'path',
-       :rows => 10,}
+       :rows => 10, :custom_buttons => 3}
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end

@@ -6,9 +6,6 @@ class CactusRun < Action
     super('Cactus run', 'Gather')
   end
 
-  def persistence_name
-    'Cactus'
-  end
   def setup(parent)
     gadgets = [
       {:type => :world_path, :label => 'Path to walk.', :name => 'path', :aux => ['Collect', 'Stash']},

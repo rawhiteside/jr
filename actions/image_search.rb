@@ -6,11 +6,6 @@ class ImageSearch < Action
     super(name, category)
   end
 
-  def persistence_name
-    'Image search'
-  end
-  
-
   def setup(parent)
     gadgets = [
       {:type => :frame, :name => 'image_def', :label => 'Capture image',

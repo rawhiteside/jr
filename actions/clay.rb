@@ -74,10 +74,7 @@ class Clay < Action
   end
 
 
-  def persistence_name
-    'Clay'
-  end
-  def setup(parent)
+    def setup(parent)
     comps = [
       {:type => :point, :name => 'chest', :label => 'Stash chest window'},
       {:type => :world_loc, :name => 'chest-coords', :label => 'Coordinates within reach of the chest.'},

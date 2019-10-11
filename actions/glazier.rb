@@ -245,18 +245,14 @@ end
 
 
 class Glazier < Action
-  def initialize(n)
-    super(n, 'Buildings')
+  def initialize
+    super('Glazier', 'Buildings')
     @threads = []
   end
 
   def stop
     @threads.each {|t| t.kill} if @threads
     super
-  end
-
-  def persistence_name
-    'Glaziers'
   end
 
   def get_ui_vals(parent)
@@ -313,4 +309,4 @@ class Glazier < Action
   
 end
 
-Action.add_action(Glazier.new('Glazier'))
+Action.add_action(Glazier.new)

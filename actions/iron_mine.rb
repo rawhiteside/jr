@@ -11,9 +11,7 @@ class IronMine < Action
   def initialize
     super('Mine iron', 'Misc')
   end
-  def persistence_name
-    'iron_mine'
-  end
+
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Show me the stone area', :name => 'area',

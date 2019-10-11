@@ -22,10 +22,6 @@ class FlaxGrow < Action
     @walker = Walker.new
   end
 
-  def persistence_name
-    'Grow flax'
-  end
-
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
@@ -223,9 +219,7 @@ class FlaxSeeds < Action
     super('Flax Seeds', 'Plants')
     @walker = Walker.new
   end
-  def persistence_name
-    'flax-seeds'
-  end
+
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [

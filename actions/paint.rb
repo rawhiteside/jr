@@ -240,9 +240,6 @@ class PpPaint < Action
     end
   end
 
-  def persistence_name
-    'Paint'
-  end
   def get_vals(parent)
     comps = [
       {:type => :combo, :name => 'color', :label => 'Color: ', :vals => @colors},

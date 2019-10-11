@@ -563,7 +563,7 @@ end
 # Beside the text area is a "CurrentLoc" button, which will append
 # the current world coordinates to the text area.
 # 
-# Uses: (:type), :label, :rows, :cols, :name, :custom_buttons (=> nil, true)
+# Uses: (:type), :label, :rows, :cols, :name, :custom_buttons (=> nil, count)
 #
 class SetupWorldPathGadget < JPanel
   def initialize(prefix, h, data_gets, data_puts)
@@ -585,11 +585,10 @@ class SetupWorldPathGadget < JPanel
     area = scroll.text_area
     button_box.add(WorldLocUtils.current_location_button(area, true))
 
-    if h[:custom_buttons]
-      button_box.add(custom_text_inserter('custom_text_1', area, data_gets, data_puts))
-      button_box.add(Box.create_vertical_glue)
-    
-      button_box.add(custom_text_inserter('custom_text_2', area, data_gets, data_puts))
+    count = 0
+    count = h[:custom_buttons] unless h[:custom_buttons].nil?
+    count.times do |i|
+      button_box.add(custom_text_inserter("custom_text_#{i}", area, data_gets, data_puts))
       button_box.add(Box.create_vertical_glue)
     end
     box.add(Box.create_horizontal_glue)

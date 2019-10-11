@@ -6,9 +6,6 @@ class Quarry < Action
     super('Quarry', 'Buildings')
   end
 
-  def persistence_name
-    'Quarry'
-  end
 
   def setup(parent)
     comps = [

@@ -6,10 +6,6 @@ class WoodPlane < Action
     @threads = []
   end
 
-  def persistence_name
-    'Wood Planes'
-  end
-
   def setup(parent)
     gadgets = [
       { :type => :point, :name => 'stack', :label => 'Drag to the stack of menus' }

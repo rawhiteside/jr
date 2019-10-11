@@ -6,9 +6,6 @@ class PlantPapy < Action
     super('Plant Papyrus', 'Plants')
   end
 
-  def persistence_name
-    'PapyPlant'
-  end
   def setup(parent)
     gadgets = 
       [

@@ -7,10 +7,6 @@ class SiltAction < Action
     super('Silt', 'Gather')
   end
 
-  def persistence_name
-    'silt'
-  end
-
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [

@@ -6,9 +6,6 @@ class Wheat < Action
     super('Wheat', 'Plants')
   end
 
-  def persistence_name
-    'wheat'
-  end
   def setup(parent)
     gadgets = [
       {:type => :world_loc, :name => 'grow_loc', :label => 'NW corner of the growing region', },

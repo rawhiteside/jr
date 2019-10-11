@@ -5,9 +5,6 @@ class WaterMineAction < Action
     super('Water mine', 'Buildings')
   end
 
-  def persistence_name
-    'water-mine'
-  end
   def setup(parent)
     gadgets = [
       {:type => :point, :name => 'water-mine', :label => 'Water mine'},

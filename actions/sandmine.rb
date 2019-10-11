@@ -7,10 +7,6 @@ class SandMine < AbstractMine
     super('Mine sand', 'Misc')
   end
 
-  def persistence_name
-    'sand_mine'
-  end
-
   def setup(parent)
     gadgets = [
       {:type => :frame, :label => 'Ore field', :name => 'field',

@@ -6,10 +6,6 @@ class PyramidPushStack < Action
     super('Pyramid push', 'Misc')
   end
 
-  def persistence_name
-    'push-pyramid-block'
-  end
-
   def setup(parent)
     gadgets = [
       {:type => :point, :label => 'Drag to stack of Rolling blocks', :name => 'win'},
@@ -50,10 +46,6 @@ Action.add_action(PyramidPushStack.new)
 class PyramidDigStack < Action
   def initialize
     super('Pyramid dig', 'Misc')
-  end
-
-  def persistence_name
-    'dig-pyramid-block'
   end
 
   def setup(parent)

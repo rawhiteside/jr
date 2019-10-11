@@ -2,7 +2,7 @@ require 'icons'
 require 'action.rb'
 require 'window'
 
-class Onions < Action
+class Vegetables < Action
   def initialize(name = "Grow vegetables", category = 'Plants')
     super(name, category)
     @threads = []
@@ -81,10 +81,6 @@ class Onions < Action
   # head.  Actually, picking up is larger.  Using this value for now. 
   REACH_RADIUS = 40
 
-  def persistence_name
-    'Grow vegetables'
-  end
-  
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'What to grow?:', :name => 'veggie', 
@@ -269,4 +265,4 @@ end
 
 
 
-Action.add_action(Onions.new)
+Action.add_action(Vegetables.new)

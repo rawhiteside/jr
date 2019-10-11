@@ -64,10 +64,6 @@ class Barley < Action
     super
   end
 
-  def persistence_name
-    'Barley'
-  end
-
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},

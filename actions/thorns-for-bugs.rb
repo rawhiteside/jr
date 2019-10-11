@@ -57,9 +57,6 @@ class ThornRun < Action
     end
   end
 
-  def persistence_name
-    'Thorns'
-  end
   def get_drop_window(parent)
     comps = [
       {:type => :point, :name => 'drop', :label => 'Pinned drop menu'},

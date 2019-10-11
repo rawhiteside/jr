@@ -1,0 +1,10 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  g.top-left.x: '1128'
+  g.top-left.y: '414'
+  g.bottom-right.x: '1267'
+  g.bottom-right.y: '574'
+  g.num-cols: '2'
+  g.num-rows: '2'

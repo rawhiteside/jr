@@ -31,11 +31,6 @@ class Grass < Action
     @threads << ControllableThread.new {CasualGrass.new.act}
   end
 
-
-  def persistence_name
-    'Grass'
-  end
-
   def setup(parent)
     gadgets = [
       {:type => :point, :name => 'chest', :label => 'Stash chest window'},

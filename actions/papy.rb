@@ -5,9 +5,6 @@ class HarvestPapy < Action
     super(name, group)
   end
 
-  def persistence_name
-    'papyrus'
-  end
   def get_uvals(parent)
     # Coords are relative to your head in cart view.
     gadgets = [

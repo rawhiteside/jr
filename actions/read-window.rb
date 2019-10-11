@@ -21,6 +21,7 @@ class ReadWindow < Action
     w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
 
     text = w.read_text
+    puts text
     comps = [
       {:type => :big_text, :value => text, :name => 'text', :label => 'Text'}
     ]

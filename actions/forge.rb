@@ -5,9 +5,6 @@ class ForgeAction < Action
     super("Forge", "Buildings")
   end
 
-  def persistence_name
-    'Forge'
-  end
   def setup(parent)
     comps = [
       {:type => :grid, :name => 'g'},
@@ -40,4 +37,4 @@ class ForgeAction < Action
     end
   end
 end
-  Action.add_action(ForgeAction.new)
+Action.add_action(ForgeAction.new)

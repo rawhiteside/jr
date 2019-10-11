@@ -7,10 +7,6 @@ class Firepits < Action
     @threads = []
   end
 
-  def persistence_name
-    'Firepits'
-  end
-
   def setup(parent)
     gadgets = [
       {:type => :grid, :name => 'g', :label => 'Show me the grid of firepits.'},

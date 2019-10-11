@@ -28,10 +28,11 @@ class Action  < ARobot
     @@action_list.sort{|a,b| a.name.downcase <=> b.name.downcase}
   end
 
-  # Just for clarity.  Bob gets comfused. 
+  # Just for clarity.  Bob gets confused. 
   def persistence_name
     @name
   end
+
   def action_name
     @name
   end
