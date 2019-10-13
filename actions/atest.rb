@@ -11,9 +11,11 @@ class DefinePatchTest < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :point, :label => 'Drag top left corner of patch', :name => 'tl'},
-      {:type => :point, :label => 'Drag lower right corner of patch', :name => 'lr'},
-      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'}
+      {:type => :label, :label => 'Define a screen rectangle to capture.'},
+      {:type => :point, :label => 'Drag center of rect', :name => 'center'},
+      {:type => :number, :label => 'Width', :name => 'width'},
+      {:type => :number, :label => 'Height', :name => 'height'},
+      {:type => :text, :label => 'Name of patch (one word)', :name => 'name', :size => 12}
     ]
     @vals = UserIO.prompt(parent, nil, 'Define patch', gadgets)
 
@@ -21,13 +23,13 @@ class DefinePatchTest < Action
 
 
   def act
-    x = @vals['tl.x'].to_i
-    y = @vals['tl.y'].to_i
-    width = @vals['lr.x'].to_i - x
-    height = @vals['lr.y'].to_i - y
-    rect = Rectangle.new(x, y, width, height)
+    x = @vals['center.x'].to_i
+    y = @vals['center.y'].to_i
+    width = @vals['width'].to_i
+    height = @vals['height'].to_i
+    rect = Rectangle.new(x - width/2, y - height/2, width, height)
     pb = PixelBlock.new(rect)
-    filename = "patches/#{@vals['name']}.png"
+    filename = "images/#{@vals['name']}.png"
     pb.save_image(filename)
     pb_new = PixelBlock.load_image(filename)
     UserIO.show_image(pb_new, "Image read back.")
