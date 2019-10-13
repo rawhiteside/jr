@@ -11,7 +11,6 @@ public class PixelBlock extends ARobot {
 	private BufferedImage m_bufferedImage;
 	private Point m_origin;
 	private Rectangle m_rect;
-	private static int[][] s_diffSq = null;
 
 	public PixelBlock(Rectangle rect) {
 		m_bufferedImage = createScreenCapture(rect);
@@ -37,33 +36,25 @@ public class PixelBlock extends ARobot {
 		return m_bufferedImage;
 	}
 
-	private int[][] diffSqLookup() {
-		if (s_diffSq == null) {
-			s_diffSq = new int[256][256];
-			for(int i = 0; i < 256; i++) {
-				for(int j = 0; j < 256; j++) {
-					s_diffSq[i][j] = (i - j) * (i - j);
-				}
-			}
-		}
-		return s_diffSq;
-	}
-
 	/** 
-	 * Search within self for the best mach for the subimage pb
+	 * Search within self for the best mach for the subimage pb.
+	 * Convert everything into HSB instead of RGB.  The HSB components
+	 * get weighted, which makes things work better with the was
+	 * lighting changes during the day.
 	 */
 	public Point findPatch(PixelBlock pb) {
-		double bestDeltaSq = Double.MAX_VALUE;
+		int bestDiff = Integer.MAX_VALUE;
+		int diff = 0;
 		Point bestOrigin = null;
-		// System.out.println("The patcch: " + pb.rect().toString());
+
+		toHSB(this);
+		toHSB(pb);
 		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
-			//System.out.println("y val " + y);
+			// if (y % 10 == 0) { System.out.println("y = " + y);}
 			for(int x = 0; x < m_rect.width - pb.getWidth(); x++) {
-				// System.out.println("x val " + x);
-				double deltaSq = deltaSquared(x, y, pb, bestDeltaSq);
-				if (deltaSq < bestDeltaSq) {
-					bestDeltaSq = deltaSq;
-					// System.out.println("New best: " + bestDeltaSq);
+				diff = weightedDiff(x, y, pb, bestDiff);
+				if (bestDiff > diff) {
+					bestDiff = diff;
 					bestOrigin = new Point(x, y);
 				}
 			}
@@ -75,39 +66,56 @@ public class PixelBlock extends ARobot {
 		return bestOrigin;
 	}
 
-	/* Compute the average color distance between the two images.
+	/*
+	 * Replace the RBG values with HSB values.
 	 */
-	private double deltaSquared(int x, int y, PixelBlock pb, double bestSoFar) {
-		bestSoFar = bestSoFar * (pb.getWidth() * pb.getHeight());
-		double totalDist = 0;
+	private void toHSB(PixelBlock pb) {
+		float[] hsb = new float[3];
+		BufferedImage bi = pb.bufferedImage();
 		for(int i = 0; i < pb.getWidth(); i++) {
-			//System.out.println("i val " + i);
+			for(int j = 0; j < pb.getHeight(); j++) {
+				Color c = pb.color(i, j);
+				Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
+				int h = (int) (hsb[0] * 255);
+				int s = (int) (hsb[1] * 255);
+				int b = (int) (hsb[2] * 255);
+				int hsbVal = (h << 16) | (s << 8) | b;
+				bi.setRGB(i, j, hsbVal);
+			}
+		}
+	}
+
+	/* 
+	 * Compute a weighted color diff between +this+ and the provided
+	 * subimage pixel.  Should have HSB in the RGB slots of each pixel
+	 * already.  Components get weighted with magic numbers from
+	 * looking at the screen.
+	 */
+	private int weightedDiff(int x, int y, PixelBlock pb, int bestSoFar) {
+		int totalDiff = 0;
+		for(int i = 0; i < pb.getWidth(); i++) {
 			for(int j = 0; j < pb.getHeight(); j++) {
 				Color c1 = pb.color(i, j);
 				Color c2 = this.color(x + i, y + j);
-				totalDist += colorDistanceSq(c1, c2);
-				if(totalDist > bestSoFar) {
-					return totalDist/ (pb.getWidth() * pb.getHeight());
+				totalDiff += weightedColorDiff(c1, c2);
+				if(totalDiff > bestSoFar) {
+					return totalDiff;
 				}
 			}
 		}
-		return totalDist / (pb.getWidth() * pb.getHeight());
+		return totalDiff;
 	}
 
-	private double colorDistanceSq(Color c1, Color c2) {
-		int mask = 0xff;
-		int v1 = c1.getRGB();
-		int v2 = c2.getRGB();
-		int[][] table = diffSqLookup();
-		int rdiffSq = table[v1 & mask][v2 & mask];
-		v1 = v1 >> 8;
-		v2 = v2 >> 8;
-		int gdiffSq = table[v1 & mask][v2 & mask];
-		v1 = v1 >> 8;
-		v2 = v2 >> 8;
-		int bdiffSq = table[v1 & mask][v2 & mask];
-
-		return rdiffSq + gdiffSq + bdiffSq;
+	private int HUE_WEIGHT = 4;
+	private int SAT_WEIGHT = 2;
+	private int weightedColorDiff(Color c1, Color c2) {
+		int hueDiff = c1.getRed() - c2.getRed();
+		hueDiff = (hueDiff < 0 ? -hueDiff : hueDiff);
+		int satDiff = c1.getGreen() - c2.getGreen();
+		satDiff = (satDiff < 0 ? -satDiff : satDiff);
+		int brightDiff = c1.getBlue() - c2.getBlue();
+		brightDiff = (brightDiff < 0 ? -brightDiff : brightDiff);
+		return (hueDiff << HUE_WEIGHT) + (satDiff << SAT_WEIGHT) + brightDiff;
 	}
 
 	/**
