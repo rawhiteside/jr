@@ -154,9 +154,11 @@ class Eat < Action
   def act
     x = @vals['p.x'].to_i
     y = @vals['p.y'].to_i
+    w = PinnableWindow.from_point(Point.new(x, y))
+    
     loop do
       if should_eat?
-	rclick_at(x, y)
+        eat(w)
 	sleep_sec 5
 	# If still not boosted, we're out of food.
 	if should_eat?
@@ -164,7 +166,20 @@ class Eat < Action
 	  return
 	end
       end
-      sleep_sec 1
+      sleep_sec 2
+    end
+  end
+
+  def eat(w)
+    w.refresh
+    if w.read_text.include?('Kitchen')
+      with_robot_lock do
+        w.click_on 'Enjoy'
+        sleep 5
+        w.refresh
+      end
+    else
+      w.click_on 'Eat'
     end
   end
 
