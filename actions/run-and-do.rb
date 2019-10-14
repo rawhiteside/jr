@@ -46,11 +46,12 @@ class RunAndDo < Action
 
     walker = Walker.new
     loop do
+      puts "Starting at #{Time.now}"
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
         else
-          instance_eval(c)
+          instance_eval(c) unless c.strip.start_with?("#")
         end
       end
       break if @vals['repeat'] == 'One time'

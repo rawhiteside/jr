@@ -222,34 +222,24 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		final ARobot robot = new ARobot();
 		// A more or less random point that should be on everyone's screen.
 		final Point p = new Point(230, 600);
-		// Now, search left/up until we find a non-black pixel
-		while(robot.getPixel(p) == 0) {
+		// Now, search left/up until we find a non-border pixel
+		while(WindowGeom.isRightEdgeBorder(robot.getColor(p))) {
 			p.x -= 1;
 			p.y -= 1;
 			if (p.x == 0 || p.y == 0) {
-				throw new RuntimeException("Didn't find a non-block pixel");
+				throw new RuntimeException("Didn't find a non-border pixel");
 			}
 		}
 		robot.withRobotLock(new Runnable() {
 				public void run() {
-					// Grab a few pixeld, so we can see what changes when we send ESC.
-					Rectangle rect = new Rectangle(p.x, p.y - 1, 1, 3);
-					PixelBlock pb1 = new PixelBlock(rect);
 					// Force a delay.  We're probably here because things are laggy.
 					robot.mm(p, 0.1);
 					robot.sendVk(KeyEvent.VK_ESCAPE);
-					// Now, look to see if the pixels changed
+					// Now, look to see if the pixel is now a border
 					// This happens when there wasn't anything to dismiss, so the
 					// self menu appeared.  If so, dismiss that.
 					robot.mm(p, 0.1);
-					PixelBlock pb2 = new PixelBlock(rect);
-					int count = 0;
-					for(int iy = 0; iy < rect.height; iy++) {
-						if(pb1.color(0, iy) != pb2.color(0, iy)) {
-							count += 1;
-						}
-					}
-					if (count > 2) {
+					if (WindowGeom.isRightEdgeBorder(robot.getColor(p))) {
 						robot.sendVk(KeyEvent.VK_ESCAPE);
 					}
 				}

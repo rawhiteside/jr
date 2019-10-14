@@ -145,7 +145,10 @@ public class WindowGeom extends ARobot {
 	}
 
 	private static boolean isRightEdgeBorder(PixelBlock pb, int x, int y) {
-		Color color = pb.colorFromScreen(x, y);
+		return isRightEdgeBorder(pb.color(x, y));
+	}
+	
+	public static boolean isRightEdgeBorder(Color color) {
 		return Math.abs(color.getRed() - OUTER_BROWN.getRed()) <= 10 &&
 			Math.abs(color.getGreen() - OUTER_BROWN.getGreen()) <= 10 &&
 			Math.abs(color.getBlue() - OUTER_BROWN.getBlue()) <= 6;

@@ -134,6 +134,10 @@ public class PinnableWindow extends AWindow {
 	
 	}
 
+	public static PinnableWindow fromPoint(int x, int y) {
+		return fromPoint(new Point(x, y));
+	}
+
 	public static PinnableWindow fromPoint(Point p) {
 		Rectangle rect = WindowGeom.rectFromPoint(p);
 		if (rect == null) {
