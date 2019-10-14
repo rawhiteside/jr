@@ -26,8 +26,14 @@ class BlastFurnaces < Action
         
         wait_till_done(w)
 
-        w.refresh
-        ConfirmationWindow.yes if w.click_on('Open')
+        2.times do
+          w.refresh
+          sleep 0.2
+          if w.click_on('Open')
+            sleep 0.2
+            break if ConfirmationWindow.yes
+          end
+        end
         
         sleep 3
         # why does this fail sometimes?!?
