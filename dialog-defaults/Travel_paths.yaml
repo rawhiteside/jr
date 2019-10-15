@@ -1,5 +1,5 @@
 ---
-2: Charcoal CP to Apiaries
+2: Jaby Campsite to Bricks CP
 1: true
 Parameter set 1:
   path: ''
@@ -208,5 +208,16 @@ Charcoal CP to Apiaries:
     -978, -6777
     -952, -6750
     -923, -6750
-  custom_text_1: ''
-  custom_text_2: ''
+Beetles to Jaby Campsite:
+  path: |
+    -1086, -6850
+    -1086, -6834
+    -1081, -6829
+    -1078, -6829
+Jaby Campsite to Bricks CP:
+  path: |
+    -1078, -6830
+    -1078, -6827
+    -1062, -6811
+    -1028, -6811
+    -1012, -6796

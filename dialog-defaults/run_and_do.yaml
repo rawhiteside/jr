@@ -4,13 +4,15 @@
 Parameter set 1:
   path: ''
 Apiaries:
-  code.code: "# a comment\ndef apiary\n  sleep 0.5  # Wait for running to stop. \n\
-    puts 'I ran'\n\n  pt = find_sub_image 'Apiary'\n  mm pt\n  sleep 0.5\n  #send_string\
-    \ 'tc'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef stash\n  win\
-    \ = find_and_pin 'Warehouse'\n  HowMuch.max if win.click_on 'Stash/Honey'\n  HowMuch.max\
-    \ if win.click_on 'Stash/Beeswax'\n  win.unpin\nend\n\n"
+  code.code: "# a comment\ndef apiary\n  sleep 0.3  # Wait for running to stop. \n\
+    \n  pt = find_sub_image 'Apiary'\n  mm pt\n  sleep 0.01\n  send_string 't', 0.2\n\
+    \  send_string 'c'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef\
+    \ stash\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n  HowMuch.max if win.click_on\
+    \ 'Stash/Honey'\n  HowMuch.max if win.click_on 'Stash/Beeswax'\n  win.unpin\n\
+    end\n\n"
   repeat: One time
   path: |
+    -919, -6750
     -920, -6750
     apiary
     -920, -6747
@@ -61,6 +63,9 @@ Apiaries:
     apiary
     -920, -6678
     apiary
+    -924, -6677
+    stash
+
     -920, -6675
     apiary
     -920, -6672
@@ -110,6 +115,207 @@ Apiaries:
     -920, -6606
     apiary
     -920, -6603
+    apiary
+    -920, -6600
+    apiary
+    -920, -6597
+    apiary
+    -920, -6594
+    apiary
+    -920, -6591
+    apiary
+    -920, -6588
+    apiary
+    -920, -6585
+    apiary
+    -920, -6582
+    apiary
+    -920, -6579
+    apiary
+    -920, -6576
+    apiary
+    -920, -6573
+    apiary
+    -920, -6570
+    apiary
+    -920, -6567
+    apiary
+    -920, -6564
+    apiary
+    -920, -6561
+    apiary
+    -920, -6558
+    apiary
+    -920, -6555
+    apiary
+    -920, -6552
+    apiary
+    -920, -6549
+    apiary
+    -920, -6546
+    apiary
+    -920, -6543
+    apiary
+    -920, -6540
+    apiary
+    -920, -6537
+    apiary
+    -920, -6534
+    apiary
+    -920, -6531
+    apiary
+    -920, -6528
+    apiary
+    -920, -6525
+    apiary
+    -920, -6522
+    apiary
+    -920, -6519
+    apiary
+    -920, -6516
+    apiary
+    -920, -6513
+    apiary
+    -920, -6510
+    apiary
+    -920, -6507
+    apiary
+    -920, -6504
+    apiary
+    -920, -6501
+    apiary
+    -920, -6498
+    apiary
+    -920, -6495
+    apiary
+    -920, -6492
+    apiary
+    -920, -6489
+    apiary
+    -920, -6486
+    apiary
+    -920, -6483
+    apiary
+    -920, -6480
+    apiary
+    -920, -6477
+    apiary
+    -920, -6474
+    apiary
+    -920, -6471
+    apiary
+    -920, -6468
+    apiary
+    -920, -6465
+    apiary
+    -920, -6462
+    apiary
+    -920, -6459
+    apiary
+    -920, -6456
+    apiary
+    -920, -6453
+    apiary
+    -924, -6454
+    stash
+    -930, -6453
+    apiary
+    -930, -6456
+    apiary
+    -930, -6459
+    apiary
+    -930, -6462
+    apiary
+    -930, -6465
+    apiary
+    -930, -6468
+    apiary
+    -930, -6471
+    apiary
+    -930, -6474
+    apiary
+    -930, -6477
+    apiary
+    -930, -6480
+    apiary
+    -930, -6483
+    apiary
+    -930, -6486
+    apiary
+    -930, -6489
+    apiary
+    -930, -6492
+    apiary
+    -930, -6495
+    apiary
+    -930, -6498
+    apiary
+    -930, -6501
+    apiary
+    -930, -6504
+    apiary
+    -930, -6507
+    apiary
+    -930, -6510
+    apiary
+    -930, -6513
+    apiary
+    -930, -6516
+    apiary
+    -930, -6519
+    apiary
+    -930, -6522
+    apiary
+    -930, -6525
+    apiary
+    -930, -6528
+    apiary
+    -930, -6531
+    apiary
+    -930, -6534
+    -930, -6537
+    apiary
+    -930, -6540
+    apiary
+    -930, -6543
+    apiary
+    -930, -6546
+    apiary
+    -930, -6549
+    apiary
+    -930, -6552
+    apiary
+    -930, -6555
+    apiary
+    -930, -6558
+    apiary
+    -930, -6561
+    apiary
+    -930, -6564
+    apiary
+    -930, -6567
+    apiary
+    -930, -6570
+    apiary
+    -930, -6573
+    apiary
+    -930, -6576
+    apiary
+    -930, -6579
+    apiary
+    -930, -6582
+    apiary
+    -930, -6585
+    apiary
+    -930, -6588
+    apiary
+    -930, -6591
+    apiary
+    -930, -6594
+    apiary
+    -930, -6597
+    apiary
+    -930, -6600
     apiary
     -930, -6603
     apiary
@@ -161,6 +367,8 @@ Apiaries:
     apiary
     -930, -6675
     apiary
+    -924, -6677
+    stash
     -930, -6678
     apiary
     -930, -6681
@@ -214,8 +422,8 @@ Apiaries:
     -924, -6676
     stash
     -920, -6750
-  custom_text_0: ''
-  custom_text_1: apiary
+  custom_text_0: apiary
+  custom_text_1: ''
   custom_text_2: ''
 Camp to Chariot:
   path: |
