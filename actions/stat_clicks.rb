@@ -137,7 +137,7 @@ class Eat < Action
     text = SkillsWindow.new.read_text
     # 
     # Make sure we can see all the stats
-    [ 'Strength', 'Dexterity', 'Endurance', ].each do |s|
+    [ 'Strength', 'Dexterity', 'Endurance', 'Speed', 'Constitution', 'Focus'].each do |s|
       return false unless text =~ Regexp.new("^#{s}")
     end
     return false if text.index('[')
