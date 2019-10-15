@@ -158,13 +158,7 @@ class Eat < Action
     
     loop do
       if should_eat?
-        eat(w)
-	sleep_sec 5
-	# If still not boosted, we're out of food.
-	if should_eat?
-	  puts "Out of food"
-	  return
-	end
+        break if eat(w).nil? 
       end
       sleep_sec 2
     end
@@ -172,14 +166,18 @@ class Eat < Action
 
   def eat(w)
     w.refresh
-    if w.read_text.include?('Kitchen')
+    text = w.read_text
+    return true if text.include?('This is too far')
+
+    if text.include?('Kitchen')
       with_robot_lock do
         w.click_on 'Enjoy'
         sleep 5
         w.refresh
+        return true
       end
     else
-      w.click_on 'Eat'
+      return w.click_on 'Eat'
     end
   end
 
