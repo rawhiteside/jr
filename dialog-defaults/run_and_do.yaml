@@ -7,9 +7,9 @@ Apiaries:
   code.code: "# a comment\ndef apiary\n  sleep 0.3  # Wait for running to stop. \n\
     \n  pt = find_sub_image 'Apiary'\n  mm pt\n  sleep 0.01\n  send_string 't', 0.2\n\
     \  send_string 'c'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef\
-    \ stash\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n  HowMuch.max if win.click_on\
-    \ 'Stash/Honey'\n  HowMuch.max if win.click_on 'Stash/Beeswax'\n  win.unpin\n\
-    end\n\n"
+    \ stash\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n  if win\n    HowMuch.max\
+    \ if win.click_on 'Stash/Honey'\n    HowMuch.max if win.click_on 'Stash/Beeswax'\n\
+    \    win.unpin\n  else\n    puts \"Didn't find warehouse.\"\n  end\nend\n\n"
   repeat: One time
   path: |
     -919, -6750
