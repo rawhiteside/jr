@@ -17,8 +17,8 @@ class Kilns < GridAction
     repeat = @user_vals['repeat'].to_i
     str = @user_vals['string']
     repeat.times do
+      start = Time.now.to_f
       str.each_char do |c|
-        start = Time.now.to_f
         GridHelper.new(@user_vals, 'g').each_point do |g|
           with_robot_lock do
             mm(g['x'],g['y'])
@@ -26,10 +26,10 @@ class Kilns < GridAction
 	    send_string(c)
           end
         end
-
-        wait_more = delay - (Time.now.to_f - start)
-        sleep_sec wait_more if wait_more > 0
       end
+
+      wait_more = delay - (Time.now.to_f - start)
+      sleep_sec wait_more if wait_more > 0
     end
   end
 
