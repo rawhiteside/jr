@@ -1,5 +1,5 @@
 ---
-2: Jaby Campsite to Bricks CP
+2: Stone CP to Kitchens CP
 1: true
 Parameter set 1:
   path: ''
@@ -221,3 +221,35 @@ Jaby Campsite to Bricks CP:
     -1062, -6811
     -1028, -6811
     -1012, -6796
+Guildhall to UArt:
+  path: |+
+    -974, -6811
+    -946, -6838
+    -946, -7044
+    -1439, -7044
+    -1439, -7046
+
+Clay CP to Flower CP:
+  path: |
+    -1067, -6895
+    -1083, -6879
+    -1084, -6849
+    -1084, -6837
+    -1082, -6834
+Flower CP to Kitchens CP:
+  path: |
+    -1082, -6834
+    -1082, -6819
+    -1043, -6780
+    -1025, -6780
+Charcoal CP to Stone CP:
+  path: |
+    -977, -6777
+    -992, -6761
+    -997, -6761
+Stone CP to Kitchens CP:
+  path: |
+    -997, -6761
+    -1009, -6762
+    -1025, -6778
+    -1025, -6780
