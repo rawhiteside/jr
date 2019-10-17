@@ -26,6 +26,11 @@ class PickStones < Action
     count = 0
 
     loop do
+
+      # Get rid of a popup message if it's there. Like, from digging
+      # or a Tower Hour.
+      PopupWindow.dismiss
+
       pt = find_point
       if pt.nil?
         puts "Nothing to pick"
