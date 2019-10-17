@@ -55,8 +55,7 @@ class FlaxComb < Action
       process(w, max_clean)
       # 
       # Dismiss the box telling me the comb died. 
-      p = PopupWindow.find
-      p.dismiss if p
+      PopupWindow.dismiss
       # 
       # Lose the done comb.
       w.unpin

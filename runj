@@ -1,5 +1,4 @@
 #!/bin/sh
 
-# Yeah, semicolons.  weird.  It's a windows thing. 
-export CLASSPATH=".;jruby-complete-1.7.21.jar;foa.jar;snakeyaml-1.9.jar"
-java -Xmx500m -Xss1024k org.jruby.Main main.rb
+# Yeah, semicolons.  weird.  It's a windows thing.  export
+CLASSPATH=".;jruby-complete-1.7.21.jar;foa.jar;snakeyaml-1.9.jar" java -Xmx500m -Xss1024k org.jruby.Main main.rb

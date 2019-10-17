@@ -44,8 +44,7 @@ class Linen < Weave
       sleep_sec(0.5)
       loom.refresh
       if loom.click_on('Re-String')
-        p = PopupWindow.find
-        p.dismiss if p
+        PopupWindow.dismiss
         loom.refresh
         sleep_sec(0.5)
         if loom.click_on('Load the Loom with Twine')
@@ -57,8 +56,7 @@ class Linen < Weave
       if loom.click_on('Load the Loom with Thread')
 	HowMuch.max
       end
-      p = PopupWindow.find
-      p.dismiss if p
+      PopupWindow.dismiss
     end
   end
 

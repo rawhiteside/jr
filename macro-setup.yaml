@@ -77,7 +77,7 @@ Global setup: "Global setup/preferences.\n\nSkills window.\nOK, this is a hack. 
   \ that there's a big dark space.  Place the skills windows near the bottom left\
   \ atop that dark empty space.  Now, the skills window has a border!! \n\n- Turn\
   \ *off* any R-click pin/unpin magic. \n- Shadows don't *generally* cause problems,\
-  \ but sometimes they do. \n"
+  \ but sometimes they do. \n- What else?"
 Travel paths: "This defines safe walking routes between waypoints.  These routes should\
   \ have names of the form \"<A> to <B>\", as in \"Guildhall to Expedition Site\"\n\
   \nThese routes are used by the \"Travel\" macro to travel.  If you want to go from\
