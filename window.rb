@@ -125,6 +125,12 @@ class PopupWindow < Window
     PopupWindow.from_point(Point.new(wid/2, height/2))
   end
 
+  # Dismiss one if it's there. 
+  def self.dismiss
+    w = self.find
+    w.dismiss if w
+  end
+
   def textInsets
     # { :right => 32, :left => 14, :top => 14, :bottom => 5 }
     Insets.new(14, 14, 5, 32)
