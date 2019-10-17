@@ -46,21 +46,35 @@ public class PixelBlock extends ARobot {
 		int bestDiff = Integer.MAX_VALUE;
 		int diff = 0;
 		Point bestOrigin = null;
-
+		int[][] bestMatchingPixels = null;
 		toHSB(this);
 		toHSB(pb);
 		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
 			// if (y % 10 == 0) { System.out.println("y = " + y);}
 			for(int x = 0; x < m_rect.width - pb.getWidth(); x++) {
-				diff = weightedDiff(x, y, pb, bestDiff);
+				/* so we can keep statistics. */
+				int[][] matchingPixels = new int[pb.getWidth()][pb.getHeight()];
+
+				diff = weightedDiff(x, y, pb, bestDiff, matchingPixels);
 				if (bestDiff > diff) {
 					bestDiff = diff;
 					bestOrigin = new Point(x, y);
+					bestMatchingPixels = matchingPixels;
 				}
 			}
 		}
 
 		System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(pb.getWidth()*pb.getHeight())));
+		/* Find the worst-matching pixel in the match. */
+		int[] flat = new int[pb.getWidth() * pb.getHeight()];
+		int worst = 0;
+		for(int y = 0; y < pb.getHeight(); y++) {
+			for(int x = 0; x < pb.getWidth(); x++) {
+				int pixel = bestMatchingPixels[x][y];
+				if (pixel > worst) { worst = pixel; }
+			}
+		}
+		System.out.println("Worst pixel: " + worst);
 
 		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
 		return bestOrigin;
@@ -91,13 +105,15 @@ public class PixelBlock extends ARobot {
 	 * already.  Components get weighted with magic numbers from
 	 * looking at the screen.
 	 */
-	private int weightedDiff(int x, int y, PixelBlock pb, int bestSoFar) {
+	private int weightedDiff(int x, int y, PixelBlock pb, int bestSoFar, int[][] pixelDiffs) {
 		int totalDiff = 0;
 		for(int i = 0; i < pb.getWidth(); i++) {
 			for(int j = 0; j < pb.getHeight(); j++) {
 				Color c1 = pb.color(i, j);
 				Color c2 = this.color(x + i, y + j);
-				totalDiff += weightedColorDiff(c1, c2);
+				int diff = weightedColorDiff(c1, c2);
+				pixelDiffs[i][j] = diff;
+				totalDiff += diff;
 				if(totalDiff > bestSoFar) {
 					return totalDiff;
 				}
