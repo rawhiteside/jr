@@ -58,6 +58,14 @@ class TopFrame < JFrame
       pack
     end
 
+
+    # Now, add a "Global setup" help button.
+    ghelp = JButton.new("Global setup")
+    box.add(ghelp)
+    ghelp.add_action_listener do |event|
+      UserIO.show_help('Global setup', self)
+    end
+
     # Refactor this.  Adding the numlock status, too.
     label = JLabel.new
     label.border = LineBorder.create_black_line_border

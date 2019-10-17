@@ -60,7 +60,7 @@ public class PixelBlock extends ARobot {
 			}
 		}
 
-		// System.out.println("Best: " + bestDeltaSq);
+		System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(pb.getWidth()*pb.getHeight())));
 
 		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
 		return bestOrigin;

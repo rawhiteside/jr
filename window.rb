@@ -271,16 +271,25 @@ class ChatLineWindow < ChatWindow
   end
 end
 
+# what a hack.  I got tired of trying to solve the transparency
+# problem in the face of time-of-day lighting changes.
+# 
+# So, you've gotta stretch the friends list down.  Put the skills
+# window atop this near the bottom.  Both of these have to he on the
+# left near the bottom.  Borders of the friends list have to be all
+# visible.
 class SkillsWindow < AWindow
 
   def initialize
-    super(Rectangle.new(0,0,0,0))
-    set_rect(compute_rect)
+    super(Rectangle.new(0, 0, 0, 0))
+    dim = screen_size
+    rect = WindowGeom.rect_from_point(Point.new(70, dim.height - 150))
+    set_rect(rect)
   end
 
   def textInsets
     # { :right => 3, :left => 0, :top => 0, :bottom => 0 }
-    Insets.new(0, 0, 0, 0)
+    Insets.new(4, 4, 4, 4)
   end
 
   def isInk(color)
@@ -288,44 +297,10 @@ class SkillsWindow < AWindow
   end
 
   def background?(color)
-    color.red < 75 &&
-    color.red > 35 &&
-    color.green < 95 &&
-    color.green > 50 &&
-    color.blue < 95 &&
-    color.blue > 50 
+    color.red < 50 &&
+    color.green < 75  &&
+    color.blue < 75 
   end
-
-  def compute_rect
-    height = screen_size.height
-    width = screen_size.width
-    pb = PixelBlock.new(Rectangle.new(0, 0, width/2, height))
-
-    # Start at the right edge, search right until first background color
-
-    pt = Point.new(0, height - 100)
-    pt.x += 1 until background?(pb.color(pt))
-    left = pt.x + 1
-
-    # Search up for top
-    pt.y -= 1 while background?(pb.color(pt))
-    pt.y += 1
-    top = pt.y + 1
-
-    # and for the bottom and right
-    pt.y += 1 while background?(pb.color(pt))
-    pt.y -= 1
-    bottom = pt.y
-
-    pt.x += 1 while background?(pb.color(pt))
-    pt.x -= 1
-    right = pt.x
-
-    Rectangle.new(left - 1, top - 1, 
-                  right - left + 2,
-                  bottom - top + 2)
-  end
-  
 end
 
 class ChatHistoryWindow < ChatWindow

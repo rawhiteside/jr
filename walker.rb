@@ -27,6 +27,7 @@ class Walker < ARobot
     # So we stop walking on pause. 
     unless @@listener_added
       # Button up is not guarded by the lock.
+      # Ooops. This listener never gets removed.  Oh well....
       l = Proc.new { |running| if !running then all_up end }
       RobotPauser.instance.add_pause_listener(l)
       @@listener_added = true

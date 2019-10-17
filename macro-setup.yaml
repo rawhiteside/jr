@@ -72,3 +72,28 @@ Flimsy Bricks: "Uses a 5x5 array, but can't reach the corners, so those unused. 
 Color Picker: "Forget why I wrote this.\n\nPick a point, then start the macro. \n\
   It watches that point, and pops a dialog, which updates itself with the color values\
   \ of that point. \n\nProbably seemed like a good idea at the time. "
+Global setup: "Global setup/preferences.\n\nSkills window.\nOK, this is a hack. Leave\
+  \ both the Friends and the Skills window up.  Stretch the Friends list *down* so\
+  \ that there's a big dark space.  Place the skills windows near the bottom left\
+  \ atop that dark empty space.  Now, the skills window has a border!! \n\n- Turn\
+  \ *off* any R-click pin/unpin magic. \n- Shadows don't *generally* cause problems,\
+  \ but sometimes they do. \n"
+Travel paths: "This defines safe walking routes between waypoints.  These routes should\
+  \ have names of the form \"<A> to <B>\", as in \"Guildhall to Expedition Site\"\n\
+  \nThese routes are used by the \"Travel\" macro to travel.  If you want to go from\
+  \ camp to the Chariot, it can chain together these routes, so you may travel Guildhall\
+  \ -> Expedition Site -> Limestone -> Chariot.  \n\nAwkwardly, the names of the waypoints\
+  \ must match exactly, so look at the existing names if you want to grow the network.\
+  \ \n"
+Travel: "This will travel to a named destination. It works like this:\n- Read in the\
+  \ defined \"Travel route\" setups.\n\n- Find all the possible chains or these that\
+  \ terminate at the destination. \n\n- Find the line segment in any of these that\
+  \ is nearest to your current location. \n\n- If there are several such line segments\
+  \ within a couple of coordinates of you, choose the one with the shortest total\
+  \ length.\n\n- Walk to the line segment, then follow the defined routes to the destination.\
+  \ \n"
+Walk: "Walk to the provided coordinates. \n\nTODO:  Read coordinates from main.  (I.e.,\
+  \ so I can click on the minimap.)\n"
+Pick Stones: "Picks stones.\n\nF8F8 and zoom out so that the field is visible.\n\n\
+  It'll walk back to the provided coords avery <number> of stones, to keep from getting\
+  \ lost. \n"

@@ -337,7 +337,7 @@ end
 # {
 #   :type => :big_text, :editable => true, :label => 'Label',
 #   :name => 'help', :value => 'Initial text value',
-#   :rows, :cols
+#   :rows, :cols, :line_wrap
 # }
 # 
 # The resulting hash will have a 'big-text' key.
@@ -371,7 +371,7 @@ class SetupBigTextGadget < JPanel
       end
     end
 
-    area.line_wrap = false
+    area.line_wrap = h[:line_wrap]
     area.wrap_style_word = true
     area.text = initial_value
     

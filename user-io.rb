@@ -95,6 +95,7 @@ class HelpForTopic
       {
 	:type => :big_text, :editable => true, :label => title,
 	:name => 'help', :value => text, :rows => 15, :cols => 30,
+        :line_wrap => true
       }
     ]
     vals = UserIO.prompt(center_on_this, nil, title, gadgets)

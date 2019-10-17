@@ -54,7 +54,7 @@ class Grass < Action
       @walker.walk_loop(@path, @path_count)
       @walker.walk_to(@chest_coords)
       @stash_window.refresh
-      unless @stash_window.click_on('Stash./Grass')
+      unless @stash_window.click_on('Stash/Grass')
         puts "Stash failed:"
         puts @stash_window.read_text
       end
