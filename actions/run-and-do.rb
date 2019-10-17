@@ -12,7 +12,7 @@ class RunAndDo < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :frame, :label => 'Code.  Takes effect on reload.', :name => 'code',
+      {:type => :frame, :label => 'Ruby Code. Gets evaluated when macro starts.', :name => 'code',
         :gadgets => [
           {
             :type => :big_text, :label => 'Setup Ruby code', :name => 'code',
