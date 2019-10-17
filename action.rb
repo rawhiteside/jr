@@ -164,9 +164,9 @@ class GridAction < Action
     delay = @user_vals['delay'].to_f
     repeat = @user_vals['repeat'].to_i
     repeat.times do
-      ControllableThread.check_for_pause
       start = Time.now.to_f
       GridHelper.new(@user_vals, 'g').each_point do |g|
+        ControllableThread.check_for_pause
 	act_at(g)
       end
 
