@@ -134,7 +134,7 @@ class Firepit < ARobot
   def get_white_fraction
     x = @x - 10
     y = @y - 10
-    size = 20
+    size = 40
     pixels = nil
     with_robot_lock {
       pixels = screen_rectangle(x, y, size, size)
@@ -151,7 +151,7 @@ class Firepit < ARobot
     end
     frac = nil
     frac = white_count.to_f / bright_count.to_f unless bright_count == 0
-    # puts "#{@ix},#{@iy}: tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n"
+    puts "tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n" if @ix == 0 && @iy == 0
     return frac
   end
 
