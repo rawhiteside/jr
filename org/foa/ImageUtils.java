@@ -3,12 +3,31 @@ package org.foa;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Graphics2D;
 import java.awt.image.*;
+
 import java.util.*;
 
 import org.foa.PixelBlock;
 
 public class ImageUtils {
+
+	public static BufferedImage resize(BufferedImage inputImage, float factor) {
+ 
+		int outputWidth = (int) (inputImage.getWidth() / factor);
+		int outputHeight = (int) (inputImage.getHeight() / factor);
+
+        // creates output image
+        BufferedImage outputImage = new BufferedImage(outputWidth, outputHeight, inputImage.getType());
+ 
+        // scales the input image to the output image
+        Graphics2D g2d = outputImage.createGraphics();
+        g2d.drawImage(inputImage, 0, 0, outputWidth, outputHeight, null);
+        g2d.dispose();
+ 
+		return outputImage;
+    }
+ 
 
 	public static HashMap[] globify(PixelBlock m, int threshold) {
 		return globify(m.bufferedImage(), threshold);
