@@ -66,7 +66,46 @@ end
 
 Action.add_action(FindPatchTest.new)
 
+class ReduceTest < Action
+  def initialize(name = 'Reduce Image')
+    super(name, 'Test/Dev')
+  end
 
+  def setup(parent)
+    true
+  end
+
+
+  def act
+    pb = full_screen_capture
+    r2 = ImageUtils.resize(pb.buffered_image, 2)
+    UserIO.show_image(r2, "Factor 2")
+    r3 = ImageUtils.resize(pb.buffered_image, 3)
+    UserIO.show_image(r3, "Factor 3")
+    r4 = ImageUtils.resize(pb.buffered_image, 4)
+    UserIO.show_image(r4, "Factor 4")
+  end  
+end
+
+Action.add_action(ReduceTest.new)
+class ReduceTest < Action
+  def initialize(name = 'Use the mouse wheel')
+    super(name, 'Test/Dev')
+  end
+
+  def setup(parent)
+    true
+  end
+
+
+  def act
+    sleep 1
+    mouse_wheel(5)
+    sleep 1
+    mouse_wheel(-3)
+  end  
+end
+Action.add_action(ReduceTest.new)
 
 class TimeTest < Action
 

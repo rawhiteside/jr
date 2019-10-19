@@ -13,6 +13,7 @@ import org.foa.window.*;
 
 public class ARobot {
 	private static final double MOUSE_MOVE_DELAY = 0.01;
+	private static final double MOUSE_WHEEL_DELAY = 0.5;
 	private Robot m_robot = null;
 	private Toolkit m_toolkit = Toolkit.getDefaultToolkit();
 	private static ARobot s_sharedInstance = new ARobot();
@@ -119,6 +120,27 @@ public class ARobot {
 		m_robot.mouseMove(x, y);
 		sleepSec(delaySecs);
 	}
+
+	public void mouse_wheel(int ticks) {
+		mouse_wheel(ticks, MOUSE_WHEEL_DELAY);
+	}
+
+	public void mouse_wheel(int ticks, double delaySecs) {
+		int count = ticks;
+		int incr = 1;
+			
+		if(ticks < 0) {
+			incr = -1;
+			count = -ticks;
+		}
+		
+		for(int i = 0; i < count; i++) {
+			checkForPause();
+			m_robot.mouseWheel(incr);
+			sleepSec(delaySecs);
+		}
+	}
+
 
 	/**
 	 * Where's the mouse pointer?
