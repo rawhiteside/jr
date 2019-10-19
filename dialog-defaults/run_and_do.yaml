@@ -65,7 +65,7 @@ Apiaries:
     apiary
     -924, -6677
 
-    stash
+    # stash
 
     -920, -6675
     apiary
@@ -372,7 +372,7 @@ Apiaries:
     -930, -6675
     apiary
     -924, -6677
-    stash
+    # stash
     -930, -6678
     apiary
     -930, -6681
@@ -423,8 +423,8 @@ Apiaries:
     apiary
     -930, -6750
     apiary
-    -924, -6676
-    stash
+    # -924, -6676
+    # stash
     -920, -6750
   custom_text_0: apiary
   custom_text_1: ''
