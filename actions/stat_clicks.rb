@@ -50,25 +50,70 @@ class DigStones < Action
 end
 Action.add_action(DigStones.new)
 
-class EnduranceClick < Action
-  def initialize
-    super('Endurance click', 'Misc')
-  end
-
+class StatClicks < Action
   def setup(parent)
     comps = [
       {:type => :point, :name => 'p', :label => 'Drag to click location'},
+      {:type => :label, :label => '~ Or ~'},
+      {:type => :text, :name => 'hotkeys', :label => 'Hotkeys (has priority)'},
     ]
     @vals = UserIO.prompt(parent, nil, @name, comps)
   end
 
-  def act
-    xy = [@vals['p.x'].to_i, @vals['p.y'].to_i]
+  def set_stats(stats)
+    stats = [stats] unless stats.kind_of?(Array)
+    @stats = stats
+  end
+  
+  def stat_hotkeys(str, stats)
+    stats = [stats] unless stats.kind_of?(Array)
     loop do
-      stat_wait('End')
-      rclick_at(*xy)
-      sleep_sec 10
+      stats.each { |stat| stat_wait(stat)}
+      send_string(str)
+      sleep 5
     end
+  end
+
+  def act
+    hotkeys = @vals['hotkeys']
+    stat_hotkeys(hotkeys.strip, @stats) if hotkeys.strip.size > 0
+    stat_clicks(@vals['p.x'].to_i, @vals['p.y'].to_i, @stats)
+  end
+
+  def stat_clicks(x, y, stats)
+    stats = [stats] unless stats.kind_of?(Array)
+    loop do
+      stats.each { |stat| stat_wait(stat)}
+      rclick_at_restore(x, y)
+      sleep_sec 5
+    end
+  end
+
+end
+
+
+class FocusClick < StatClicks
+  def initialize
+    super('Focus click', 'Misc')
+    set_stats(['Foc'])
+  end
+end
+Action.add_action(FocusClick.new)
+
+
+class ConClick < StatClicks
+  def initialize
+    super('Constitution click', 'Misc')
+    set_stats(['Con'])
+  end
+end
+
+Action.add_action(ConClick.new)
+
+class EnduranceClick < StatClicks
+  def initialize
+    super('Endurance click', 'Misc')
+    set_stats(['End'])
   end
 end
 Action.add_action(EnduranceClick.new)
@@ -101,25 +146,10 @@ class Stir < Action
 end
 Action.add_action(Stir.new)
 
-class StrengthClick < Action
+class StrengthClick < StatClicks
   def initialize
     super('Strength click', 'Misc')
-  end
-
-  def setup(parent)
-    comps = [
-      {:type => :point, :name => 'p', :label => 'Drag to click location'},
-    ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
-  end
-
-  def act
-    xy = [@vals['p.x'].to_i, @vals['p.y'].to_i]
-    loop do
-      stat_wait('Str')
-      rclick_at(*xy)
-      sleep_sec 3
-    end
+    set_stats(['Str'])
   end
 end
 Action.add_action(StrengthClick.new)
@@ -180,57 +210,7 @@ class Eat < Action
       return w.click_on 'Eat'
     end
   end
-
 end
 Action.add_action(Eat.new)
 
 
-class FocusClick < Action
-  def initialize
-    super('Focus click', 'Misc')
-  end
-
-  def setup(parent)
-    comps = [
-      {:type => :point, :name => 'p', :label => 'Drag to click location'},
-    ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
-  end
-
-  def act
-    x = @vals['p.x'].to_i
-    y = @vals['p.y'].to_i
-    loop do
-      stat_wait('Foc')
-      rclick_at_restore(x, y)
-      sleep_sec 5
-    end
-  end
-end
-Action.add_action(FocusClick.new)
-
-class ConClick < Action
-  def initialize
-    super('Constitution click', 'Misc')
-  end
-
-  def setup(parent)
-    comps = [
-      {:type => :point, :name => 'p', :label => 'Drag to click location'},
-    ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
-  end
-
-  def act
-    x = @vals['p.x'].to_i
-    y = @vals['p.y'].to_i
-    loop do
-      stat_wait('Con')
-      rclick_at_restore(x, y)
-      sleep_sec 5
-    end
-  end
-
-end
-
-Action.add_action(ConClick.new)
