@@ -1,9 +1,11 @@
 require 'action'
 require 'walker'
+require 'utils'
 
 class RunAndDo < Action
   def initialize
     super('Run and do', 'Misc')
+    @context = Utils.new
   end
 
   def persistence_name
@@ -37,7 +39,7 @@ class RunAndDo < Action
     end
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
     code = @vals['code.code']
-    instance_eval(code)
+    @context.instance_eval(code)
     true
   end
 
@@ -51,7 +53,7 @@ class RunAndDo < Action
         if c.kind_of? Array
           walker.walk_to(c)
         else
-          instance_eval(c) unless c.strip.start_with?("#")
+          @context.instance_eval(c) unless c.strip.start_with?("#")
         end
       end
       break if @vals['repeat'] == 'One time'
