@@ -1,5 +1,5 @@
 ---
-2: UBod to UThought
+2: Ranch 2 to Charcoal CP
 1: true
 Parameter set 1:
   path: ''
@@ -261,3 +261,34 @@ Stone CP to Kitchens CP:
     -1009, -6762
     -1025, -6778
     -1025, -6780
+Bricks CP to Salt Water Lake:
+  path: |
+    -1012, -6795
+    -1023, -6806
+    -1031, -6813
+    -1056, -6813
+    -1137, -6731
+    -1368, -6731
+    -1488, -6610
+    -1548, -6549
+Charcoal CP to Ranch 1:
+  path: |
+    -978, -6777
+    -987, -6787
+    -993, -6823
+Ranch 1 to Bricks CP:
+  path: |
+    -993, -6823
+    -1012, -6804
+    -1012, -6796
+Apiaries to Ranch 3:
+  path: |
+    -923, -6750
+    -880, -6727
+Apiaries to Ranch 2:
+  path: |
+    -923, -6750
+    -930, -6768
+Ranch 2 to Charcoal CP:
+  path: |
+    -977, -6777
