@@ -36,6 +36,31 @@ public class PixelBlock extends ARobot {
 		return m_bufferedImage;
 	}
 
+	/**
+	 * Find a scaling that will give acceptable performance.  We
+	 * compute the number of color diffs required, and reduce sizes
+	 * until that count is below a threshold.  200M is too large.  52M
+	 * was OK.
+	 */
+	private final static int MAX_DIFFS = 52000000;
+	private int findScale(PixelBlock pb) {
+		int scale = 1;
+		Rectangle rectMe = rect();
+		Rectangle rectOther = pb.rect();
+		while(true) {
+			long count = ((long)rectMe.width/scale) * (rectOther.width/scale) *
+				(rectMe.height/scale) * (rectOther.height/scale);
+			if (count < MAX_DIFFS) {
+				System.out.println("Count of " + count + " accepted");
+				break;
+			}
+			System.out.println("Count of " + count + " rejected");
+			scale += 1;
+		}
+		System.out.println("Scale is " + scale);
+		return scale;
+	}
+
 	/** 
 	 * Search within self for the best mach for the subimage pb.
 	 * Convert everything into HSB instead of RGB.  The HSB components
@@ -43,52 +68,39 @@ public class PixelBlock extends ARobot {
 	 * lighting changes during the day.
 	 */
 	public Point findPatch(PixelBlock pb) {
+		
+		int scale = findScale(pb);
+		BufferedImage biScene = ImageUtils.resize(bufferedImage(), scale);
+		BufferedImage biPatch = ImageUtils.resize(pb.bufferedImage(), scale);
+		
+		
 		int bestDiff = Integer.MAX_VALUE;
-		int diff = 0;
 		Point bestOrigin = null;
-		int[][] bestMatchingPixels = null;
-		toHSB(this);
-		toHSB(pb);
-		for(int y = 0; y < m_rect.height - pb.getHeight(); y++) {
-			// if (y % 10 == 0) { System.out.println("y = " + y);}
-			for(int x = 0; x < m_rect.width - pb.getWidth(); x++) {
-				/* so we can keep statistics. */
-				int[][] matchingPixels = new int[pb.getWidth()][pb.getHeight()];
-
-				diff = weightedDiff(x, y, pb, bestDiff, matchingPixels);
+		toHSB(biScene);
+		toHSB(biPatch);
+		for(int y = 0; y < biScene.getHeight() - biPatch.getHeight(); y++) {
+			for(int x = 0; x < biScene.getWidth() - biPatch.getWidth(); x++) {
+				int diff = weightedDiff(x, y, biScene, biPatch);
 				if (bestDiff > diff) {
 					bestDiff = diff;
 					bestOrigin = new Point(x, y);
-					bestMatchingPixels = matchingPixels;
 				}
 			}
 		}
 
-		System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(pb.getWidth()*pb.getHeight())));
-		/* Find the worst-matching pixel in the match. */
-		int[] flat = new int[pb.getWidth() * pb.getHeight()];
-		int worst = 0;
-		for(int y = 0; y < pb.getHeight(); y++) {
-			for(int x = 0; x < pb.getWidth(); x++) {
-				int pixel = bestMatchingPixels[x][y];
-				if (pixel > worst) { worst = pixel; }
-			}
-		}
-		System.out.println("Worst pixel: " + worst);
-
-		bestOrigin.translate(pb.getWidth() / 2, pb.getHeight() / 2);
-		return bestOrigin;
+		System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(biPatch.getWidth()*biPatch.getHeight())));
+		bestOrigin.translate(biPatch.getWidth() / 2, biPatch.getHeight() / 2);
+		return new Point(bestOrigin.x * scale, bestOrigin.y * scale);
 	}
 
 	/*
 	 * Replace the RBG values with HSB values.
 	 */
-	private void toHSB(PixelBlock pb) {
+	private void toHSB(BufferedImage bi) {
 		float[] hsb = new float[3];
-		BufferedImage bi = pb.bufferedImage();
-		for(int i = 0; i < pb.getWidth(); i++) {
-			for(int j = 0; j < pb.getHeight(); j++) {
-				Color c = pb.color(i, j);
+		for(int i = 0; i < bi.getWidth(); i++) {
+			for(int j = 0; j < bi.getHeight(); j++) {
+				Color c = new Color(bi.getRGB(i, j));
 				Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
 				int h = (int) (hsb[0] * 255);
 				int s = (int) (hsb[1] * 255);
@@ -105,18 +117,13 @@ public class PixelBlock extends ARobot {
 	 * already.  Components get weighted with magic numbers from
 	 * looking at the screen.
 	 */
-	private int weightedDiff(int x, int y, PixelBlock pb, int bestSoFar, int[][] pixelDiffs) {
+	private int weightedDiff(int x, int y, BufferedImage scene, BufferedImage patch) {
 		int totalDiff = 0;
-		for(int i = 0; i < pb.getWidth(); i++) {
-			for(int j = 0; j < pb.getHeight(); j++) {
-				Color c1 = pb.color(i, j);
-				Color c2 = this.color(x + i, y + j);
-				int diff = weightedColorDiff(c1, c2);
-				pixelDiffs[i][j] = diff;
-				totalDiff += diff;
-				if(totalDiff > bestSoFar) {
-					return totalDiff;
-				}
+		for(int i = 0; i < patch.getWidth(); i++) {
+			for(int j = 0; j < patch.getHeight(); j++) {
+				Color c1 = new Color(patch.getRGB(i, j));
+				Color c2 = new Color(scene.getRGB(x + i, y + j));
+				totalDiff += weightedColorDiff(c1, c2);
 			}
 		}
 		return totalDiff;
