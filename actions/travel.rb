@@ -49,8 +49,14 @@ class Travel < Action
   end
 
   def act
-    current_coords = get_current_coords
     destination = @vals['destination']
+    travel_to(destination)
+  end
+
+  def travel_to(destination)
+    @defaults = DialogDefaults.get_defaults('Travel paths')
+    @basis = get_basis
+    current_coords = get_current_coords
     puts "Travel to #{destination}"
     puts "From point #{current_coords}"
     #
