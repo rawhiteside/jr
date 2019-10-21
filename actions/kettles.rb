@@ -4,14 +4,14 @@ require 'window'
 class KettleAction < GridAction
   def initialize(n)
     super(n, 'Buildings')
-    yoff = 26
+    yoff = 23
     @locs = {
-      'Take' => [42, 256],
-      'Begin' => [42, 256],
-      'Potash' => [42, 180],
-      'Flower Fert' => [42, 205],
-      'Weed Killer' => [126, 180],
-      'Grain Fert' => [126, 205],
+      'Take' => [42, 275],
+      'Begin' => [42, 275],
+      'Potash' => [42, 178],
+      'Flower Fert' => [42, 202],
+      'Weed Killer' => [162, 178],
+      'Grain Fert' => [162, 202],
       'Salt' => [126, 255],
       'Acid' => [126, 280],
     }
@@ -25,14 +25,16 @@ class Fert < KettleAction
   end
 
   def act_at(g)
+    delay = 0.3
     w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
     w.dialog_click(Point.new(*@locs['Take']))
-    sleep_sec 0.1
+    sleep_sec delay
     w.dialog_click(Point.new(*@locs['Grain Fert']))
-    sleep_sec 0.1
+    sleep_sec delay
     w.dialog_click(Point.new(*@locs['Begin']))
-    sleep_sec 0.1
+    sleep_sec delay
     AWindow.dismiss_all
+    sleep_sec delay
   end
 end
 Action.add_action(Fert.new)
@@ -43,14 +45,16 @@ class FlowerFert < KettleAction
   end
 
   def act_at(g)
+    delay = 0.3
     w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
     w.dialog_click(Point.new(*@locs['Take']))
-    sleep_sec 0.1
+    sleep_sec delay
     w.dialog_click(Point.new(*@locs['Flower Fert']))
-    sleep_sec 0.1
+    sleep_sec delay
     w.dialog_click(Point.new(*@locs['Begin']))
-    sleep_sec 0.1
+    sleep_sec delay
     AWindow.dismiss_all
+    sleep_sec delay
   end
 end
 Action.add_action(FlowerFert.new)
@@ -82,8 +86,9 @@ class TakeFromKettles < KettleAction
   def act_at(g)
     w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
     w.dialog_click(Point.new(*@locs['Take']))
-    sleep_sec 0.1
+    sleep_sec 0.3
     AWindow.dismiss_all
+    sleep_sec 0.3
   end
 end
 Action.add_action(TakeFromKettles.new)
