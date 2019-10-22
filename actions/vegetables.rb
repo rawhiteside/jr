@@ -196,23 +196,27 @@ class Vegetables < Action
     end
 
 
-    # Carrots are slow to render
-    sleep_sec(3.5) if @vegi_choice.start_with?('Carrot')
+    # Sometimes the plant is slow to render
+    point = x = nil
+    3.times do
 
-    after = PixelBlock.new(@head_rect)
+      after = PixelBlock.new(@head_rect)
 
-    x = ImageUtils.brightness(ImageUtils.xor(before, after))
-    # Shrink until there's no largest.
+      x = ImageUtils.brightness(ImageUtils.xor(before, after))
+      # Shrink until there's no largest.
 
-    point = nil
-    point_count = 0
-    while true
-      xnew = ImageUtils.shrink(x, 1)
-      point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
-      break if point_new.nil?
-      x = xnew
-      point_count += 1
-      point = point_new
+      point = nil
+      point_count = 0
+      while true
+        xnew = ImageUtils.shrink(x, 1)
+        point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
+        break if point_new.nil?
+        x = xnew
+        point_count += 1
+        point = point_new
+      end
+      break unless point.nil?
+      sleep 1
     end
 
     return nil, nil unless point
