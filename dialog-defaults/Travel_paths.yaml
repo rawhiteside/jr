@@ -1,5 +1,5 @@
 ---
-2: Hades 0 to Salt Water Lake
+2: Hades 3 to Hades 4
 1: true
 Parameter set 1:
   path: ''
@@ -343,3 +343,10 @@ Hades 0 to Salt Water Lake:
     -1535, -6547
     -1542, -6555
     -1550, -6555
+Hades 3 to Hades 4:
+  path: |
+    -1839, -6531
+    -1846, -6531
+    -1863, -6548
+    -1898, -6548
+    -1905, -6556
