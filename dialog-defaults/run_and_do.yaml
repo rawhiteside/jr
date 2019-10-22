@@ -423,11 +423,10 @@ Apiaries:
     apiary
     -930, -6750
     apiary
-    # -924, -6676
-    # stash
-    -920, -6750
+    -958, -6779
+    stash
   custom_text_0: apiary
-  custom_text_1: ''
+  custom_text_1: stash
   custom_text_2: ''
 Camp to Chariot:
   path: |
@@ -564,4 +563,26 @@ Tree run:
     \ += 1\n\n\n\n\n\n"
   custom_text_0: resin
   custom_text_1: wood
+  custom_text_2: ''
+Test:
+  code.code: '# Type Ruby code here.'
+  repeat: One time
+  path: |
+    travel 'Bricks CP'
+    -1010, -6791
+
+    fill_jugs
+  custom_text_0: ''
+  custom_text_1: ''
+  custom_text_2: ''
+Fetch salt water:
+  code.code: '# Type Ruby code here.'
+  repeat: One time
+  path: |+
+    travel 'Salt Water Lake'
+    fill_jugs
+    travel 'Bricks CP'
+
+  custom_text_0: ''
+  custom_text_1: ''
   custom_text_2: ''

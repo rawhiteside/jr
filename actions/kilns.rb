@@ -17,9 +17,11 @@ class Kilns < GridAction
     key_delay = @user_vals['key-delay'].to_f
     repeat = @user_vals['repeat'].to_i
     str = @user_vals['string']
+    start = nil
     repeat.times do
-      start = Time.now.to_f
       str.each_char do |c|
+        # Start at fire (the last character)
+        start = Time.now.to_f
         GridHelper.new(@user_vals, 'g').each_point do |g|
           with_robot_lock do
             mm(g['x'],g['y'])
@@ -31,7 +33,7 @@ class Kilns < GridAction
       end
       while win = PopupWindow.find
         win.dismiss
-        sleep 0.3
+        sleep 0.1
       end
 
       wait_more = delay - (Time.now.to_f - start)
