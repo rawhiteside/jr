@@ -9,11 +9,20 @@ class Vegetables < Action
   end
 
   VEGETABLE_DATA = {
-    "Peppers/Ptah's Breed/(2)" => {
+    "Cucumbers/Wadjet's Garden/(2) grass" => {
       :water => 2,
       :min_width => 240,
     },
-    "Peppers/Ra's Fire/(1)" => {
+    "Peppers/Isis/(3/4) dirt/sand" => {
+      :water => 3,
+      :tendings => 4,
+      :min_width => 240,
+    },
+    "Peppers/Ptah's Breed/(2) dirt" => {
+      :water => 2,
+      :min_width => 240,
+    },
+    "Peppers/Ra's Fire/(1) dirt" => {
       :water => 1,
       :min_width => 240,
     },
@@ -93,6 +102,7 @@ class Vegetables < Action
       {:type => :number, :label => 'Number of beds.', :name => 'beds'},
       {:type => :number, :label => 'Second water (~15-30).', :name => 'second'},
       {:type => :number, :label => 'Third water (~30-45).', :name => 'third'},
+      {:type => :number, :label => 'Fourth water (~30-45).', :name => 'fourth'},
     ]
     @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -106,6 +116,7 @@ class Vegetables < Action
     walker = Walker.new
     @vegi_choice =  @vals['veggie']
     @vegi_name = @vals['veggie'].split('/')[1].strip
+    puts @vegi_name
     @vegi_data = VEGETABLE_DATA[@vals['veggie']]
     @repeat = @vals['repeat'].to_i
     @grow_location = WorldLocUtils.parse_world_location(@vals['grow'])
@@ -177,6 +188,7 @@ class Vegetables < Action
     
     with_robot_lock do 
       before = PixelBlock.new(@head_rect)
+      @plant_win.refresh
       @plant_win.click_on(@vegi_name)
       builder = BuildMenu.new
       builder.build(build_recipe)
@@ -218,8 +230,16 @@ class Vegetables < Action
     #
     # grow_times = [0, 15, 30, 45] # measured.
     water_times = [4, @vals['second'].to_i, @vals['third'].to_i]
-    harvest_time = 36
-    3.times do |index|
+    tmp = @vegi_data[:tendings]
+    if tmp.nil?
+      tend_count = 3
+    else
+      tend_count = tmp
+    end
+    water_times << @vals['fourth'].to_i if tend_count == 4
+    
+    harvest_time = water_times.last + 8
+    tend_count.times do |index|
       target_secs = water_times[index]
       delta = (Time.new - plant_time)
       delay = target_secs - delta
