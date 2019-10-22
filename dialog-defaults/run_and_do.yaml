@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Tree run
 1: true
 Parameter set 1:
   path: ''
@@ -484,14 +484,18 @@ Tree run:
   code.code: |
     @tree_loop_count = 0
     def wood
+      sleep 1
       spam 'g'
       sleep 1
     end
     def resin
+      sleep 1
       spam 'r' if (@tree_loop_count % 4) == 3
     end
     def stash
-      w = find_and_pin 'Warehouse'
+      sleep 2
+      w = find_and_pin 'WH-nw'
+      sleep 0.5
       HowMuch.max if w.click_on 'Stash/Wood'
       w.click_on 'Stash/Resin./All'
       w.click_on 'Stash/Insect/All'
@@ -500,8 +504,6 @@ Tree run:
     end
 
     def spam(str)
-
-
       dim = screen_size
       gridx = 10
       gridy = 8
@@ -510,55 +512,56 @@ Tree run:
       1.upto(gridy - 1) do |y|
         1.upto(gridx - 1) do |x|
           mm x * x_size, y * y_size
-          send_string str, 0.01
+          send_string str, 0.03
         end
       end
     end
   repeat: Repeat
-  path: "# Start at wood WH\n-980, -6776\n#stash\n\n-1018, -6814\n-1018, -6820\nwood\n\
-    resin\n-1019, -6825\nwood\nresin\n-1012, -6816\nresin\nwood\n-1010, -6819\nresin\n\
-    -1007, -6829\nwood\nresin\n-1010, -6842\nwood\nresin\n-1004, -6845\nwood\nresin\n\
-    -1005, -6855\n-1010, -6858\nresin\nwood\n-1005, -6862\nwood\nresin\n-1007, -6868\n\
-    resin\nwood\n-1006, -6873\nresin\nwood\n-999, -6879\n-999, -6883\n-1004, -6888\n\
-    -1007, -6888\n-1008, -6884\n-1009, -6884\n-1009, -6878\n-1016, -6871\n-1016, -6868\n\
-    -1023, -6870\n-1030, -6871\n-1030, -6881\n-1032, -6882\nwood\nresin\n-1037, -6881\n\
-    -1039, -6902\nwood\nresin\n-1039, -6906\n-1040, -6906\nwood\nresin\n-1040, -6912\n\
-    -1031, -6912\nwood\nresin\n-1035, -6916\n-1036, -6929\n-1040, -6930\n# Bottom\
-    \ of ridge. \n-1052, -6931\n-1052, -6904\n-1044, -6904\nwood\nresin\n-1059, -6904\n\
-    -1059, -6902\nwood\n-1053, -6902\n-1053, -6881\n-1046, -6874\nresin\nwood\n-1054,\
-    \ -6874\n-1058, -6870\n# Spiked fish tree.\nwood\nresin\n\n# -----------------\n\
-    # Inserting southern run here. \n-1058, -6870\n-1055, -6870\n-1055, -6878\n-1099,\
-    \ -6877\n-1103, -6877\nwood\nresin\n-1080, -6892\n-1082, -6925\n-1089, -6932\n\
-    -1089, -6943\n-1103, -6958\n-1108, -6958\nresin\nwood\n-1113, -6963\n-1113, -6964\n\
-    resin\nwood\n-1130, -6961\nresin\nwood\n-1130, -6969\n-1167, -6972\nresin\nwood\n\
-    -1174, -6972\nresin\nwood\n-1203, -7042\nresin\nwood\n-1206, -7089\n-1222, -7105\n\
-    -1231, -7105\n-1260, -7134\n# 3x bottle trees\n-1262, -7158\nresin\nwood\n-1266,\
-    \ -7173\nresin\nwood\n-1268, -7173\n-1268, -7182\n-1264, -7185\n-1264, -7190\n\
-    resin\nwood\n-1263, -7193\nresin\nwood\n-1259, -7197\nresin\nwood\n-1262, -7198\n\
-    resin\nwood\n-1261, -7191\nresin\nwood\n-1255, -7193\nresin\nwood\n-1253, -7188\n\
-    resin\nwood\n-1259, -7186\nresin\nwood\n-1241, -7186\n-1229, -7196\nresin\nwood\n\
-    -1224, -7187\n-1220, -7185\nresin\nwood\n-1217, -7183\nresin\nwood\n-1219, -7180\n\
-    resin\nwood\n-1219, -7176\n-1188, -7176\n-1185, -7178\nresin\nwood\n-1186, -7140\n\
-    -1181, -7097\n-1185, -7089\n-1193, -7089\n-1193, -7063\n-1195, -7043\n-1118, -7043\n\
-    -1114, -7017\nresin\nwood\n-1113, -7017\nresin\nwood\n-1110, -7017\nresin\nwood\n\
-    -1108, -7017\nresin\nwood\n-1094, -7017\n-1086, -7009\n-1079, -7007\nresin\nwood\n\
-    -1082, -6998\nresin\nwood\n-1087, -6995\nresin\nwood\n-1098, -6983\n-1085, -6970\n\
-    -1079, -6972\nresin\nwood\n-1075, -6972\nresin\nwood\n-1076, -6968\nresin\nwood\n\
-    -1079, -6953\n-1069, -6944\n-1069, -6911\n-1072, -6911\n-1072, -6895\n-1064, -6888\n\
-    -1057, -6888\n-1044, -6900\n-1044, -6905\nresin\nwood\n-1044, -6879\n-1047, -6876\n\
-    -1046, -6875\nresin\nwood\n-1052, -6869\n\n\n# ------\n# insertions above here.\n\
-    -1047, -6859\n-1036, -6858\nwood\nresin\n-1035, -6867\nwood\nresin\n# Back to\
-    \ front of the ridge. \n# Now, go do the east field.\n-1036, -6818\n-970, -6795\n\
-    wood\nresin\n-970, -6807\n-961, -6804\nwood\nresin\n-962, -6811\n-942, -6821\n\
-    resin\nwood\n# Go to altar group\n-922, -6814\n-923, -6801\n-915, -6799\nwood\n\
-    resin\n-915, -6796\nwood\nresin\n-916, -6794\nwood\nresin\n-915, -6792\nwood\n\
-    -916, -6787\nresin\nwood\n-920, -6787\nresin\nwood\n-926, -6787\nwood\nresin\n\
-    -928, -6787\nresin\nwood\n-930, -6791\nresin\nwood\n-931, -6792\nresin\nwood\n\
-    -930, -6795\nwood\nresin\n-930, -6800\nresin\nwood\n# Done with altar.  \n# East\
-    \ clump next. \n-922, -6800\n-923, -6813\n-904, -6832\nresin\nwood\n-902, -6833\n\
-    resin\nwood\n-903, -6834\nresin\nwood\n-902, -6838\nresin\nwood\n-903, -6839\n\
-    resin\nwood\n-903, -6841\nwood\nresin\n# Back to WH.\n-971, -6814\n-980, -6808\n\
-    -982, -6776\n@tree_loop_count += 1\n\n\n\n\n\n"
+  path: "# Start at wood WH\n-981, -6776\nstash\n-1015, -6800\nspam 'h'\n-1018, -6800\n\
+    spam 'h'\n-1018, -6814\n-1018, -6820\nwood\nresin\n-1019, -6825\nwood\nresin\n\
+    -1012, -6816\nresin\nwood\n-1010, -6819\nresin\n-1007, -6829\nwood\nresin\n-1010,\
+    \ -6842\nwood\nresin\n-1004, -6845\nwood\nresin\n-1005, -6855\n-1010, -6858\n\
+    resin\nwood\n-1005, -6862\nwood\nresin\n-1007, -6868\nresin\nwood\n-1006, -6873\n\
+    resin\nwood\n-999, -6879\n-999, -6883\n-1004, -6888\n-1007, -6888\n-1008, -6884\n\
+    -1009, -6884\n-1009, -6878\n-1016, -6871\n-1016, -6868\n-1023, -6870\n-1030, -6871\n\
+    -1030, -6881\n-1032, -6882\nwood\nresin\n-1037, -6881\n-1039, -6902\nwood\nresin\n\
+    -1039, -6906\n-1040, -6906\nwood\nresin\n-1040, -6912\n-1031, -6912\nwood\nresin\n\
+    -1035, -6916\n-1036, -6929\n-1040, -6930\n# Bottom of ridge. \n-1052, -6931\n\
+    -1052, -6904\n-1044, -6904\nwood\nresin\n-1059, -6904\n-1059, -6902\nwood\n-1053,\
+    \ -6902\n-1053, -6881\n-1046, -6874\nresin\nwood\n-1054, -6874\n-1058, -6870\n\
+    # Spiked fish tree.\nwood\nresin\n\n# -----------------\n# Inserting southern\
+    \ run here. \n-1058, -6870\n-1055, -6870\n-1055, -6878\n-1099, -6877\n-1103, -6877\n\
+    wood\nresin\n-1080, -6892\n-1082, -6925\n-1089, -6932\n-1089, -6943\n-1103, -6958\n\
+    -1108, -6958\nresin\nwood\n-1113, -6963\n-1113, -6964\nresin\nwood\n-1130, -6961\n\
+    resin\nwood\n-1130, -6969\n-1167, -6972\nresin\nwood\n-1174, -6972\nresin\nwood\n\
+    -1203, -7042\nresin\nwood\n-1206, -7089\n-1222, -7105\n-1231, -7105\n-1260, -7134\n\
+    # 3x bottle trees\n-1262, -7158\nresin\nwood\n-1266, -7173\nresin\nwood\n-1268,\
+    \ -7173\n-1268, -7182\n-1264, -7185\n-1264, -7190\nresin\nwood\n-1263, -7193\n\
+    resin\nwood\n-1259, -7197\nresin\nwood\n-1262, -7198\nresin\nwood\n-1261, -7191\n\
+    resin\nwood\n-1255, -7193\nresin\nwood\n-1253, -7188\nresin\nwood\n-1259, -7186\n\
+    resin\nwood\n-1241, -7186\n-1229, -7196\nresin\nwood\n-1224, -7187\n-1220, -7185\n\
+    resin\nwood\n-1217, -7183\nresin\nwood\n-1219, -7180\nresin\nwood\n-1219, -7176\n\
+    -1188, -7176\n-1185, -7178\nresin\nwood\n-1186, -7140\n-1181, -7097\n-1185, -7089\n\
+    -1193, -7089\n-1193, -7063\n-1195, -7043\n-1118, -7043\n-1114, -7017\nresin\n\
+    wood\n-1113, -7017\nresin\nwood\n-1110, -7017\nresin\nwood\n-1108, -7017\nresin\n\
+    wood\n-1094, -7017\n-1086, -7009\n-1079, -7007\nresin\nwood\n-1082, -6998\nresin\n\
+    wood\n-1087, -6995\nresin\nwood\n-1098, -6983\n-1085, -6970\n-1079, -6972\nresin\n\
+    wood\n-1075, -6972\nresin\nwood\n-1076, -6968\nresin\nwood\n-1079, -6953\n-1069,\
+    \ -6944\n-1069, -6911\n-1072, -6911\n-1072, -6895\n-1064, -6888\n-1057, -6888\n\
+    -1044, -6900\n-1044, -6905\nresin\nwood\n-1044, -6879\n-1047, -6876\n-1046, -6875\n\
+    resin\nwood\n-1052, -6869\n\n\n# ------\n# insertions above here.\n-1047, -6859\n\
+    -1036, -6858\nwood\nresin\n-1035, -6867\nwood\nresin\n# Back to front of the ridge.\
+    \ \n# Now, go do the east field.\n-1036, -6818\n-970, -6795\nwood\nresin\n-970,\
+    \ -6807\n-961, -6804\nwood\nresin\n-962, -6811\n-942, -6821\nresin\nwood\n# Go\
+    \ to altar group\n-922, -6814\n-923, -6801\n-915, -6799\nwood\nresin\n-915, -6796\n\
+    wood\nresin\n-916, -6794\nwood\nresin\n-915, -6792\nwood\n-916, -6787\nresin\n\
+    wood\n-920, -6787\nresin\nwood\n-926, -6787\nwood\nresin\n-928, -6787\nresin\n\
+    wood\n-930, -6791\nresin\nwood\n-931, -6792\nresin\nwood\n-930, -6795\nwood\n\
+    resin\n-930, -6800\nresin\nwood\n# Done with altar.  \n# East clump next. \n-922,\
+    \ -6800\n-923, -6813\n-904, -6832\nresin\nwood\n-902, -6833\nresin\nwood\n-903,\
+    \ -6834\nresin\nwood\n-902, -6838\nresin\nwood\n-903, -6839\nresin\nwood\n-903,\
+    \ -6841\nwood\nresin\n# Back to WH.\n-971, -6814\n-980, -6808\n-982, -6776\n@tree_loop_count\
+    \ += 1\n\n\n\n\n\n"
   custom_text_0: resin
   custom_text_1: wood
   custom_text_2: ''
