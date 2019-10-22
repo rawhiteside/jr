@@ -1,5 +1,5 @@
 ---
-2: Ranch 2 to Charcoal CP
+2: Great Hall to Chariot
 1: true
 Parameter set 1:
   path: ''
@@ -291,4 +291,22 @@ Apiaries to Ranch 2:
     -930, -6768
 Ranch 2 to Charcoal CP:
   path: |
+    -930, -6768
     -977, -6777
+Meroe Fresh Water to Salt Water Lake:
+  path: |
+    -1777, -6507
+    -1735, -6547
+    -1735, -6623
+    -1701, -6657
+    -1642, -6657
+    -1592, -6607
+    -1564, -6607
+    -1551, -6594
+    -1551, -6560
+    -1541, -6549
+Great Hall to Chariot:
+  path: |
+    100, -7104
+    36, -7039
+    14, -7039
