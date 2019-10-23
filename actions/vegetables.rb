@@ -88,7 +88,7 @@ class Vegetables < Action
 
   # The distance out that Jaby's arm reaches from the center of her
   # head.  Actually, picking up is larger.  Using this value for now. 
-  REACH_RADIUS = 40
+  REACH_RADIUS = 30
 
   def setup(parent)
     gadgets = [
@@ -195,30 +195,20 @@ class Vegetables < Action
       plant_time = Time.new
     end
 
+    after = PixelBlock.new(@head_rect)
 
-    # Sometimes the plant is slow to render
-    point = x = nil
-    3.times do
+    x = ImageUtils.brightness(ImageUtils.xor(before, after))
 
-      after = PixelBlock.new(@head_rect)
-
-      x = ImageUtils.brightness(ImageUtils.xor(before, after))
-      # Shrink until there's no largest.
-
-      point = nil
-      point_count = 0
-      while true
-        xnew = ImageUtils.shrink(x, 1)
-        point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
-        break if point_new.nil?
-        x = xnew
-        point_count += 1
-        point = point_new
-      end
-      break unless point.nil?
-      sleep 1
+    # Shrink until there's no largest.
+    point_count = 0
+    while true
+      xnew = ImageUtils.shrink(x, 1)
+      point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
+      break if point_new.nil?
+      x = xnew
+      point_count += 1
+      point = point_new
     end
-
     return nil, nil unless point
     
     spoint = x.to_screen(point)
