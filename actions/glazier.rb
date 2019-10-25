@@ -99,7 +99,7 @@ class GlazierWindow < PinnableWindow
   end
 
   def data_text_reader
-    TextReader.new(data_rect)
+    TextReader.new(data_rect, self)
   end
 
   def read_data
@@ -130,19 +130,18 @@ class GlazierWindow < PinnableWindow
 
   def data_vals
     text = read_data
-    
     vals = {}
     # Temp
-    match = Regexp.new('Temperature: ([0-9]+)').match(text)
+    match = Regexp.new('Temperature[ :]+([0-9]+)').match(text)
     vals[:temperature] = match[1].to_i
     # Glass type
-    match = Regexp.new('(.*) Glass:').match(text)
+    match = Regexp.new('(.*) Glass[ :]+').match(text)
     vals[:glass_type] = match[1].strip
     # Glass Amount
-    match = Regexp.new('.* Glass:(.*)').match(text)
+    match = Regexp.new('.* Glass[ :]+(.*)').match(text)
     vals[:glass_amount] = match[1].strip
     # CC
-    match = Regexp.new('Charcoal Avail: ([0-9]+)').match(text)
+    match = Regexp.new('Charcoal.*: ([0-9]+)').match(text)
     vals[:cc] = match[1].to_i if match 
 
     return vals
@@ -232,7 +231,7 @@ class GlazierWindow < PinnableWindow
   # Let temp drop till round 1750--1800
   def drop
     each_tick do |s|
-      log "Drop  temperature=@{s['Temperature']}, delta=#{@last_delta}"
+      log "Drop  temperature=#{s['Temperature']}, delta=#{@last_delta}"
       break if s['Temperature'] < 1800
       break if (s['Temperature'] + @last_delta) < 1750
     end
@@ -280,7 +279,8 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 30, 0.45)
+    tiler = Tiler.new(0, 115)
+    tiler.min_height = 400
     @threads = []
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
