@@ -1,5 +1,5 @@
 ---
-2: Hades 3 to Hades 4
+2: Apiaries to Copper Mine
 1: true
 Parameter set 1:
   path: ''
@@ -350,3 +350,13 @@ Hades 3 to Hades 4:
     -1863, -6548
     -1898, -6548
     -1905, -6556
+Apiaries to Copper Mine:
+  path: |
+    -923, -6750
+    -747, -6573
+    -715, -6573
+    -694, -6574
+    -694, -6581
+    -682, -6581
+    -632, -6532
+    -632, -6493
