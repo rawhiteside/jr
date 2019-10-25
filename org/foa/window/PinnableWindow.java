@@ -111,6 +111,12 @@ public class PinnableWindow extends AWindow {
 		m_pinned = false;
 	}
 
+	public void unpin(double delay) {
+		updateRect();
+		dialogClick(new Point(getRect().width - 20, 20), null, delay, true);
+		m_pinned = false;
+	}
+
 	/**
 	 * See if there's a dialog at the point (after dragging)
 	 */
