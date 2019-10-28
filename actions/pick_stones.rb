@@ -64,13 +64,29 @@ class PickStones < Action
 
      return true
   end
+  def bag_color?(pb, pt)
+
+    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
+       color = pb.color(pt.x + delta[0], pt.y + delta[1])
+       r = color.red
+       g = color.green
+       b = color.blue
+
+       return false unless (r - 234).abs < 8 &&  (g - 211).abs < 8  && (b - 170).abs < 8 
+     end
+
+     return true
+  end
 
   def find_point
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
     (pb.height/2).times do |r|
       pts = square_with_radius(center, r)
-      pts.each {|pt| return pt if stone_color?(pb, pt)}
+      pts.each  do |pt|
+        return pt if stone_color?(pb, pt)
+        return pt if bag_color?(pb, pt)
+      end
     end
     
     return nil
