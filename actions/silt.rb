@@ -32,7 +32,7 @@ class SiltAction < PickThings
         # Its either coordinates [x, y], or the word "silt".
         if coord.kind_of?(Array)
 	  walker.walk_to(coord)
-          sleep 4
+          sleep 1
           last_coord = coord
         elsif coord == 'Stash'
           @stash_window.refresh
@@ -76,7 +76,7 @@ class SiltAction < PickThings
   def gather_once
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
-    max_rad = pb.height/2 - 20
+    max_rad = pb.height/2 - 200
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
@@ -125,7 +125,6 @@ class SiltAction < PickThings
           return :yes
         end
       end
-      puts "no inventory change"
       return :done_here
     end
 
