@@ -1,0 +1,71 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  stash.x: '471'
+  stash.y: '829'
+  inventory.x: '228'
+  inventory.y: '900'
+  path: |
+    -526, -7017
+    Silt
+    -526, -7022
+    Silt
+    -526, -7025
+    Silt
+    -526, -7028
+    Silt
+    -526, -7031
+    Silt
+    -521, -7031
+    Silt
+    -521, -7026
+    Silt
+    -521, -7023
+    Silt
+    -521, -7020
+    Silt
+    -521, -7017
+    Silt
+    -518, -7017
+    Silt
+    -518, -7020
+    Silt
+    -518, -7023
+    Silt
+    -518, -7026
+    Silt
+    -518, -7029
+    Silt
+    -518, -7032
+    Silt
+    -515, -7032
+    Silt
+    -515, -7029
+    Silt
+    -515, -7026
+    Silt
+    -515, -7023
+    Silt
+    -515, -7020
+    Silt
+    -515, -7017
+    Silt
+    -512, -7017
+    Silt
+    -512, -7020
+    Silt
+    -512, -7023
+    Silt
+    -512, -7026
+    Silt
+    -512, -7029
+    Silt
+    -509, -7029
+    Silt
+    -509, -7025
+    Silt
+    -498, -7025
+    Stash
+  custom_text_0: Silt
+  custom_text_1: Stash
