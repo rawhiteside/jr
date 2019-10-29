@@ -32,9 +32,13 @@ class ReadWindow < Action
     
 
     skills = SkillsWindow.new
-    skills.display_to_user("Skills window")
+    # skills.display_to_user("Skills window")
     puts skills.read_text
 
+
+    # about my usual spot
+    inventory = InventoryWindow.from_point(Point.new(260, 950))
+    puts inventory.read_text
   end
 end
 
