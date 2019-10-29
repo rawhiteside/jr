@@ -37,8 +37,8 @@ class FlimsyBricks < GridAction
   def brick_rack_brown?(x, y)
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
-    r_rng = 1..120
-    g_rng = 1..100
+    r_rng = 1..130
+    g_rng = 1..110
     b_rng = 1..100
 
     rv = r_rng.include?(r) && g_rng.include?(g) && b_rng.include?(b) &&
