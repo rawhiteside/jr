@@ -173,126 +173,12 @@ class ConfirmationWindow < PopupWindow
 end
 
 
-class FixedWindow < Window
 
-  # Search from provided +xy+ point, in direction specified by +step+.
-  # *step+ is an array with increment vals for x and y, as in [0, -1]
-  # to search up
-  # 
-  # For these windows, start at a known point on the background.  We
-  # don't search for the multicolor borders here.
-  # Return x, y
-  def find_edge(pb, x, y, step)
-    loop do
-      c = pb.color_from_screen(x, y)
-      # We stop on a darker pixel
-      return x,y if c.get_red < 200
-
-      x += step[0]
-      y += step[1]
-      return -1, -1 unless x > 0
-    end
-  end
-end
-
-# Base class for ChatHistory and for ChatLineWindow.
-class ChatWindow < FixedWindow
-
-  def find_left_edge(x, y)
-    pb = PixelBlock.new(Rectangle.new(0, y, x+1, 1))
-    xo, yo = find_edge(pb, x, y, [-1, 0])
-    return xo
-  end
-
-  def find_right_edge(x, y)
-    swidth = screen_size.width
-    pb = PixelBlock.new(Rectangle.new(x, y, swidth - x, 1))
-    xo, yo = find_edge(pb, x, y, [1, 0])
-    return xo
+class DarkWindow < AWindow
+  def initialize(rect)
+    super(rect)
   end
   
-  def find_top_edge(x, y)
-    pb = PixelBlock.new(Rectangle.new(x, 0, 1, y+1))
-    xo, yo = find_edge(pb, x, y, [0, -1])
-    return yo
-  end
-
-  def textInsets
-    # { :right => 4, :left => 4, :top => 3, :bottom => 0 }
-    Insets.new(3, 4, 0, 4)
-  end
-
-  def textReader
-    flushTextReader
-    super
-  end
-  
-end
-
-class ChatLineWindow < ChatWindow
-  def initialize
-    compute_rect
-  end
-
-  # Minimize the chat.  If there's some typing in there,
-  # wait for it to be sent before minimizing.
-  def minimize(if_min = true)
-    text = read_text
-    if text =~ /Press Enter to Chat/
-      return if if_min
-    else
-      return unless if_min
-    end
-
-    if if_min
-      # In case I'm currently typing something to a chat window, wait
-      # for the chatline to become empty.
-      wait_for_empty_chatline
-      send_vk(VK_RETURN) unless read_text =~ /Press Enter to Chat/
-    else
-      # Need to un-minimize.
-      send_vk(VK_RETURN)
-    end
-    
-  end
-
-  def wait_for_empty_chatline
-    loop do
-      break if read_text == ''
-      sleep_sec 1
-    end
-  end
-
-  def compute_rect
-    dim = screen_size
-    s_width, s_height = dim.width, dim.height
-    y_bottom = s_height - 40
-    x_right = s_width - 29
-    # Need to search to find the top and left edges.
-    x_left = find_left_edge(x_right, y_bottom)
-    y_top = s_height - 56
-    set_rect(Rectangle.new(x_left + 1, y_top,
-			   x_right - x_left,
-			   y_bottom - y_top))
-  end
-end
-
-# what a hack.  I got tired of trying to solve the transparency
-# problem in the face of time-of-day lighting changes.
-# 
-# So, you've gotta stretch the friends list down.  Put the skills
-# window atop this near the bottom.  Both of these have to he on the
-# left near the bottom.  Borders of the friends list have to be all
-# visible.
-class SkillsWindow < AWindow
-
-  def initialize
-    super(Rectangle.new(0, 0, 0, 0))
-    dim = screen_size
-    rect = WindowGeom.rect_from_point(Point.new(70, dim.height - 150))
-    set_rect(rect)
-  end
-
   def textInsets
     # { :right => 3, :left => 0, :top => 0, :bottom => 0 }
     Insets.new(4, 4, 4, 4)
@@ -309,26 +195,34 @@ class SkillsWindow < AWindow
   end
 end
 
-class ChatHistoryWindow < ChatWindow
+
+# what a hack.  I got tired of trying to solve the transparency
+# problem in the face of time-of-day lighting changes.
+# 
+# So, you've gotta stretch the friends list down.  Put the skills
+# window atop this near the bottom.  Both of these have to he on the
+# left near the bottom.  Borders of the friends list have to be all
+# visible.
+class SkillsWindow < DarkWindow
 
   def initialize
-    super()
-    compute_rect
+    super(Rectangle.new(0, 0, 0, 0))
+    dim = screen_size
+    rect = WindowGeom.rect_from_point(Point.new(70, dim.height - 150))
+    set_rect(rect)
   end
 
-  def compute_rect
-    dim  = screen_size
-    s_width, s_height = dim.width, dim.height
-    y_bottom = s_height - 60
-    x_right = s_width - 27
-    # Need to search to find the top and left edges.
-    x_left = find_left_edge(x_right, y_bottom)
-    y_top = find_top_edge(x_right, y_bottom)
-    set_rect(Rectangle.new(x_left, y_top,
-			   x_right - x_left,
-			   y_bottom - y_top))
+end
+
+class InventoryWindow < DarkWindow
+  def initialize(rect)
+    super(rect)
   end
-  
+
+  def self.from_point(pt)
+    rect = WindowGeom.rect_from_point(pt)
+    return InventoryWindow.new(rect)
+  end
 end
 
 

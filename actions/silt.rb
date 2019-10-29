@@ -2,7 +2,7 @@ require 'action'
 require 'bounds'
 require 'walker'
 
-class SiltAction < Action
+class SiltAction < PickThings
   def initialize
     super('Silt', 'Gather')
   end
@@ -10,24 +10,20 @@ class SiltAction < Action
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
-      {:type => :point, :label => 'UL Corner of gather region', :name => 'ul'},
-      {:type => :point, :label => 'LR Corner of gather region', :name => 'lr'},
       {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
-      {:type => :world_path, :label => 'Path to walk', :name => 'path', :aux => "Silt"},
+      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
+      {:type => :world_path, :label => 'Path to walk', :name => 'path',
+       :rows => 12, :custom_buttons => 2},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act
     @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
-
-
-    box = Bounds.new([@vals['ul.x'].to_i, @vals['ul.y'].to_i],
-		     [@vals['lr.x'].to_i, @vals['lr.y'].to_i])
+    @inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
 
     walker = Walker.new
     # An array of boxes to search, in order spiraling out. 
-    sub_boxes = make_regions(box)
     coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     loop do
@@ -36,33 +32,34 @@ class SiltAction < Action
         # Its either coordinates [x, y], or the word "silt".
         if coord.kind_of?(Array)
 	  walker.walk_to(coord)
+          sleep 4
           last_coord = coord
         elsif coord == 'Stash'
           @stash_window.refresh
           HowMuch.max if @stash_window.click_on('Stash/Silt')
-        else
-          sleep_sec(0.2)
-          gather_at(walker, last_coord, sub_boxes)
+        elsif coord == 'Silt'
+          sleep 0.2
+          gather_at(walker, last_coord)
         end
       end
     end
   end
 
-  def gather_at(walker, coords, sub_boxes)
+  def gather_at(walker, coords)
     loop do
       # Gather as many as we find, going from one silt pile to
       # another.
-      got_some = gather_several(sub_boxes)
+      got_some = gather_several
       return unless got_some
       # Go back to the starting point and check again for more.
       walker.walk_to(coords)
     end
   end
 
-  def gather_several(sub_boxes)
-    gathered_once = gather_once(sub_boxes)
+  def gather_several
+    gathered_once = gather_once
     if gathered_once
-      loop { break unless gather_once(sub_boxes) }
+      loop { break unless gather_once }
     end
     return gathered_once
   end
@@ -73,63 +70,66 @@ class SiltAction < Action
     hsb = Color.RGBtoHSB(r, g, b, nil)
     hue = hsb[0]
     sat = hsb[1]
-
     return (hue > 0.08 && hue < 0.11 && sat < 0.18)
   end
 
-  def gather_once(boxes)
-    rad = 2
-    boxes.each do |box|
-      pixel_block = screen_rectangle(box.xmin - rad, box.ymin - rad, box.width + rad, box.height + rad)
-      rad.upto(box.height - 1) do |y|
-        rad.upto(box.width - 1) do |x|
-
-          # Search around [x, y]
-          all_silt = true
-          (-rad).upto(rad) do |xoff|
-            (-rad).upto(rad) do |yoff|
-              unless silt_color?(pixel_block, x + xoff, y + yoff)
-	        all_silt = false 
-                break
-              end
-            end
-            break unless all_silt
-          end
-          if all_silt
-	    screen_x, screen_y  = pixel_block.to_screen(x, y)
-            point = Point.new(screen_x, screen_y)
-            return false if point == @last_point
-            @last_point = point
-	    rclick_at(screen_x, screen_y)
-	    sleep_sec 4
-	    return true
-          end
-        end
+  def gather_once
+    pb = full_screen_capture
+    center = Point.new(pb.width/2, pb.height/2)
+    max_rad = pb.height/2 - 20
+    max_rad.times do |r|
+      pts = square_with_radius(center, r)
+      pts.each  do |pt|
+        state = try_gather(pb, pt)
+        return true if state == :yes
+        return false if state == :done_here
       end
     end
-    return false
+    
+    return nil
   end
 
-  # Splits the bounding box into a 5x5 array of sub-boxes.
-  def make_regions(bbox)
-    spiral = Bounds.new([0,0], [5,5]).spiral
-    xvals = []
-    yvals = []
-    5.times do |i|
-      xvals << (bbox.xmin + bbox.width * i * 0.2).to_i
-      yvals << (bbox.ymin + bbox.height * i * 0.2).to_i
-    end
-    xvals << bbox.xmax
-    yvals << bbox.ymax
+  # Returns:
+  # :yes - gathered silt
+  # :no - Nothing at this point
+  # :done_here - Nothing in range.  Done at these world coordinates.
+  
+  def try_gather(pb, pt)
 
-    boxes = []
-    spiral.each do |ij|
-      i = ij[0]
-      j = ij[1]
-      boxes << Bounds.new([xvals[i], yvals[j]], [xvals[i+1], yvals[j+1]])
+    all_silt = silt_color?(pb, pt.x, pt.y) &&
+               silt_color?(pb, pt.x + 1, pt.y) &&
+               silt_color?(pb, pt.x - 1, pt.y) &&
+               silt_color?(pb, pt.x, pt.y + 1) &&
+               silt_color?(pb, pt.x, pt.y - 1) 
+
+    if all_silt
+      @inventory_window.flush_text_reader
+      inv_text_before = @inventory_window.read_text
+      screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
+      point = Point.new(screen_x, screen_y)
+      rclick_at(screen_x, screen_y, 0.2)
+      sleep 0.3
+      color = getColor(screen_x, screen_y)
+      if WindowGeom.isRightEdgeBorder(color)
+        AWindow.dismissAll
+        return :done_here
+      end
+      # Wait for the inventory to change.  If not, then we clicked on
+      # some ground that looked like silt.  Let's jus tmove along.
+      5.times do
+        sleep_sec 1
+        @inventory_window.flush_text_reader
+        inv_text = @inventory_window.read_text
+        if inv_text != inv_text_before
+          sleep 2.5
+          return :yes
+        end
+      end
+      puts "no inventory change"
+      return :done_here
     end
-    
-    return boxes
+
+    return :no
   end
 
   def get_vals(parent)
