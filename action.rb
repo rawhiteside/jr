@@ -140,6 +140,9 @@ class Action  < ARobot
     end
   end
 
+  def dismiss_all
+    AWindow.dismiss_all
+  end
 end
 
 class GridAction < Action
