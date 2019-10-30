@@ -1,5 +1,4 @@
 require 'action'
-require 'bounds'
 require 'walker'
 
 class SiltAction < PickThings

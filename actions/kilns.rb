@@ -35,6 +35,14 @@ class Kilns < GridAction
         win.dismiss
         sleep 0.1
       end
+      # Now, go through and try to repair.
+      GridHelper.new(@user_vals, 'g').each_point do |g|
+        with_robot_lock do
+          menu = PinnableWindow.from_screen_click(g['x'], g['y'])
+          dismiss_all unless menu.click_on('Repair')
+        end
+      end
+      
 
       wait_more = delay - (Time.now.to_f - start)
       sleep_sec wait_more if wait_more > 0
