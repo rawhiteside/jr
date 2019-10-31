@@ -1,8 +1,17 @@
 ---
-2: Tree run
+2: Water mines
 1: true
 Parameter set 1:
-  path: ''
+  code.code: '# Type Ruby code here.'
+  repeat: One time
+  path: |
+    travel 'Bricks CP'
+    -1010, -6791
+
+    fill_jugs
+  custom_text_0: ''
+  custom_text_1: ''
+  custom_text_2: ''
 Apiaries:
   code.code: "# a comment\ndef apiary\n  sleep 0.3  # Wait for running to stop. \n\
     \n  pt = find_sub_image 'Apiary'\n  mm pt\n  sleep 0.01\n  send_string 't', 0.2\n\
@@ -65,7 +74,7 @@ Apiaries:
     apiary
     -924, -6677
 
-    # stash
+    stash
 
     -920, -6675
     apiary
@@ -219,7 +228,7 @@ Apiaries:
     apiary
     -924, -6454
 
-    stash
+    # stash
 
     -930, -6453
     apiary
@@ -372,7 +381,9 @@ Apiaries:
     -930, -6675
     apiary
     -924, -6677
-    # stash
+
+    stash
+
     -930, -6678
     apiary
     -930, -6681
@@ -428,59 +439,8 @@ Apiaries:
   custom_text_0: apiary
   custom_text_1: stash
   custom_text_2: ''
-Camp to Chariot:
-  path: |
-    -974, -6810
-    -946, -6838
-    -946, -7044
-    -912, -7044
-    -907, -7040
-    14, -7040
-Chaiot to UArch:
-  path: |
-    14, -7040
-    161, -7040
-    172, -7051
-    231, -7051
-    241, -7061
-    339, -7061
-    364, -7085
-    406, -7085
-    416, -7096
-    463, -7096
-    471, -7088
-    502, -7088
-    506, -7084
-    539, -7084
-    542, -7087
-    552, -7087
-    555, -7090
-    590, -7090
-    602, -7103
-    790, -7103
-    795, -7098
-    825, -7098
-    827, -7100
-    998, -7100
-    1020, -7121
-    1020, -7130
-Apiary Test:
-  code.code: |+
-    def stash
-      win = find_and_pin 'Warehouse'
-      HowMuch.max if win.click_on 'Stash/Honey'
-      HowMuch.max if win.click_on 'Stash/Beeswax'
-      win.unpin
-    end
-
-  repeat: One time
-  path: |
-    -924, -6676
-    stash
-  custom_text_1: apiary
-  custom_text_2: text2
 Tree run:
-  code.code: |
+  code.code: |+
     @tree_loop_count = 0
     def wood
       sleep 1
@@ -502,19 +462,6 @@ Tree run:
       w.unpin
     end
 
-    def spam(str)
-      dim = screen_size
-      gridx = 10
-      gridy = 8
-      x_size = dim.width/gridx
-      y_size = dim.height/gridy
-      1.upto(gridy - 1) do |y|
-        1.upto(gridx - 1) do |x|
-          mm x * x_size, y * y_size
-          send_string str, 0.03
-        end
-      end
-    end
   repeat: Repeat
   path: "# Start at wood WH\n-981, -6776\nstash\n-1015, -6800\nspam 'h'\n-1018, -6800\n\
     spam 'h'\n-1018, -6814\n-1018, -6820\nwood\nresin\n-1019, -6825\nwood\nresin\n\
@@ -564,17 +511,6 @@ Tree run:
   custom_text_0: resin
   custom_text_1: wood
   custom_text_2: ''
-Test:
-  code.code: '# Type Ruby code here.'
-  repeat: One time
-  path: |
-    travel 'Bricks CP'
-    -1010, -6791
-
-    fill_jugs
-  custom_text_0: ''
-  custom_text_1: ''
-  custom_text_2: ''
 Fetch salt water:
   code.code: '# Type Ruby code here.'
   repeat: One time
@@ -582,6 +518,48 @@ Fetch salt water:
     travel 'Salt Water Lake'
     fill_jugs
     travel 'Bricks CP'
+
+  custom_text_0: ''
+  custom_text_1: ''
+  custom_text_2: ''
+Water mines:
+  code.code: "# Pin the three water mine menus lower left, \n# pile atip each other.\
+    \  \n# In this order:\n# First (on bottom of the pile) the kitchen mine\n# then\
+    \ the one NW of that at the tip of the lake.\n# then, the one over by the forges.\
+    \ \n@tile_done = nil\n@mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n\
+    \  puts \"water mine #{num}\"\n  @workers[num].tend\nend\n\ndef tile_pinned_windows\n\
+    \  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2,\
+    \ 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height - 20\n  3.times do\n\
+    \    w = PinnableWindow.from_point(x, y)\n    @workers << WaterMineWorker.new(w,\
+    \ 9999, 9999)\n    tiler.tile(w)\n  end\n  @workers.reverse!\nend\n"
+  repeat: Repeat
+  path: |+
+    -1019, -6785
+
+    tile_pinned_windows
+
+    water_mine 0
+    -1019, -6782
+    -1007, -6769
+    -997, -6769
+    -994, -6773
+    -994, -6774
+
+    water_mine 1
+
+    -977, -6774
+    -973, -6778
+    -966, -6778
+    -966, -6783
+
+    water_mine 2
+
+    -966, -6778
+    -972, -6772
+    -987, -6772
+    -991, -6768
+    -1004, -6768
+    -1019, -6783
 
   custom_text_0: ''
   custom_text_1: ''

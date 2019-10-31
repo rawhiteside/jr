@@ -111,8 +111,8 @@ class WaterMineWorker
   end
 
   def tend
-    puts "water mine: #{@win.default_refresh_loc}"
     @win.refresh
+    sleep 0.1
     take
     @angle = angle
 
