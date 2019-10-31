@@ -47,7 +47,6 @@ class Firepits < Action
         HowMuch.amount(4)
       end
 
-      puts 'unpin'
       w.unpin
       sleep_sec 0.5
     end
@@ -122,22 +121,23 @@ class Firepit < ARobot
       if new_state == HOT
 	with_robot_lock do
 	  mm(@x, @y)
-	  sleep_sec 0.2
-	  send_string('s')
+	  sleep 0.1
+	  send_string('s', 0.1)
 	end
+        sleep 15
       end
-      sleep_sec 0.5
+      sleep 1
     end
   end
 
   BRIGHT = 450
+  IMAGE_SIZE = 40
   def get_white_fraction
-    x = @x - 10
-    y = @y - 10
-    size = 40
+    x = @x - IMAGE_SIZE/2
+    y = @y - IMAGE_SIZE/2
     pixels = nil
     with_robot_lock {
-      pixels = screen_rectangle(x, y, size, size)
+      pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
     }
     bright_count = 0
     white_count = 0
@@ -151,7 +151,7 @@ class Firepit < ARobot
     end
     frac = nil
     frac = white_count.to_f / bright_count.to_f unless bright_count == 0
-    puts "tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n" if @ix == 0 && @iy == 0
+    # puts "tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n" if @ix == 0 && @iy == 0
     return frac
   end
 
@@ -160,6 +160,7 @@ class Firepit < ARobot
   NORMAL_THRESH = 0.05
   NORMAL = 'normal'
   HOT = 'hot'
+  REPEATS = 1
   # 
   # Returns a new firepit state: one of "hot", "normal"
   # Returns nil if state did not change
@@ -173,17 +174,17 @@ class Firepit < ARobot
 	return @state = NORMAL
       end
     end
-    # We enter "hot", it we're in "normal" and this is the
-    # second consecutive tick of high fraction
+    # We enter "hot", if we're in "normal" and this is the
+    # REPEATS consecutive tick of high fraction
     if frac >= HOT_THRESH
       @hot_count += 1
       @normal_count = 0
-      return @state = HOT if @state != HOT && @hot_count > 1
+      return @state = HOT if @state != HOT && @hot_count > REPEATS
       return nil
     elsif frac < NORMAL_THRESH
       @normal_count += 1
       @hot_count = 0
-      return @state = NORMAL if @state != NORMAL && @normal_count > 1
+      return @state = NORMAL if @state != NORMAL && @normal_count > REPEATS
       return nil
     else
       @normal_count = @hot_count = 0
