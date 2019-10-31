@@ -23,17 +23,14 @@ class WoodPlane < Action
   end
   
   def plane(w)
-    loop do
-      stat_wait('End')
+    stat_wait('End')
+    w.refresh
+    w.refresh if (w.click_on('Repair') || w.click_on('Install'))
+    if w.click_on('Plane')
       w.refresh
-      w.refresh if (w.click_on('Repair') || w.click_on('Install'))
-      if w.click_on('Plane')
+      if w.click_on('Repair')
         w.refresh
-        if w.click_on('Repair')
-          w.refresh
-          w.click_on('Plane')
-        end
-        break
+        w.click_on('Plane')
       end
     end
   end

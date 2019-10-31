@@ -31,7 +31,7 @@ class SiltAction < PickThings
         # Its either coordinates [x, y], or the word "silt".
         if coord.kind_of?(Array)
 	  walker.walk_to(coord)
-          sleep 1
+          sleep 2
           last_coord = coord
         elsif coord == 'Stash'
           @stash_window.refresh
@@ -52,6 +52,7 @@ class SiltAction < PickThings
       return unless got_some
       # Go back to the starting point and check again for more.
       walker.walk_to(coords)
+      sleep 2
     end
   end
 
@@ -75,7 +76,7 @@ class SiltAction < PickThings
   def gather_once
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
-    max_rad = pb.height/2 - 200
+    max_rad = pb.height/2 - 100
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
