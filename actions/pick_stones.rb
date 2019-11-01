@@ -87,7 +87,7 @@ class PickStones < PickThings
        g = color.green
        b = color.blue
 
-       return false unless (r - 154).abs < 8 &&  (g - 114).abs < 8  && (b - 83).abs < 8 
+       return false unless (r - 180).abs < 8 &&  (g - 146).abs < 8  && (b - 113).abs < 8 
      end
 
      return true
