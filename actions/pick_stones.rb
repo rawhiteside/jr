@@ -79,6 +79,20 @@ class PickStones < PickThings
      return true
   end
 
+  def bauxite_color?(pb, pt)
+
+    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
+       color = pb.color(pt.x + delta[0], pt.y + delta[1])
+       r = color.red
+       g = color.green
+       b = color.blue
+
+       return false unless (r - 154).abs < 8 &&  (g - 114).abs < 8  && (b - 83).abs < 8 
+     end
+
+     return true
+  end
+
   def find_point
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
@@ -87,6 +101,7 @@ class PickStones < PickThings
       pts.each  do |pt|
         return pt if stone_color?(pb, pt)
         return pt if bag_color?(pb, pt)
+        return pt if bauxite_color?(pb, pt)
       end
     end
     
