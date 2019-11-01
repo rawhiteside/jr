@@ -101,7 +101,7 @@ class PickStones < PickThings
       pts.each  do |pt|
         return pt if stone_color?(pb, pt)
         return pt if bag_color?(pb, pt)
-        return pt if bauxite_color?(pb, pt)
+        # return pt if bauxite_color?(pb, pt)
       end
     end
     
