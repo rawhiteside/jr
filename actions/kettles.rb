@@ -4,18 +4,6 @@ require 'window'
 class KettleAction < GridAction
   def initialize(n)
     super(n, 'Buildings')
-    yoff = 23
-    @locs = {
-      'Take' => [42, 275],
-      'Begin' => [42, 275],
-      'Potash' => [42, 178],
-      'Flower Fert' => [42, 202],
-      'Weed Killer' => [162, 178],
-      'Grain Fert' => [162, 202],
-      'Salt' => [126, 255],
-      'Acid' => [126, 280],
-    }
-    @locs.each_key {|k| @locs[k][1] -= yoff }
   end
 end
 
@@ -26,12 +14,12 @@ class Fert < KettleAction
 
   def act_at(g)
     delay = 0.3
-    w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
-    w.dialog_click(Point.new(*@locs['Take']))
+    w = KettleWindow.from_screen_click(g['x'], g['y'])
+    w.click_button('Take')
     sleep_sec delay
-    w.dialog_click(Point.new(*@locs['Grain Fert']))
+    w.click_button('Grain Fert' )
     sleep_sec delay
-    w.dialog_click(Point.new(*@locs['Begin']))
+    w.click_button('Begin')
     sleep_sec delay
     AWindow.dismiss_all
     sleep_sec delay
@@ -46,12 +34,12 @@ class FlowerFert < KettleAction
 
   def act_at(g)
     delay = 0.3
-    w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
-    w.dialog_click(Point.new(*@locs['Take']))
+    w = KettleWindow.from_screen_click(g['x'], g['y'])
+    w.click_button('Take')
     sleep_sec delay
-    w.dialog_click(Point.new(*@locs['Flower Fert']))
+    w.click_button('Flower Fert')
     sleep_sec delay
-    w.dialog_click(Point.new(*@locs['Begin']))
+    w.click_button('Begin')
     sleep_sec delay
     AWindow.dismiss_all
     sleep_sec delay
@@ -65,12 +53,12 @@ class Salt < KettleAction
   end
 
   def act_at(g)
-    w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
-    w.dialog_click(Point.new(*@locs['Take']))
+    w = KettleWindow.from_screen_click(g['x'], g['y'])
+    w.click_button('Take')
     sleep_sec 0.1
-    w.dialog_click(Point.new(*@locs['Salt']))
+    w.click_button('Salt')
     sleep_sec 0.1
-    w.dialog_click(Point.new(*@locs['Begin']))
+    w.click_button('Begin')
     sleep_sec 0.1
     AWindow.dismiss_all
   end
@@ -84,8 +72,8 @@ class TakeFromKettles < KettleAction
   end
 
   def act_at(g)
-    w = PinnableWindow.from_screen_click(Point.new(g['x'], g['y']))
-    w.dialog_click(Point.new(*@locs['Take']))
+    w = KettleWindow.from_screen_click(g['x'], g['y'])
+    w.click_button('Take')
     sleep_sec 0.3
     AWindow.dismiss_all
     sleep_sec 0.3
@@ -96,21 +84,25 @@ Action.add_action(TakeFromKettles.new)
 
 class KettleWindow < PinnableWindow
 
+  def self.from_screen_click(x, y)
+    pw = PinnableWindow.from_screen_click(x, y)
+    return KettleWindow.new(pw.rect)
+  end
+
   def initialize(rect)
     super
     yoff = 26
     @locs = {
 
-      'take' => [42, 256],
-      'begin' => [42, 256],
-      'ignite' => [42, 256],
-      'arsenic' => [42, 256],
+      'take' => [50, 277],
+      'begin' => [50, 277],
+      'ignite' => [50, 277],
+      'arsenic' => [50, 277],
 
-      'potash' => [42, 180],
-      'weed killer' => [126, 180],
-      'grain fert' => [126, 206],
-      'salt' => [126, 255],
-      'acid' => [126, 280],
+      'potash' => [50, 175],
+      'weed killer' => [160, 175],
+      'grain fert' => [160, 202],
+      'flower fert' => [50, 202],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
   end
@@ -133,7 +125,7 @@ class KettleWindow < PinnableWindow
     text = nil
     with_robot_lock do
       refresh
-      data_text_reader = TextReader.new(data_rect)
+      data_text_reader = TextReader.new(data_rect, self)
       text = data_text_reader.read_text
     end
     text
@@ -146,11 +138,11 @@ class KettleWindow < PinnableWindow
     data_area_height = 93
     # Move in this far from left and right. 
     off = 13
-  
+    
     r = Rectangle.new(tr.x + off,
-		  tr.y + tr.height + data_area_border_thickness,
-		  tr.width,  # No offset here, as the pin exclusion.
-		  data_area_height)
+		      tr.y + tr.height + data_area_border_thickness,
+		      tr.width,  # No offset here, as the pin exclusion.
+		      data_area_height)
     return r
   end
 
@@ -183,8 +175,7 @@ class Potash < KettleAction
   end
 
   def pinned_kettle_window(p, pinned = true)
-    w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
-    w = KettleWindow.new(w.rect)
+    w = KettleWindow.from_screen_click(p['x'], p['y'])
     w.pin if pinned
     w
   end
@@ -234,8 +225,7 @@ class Potash < KettleAction
       break unless task =~ /Start/
 
       # fill jugs
-      rclick_at(224, 60)
-      HowMuch.max
+      Icons.refill
     end
   end
 
@@ -267,8 +257,7 @@ class Potash < KettleAction
     if v[:wood] < 5 && v[:wood] < v[:water]
       w.click_on('Stoke')
     else
-      w.pin
-      w.unpin
+      dismiss_all
     end
     return false
   end
