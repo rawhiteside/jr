@@ -39,7 +39,8 @@ class FlimsyBricks < GridAction
     r, g, b = color.red, color.green, color.blue
     hsb = Color.RGBtoHSB(r, g, b, nil)
 
-    hue = (hsb[0] * 255).to_i
+    # NOTE:  Converting hue into degrees.
+    hue = (hsb[0] * 359).to_i
     sat = (hsb[1] * 255).to_i
     return hue > 25 && hue < 45 && sat > 50
   end
