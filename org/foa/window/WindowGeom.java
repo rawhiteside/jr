@@ -51,7 +51,7 @@ public class WindowGeom extends ARobot {
 		//
 		// Move right one pixel, then search up for another border pixel.
 		x += 1;
-		while(!isLeftEdgeBorder(pb, x, y)) {
+		while(!isInnerBorder(pb, x, y)) {
 			y = y - 1;
 			if (y < 0) {
 				return null;
@@ -72,7 +72,7 @@ public class WindowGeom extends ARobot {
 		// search right for another border.
 		int y = pt.y + 1;
 		int x = pt.x + 1;
-		while(!isLeftEdgeBorder(pb, x, y)) {
+		while(!isInnerBorder(pb, x, y)) {
 			x += 1;
 			if (x >= screenWidth) { return 0; }
 		}
@@ -91,7 +91,7 @@ public class WindowGeom extends ARobot {
 		y += 1;
 		x += 1;
 
-		while(!isLeftEdgeBorder(pb, x, y)) {
+		while(!isInnerBorder(pb, x, y)) {
 			y += 1;
 			if (y >= screenHeight) { return 0; }
 		}
@@ -120,10 +120,10 @@ public class WindowGeom extends ARobot {
 	 * Find the left edge. The pixel is a border.  Not background.
 	 */
 	private static int findLeftEdge(PixelBlock pb, int x, int y) {
-		while (x >= 0 && !isLeftEdgeBorder(pb, x, y)) {
+		while (x >= 0 && !isInnerBorder(pb, x, y)) {
 			// If we encounter a *right* border, the there was no
 			// window there, and we've bumped into another.
-			if (isRightEdgeBorder(pb, x, y)) {
+			if (isOuterBorder(pb, x, y)) {
 				return -1;
 			}
 
@@ -137,18 +137,18 @@ public class WindowGeom extends ARobot {
 
 
 
-	private static boolean isLeftEdgeBorder(PixelBlock pb, int x, int y) {
+	private static boolean isInnerBorder(PixelBlock pb, int x, int y) {
 		Color color = pb.colorFromScreen(x, y);
 		return Math.abs(color.getRed() - INNER_BROWN.getRed()) <= 4 &&
 			Math.abs(color.getGreen() - INNER_BROWN.getGreen()) <= 4 &&
 			Math.abs(color.getBlue() - INNER_BROWN.getBlue()) <= 4;
 	}
 
-	private static boolean isRightEdgeBorder(PixelBlock pb, int x, int y) {
-		return isRightEdgeBorder(pb.color(x, y));
+	private static boolean isOuterBorder(PixelBlock pb, int x, int y) {
+		return isOuterBorder(pb.color(x, y));
 	}
 	
-	public static boolean isRightEdgeBorder(Color color) {
+	public static boolean isOuterBorder(Color color) {
 		return Math.abs(color.getRed() - OUTER_BROWN.getRed()) <= 10 &&
 			Math.abs(color.getGreen() - OUTER_BROWN.getGreen()) <= 12 &&
 			Math.abs(color.getBlue() - OUTER_BROWN.getBlue()) <= 6;
