@@ -1,5 +1,5 @@
 ---
-2: Water mines
+2: Apiaries
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -228,7 +228,7 @@ Apiaries:
     apiary
     -924, -6454
 
-    # stash
+    stash
 
     -930, -6453
     apiary
