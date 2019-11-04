@@ -30,7 +30,8 @@ class PickThings < Action
 
        # NOTE:  Converting hue into degrees.
        hue = (hsb[0] * 359).to_i
-       return false unless (hue - 300).abs < 2
+
+       return false unless hue == 300 || (hue == 0 && hsb[1] < 0.01)
      end
 
      return true
