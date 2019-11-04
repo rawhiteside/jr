@@ -22,7 +22,7 @@ class SiltAction < PickThings
     @inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
 
     walker = Walker.new
-    # An array of boxes to search, in order spiraling out. 
+
     coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     loop do
@@ -44,6 +44,9 @@ class SiltAction < PickThings
     end
   end
 
+  # Gather nearby things repeatedly, just wandering wherever it takes
+  # you. When you run out of things, return to these coords and do it
+  # again.  Repeat *that* until there's nothing at the coords.
   def gather_at(walker, coords)
     loop do
       # Gather as many as we find, going from one silt pile to
@@ -56,6 +59,8 @@ class SiltAction < PickThings
     end
   end
 
+  # Just gather the nearest thing until there's nothing to gather.
+  # You may wander off following the things to gather.
   def gather_several
     gathered_once = gather_once
     if gathered_once
@@ -73,6 +78,8 @@ class SiltAction < PickThings
     return (hue > 0.08 && hue < 0.11 && sat < 0.18)
   end
 
+  # Gather the nearest thing. Return whether there was anything to
+  # gather.
   def gather_once
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
@@ -91,7 +98,7 @@ class SiltAction < PickThings
 
   # Returns:
   # :yes - gathered silt
-  # :no - Nothing at this point
+  # :no - Nothing at this screen point
   # :done_here - Nothing in range.  Done at these world coordinates.
   
   def try_gather(pb, pt)
@@ -110,12 +117,13 @@ class SiltAction < PickThings
       rclick_at(screen_x, screen_y, 0.2)
       sleep 0.3
       color = getColor(screen_x, screen_y)
-      if WindowGeom.isRightEdgeBorder(color)
+      if WindowGeom.isOuterBorder(color)
         AWindow.dismissAll
         return :done_here
       end
       # Wait for the inventory to change.  If not, then we clicked on
-      # some ground that looked like silt.  Let's jus tmove along.
+      # some ground that looked like something to gather.  Let's just
+      # move along.
       5.times do
         sleep_sec 1
         @inventory_window.flush_text_reader
