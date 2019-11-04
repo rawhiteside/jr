@@ -44,9 +44,9 @@ class GravelAction < PickThings
   def grid_from_smash_loc
     coords = []
     smash = WorldLocUtils.parse_world_location(@vals['smash_loc'])
-    -2.upto(1) do |yoff|
-      -2.upto(2) do |xoff|
-        coords << [smash[0] + xoff*2, smash[1] + yoff*2]
+    -3.upto(3) do |yoff|
+      -3.upto(3) do |xoff|
+        coords << [smash[0] + xoff, smash[1] + yoff]
       end
     end
     return coords
