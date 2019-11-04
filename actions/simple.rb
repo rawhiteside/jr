@@ -2,11 +2,21 @@ require 'action'
 
 class IntervalTab < Action
   def initialize
-    super("Inverval tabs", "Misc")
+    super("Inverval keys", "Misc")
   end
 
   def setup(parent)
-    @delay = get_delay_secs(parent)
+    gadgets = [{:type => :text, :label => 'Secs between keys', :name => 'interval'},
+               {:type => :combo, :name => 'tab-or-key', :label => 'What keys?',
+                :vals => ['Tab', 'Provided key']},
+               {:type => :text, :label => 'Key', :name => 'key'}
+              ]
+    @vals = UserIO.prompt(parent, 'Interval keys', 'Interval keys', gadgets)
+    return nil unless @vals
+    @delay = @vals['interval'].to_f
+    @key = @vals['key']
+    @if_tab = (@vals['tab-or-key'] == 'Tab')
+    true
   end
 
   def act
@@ -15,16 +25,14 @@ class IntervalTab < Action
     loop do
       sleep_sec @delay
       ControllableThread.check_for_pause
-      send_vk(VK_TAB)
+      if @if_tab
+        send_vk(VK_TAB)
+      else
+        send_string @key
+      end
     end
   end
   
-  def get_delay_secs(parent)
-    c = [{:type => :text, :label => 'Secs between tabs', :name => 'interval'}]
-    vals = UserIO.prompt(parent, 'Interval tab', 'Interval tabs', c)
-    return nil unless vals
-    return vals['interval'].to_f
-  end
 end
 
 Action.add_action(IntervalTab.new)
