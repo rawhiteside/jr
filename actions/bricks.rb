@@ -42,7 +42,7 @@ class FlimsyBricks < GridAction
     # NOTE:  Converting hue into degrees.
     hue = (hsb[0] * 359).to_i
     sat = (hsb[1] * 255).to_i
-    return hue > 25 && hue < 45 && sat > 50
+    return hue > 20 && hue < 45 && sat > 50
   end
 
   def check_build(p)
