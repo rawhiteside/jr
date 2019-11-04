@@ -39,7 +39,7 @@ class PickStones < PickThings
         rclick_at(pt, 0.1)
         sleep 0.1
         color = getColor(pt)
-        AWindow.dismissAll if WindowGeom.isRightEdgeBorder(color)
+        AWindow.dismissAll if WindowGeom.isOuterBorder(color)
       end        
       sleep 4
       if count >= count_max
@@ -52,19 +52,6 @@ class PickStones < PickThings
     end
   end
 
-  def stone_color?(pb, pt)
-
-    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
-       color = pb.color(pt.x + delta[0], pt.y + delta[1])
-       r = color.red
-       g = color.green
-       b = color.blue
-
-       return false unless r > 170 && r < 210 && (r-g).abs < 3 && (r-b).abs < 3
-     end
-
-     return true
-  end
   def bag_color?(pb, pt)
 
     [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|

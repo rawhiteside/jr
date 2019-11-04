@@ -121,8 +121,7 @@ class Firepit < ARobot
       if new_state == HOT
 	with_robot_lock do
 	  mm(@x, @y)
-	  sleep 0.1
-	  send_string('s', 0.1)
+	  send_string('s', 0.01)
 	end
         sleep 15
       end
@@ -136,9 +135,7 @@ class Firepit < ARobot
     x = @x - IMAGE_SIZE/2
     y = @y - IMAGE_SIZE/2
     pixels = nil
-    with_robot_lock {
-      pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
-    }
+    pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
     bright_count = 0
     white_count = 0
     pixels.height.times do |y|

@@ -37,13 +37,12 @@ class FlimsyBricks < GridAction
   def brick_rack_brown?(x, y)
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
-    r_rng = 1..160
-    g_rng = 1..130
-    b_rng = 1..100
+    hsb = Color.RGBtoHSB(r, g, b, nil)
 
-    rv = r_rng.include?(r) && g_rng.include?(g) && b_rng.include?(b) &&
-      (r - g) > 5 && (r - b) > 5
-    rv
+    # NOTE:  Converting hue into degrees.
+    hue = (hsb[0] * 359).to_i
+    sat = (hsb[1] * 255).to_i
+    return hue > 25 && hue < 45 && sat > 50
   end
 
   def check_build(p)
