@@ -44,9 +44,9 @@ class GravelAction < PickThings
   def grid_from_smash_loc
     coords = []
     smash = WorldLocUtils.parse_world_location(@vals['smash_loc'])
-    -1.upto(1) do |yoff|
-      -1.upto(1) do |xoff|
-        coords << [smash[0] + xoff*3, smash[1] + yoff*3]
+    -2.upto(1) do |yoff|
+      -2.upto(2) do |xoff|
+        coords << [smash[0] + xoff*2, smash[1] + yoff*2]
       end
     end
     return coords
@@ -82,7 +82,7 @@ class GravelAction < PickThings
   def gather_once
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
-    max_rad = pb.height/2 - 100
+    max_rad = pb.height/2 - 150
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
