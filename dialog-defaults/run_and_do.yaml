@@ -527,12 +527,11 @@ Water mines:
     \  \n# In this order:\n# First (on bottom of the pile) the kitchen mine\n# then\
     \ the one NW of that at the tip of the lake.\n# then, the one over by the forges.\
     \ \n# --------------------------------------------\n@tile_done = nil\n@mine_hash\
-    \ = {}\n@workers = []\n\ndef water_mine(num)\n  puts \"water mine #{num}\"\n \
-    \ @workers[num].tend\nend\n\ndef tile_pinned_windows\n  return if @tile_done\n\
-    \  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2, 160)\n  tiler.min_width\
-    \ = 350\n  x = 20\n  y = dim.height - 20\n  3.times do\n    w = PinnableWindow.from_point(x,\
-    \ y)\n    @workers << WaterMineWorker.new(w, 9999, 9999)\n    tiler.tile(w)\n\
-    \  end\n  @workers.reverse!\nend\n"
+    \ = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\nend\n\ndef\
+    \ tile_pinned_windows\n  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n\
+    \  tiler = Tiler.new(2, 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height\
+    \ - 20\n  3.times do\n    w = PinnableWindow.from_point(x, y)\n    @workers <<\
+    \ WaterMineWorker.new(w)\n    tiler.tile(w)\n  end\n  @workers.reverse!\nend\n"
   repeat: Repeat
   path: |+
     -1019, -6785
