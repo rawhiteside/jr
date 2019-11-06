@@ -9,6 +9,7 @@ class WaterMineAction < Action
     gadgets = [
       {:type => :point, :name => 'water-mine', :label => 'Water mine'},
       {:type => :number, :name => 'check-freq', :label => 'Gem check interval (seconds)'},
+      {:type => :number, :name => 'scan-interval', :label => 'Angle scan interval (minutes)'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
 
@@ -23,8 +24,9 @@ class WaterMineAction < Action
     pt = point_from_hash(@vals, 'water-mine')
     win = PinnableWindow.from_point(pt)
     gem_delay = @vals['check-freq'].to_i
+    interval_minutes1 = @vals['scan-interval'].to_i
 
-    @water_mine = WaterMineWorker.new(win)
+    @water_mine = WaterMineWorker.new(win, interval_minutes1 * 60)
 
     loop do
       @water_mine.tend
@@ -35,12 +37,45 @@ end
 
 class WaterMineWorker
   LOG_FILE = 'water-mine.csv'
-  WIND_INTERVAL = 60 * 118
-  def initialize(w)
+  WIND_INTERVAL = 60 * 118   # Seconds
+  POST_WIND_WAIT = 60 * 5    # Seconds
+
+  # We start at some angle.
+  # Watch the mine for interval-1 seconds.
+  # - If no gems, the advance to next angle. Else stay here and continue
+
+  def initialize(w, scan_interval)
     @win = w
     @win.default_refresh_loc = 'lc'
     @last_wind_time = nil
     log_action('Start')
+    @scan_interval = scan_interval
+    @scan_gems = 0
+    @angle = "unknown"
+  end
+
+  def start_scan
+    @scan_start = Time.now
+    @scan_gems = 0
+  end
+
+  def scan_angle
+    return if (Time.now - @last_wind_time) < POST_WIND_WAIT
+
+    # Have we started scanning?
+    if @scan_start.nil?
+      start_scan
+      return
+    end
+
+    # Look at things after the scan interval
+    if (Time.now - @scan_start) > @scan_interval
+      log_action("-- #{@scan_gems} gems during previous #{@scan_interval} seconds")
+      set_angle(angle - 1)
+      @win.refresh
+      start_scan
+    end
+    
   end
 
   def set_angle(ang)
@@ -60,6 +95,7 @@ class WaterMineWorker
       return match[1].to_i
     else
       puts "Failed to find angle in: #{text}"
+      # Return some number.
       return 18
     end
 
@@ -67,7 +103,7 @@ class WaterMineWorker
     
   def wind
     @last_wind_time = Time.new
-    @win.click_on('Wind')
+    @win.click_on('Wind', 'lc')
     log_action('Wind')
   end
 
@@ -75,13 +111,16 @@ class WaterMineWorker
     @win.refresh
     sleep 0.1
     take
+    @angle = angle
 
     wind if @last_wind_time.nil? || ((Time.new - @last_wind_time) > WIND_INTERVAL)
 
+    scan_angle
   end
 
   def take
     if @win.click_on('Take')
+      @scan_gems += 1
       match = Regexp.new('Take the (.*)').match(@win.read_text)
       log_action(match[1])
     end
@@ -93,7 +132,7 @@ class WaterMineWorker
     wtime = t[1]
     File.open(LOG_FILE, 'a') do |f|
       f.puts('longitude, latitude, (real) time, angle, event') if action == 'Start'
-      f.puts("#{coords[0]}, #{coords[1]}, #{wtime}, #{angle}, #{action}")
+      f.puts("#{coords[0]}, #{coords[1]}, #{wtime}, #{@angle}, #{action}")
     end
     
   end
