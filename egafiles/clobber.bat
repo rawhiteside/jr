@@ -1,5 +1,5 @@
 @echo off
 set EGYPTC="C:\eGenesis\A Tale in the Desert\egyptc"
-type nul > %1
-copy %1 %EGYPTC%
+del /F %EGYPTC%\%1
+type nul > %EGYPTC%\%1
 attrib +R %EGYPTC%\%1
