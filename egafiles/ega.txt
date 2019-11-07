@@ -1,0 +1,9 @@
+diamond base:
+ega7669ab3efe7d5fa106b494c219a851ed3138dc4e.ega
+
+diamond stones:
+egaf104c2d2cc65c57cad1bced1341fca259ea439a2.ega
+
+opal parts:
+ega64f7ad9f469f64592b3f2f8d4bae45effb691945.ega
+egae60f3a405a668ab4a61da9b75851793ccb6686db.ega
