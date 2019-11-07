@@ -1,219 +1,70 @@
-longitude, latitude, (real) time, angle, event
--1019, -6785, 11:34:18, , Start
-longitude, latitude, (real) time, angle, event
--1019, -6785, 11:34:19, , Start
-longitude, latitude, (real) time, angle, event
--1019, -6785, 11:34:19, , Start
--1019, -6785, 11:34:21, 14, Wind
--994, -6774, 11:34:42, 17, Wind
--966, -6783, 11:35:03, 15, Wind
--1019, -6785, 11:48:50, 14, Cuttable Garnet
--1019, -6785, 11:59:23, 14, Large Quar?
--1019, -6785, 12:00:42, 14, -- 2 gems during previous 1200 seconds
--1019, -6785, 12:00:44, 14, Pitch angle 13
--994, -6774, 12:01:04, 17, -- 0 gems during previous 1200 seconds
--994, -6774, 12:01:06, 17, Pitch angle 16
--966, -6783, 12:01:26, 15, -- 0 gems during previous 1200 seconds
--966, -6783, 12:01:28, 15, Pitch angle 14
--966, -6783, 12:18:38, 14, Cuttable Lapis
--1019, -6785, 12:21:56, 13, -- 0 gems during previous 1200 seconds
--1019, -6785, 12:21:58, 13, Pitch angle 12
--994, -6774, 12:22:19, 17, -- 0 gems during previous 1200 seconds
--994, -6774, 12:22:21, 17, Pitch angle 16
--966, -6783, 12:22:40, 14, -- 1 gems during previous 1200 seconds
--966, -6783, 12:22:42, 14, Pitch angle 13
--1019, -6785, 12:43:15, 12, -- 0 gems during previous 1200 seconds
--1019, -6785, 12:43:17, 12, Pitch angle 11
--994, -6774, 12:43:38, 16, Cuttable Citrine
--994, -6774, 12:43:38, 16, -- 1 gems during previous 1200 seconds
--994, -6774, 12:43:40, 16, Pitch angle 15
--966, -6783, 12:44:00, 13, -- 0 gems during previous 1200 seconds
--966, -6783, 12:44:01, 13, Pitch angle 12
--966, -6783, 12:45:21, 13, Small Quar?
--1019, -6785, 12:55:21, 11, Small Quar?
--1019, -6785, 13:03:22, 11, Cuttable Jade
--1019, -6785, 13:03:22, 11, -- 2 gems during previous 1200 seconds
--1019, -6785, 13:03:24, 11, Pitch angle 10
--994, -6774, 13:03:46, 15, -- 0 gems during previous 1200 seconds
--994, -6774, 13:03:47, 15, Pitch angle 14
--966, -6783, 13:04:07, 12, -- 1 gems during previous 1200 seconds
--966, -6783, 13:04:09, 12, Pitch angle 11
--994, -6774, 13:14:32, 14, Cuttable Jade
--966, -6783, 13:16:11, 11, Cuttable Jade
--1019, -6785, 13:23:29, 10, -- 0 gems during previous 1200 seconds
--1019, -6785, 13:23:31, 10, Pitch angle 30
--994, -6774, 13:23:52, 14, -- 1 gems during previous 1200 seconds
--994, -6774, 13:23:54, 14, Pitch angle 13
--966, -6783, 13:24:14, 11, -- 1 gems during previous 1200 seconds
--966, -6783, 13:24:16, 11, Pitch angle 10
--1019, -6785, 13:32:56, 30, Wind
--994, -6774, 13:33:18, 13, Wind
--966, -6783, 13:33:39, 11, Wind
--1019, -6785, 13:39:37, 30, Cuttable Turquoise
--1019, -6785, 13:43:37, 30, -- 1 gems during previous 1200 seconds
--1019, -6785, 13:43:38, 30, Pitch angle 29
--994, -6774, 13:44:00, 13, -- 0 gems during previous 1200 seconds
--994, -6774, 13:44:02, 13, Pitch angle 12
--966, -6783, 13:44:22, 11, -- 0 gems during previous 1200 seconds
--966, -6783, 13:44:23, 11, Pitch angle 10
--966, -6783, 13:45:44, 11, Cuttable Turquoise
--994, -6774, 13:48:05, 12, Cuttable Sunstone
--1019, -6785, 14:03:50, 29, -- 0 gems during previous 1200 seconds
--1019, -6785, 14:03:52, 29, Pitch angle 28
--994, -6774, 14:04:13, 12, -- 1 gems during previous 1200 seconds
--994, -6774, 14:04:15, 12, Pitch angle 11
--966, -6783, 14:04:36, 10, -- 1 gems during previous 1200 seconds
--966, -6783, 14:04:37, 10, Pitch angle 30
--994, -6774, 14:09:39, 12, Cuttable Amethyst
--1019, -6785, 14:13:22, 29, Cuttable Jade
--1019, -6785, 14:24:07, 29, -- 1 gems during previous 1200 seconds
--1019, -6785, 14:24:08, 29, Pitch angle 28
--994, -6774, 14:24:29, 12, Cuttable Amethyst
--994, -6774, 14:24:30, 12, -- 2 gems during previous 1200 seconds
--994, -6774, 14:24:31, 12, Pitch angle 11
--966, -6783, 14:24:53, 30, -- 0 gems during previous 1200 seconds
--966, -6783, 14:24:55, 30, Pitch angle 29
--1019, -6785, 14:44:24, 29, -- 0 gems during previous 1200 seconds
--1019, -6785, 14:44:26, 29, Pitch angle 28
--994, -6774, 14:44:48, 11, -- 0 gems during previous 1200 seconds
--994, -6774, 14:44:49, 11, Pitch angle 10
--966, -6783, 14:45:09, 30, -- 0 gems during previous 1200 seconds
--966, -6783, 14:45:11, 30, Pitch angle 29
--994, -6774, 14:47:32, 10, Small Topaz
--994, -6774, 14:55:33, 10, Small Quar?
-longitude, latitude, (real) time, angle, event
--1019, -6785, 15:12:45, , Start
-longitude, latitude, (real) time, angle, event
--1019, -6785, 15:12:45, , Start
-longitude, latitude, (real) time, angle, event
--1019, -6785, 15:12:45, , Start
--1019, -6785, 15:12:48, 28, Wind
--994, -6774, 15:13:08, unknown, Small Quar?
--994, -6774, 15:13:09, 10, Wind
--966, -6783, 15:13:31, 30, Wind
--1019, -6785, 15:21:54, 28, Cuttable Amethyst
--966, -6783, 15:38:10, 30, Cuttable Garnet
--1019, -6785, 15:38:50, 28, -- 1 gems during previous 1200 seconds
--1019, -6785, 15:38:52, 28, Pitch angle 27
--994, -6774, 15:39:13, 10, -- 0 gems during previous 1200 seconds
--994, -6774, 15:39:14, 10, Pitch angle 30
--966, -6783, 15:39:34, 30, -- 1 gems during previous 1200 seconds
--966, -6783, 15:39:36, 30, Pitch angle 29
--966, -6783, 15:40:54, 30, Cuttable Jade
--1019, -6785, 15:59:40, 27, -- 0 gems during previous 1200 seconds
--1019, -6785, 15:59:42, 27, Pitch angle 26
--994, -6774, 16:00:02, 30, -- 0 gems during previous 1200 seconds
--994, -6774, 16:00:04, 30, Pitch angle 29
--966, -6783, 16:00:24, 29, -- 1 gems during previous 1200 seconds
--966, -6783, 16:00:25, 29, Pitch angle 28
--1019, -6785, 16:16:36, 26, Small Topaz
--1019, -6785, 16:20:29, 26, -- 1 gems during previous 1200 seconds
--1019, -6785, 16:20:31, 26, Pitch angle 25
--994, -6774, 16:20:52, 29, -- 0 gems during previous 1200 seconds
--994, -6774, 16:20:53, 29, Pitch angle 28
--966, -6783, 16:21:13, 28, -- 0 gems during previous 1200 seconds
--966, -6783, 16:21:15, 28, Pitch angle 27
--1019, -6785, 16:23:10, 26, Small Quar?
--994, -6774, 16:26:05, 28, Cuttable Amethyst
--966, -6783, 16:34:13, 27, Small Quar?
--994, -6774, 16:37:47, 28, Cuttable Turquoise
--966, -6783, 16:40:43, 27, Cuttable Garnet
--1019, -6785, 16:41:23, 26, Small Topaz
--1019, -6785, 16:41:23, 26, -- 2 gems during previous 1200 seconds
--1019, -6785, 16:41:25, 26, Pitch angle 25
--994, -6774, 16:41:46, 28, -- 2 gems during previous 1200 seconds
--994, -6774, 16:41:48, 28, Pitch angle 27
--966, -6783, 16:42:07, 27, -- 2 gems during previous 1200 seconds
--966, -6783, 16:42:09, 27, Pitch angle 26
--994, -6774, 16:43:08, 28, Small Quar?
--994, -6774, 16:50:52, 27, Cuttable Sunstone
--1019, -6785, 17:02:11, 26, Cuttable Turquoise
--1019, -6785, 17:02:12, 26, -- 1 gems during previous 1200 seconds
--1019, -6785, 17:02:13, 26, Pitch angle 25
--994, -6774, 17:02:34, 27, -- 2 gems during previous 1200 seconds
--994, -6774, 17:02:36, 27, Pitch angle 26
--966, -6783, 17:02:55, 26, -- 0 gems during previous 1200 seconds
--966, -6783, 17:02:57, 26, Pitch angle 25
--1019, -6785, 17:11:26, 25, Wind
--994, -6774, 17:11:47, 26, Wind
--966, -6783, 17:12:07, 25, Wind
--1019, -6785, 17:23:07, 25, -- 0 gems during previous 1200 seconds
--1019, -6785, 17:23:09, 25, Pitch angle 24
--994, -6774, 17:23:30, 26, -- 0 gems during previous 1200 seconds
--994, -6774, 17:23:31, 26, Pitch angle 25
--966, -6783, 17:23:50, 25, Cuttable Jade
--966, -6783, 17:23:51, 25, -- 1 gems during previous 1200 seconds
--966, -6783, 17:23:52, 25, Pitch angle 24
--1019, -6785, 17:27:06, 24, Cuttable Lapis
--994, -6774, 17:30:00, 25, Cuttable Amethyst
--966, -6783, 17:41:59, 24, Cuttable Jade
--1019, -6785, 17:43:55, 24, -- 1 gems during previous 1200 seconds
--1019, -6785, 17:43:57, 24, Pitch angle 23
--994, -6774, 17:44:20, 25, -- 1 gems during previous 1200 seconds
--994, -6774, 17:44:22, 25, Pitch angle 24
--966, -6783, 17:44:41, 24, -- 1 gems during previous 1200 seconds
--966, -6783, 17:44:43, 24, Pitch angle 23
--1019, -6785, 18:04:46, 23, -- 0 gems during previous 1200 seconds
--1019, -6785, 18:04:47, 23, Pitch angle 22
--994, -6774, 18:05:08, 24, -- 0 gems during previous 1200 seconds
--994, -6774, 18:05:10, 24, Pitch angle 23
--966, -6783, 18:05:29, 23, -- 0 gems during previous 1200 seconds
--966, -6783, 18:05:31, 23, Pitch angle 22
--966, -6783, 18:06:48, 23, Cuttable Citrine
--994, -6774, 18:11:42, 23, Small Quar?
--1019, -6785, 18:13:56, 22, Medium Ruby
--1019, -6785, 18:25:35, 22, -- 1 gems during previous 1200 seconds
--1019, -6785, 18:25:37, 22, Pitch angle 21
--994, -6774, 18:25:57, 23, -- 1 gems during previous 1200 seconds
--994, -6774, 18:25:59, 23, Pitch angle 22
--966, -6783, 18:26:18, 22, -- 1 gems during previous 1200 seconds
--966, -6783, 18:26:20, 22, Pitch angle 21
--966, -6783, 18:43:12, 21, Cuttable Garnet
--994, -6774, 18:45:28, 22, Cuttable Jade
--1019, -6785, 18:46:27, 21, -- 0 gems during previous 1200 seconds
--1019, -6785, 18:46:29, 21, Pitch angle 20
--994, -6774, 18:46:50, 22, -- 1 gems during previous 1200 seconds
--994, -6774, 18:46:51, 22, Pitch angle 21
--966, -6783, 18:47:11, 21, -- 1 gems during previous 1200 seconds
--966, -6783, 18:47:12, 21, Pitch angle 20
--1019, -6785, 18:54:18, 20, Small Quar?
--1019, -6785, 18:55:36, 20, Cuttable Jade
--1019, -6785, 18:58:11, 20, Small Quar?
--1019, -6785, 18:59:31, 20, Cuttable Jade
--1019, -6785, 19:00:48, 20, Cuttable Jade
--1019, -6785, 19:07:16, 20, -- 5 gems during previous 1200 seconds
--1019, -6785, 19:07:17, 20, Pitch angle 19
--994, -6774, 19:07:38, 21, -- 0 gems during previous 1200 seconds
--994, -6774, 19:07:40, 21, Pitch angle 20
--966, -6783, 19:07:59, 20, -- 0 gems during previous 1200 seconds
--966, -6783, 19:08:01, 20, Pitch angle 19
--1019, -6785, 19:09:57, 19, Wind
--994, -6774, 19:10:17, 20, Wind
--966, -6783, 19:10:36, 19, Small Quar?
--966, -6783, 19:10:37, 19, Wind
--994, -6774, 19:20:42, 20, Cuttable Amethyst
--994, -6774, 19:23:18, 20, Cuttable Jade
--1019, -6785, 19:28:10, 19, Cuttable Lapis
--1019, -6785, 19:28:10, 19, -- 1 gems during previous 1200 seconds
--1019, -6785, 19:28:12, 19, Pitch angle 18
--994, -6774, 19:28:33, 20, -- 2 gems during previous 1200 seconds
--994, -6774, 19:28:34, 20, Pitch angle 19
--966, -6783, 19:28:54, 19, -- 1 gems during previous 1200 seconds
--966, -6783, 19:28:55, 19, Pitch angle 18
--1019, -6785, 19:46:23, 18, Cuttable Amethyst
--966, -6783, 19:47:03, 18, Cuttable Turquoise
--1019, -6785, 19:48:58, 18, -- 1 gems during previous 1200 seconds
--1019, -6785, 19:49:00, 18, Pitch angle 17
--994, -6774, 19:49:21, 19, -- 0 gems during previous 1200 seconds
--994, -6774, 19:49:22, 19, Pitch angle 18
--966, -6783, 19:49:42, 18, -- 1 gems during previous 1200 seconds
--966, -6783, 19:49:43, 18, Pitch angle 17
--994, -6774, 19:50:44, 19, Cuttable Sunstone
--994, -6774, 20:03:41, 18, Cuttable Garnet
--994, -6774, 20:04:58, 18, Cuttable Jade
--1019, -6785, 20:09:48, 17, -- 0 gems during previous 1200 seconds
--1019, -6785, 20:09:50, 17, Pitch angle 16
--994, -6774, 20:10:11, 18, -- 3 gems during previous 1200 seconds
--994, -6774, 20:10:13, 18, Pitch angle 17
--966, -6783, 20:10:32, 17, -- 0 gems during previous 1200 seconds
--966, -6783, 20:10:34, 17, Pitch angle 16
+Forges, 12:01:04, 17, -- 0 gems during previous 1200 seconds
+Forges, 12:22:19, 17, -- 0 gems during previous 1200 seconds
+Forges, 12:43:38, 16, -- 1 gems during previous 1200 seconds
+Forges, 13:03:46, 15, -- 0 gems during previous 1200 seconds
+Forges, 13:23:52, 14, -- 1 gems during previous 1200 seconds
+Forges, 13:44:00, 13, -- 0 gems during previous 1200 seconds
+Forges, 14:04:13, 12, -- 1 gems during previous 1200 seconds
+Forges, 14:24:30, 12, -- 2 gems during previous 1200 seconds
+Forges, 14:44:48, 11, -- 0 gems during previous 1200 seconds
+Forges, 15:39:13, 10, -- 0 gems during previous 1200 seconds
+Forges, 16:00:02, 30, -- 0 gems during previous 1200 seconds
+Forges, 16:20:52, 29, -- 0 gems during previous 1200 seconds
+Forges, 16:41:46, 28, -- 2 gems during previous 1200 seconds
+Forges, 17:02:34, 27, -- 2 gems during previous 1200 seconds
+Forges, 17:23:30, 26, -- 0 gems during previous 1200 seconds
+Forges, 17:44:20, 25, -- 1 gems during previous 1200 seconds
+Forges, 18:05:08, 24, -- 0 gems during previous 1200 seconds
+Forges, 18:25:57, 23, -- 1 gems during previous 1200 seconds
+Forges, 18:46:50, 22, -- 1 gems during previous 1200 seconds
+Forges, 19:07:38, 21, -- 0 gems during previous 1200 seconds
+Forges, 19:28:33, 20, -- 2 gems during previous 1200 seconds
+Forges, 19:49:21, 19, -- 0 gems during previous 1200 seconds
+Forges, 20:10:11, 18, -- 3 gems during previous 1200 seconds
+Kitchen, 12:00:42, 14, -- 2 gems during previous 1200 seconds
+Kitchen, 12:21:56, 13, -- 0 gems during previous 1200 seconds
+Kitchen, 12:43:15, 12, -- 0 gems during previous 1200 seconds
+Kitchen, 13:03:22, 11, -- 2 gems during previous 1200 seconds
+Kitchen, 13:23:29, 10, -- 0 gems during previous 1200 seconds
+Kitchen, 13:43:37, 30, -- 1 gems during previous 1200 seconds
+Kitchen, 14:03:50, 29, -- 0 gems during previous 1200 seconds
+Kitchen, 14:24:07, 29, -- 1 gems during previous 1200 seconds
+Kitchen, 14:44:24, 29, -- 0 gems during previous 1200 seconds
+Kitchen, 15:38:50, 28, -- 1 gems during previous 1200 seconds
+Kitchen, 15:59:40, 27, -- 0 gems during previous 1200 seconds
+Kitchen, 16:20:29, 26, -- 1 gems during previous 1200 seconds
+Kitchen, 16:41:23, 26, -- 2 gems during previous 1200 seconds
+Kitchen, 17:02:12, 26, -- 1 gems during previous 1200 seconds
+Kitchen, 17:23:07, 25, -- 0 gems during previous 1200 seconds
+Kitchen, 17:43:55, 24, -- 1 gems during previous 1200 seconds
+Kitchen, 18:04:46, 23, -- 0 gems during previous 1200 seconds
+Kitchen, 18:25:35, 22, -- 1 gems during previous 1200 seconds
+Kitchen, 18:46:27, 21, -- 0 gems during previous 1200 seconds
+Kitchen, 19:07:16, 20, -- 5 gems during previous 1200 seconds
+Kitchen, 19:28:10, 19, -- 1 gems during previous 1200 seconds
+Kitchen, 19:48:58, 18, -- 1 gems during previous 1200 seconds
+Kitchen, 20:09:48, 17, -- 0 gems during previous 1200 seconds
+Lake Point, 12:01:26, 15, -- 0 gems during previous 1200 seconds
+Lake Point, 12:22:40, 14, -- 1 gems during previous 1200 seconds
+Lake Point, 12:44:00, 13, -- 0 gems during previous 1200 seconds
+Lake Point, 13:04:07, 12, -- 1 gems during previous 1200 seconds
+Lake Point, 13:24:14, 11, -- 1 gems during previous 1200 seconds
+Lake Point, 13:44:22, 11, -- 0 gems during previous 1200 seconds
+Lake Point, 14:04:36, 10, -- 1 gems during previous 1200 seconds
+Lake Point, 14:24:53, 30, -- 0 gems during previous 1200 seconds
+Lake Point, 14:45:09, 30, -- 0 gems during previous 1200 seconds
+Lake Point, 15:39:34, 30, -- 1 gems during previous 1200 seconds
+Lake Point, 16:00:24, 29, -- 1 gems during previous 1200 seconds
+Lake Point, 16:21:13, 28, -- 0 gems during previous 1200 seconds
+Lake Point, 16:42:07, 27, -- 2 gems during previous 1200 seconds
+Lake Point, 17:02:55, 26, -- 0 gems during previous 1200 seconds
+Lake Point, 17:23:51, 25, -- 1 gems during previous 1200 seconds
+Lake Point, 17:44:41, 24, -- 1 gems during previous 1200 seconds
+Lake Point, 18:05:29, 23, -- 0 gems during previous 1200 seconds
+Lake Point, 18:26:18, 22, -- 1 gems during previous 1200 seconds
+Lake Point, 18:47:11, 21, -- 1 gems during previous 1200 seconds
+Lake Point, 19:07:59, 20, -- 0 gems during previous 1200 seconds
+Lake Point, 19:28:54, 19, -- 1 gems during previous 1200 seconds
+Lake Point, 19:49:42, 18, -- 1 gems during previous 1200 seconds
+Lake Point, 20:10:32, 17, -- 0 gems during previous 1200 seconds
+
