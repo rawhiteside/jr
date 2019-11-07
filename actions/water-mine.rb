@@ -52,11 +52,13 @@ class WaterMineWorker
     @scan_interval = scan_interval
     @scan_gems = 0
     @angle = "unknown"
+    @wind_delay = 0
   end
 
   def start_scan
     @scan_start = Time.now
     @scan_gems = 0
+    @wind_delay = 0
   end
 
   def scan_angle
@@ -69,8 +71,8 @@ class WaterMineWorker
     end
 
     # Look at things after the scan interval
-    if (Time.now - @scan_start) > @scan_interval
-      log_action("-- #{@scan_gems} gems during previous #{@scan_interval} seconds")
+    if (Time.now - @scan_start) > (@scan_interval + @wind_delay)
+      log_action("Gems last #{@scan_interval} seconds, #{@scan_gems}")
       set_angle(angle - 1)
       @win.refresh
       start_scan
@@ -105,6 +107,8 @@ class WaterMineWorker
     @last_wind_time = Time.new
     @win.click_on('Wind', 'lc')
     log_action('Wind')
+    # Dead time after winding.
+    @wind_delay = POST_WIND_WAIT
   end
 
   def tend
@@ -113,6 +117,7 @@ class WaterMineWorker
     take
     @angle = angle
 
+    # Time to wind again?
     wind if @last_wind_time.nil? || ((Time.new - @last_wind_time) > WIND_INTERVAL)
 
     scan_angle
