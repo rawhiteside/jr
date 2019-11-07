@@ -38,13 +38,16 @@ end
 class WaterMineWorker
   LOG_FILE = 'water-mine.csv'
   WIND_INTERVAL = 60 * 118   # Seconds
-  POST_WIND_WAIT = 60 * 5    # Seconds
+  # XXX POST_WIND_WAIT = 60 * 5    # Seconds
+  POST_WIND_WAIT = 1
 
   # We start at some angle.
   # Watch the mine for interval-1 seconds.
   # - If no gems, the advance to next angle. Else stay here and continue
 
   def initialize(w, scan_interval)
+    @pitch_list = nil
+    @past_pitches = []
     @win = w
     @win.default_refresh_loc = 'lc'
     @last_wind_time = nil
@@ -59,6 +62,39 @@ class WaterMineWorker
     @scan_start = Time.now
     @scan_gems = 0
     @wind_delay = 0
+    set_pitch_list unless @pitch_list
+  end
+
+  # If the label looks like "String, num, num..." then the numbers are
+  # the pitches to scan.
+  def set_pitch_list
+    text = @win.read_text
+    return unless text
+    label = text.split(/\n/)[3]
+    if label=~ /-+/
+      label = "Unlabeled"
+    end
+    words = label.split(',')
+    nums = []
+    tag = words.shift
+    all_nums = words.size > 0
+    words.each do |word|
+      num = word.strip.to_i
+      if num == 0
+        all_nums = false
+        break
+      end
+      nums << num
+    end
+    # Is it a pitch list?
+    if all_nums
+      @pitch_list = nums
+      @mine_tag = tag
+    else
+      @pitch_list = []
+      @mine_tag = tag
+      10.upto(30) {|i| @pitch_list << i}
+    end
   end
 
   def scan_angle
@@ -73,14 +109,22 @@ class WaterMineWorker
     # Look at things after the scan interval
     if (Time.now - @scan_start) > (@scan_interval + @wind_delay)
       log_action("Gems last #{@scan_interval} seconds, #{@scan_gems}")
-      set_angle(angle - 1)
+      advance_angle
       @win.refresh
       start_scan
     end
     
   end
 
-  def set_angle(ang)
+  def advance_angle
+    if @pitch_list.size > 0
+      ang = @pitch_list.shift
+      @past_pitches << ang
+    else
+      @pitch_list = @past_pitches
+      ang = @pitch_list.shift
+      @past_pitches = [ang]
+    end
     ang = 10 if ang > 30
     ang = 30 if ang < 10
     @win.refresh
@@ -111,8 +155,14 @@ class WaterMineWorker
     @wind_delay = POST_WIND_WAIT
   end
 
+  def get_pitch_list
+    text = @win.read_text
+    
+  end
+
   def tend
     @win.refresh
+    get_pitch_list if @pitch_list.nil?
     sleep 0.1
     take
     @angle = angle
@@ -136,8 +186,8 @@ class WaterMineWorker
     coords = ClockLocWindow.instance.coords.to_a
     wtime = t[1]
     File.open(LOG_FILE, 'a') do |f|
-      f.puts('longitude, latitude, (real) time, angle, event') if action == 'Start'
-      f.puts("#{coords[0]}, #{coords[1]}, #{wtime}, #{@angle}, #{action}")
+      f.puts('mine tag, (real) time, angle, event') if action == 'Start'
+      f.puts("#{@mine_tag}, #{wtime}, #{@angle}, #{action}")
     end
     
   end
