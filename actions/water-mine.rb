@@ -38,8 +38,7 @@ end
 class WaterMineWorker
   LOG_FILE = 'water-mine.csv'
   WIND_INTERVAL = 60 * 118   # Seconds
-  # XXX POST_WIND_WAIT = 60 * 5    # Seconds
-  POST_WIND_WAIT = 1
+  POST_WIND_WAIT = 60 * 5    # Seconds
 
   # We start at some angle.
   # Watch the mine for interval-1 seconds.
