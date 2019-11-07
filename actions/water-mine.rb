@@ -94,6 +94,8 @@ class WaterMineWorker
       @mine_tag = tag
       10.upto(30) {|i| @pitch_list << i}
     end
+
+    advance_angle
   end
 
   def scan_angle
@@ -154,14 +156,9 @@ class WaterMineWorker
     @wind_delay = POST_WIND_WAIT
   end
 
-  def get_pitch_list
-    text = @win.read_text
-    
-  end
-
   def tend
     @win.refresh
-    get_pitch_list if @pitch_list.nil?
+    set_pitch_list if @pitch_list.nil?
     sleep 0.1
     take
     @angle = angle
