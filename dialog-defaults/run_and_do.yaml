@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Water mines
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -531,7 +531,8 @@ Water mines:
     \ tile_pinned_windows\n  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n\
     \  tiler = Tiler.new(2, 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height\
     \ - 20\n  3.times do\n    w = PinnableWindow.from_point(x, y)\n    @workers <<\
-    \ WaterMineWorker.new(w)\n    tiler.tile(w)\n  end\n  @workers.reverse!\nend\n"
+    \ WaterMineWorker.new(w, 1200)\n    tiler.tile(w)\n  end\n  @workers.reverse!\n\
+    end\n"
   repeat: Repeat
   path: |+
     -1019, -6785
