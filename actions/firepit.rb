@@ -120,12 +120,13 @@ class Firepit < ARobot
       new_state = get_new_firepit_state
       if new_state == HOT
 	with_robot_lock do
-	  mm(@x, @y)
-	  send_string('s', 0.01)
+	  mm(@x, @y, 0.2)
+	  send_string('s', 0.2)
+	  mm(@x - 20, @y + 20)
 	end
-        sleep 15
+        sleep 5
       end
-      sleep 1
+      sleep 0.5
     end
   end
 
@@ -163,25 +164,25 @@ class Firepit < ARobot
   # Returns nil if state did not change
   def get_new_firepit_state
     frac = get_white_fraction
-    # During startup.
-    if frac == nil || @state == nil
-      if @state == NORMAL
-	return nil
-      else
-	return @state = NORMAL
-      end
-    end
+    # Frac is nil if there are no bright spots at all. This happens
+    # (apart from startup) when heavy lag causes the fire to vanish
+    # for a few moments.  We just ignore these states entirely.
+    return nil unless frac
+
+    # We're just getting going. Start in "normal" state.
+    return @state = NORMAL if @state == nil
+
     # We enter "hot", if we're in "normal" and this is the
     # REPEATS consecutive tick of high fraction
     if frac >= HOT_THRESH
       @hot_count += 1
       @normal_count = 0
-      return @state = HOT if @state != HOT && @hot_count > REPEATS
+      return @state = HOT if @state != HOT && @hot_count >= REPEATS
       return nil
     elsif frac < NORMAL_THRESH
       @normal_count += 1
       @hot_count = 0
-      return @state = NORMAL if @state != NORMAL && @normal_count > REPEATS
+      return @state = NORMAL if @state != NORMAL && @normal_count >= REPEATS
       return nil
     else
       @normal_count = @hot_count = 0
