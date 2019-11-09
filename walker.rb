@@ -181,7 +181,7 @@ class Walker < ARobot
 	start_going(direction)
 	curr_direction = direction
       end
-      sleep_sec 0.3
+      sleep_sec 0.1
     end
   end
 end
