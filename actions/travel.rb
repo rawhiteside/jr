@@ -62,6 +62,10 @@ class Travel < Action
     #
     # Compute all possible routes that terminate at the destination.
     routes = all_routes_to(destination)
+    if routes.nil?
+      puts "Destination #{destination} is unknown."
+      return
+    end
     #
     # We are located somewhere.  Find the shortest distance
     # (:offset)from our location to a line segment on each of the
@@ -114,7 +118,8 @@ class Travel < Action
 
   def all_routes_to(destination)
     base_list = @basis.select{|b| b[:waypoints].last == destination}
-
+    return nil unless base_list && base_list.size > 0
+    
     completed_routes = []
     growing_routes = base_list
     loop do
