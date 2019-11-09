@@ -120,13 +120,14 @@ class Firepit < ARobot
       new_state = get_new_firepit_state
       if new_state == HOT
 	with_robot_lock do
-	  mm(@x, @y, 0.2)
+	  mm(@x, @y)
+          sleep 0.2
 	  send_string('s', 0.2)
 	  mm(@x - 20, @y + 20)
 	end
         sleep 5
       end
-      sleep 0.5
+      sleep 1
     end
   end
 
@@ -177,12 +178,12 @@ class Firepit < ARobot
     if frac >= HOT_THRESH
       @hot_count += 1
       @normal_count = 0
-      return @state = HOT if @state != HOT && @hot_count >= REPEATS
+      return @state = HOT if @state != HOT && @hot_count > REPEATS
       return nil
     elsif frac < NORMAL_THRESH
       @normal_count += 1
       @hot_count = 0
-      return @state = NORMAL if @state != NORMAL && @normal_count >= REPEATS
+      return @state = NORMAL if @state != NORMAL && @normal_count > REPEATS
       return nil
     else
       @normal_count = @hot_count = 0
