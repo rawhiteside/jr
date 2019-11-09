@@ -83,11 +83,11 @@ class PickStones < PickThings
   def find_point
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
-    (pb.height/2).times do |r|
+    (-150 + pb.height/2).times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
         return pt if stone_color?(pb, pt)
-        return pt if bag_color?(pb, pt)
+#        return pt if bag_color?(pb, pt)
         # return pt if bauxite_color?(pb, pt)
       end
     end
