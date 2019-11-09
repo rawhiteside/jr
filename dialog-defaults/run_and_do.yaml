@@ -532,7 +532,7 @@ Water mines:
     \  tiler = Tiler.new(2, 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height\
     \ - 20\n  3.times do\n    w = PinnableWindow.from_point(x, y)\n    @workers <<\
     \ WaterMineWorker.new(w, 1200)\n    tiler.tile(w)\n  end\n  @workers.reverse!\n\
-    end\n"
+    end\ntravel 'Kitchens CP'\n"
   repeat: Repeat
   path: |+
     -1019, -6785
