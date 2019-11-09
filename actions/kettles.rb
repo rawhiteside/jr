@@ -109,7 +109,7 @@ class KettleWindow < PinnableWindow
 
   def click_button(which)
     xy = @locs[which.downcase]
-    dialog_click(Point.new(xy[0], xy[1]))
+    dialog_click(Point.new(xy[0], xy[1]), 'lc', 0.1)
     sleep_sec(0.1)
   end
 
