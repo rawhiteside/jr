@@ -19,14 +19,14 @@ class RunAndDo < Action
           {
             :type => :big_text, :label => 'Setup Ruby code', :name => 'code',
             :value => '# Type Ruby code here.',
-            :rows => 15, :cols => 50
+            :rows => 10, :cols => 50
           },
         ]
       },
       {:type => :combo, :name => 'repeat', :label => 'Repeat?', 
        :vals => ['Repeat', 'One time']},
       {:type => :world_path, :label => 'Path to walk.', :name => 'path',
-       :rows => 15, :custom_buttons => 3}
+       :rows => 11, :custom_buttons => 2}
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
