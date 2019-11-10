@@ -68,6 +68,7 @@ class StatClicks < Action
   def stat_hotkeys(str, stats)
     stats = [stats] unless stats.kind_of?(Array)
     loop do
+      PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
       send_string(str)
       sleep 5
@@ -83,6 +84,7 @@ class StatClicks < Action
   def stat_clicks(x, y, stats)
     stats = [stats] unless stats.kind_of?(Array)
     loop do
+      PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
       rclick_at_restore(x, y)
       sleep_sec 5
