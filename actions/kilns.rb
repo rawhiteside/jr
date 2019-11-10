@@ -35,11 +35,15 @@ class Kilns < GridAction
         win.dismiss
         sleep 0.1
       end
-      repair_kilns
-
+      post_grid_hook
+      
       wait_more = delay - (Time.now.to_f - start)
       sleep_sec wait_more if wait_more > 0
     end
+  end
+
+  def post_grid_hook
+    repair_kilns
   end
 
   def repair_kilns
@@ -66,9 +70,34 @@ class PotteryWheel < Kilns
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
 
-  def repair_kilns
+  def post_grid_hook
   end
 end
 Action.add_action(PotteryWheel.new)
+
+
+class GridHotkeys < Kilns
+  def initialize
+    super('Grid Hotkeys', 'Buildings')
+  end
+
+  def get_gadgets
+    super + [{:type => :combo, :label => 'Refill jugs?', :name => 'jugs', :vals => ['Yes', 'No']},]
+  end
+
+  def act_at(p)
+    
+    mm(p['x'],p['y'])
+    sleep_sec 0.3
+    send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
+  end
+
+  def post_grid_hook
+    if @user_vals['jugs'] == 'Yes'
+      Icons.refill
+    end
+  end
+end
+Action.add_action(GridHotkeys.new)
 
 
