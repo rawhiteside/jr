@@ -16,7 +16,7 @@ class Clr
   }
 
   def self.red?(hue, sat, bright)
-    return (5..8).cover?(hue) && sat > 100
+    return (5..8).cover?(hue) && sat > 100 && bright > 199
   end
 
   def self.green?(hue, sat, bright)
