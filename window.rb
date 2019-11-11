@@ -66,7 +66,7 @@ class HowMuch < Window
   def self.max
     win = wait_for_win
     return nil unless win
-    win.dialog_click(Point.new(110, win.rect.height - 30))
+    win.dialog_click(Point.new(110, win.rect.height - 30), 'lc', 0.1)
     wait_till_gone
 
     true
