@@ -56,6 +56,7 @@ class StatClicks < Action
       {:type => :point, :name => 'p', :label => 'Drag to click location'},
       {:type => :label, :label => '~ Or ~'},
       {:type => :text, :name => 'hotkeys', :label => 'Hotkeys (has priority)'},
+      {:type => :text, :name => 'delay', :label => 'Delay (for lag)'},
     ]
     @vals = UserIO.prompt(parent, nil, @name, comps)
   end
@@ -70,13 +71,15 @@ class StatClicks < Action
     loop do
       PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
+      sleep @delay
       send_string(str)
-      sleep 5
     end
   end
 
   def act
     hotkeys = @vals['hotkeys']
+    @delay = @vals['delay'].to_i
+    @delay = 5 if @delay == 0
     stat_hotkeys(hotkeys.strip, @stats) if hotkeys.strip.size > 0
     stat_clicks(@vals['p.x'].to_i, @vals['p.y'].to_i, @stats)
   end
@@ -86,8 +89,8 @@ class StatClicks < Action
     loop do
       PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
+      sleep_sec @delay
       rclick_at_restore(x, y)
-      sleep_sec 5
     end
   end
 
