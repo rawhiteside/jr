@@ -75,8 +75,14 @@ class SandMine < AbstractMine
         end
       end
       p sums if @debug
+      if @debug
+        sums.each_key do |k|
+          puts "Color: #{k}, count #{sums[k]}, area: #{rect.width * rect.height}, ratio: #{sums[k].to_f/(rect.width * rect.height)}"
+        end
+      end
       max_count = sums.values.max
-      if max_count > 15
+      ratio = max_count.to_f / (rect.width * rect.height)
+      if ratio > 0.002     # Magic number!!
         sums.each_key do |k|
           if sums[k] == max_count
             ore_stone.color_symbol = k
@@ -86,6 +92,8 @@ class SandMine < AbstractMine
       else
         ore_stone.color_symbol = @gem_color.to_sym
       end
+      puts "Picked: #{ore_stone.color_symbol}" if @debug
+      puts "--" if @debug
       puts "this should not happen" unless ore_stone.color_symbol
 
     end
@@ -120,13 +128,13 @@ class SandMine < AbstractMine
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     globs = globs.slice(0, @stone_count)
     stones = []
-    if @debug
-      if globs.size == @stone_count && globs[0].size > 2 * globs[@stone_count-1].size
-        UserIO.show_image(@empty_image)
-        UserIO.show_image(@stones_image)
-        UserIO.show_image(@diff_image)
-      end
-    end
+#    if @debug
+#      if globs.size == @stone_count && globs[0].size > 2 * globs[@stone_count-1].size
+#        UserIO.show_image(@empty_image)
+#        UserIO.show_image(@stones_image)
+#        UserIO.show_image(@diff_image)
+#      end
+#    end
     globs.each { |g| 
       # Stones will hold the sets of points.  These points will be in
       # screen coordinates.
