@@ -58,34 +58,36 @@ class SandMine < AbstractMine
     end
   end
 
-  SEARCH_FRACTION = 0.4
   def assign_colors_to_stones(stones)
     stones.each do |ore_stone|
       # Bounds is a weird, old, class, but has that "spiral" method.
       # We'll search in the central portion of the stone.
       # Compute the central search Bounds from the two ul/lr points
-      stone_rect = ore_stone.rectangle
-      fract = (1.0 - SEARCH_FRACTION) / 2.0
-      xoff = (stone_rect.width * fract).to_i
-      yoff = (stone_rect.height * fract).to_i
-      x1 = stone_rect.x + xoff
-      y1 = stone_rect.y + yoff
-      x2 = stone_rect.x + stone_rect.width - xoff
-      y2 = stone_rect.y + stone_rect.height - xoff
-      bounds = Bounds.new([x1, y1], [x2, y2])
-      bounds.spiral.each do |xy|
-        color = @stones_image.color_from_screen(xy[0], xy[1])
-        sym = Clr.color_symbol(color, @gem_color, @debug)
-        if (sym)
-          ore_stone.color_symbol = sym
-          break
+      rect = ore_stone.rectangle
+      sums = Hash.new(0)
+      sums[:red] = 0  # put at least one element in there. 
+      rect.x.upto(rect.x + rect.width) do |x|
+        rect.y.upto(rect.y + rect.height) do |y|
+
+          color = @stones_image.color_from_screen(x, y)
+          sym = Clr.color_symbol(color, @gem_color, @debug)
+          sums[sym] = sums[sym] + 1 if (sym)
         end
       end
-
-      unless ore_stone.color_symbol
+      p sums if @debug
+      max_count = sums.values.max
+      if max_count > 15
+        sums.each_key do |k|
+          if sums[k] == max_count
+            ore_stone.color_symbol = k
+            break
+          end
+        end
+      else
         ore_stone.color_symbol = @gem_color.to_sym
       end
-      
+      puts "this should not happen" unless ore_stone.color_symbol
+
     end
     if @debug
       p stones.collect {|s| s.color_symbol}
@@ -188,6 +190,8 @@ class SandMine < AbstractMine
 
     # Desparately needs a refactor.  Add any highlight colors in the
     # rectangle to the stone points.
+    # 
+    # To keep the stone from looking like it's highlighted. 
     count = 0
     rect = stone.rectangle
     rect.width.times do |x|
@@ -351,7 +355,7 @@ class SandMine < AbstractMine
 
   def highlight_blue?(color)
     r, g, b = color.red, color.green, color.blue
-    return b > 100 && (b - r) > 40 && (b - g) < 30
+    return b > 100 && (b - r) > 30 && (b - g) < 30
   end
 
   def stone_highlight?(stone)
@@ -364,6 +368,8 @@ class SandMine < AbstractMine
 
   def count_highlight_points(stone)
     rect = stone.rectangle
+    r = Rectangle.new(rect.x - 100, rect.y - 100, rect.width + 200, rect.height + 200)
+    rect = r
     pb = PixelBlock.new(rect)
     count = 0
     rect.width.times do |x|
