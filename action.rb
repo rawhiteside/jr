@@ -12,6 +12,7 @@ class Action  < ARobot
   attr_reader :name, :group
   attr_accessor :repeat
 
+  # ctor.  Subclasses should implement a no-arg ctor that calls this.
   def initialize(name, group='Misc')
     @name = name
     @group = group
@@ -28,7 +29,8 @@ class Action  < ARobot
     @@action_list.sort{|a,b| a.name.downcase <=> b.name.downcase}
   end
 
-  # Just for clarity.  Bob gets confused. 
+  # Just for clarity.  Bob gets confused.  But, you can over-ride this
+  # if you want the yaml name diff from the display name.
   def persistence_name
     @name
   end
@@ -50,6 +52,7 @@ class Action  < ARobot
     true
   end
 
+  # Don't over-ride this. I barely undersand it myself. 
   def start(check)
     if @action_thread
       puts "Start called for action already running!"
