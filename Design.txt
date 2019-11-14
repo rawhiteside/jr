@@ -1,0 +1,100 @@
+Here's an overview of what I can remember about the design.
+
+--Actions.
+Macros are subclasses of the Action class.  Every file in the actions/
+subdir are loaded at startup.  The shape of a file in there should be:
+
+  class Foo < Action
+  ...
+  end
+  Action.addAction(Foo.new)
+
+There is *some*, at least,  documentation in "action.rb" about what
+you should do/implement.  Best is probably to look at a simple
+example.  "actions/simple.rb" for example.
+
+--GridActions.
+See PotteryWheel in kilns.rb, for example.  Basically, you just
+implement act_at(Point p)
+Some refactoring needed since Plur added delays. The Kilns class is
+messy now since keys need to go in separate passes.  No more "tbwf" at
+each point.
+
+
+-- Setup.
+  The setup() method displays the set of "gadgets" to display in the
+  setup dlg.  
+    def setup
+      my_gadgets = [
+        :type => :text, :label => "itsa label", :name => 'interval',
+      ]
+      @vals = UserIO.prompt(parent, 'Interval keys', 'Interval keys', gadgets)
+      return nil unless @vals
+    end
+  
+  This stuff is in action-setup-ui.rb. Maybe there are comments in
+  there.
+
+  Note that *every* macro can have multiple parameter sets.  This
+  stuff is handled by DialogDefaultsManager in action-setup-ui.rb
+
+-- World Locations.
+  Some of the gadgets expect world locaions as a string "[<x>, <y>]".
+  The WorldLocUtuils class in action-setup-ui.rb has methods to turn
+  these into [x, y] arrays.
+  
+
+-- Windows
+The base class for a window is org.foa.window.AWindow.  (A for Atitd,
+so I don't get confused about other Window classes wherever). It knows
+the rectangle for the window, how to read its text, how to click on
+text, how to click points relative to its origin.  Stuff like that.
+
+WindowGeom.java finds the rectangles for windows. 
+
+An important subclass is PinnableWindow.  Constuctors are:
+
+  fromScreenClick(Point p)
+  fromSceenClick(x, y)
+    Click at the point, and construct a window from what pops up. 
+
+  fromPoint(Point p)
+  fromPoint(x, y)
+    Construct a window from what's on the screen.  The provided point
+    is inside the window.
+
+
+-- PixelBlocks
+Get a screen capture with robot.fullScreenCapture.  (Your Action is a
+subclass of ARobot, but if you need one, use ARobot.sharedInstance)
+
+Other screen rectangles, use PixelBlock.new(Rectangle rect)
+
+Coordinates for things like color(x, y) are in local coords.  You can
+convert these with toScreen(x, y).  There are Point versions as
+well.
+
+Some cool image manipulation methods are availble in ImageUtils.java.
+
+-- World Navigaton
+Is handled in walker.rb
+
+
+-- User interaction
+Methods for showing warnings and errors, etc, are in user-io.rb
+
+-- Persistence
+Things are generally persisted as yaml files.  I think these are
+*very* close to JSon.
+
+
+-- Reading text.
+The text stuff is held in font.yaml.  It's a bitmap-to-string map.
+When the reader doesn't recognize something, it emits "?".  If you
+want to fix this, run "Acquire font" and point to the offending
+window.  You'll be prompted with the unknown bitmap and asked to
+provide a string.  It gets confused with things like, "AV" which it
+thinks is a single "gplyph" since the characters overlap
+horizontally.
+
+
