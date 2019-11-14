@@ -72,7 +72,7 @@ class SandMine < AbstractMine
           sums[sym] = sums[sym] + 1 if (sym)
         end
       end
-      p sums if @debug
+      log_result sums.to_s
       if @debug
         sums.each_key do |k|
           log_result "Color: #{k}, count #{sums[k]}, area: #{rect.width * rect.height}, ratio: #{sums[k].to_f/(rect.width * rect.height)}"
@@ -98,8 +98,10 @@ class SandMine < AbstractMine
       end
       
     end
+    picked = stones.collect {|s| s.color_symbol}
+    log_result picked.to_s
     if @debug
-      p stones.collect {|s| s.color_symbol}
+      p picked
     end
     
   end
@@ -331,7 +333,7 @@ class SandMine < AbstractMine
     hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
     hue = hsb[0] * 360  # Angle
     sat = hsb[1] * 255
-    return (186..191).cover?(hue) && (91..97).cover?(sat)
+    return (186..196).cover?(hue) && (80..97).cover?(sat)
   end
 
   def count_highlight_pixels(stone)
