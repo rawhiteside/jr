@@ -1,4 +1,4 @@
-orequire 'action'
+require 'action'
 
 class EldradReactory < Action
   def initialize
@@ -53,7 +53,6 @@ class EldradReactory < Action
           @win.click_on 'Take'
         end
       end
-    else
       # waiting....
       sleep 1
     end
