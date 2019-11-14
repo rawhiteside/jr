@@ -103,6 +103,10 @@ class KettleWindow < PinnableWindow
       'weed killer' => [160, 175],
       'grain fert' => [160, 202],
       'flower fert' => [50, 202],
+
+      'acid' => [160, 277],
+      'sulfur' => [50, 277],
+      'salt' => [160, 253],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
   end
@@ -150,8 +154,8 @@ class KettleWindow < PinnableWindow
 end
 
 class Potash < KettleAction
-  def initialize
-    super('Potash')
+  def initialize(n = 'Potash')
+    super(n)
   end
 
   def get_gadgets
@@ -180,11 +184,15 @@ class Potash < KettleAction
     w
   end
 
+  def make_this
+    'potash'
+  end
+
   def start_potash(p, ignite)
     w = pinned_kettle_window(p)
     unless ignite
       # Have to pause between these to let them update.
-      w.click_button('potash')
+      w.click_button(make_this)
       sleep_sec(0.1)
       w.click_button('begin')
       sleep_sec(0.1)
@@ -217,7 +225,7 @@ class Potash < KettleAction
       # Tend until they're all done
       while done.values.include?(false)
         grid.each_point do |p|
-          done[p] = tend_potash(p) unless done[p]
+          done[p] = stoke_kettle(p) unless done[p]
         end
         sleep_sec(3.0)
       end
@@ -232,7 +240,7 @@ class Potash < KettleAction
   # Look at the potash kettle at the point and decide what, if
   # anything, needs to be done. Return a true if the potash is
   # complete, false otherwise.
-  def tend_potash(p)
+  def stoke_kettle(p)
     w = pinned_kettle_window(p, false)
     v = {}
     5.times do
@@ -265,3 +273,15 @@ class Potash < KettleAction
 
 end
 Action.add_action(Potash.new)
+
+# XXX Refactor this more cleanly. 
+class Acid < Potash
+  def initialize
+    super('acid')
+  end
+  
+  def make_this
+    'acid'
+  end
+end
+Action.add_action(Acid.new)
