@@ -1,27 +1,5 @@
 require 'action'
 
-class TimerAction < Action
-  
-end
-
-
-class DigDirt < Action
-  def initialize
-    super('Dig dirt', 'Gather')
-  end
-
-  def act
-    xy = [92, 65]
-    stat = 'End'
-    loop do
-      stat_wait('End')
-      rclick_at(xy[0], xy[1])
-      sleep_sec 1
-    end
-  end
-end
-Action.add_action(DigDirt.new)
-
 class DigStones < Action
   def initialize
     super('Dig Stones', 'Gather')
@@ -87,10 +65,10 @@ class StatClicks < Action
   def stat_clicks(x, y, stats)
     stats = [stats] unless stats.kind_of?(Array)
     loop do
-      PopupWindow.dismiss
+      # PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
       sleep_sec @delay
-      rclick_at_restore(x, y)
+      rclick_at(x, y)
     end
   end
 
