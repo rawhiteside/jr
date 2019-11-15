@@ -12,11 +12,17 @@ class Fert < KettleAction
     super('Grain Fertilizer')
   end
 
+  def start_pass(index)
+    @first_pass = (index == 0)
+  end
+  
   def act_at(g)
     delay = 0.3
+    unless @first_pass
+      w.click_button('Take')
+      sleep_sec delay
+    end
     w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_button('Take')
-    sleep_sec delay
     w.click_button('Grain Fert' )
     sleep_sec delay
     w.click_button('Begin')
@@ -32,11 +38,17 @@ class FlowerFert < KettleAction
     super('Flower Fertilizer')
   end
 
+  def start_pass(index)
+    @first_pass = (index == 0)
+  end
+
   def act_at(g)
     delay = 0.3
     w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_button('Take')
-    sleep_sec delay
+    unless @first_pass
+      w.click_button('Take')
+      sleep_sec delay
+    end
     w.click_button('Flower Fert')
     sleep_sec delay
     w.click_button('Begin')
