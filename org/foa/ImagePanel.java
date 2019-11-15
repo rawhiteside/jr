@@ -70,13 +70,13 @@ public class ImagePanel extends JPanel implements ActionListener {
 	
 		switch (cmd) {
 		case "R":
-			c = new Color(c.getRed(), 0, 0);
+			c = new Color(c.getRed(), c.getRed(), c.getRed());
 			break;
 		case "G":
-			c = new Color(0, c.getGreen(), 0);
+			c = new Color(c.getGreen(), c.getGreen(), c.getGreen());
 			break;
 		case "B":
-			c = new Color(0, 0, c.getBlue());
+			c = new Color(c.getGreen(), c.getGreen(), c.getBlue());
 			break;
 		case "H":
 			hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
