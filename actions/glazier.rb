@@ -34,7 +34,6 @@ class GlazierWindow < PinnableWindow
   # - Waits for the temperature to get into the working range
   #   (1600-2400)
   # - Makes 'what' items until the amount of glass is 19.
-  # - Sets the @done variable to true.
   def make_glass(what)
     wait_to_start_making
 
@@ -209,7 +208,6 @@ class GlazierWindow < PinnableWindow
 
   def watch
     each_tick do |stats|
-      p stats
       return if temperature == 0
     end
   end
@@ -222,7 +220,7 @@ class GlazierWindow < PinnableWindow
 	refresh
 	click_on('Add 2')
       }
-      sleep_sec 100
+      sleep_sec 120
       log "Rise checking stop. done=#{@done}, temp=#{temperature}"
       break if temperature > 2050
     end
