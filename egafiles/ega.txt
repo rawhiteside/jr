@@ -17,3 +17,7 @@ Topaz
 egac07a0671c5c23dcd5ab488970e4b525f742d54a1.ega
 -- Stones
 egaad40db46860cd7f1c87f0d65eb00b035c50655fb.ega
+
+Sapphire
+-- Base
+egae00b6cebbac734624481d6d3a151b7394581da51.ega
