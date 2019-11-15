@@ -166,10 +166,16 @@ class GridAction < Action
     @user_vals = UserIO.prompt(parent, @name, @name, get_gadgets)
   end
 
+  # Override to watch passes begin. 
+  def start_pass(index)
+    puts "in grid: action"
+  end
+
   def act
     delay = @user_vals['delay'].to_f
     repeat = @user_vals['repeat'].to_i
-    repeat.times do
+    repeat.times do |i|
+      start_pass i
       start = Time.now.to_f
       GridHelper.new(@user_vals, 'g').each_point do |g|
         ControllableThread.check_for_pause
