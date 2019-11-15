@@ -1379,3 +1379,438 @@ Forges, 21:53:08, 19, Pitch angle 12
 Rocksaws, 22:02:04, 22, Cuttable Amethyst
 Kitchens, 22:13:39, 19, Gems last 1200 seconds, 0
 Kitchens, 22:13:40, 19, Pitch angle 10
+mine tag, (real) time, angle, event
+, 08:15:46, , Start
+mine tag, (real) time, angle, event
+, 08:15:47, , Start
+mine tag, (real) time, angle, event
+, 08:15:47, , Start
+Kitchens, 08:15:49, unknown, Pitch angle 24
+Kitchens, 08:15:50, 24, Wind
+Rocksaws, 08:16:11, unknown, Pitch angle 27
+Rocksaws, 08:16:12, 27, Wind
+Forges, 08:16:32, unknown, Pitch angle 24
+Forges, 08:16:33, 24, Wind
+Kitchens, 08:23:32, 24, Cuttable Sunstone
+Kitchens, 08:31:12, 24, Cuttable Sunstone
+Rocksaws, 08:36:38, 27, Cuttable Jade
+Rocksaws, 08:40:27, 27, Cuttable Turquoise
+Kitchens, 08:41:24, 24, Gems last 1200 seconds, 2
+Kitchens, 08:41:26, 24, Pitch angle 12
+Rocksaws, 08:41:46, 27, Gems last 1200 seconds, 2
+Rocksaws, 08:41:47, 27, Pitch angle 22
+Forges, 08:42:06, 24, Gems last 1200 seconds, 0
+Forges, 08:42:08, 24, Pitch angle 12
+Rocksaws, 08:44:21, 22, Cuttable Turquoise
+Rocksaws, 08:55:49, 22, Cuttable Citrine
+Kitchens, 09:01:51, 12, Gems last 1200 seconds, 0
+Kitchens, 09:01:52, 12, Pitch angle 22
+Rocksaws, 09:02:12, 22, Gems last 1200 seconds, 2
+Rocksaws, 09:02:13, 22, Pitch angle 18
+Forges, 09:02:33, 12, Gems last 1200 seconds, 0
+Forges, 09:02:34, 12, Pitch angle 22
+Kitchens, 09:08:17, 22, Cuttable Amethyst
+Kitchens, 09:22:17, 22, Gems last 1200 seconds, 1
+Kitchens, 09:22:18, 22, Pitch angle 19
+Rocksaws, 09:22:38, 18, Gems last 1200 seconds, 0
+Rocksaws, 09:22:40, 18, Pitch angle 27
+Forges, 09:22:59, 22, Gems last 1200 seconds, 0
+Forges, 09:23:00, 22, Pitch angle 19
+Kitchens, 09:24:54, 19, Medium Quar?
+Forges, 09:28:06, 19, Cuttable Garnet
+Forges, 09:29:23, 19, Cuttable Amethyst
+Rocksaws, 09:39:16, 27, Cuttable Jade
+Kitchens, 09:42:45, 19, Gems last 1200 seconds, 1
+Kitchens, 09:42:47, 19, Pitch angle 10
+Rocksaws, 09:43:07, 27, Gems last 1200 seconds, 1
+Rocksaws, 09:43:08, 27, Pitch angle 22
+Forges, 09:43:27, 19, Gems last 1200 seconds, 2
+Forges, 09:43:29, 19, Pitch angle 24
+Forges, 09:58:45, 24, Cuttable Turquoise
+Kitchens, 10:03:12, 10, Gems last 1200 seconds, 0
+Kitchens, 10:03:13, 10, Pitch angle 24
+Rocksaws, 10:03:33, 22, Gems last 1200 seconds, 0
+Rocksaws, 10:03:34, 22, Pitch angle 18
+Forges, 10:03:54, 24, Gems last 1200 seconds, 1
+Forges, 10:03:55, 24, Pitch angle 12
+Kitchens, 10:12:11, 24, Cuttable Turquoise
+Kitchens, 10:14:45, 24, Wind
+Rocksaws, 10:15:06, 18, Wind
+Forges, 10:15:25, 12, Wind
+Kitchens, 10:24:57, 24, Cuttable Sunstone
+Kitchens, 10:28:46, 24, Gems last 1200 seconds, 2
+Kitchens, 10:28:47, 24, Pitch angle 12
+Rocksaws, 10:29:07, 18, Cuttable Lapis
+Rocksaws, 10:29:08, 18, Gems last 1200 seconds, 1
+Rocksaws, 10:29:09, 18, Pitch angle 27
+Forges, 10:29:28, 12, Gems last 1200 seconds, 0
+Forges, 10:29:29, 12, Pitch angle 22
+Rocksaws, 10:35:32, 27, Cuttable Sunstone
+Rocksaws, 10:43:10, 27, Small Quar?
+Kitchens, 10:49:13, 12, Gems last 1200 seconds, 0
+Kitchens, 10:49:14, 12, Pitch angle 22
+Rocksaws, 10:49:34, 27, Gems last 1200 seconds, 2
+Rocksaws, 10:49:35, 27, Pitch angle 22
+Forges, 10:49:55, 22, Gems last 1200 seconds, 0
+Forges, 10:49:56, 22, Pitch angle 19
+Rocksaws, 10:54:43, 22, Small Ruby
+Kitchens, 11:02:02, 22, Cuttable Sunstone
+Kitchens, 11:09:41, 22, Gems last 1200 seconds, 1
+Kitchens, 11:09:42, 22, Pitch angle 19
+Rocksaws, 11:10:02, 22, Gems last 1200 seconds, 1
+Rocksaws, 11:10:03, 22, Pitch angle 18
+Forges, 11:10:23, 19, Gems last 1200 seconds, 0
+Forges, 11:10:24, 19, Pitch angle 24
+Forges, 11:11:41, 19, Cuttable Turquoise
+Forges, 11:18:03, 24, Cuttable Citrine
+Forges, 11:23:09, 24, Cuttable Garnet
+Kitchens, 11:30:08, 19, Gems last 1200 seconds, 0
+Kitchens, 11:30:09, 19, Pitch angle 10
+Rocksaws, 11:30:29, 18, Cuttable Garnet
+Rocksaws, 11:30:30, 18, Gems last 1200 seconds, 1
+Rocksaws, 11:30:31, 18, Pitch angle 27
+Forges, 11:30:50, 24, Gems last 1200 seconds, 3
+Forges, 11:30:51, 24, Pitch angle 12
+Rocksaws, 11:43:16, 27, Cuttable Jade
+Forges, 11:44:51, 12, Small Quar?
+Kitchens, 11:50:34, 10, Gems last 1200 seconds, 0
+Kitchens, 11:50:36, 10, Pitch angle 24
+Rocksaws, 11:50:56, 27, Gems last 1200 seconds, 1
+Rocksaws, 11:50:57, 27, Pitch angle 22
+Forges, 11:51:17, 12, Gems last 1200 seconds, 1
+Forges, 11:51:18, 12, Pitch angle 22
+Rocksaws, 11:54:48, 22, Medium Ruby
+Forges, 11:58:56, 22, Cuttable Amethyst
+Kitchens, 12:05:55, 24, Cuttable Sunstone
+Forges, 12:09:06, 22, Cuttable Garnet
+Kitchens, 12:11:00, 24, Gems last 1200 seconds, 1
+Kitchens, 12:11:01, 24, Pitch angle 12
+Rocksaws, 12:11:22, 22, Gems last 1200 seconds, 1
+Rocksaws, 12:11:23, 22, Pitch angle 18
+Forges, 12:11:42, 22, Gems last 1200 seconds, 2
+Forges, 12:11:43, 22, Pitch angle 19
+Kitchens, 12:13:38, 12, Wind
+Rocksaws, 12:13:58, 18, Wind
+Forges, 12:14:18, 19, Wind
+Rocksaws, 12:20:21, 18, Small Quar?
+Forges, 12:21:57, 19, Cuttable Turquoise
+Forges, 12:24:30, 19, Cuttable Garnet
+Forges, 12:33:24, 19, Cuttable Sunstone
+Kitchens, 12:36:35, 12, Gems last 1200 seconds, 0
+Kitchens, 12:36:36, 12, Pitch angle 22
+Rocksaws, 12:36:56, 18, Gems last 1200 seconds, 1
+Rocksaws, 12:36:57, 18, Pitch angle 27
+Forges, 12:37:17, 19, Gems last 1200 seconds, 3
+Forges, 12:37:18, 19, Pitch angle 24
+Kitchens, 12:39:12, 22, Small Quar?
+Forges, 12:44:56, 24, Cuttable Citrine
+Rocksaws, 12:50:58, 27, Cuttable Garnet
+Kitchens, 12:57:01, 22, Gems last 1200 seconds, 1
+Kitchens, 12:57:02, 22, Pitch angle 19
+Rocksaws, 12:57:22, 27, Gems last 1200 seconds, 1
+Rocksaws, 12:57:23, 27, Pitch angle 22
+Forges, 12:57:43, 24, Gems last 1200 seconds, 1
+Forges, 12:57:44, 24, Pitch angle 12
+Forges, 13:06:39, 12, Cuttable Sunstone
+Kitchens, 13:17:28, 19, Gems last 1200 seconds, 0
+Kitchens, 13:17:29, 19, Pitch angle 10
+Rocksaws, 13:17:49, 22, Gems last 1200 seconds, 0
+Rocksaws, 13:17:50, 22, Pitch angle 18
+Forges, 13:18:10, 12, Gems last 1200 seconds, 1
+Forges, 13:18:11, 12, Pitch angle 22
+Forges, 13:24:33, 22, Cuttable Amethyst
+Forges, 13:27:06, 22, Cuttable Garnet
+Kitchens, 13:37:54, 10, Gems last 1200 seconds, 0
+Kitchens, 13:37:55, 10, Pitch angle 24
+Rocksaws, 13:38:15, 18, Gems last 1200 seconds, 0
+Rocksaws, 13:38:16, 18, Pitch angle 27
+Forges, 13:38:36, 22, Gems last 1200 seconds, 2
+Forges, 13:38:37, 22, Pitch angle 19
+Rocksaws, 13:44:39, 27, Cuttable Lapis
+Kitchens, 13:45:36, 24, Cuttable Amethyst
+Forges, 13:47:30, 19, Cuttable Garnet
+Kitchens, 13:50:40, 24, Cuttable Citrine
+Rocksaws, 13:54:48, 27, Cuttable Citrine
+Kitchens, 13:58:17, 24, Gems last 1200 seconds, 2
+Kitchens, 13:58:18, 24, Pitch angle 12
+Rocksaws, 13:58:38, 27, Gems last 1200 seconds, 2
+Rocksaws, 13:58:39, 27, Pitch angle 22
+Forges, 13:58:59, 19, Gems last 1200 seconds, 1
+Forges, 13:59:00, 19, Pitch angle 24
+Forges, 14:05:21, 24, Medium Quar?
+Kitchens, 14:12:20, 12, Wind
+Rocksaws, 14:12:40, 22, Wind
+Forges, 14:13:00, 24, Wind
+Kitchens, 14:23:46, 12, Gems last 1200 seconds, 0
+Kitchens, 14:23:48, 12, Pitch angle 22
+Rocksaws, 14:24:08, 22, Gems last 1200 seconds, 0
+Rocksaws, 14:24:09, 22, Pitch angle 18
+Forges, 14:24:29, 24, Gems last 1200 seconds, 1
+Forges, 14:24:30, 24, Pitch angle 12
+Rocksaws, 14:28:00, 18, Cuttable Amethyst
+Forges, 14:29:35, 12, Cuttable Garnet
+Rocksaws, 14:34:20, 18, Small Quar?
+Forges, 14:34:39, 12, Cuttable Turquoise
+Kitchens, 14:35:17, 22, Small Emerald
+Forges, 14:35:56, 12, Cuttable Lapis
+Kitchens, 14:44:11, 22, Gems last 1200 seconds, 1
+Kitchens, 14:44:12, 22, Pitch angle 19
+Rocksaws, 14:44:32, 18, Gems last 1200 seconds, 2
+Rocksaws, 14:44:34, 18, Pitch angle 27
+Forges, 14:44:53, 12, Gems last 1200 seconds, 3
+Forges, 14:44:54, 12, Pitch angle 22
+Kitchens, 15:00:46, 19, Cuttable Jade
+Kitchens, 15:04:34, 19, Cuttable Sunstone
+Kitchens, 15:04:35, 19, Gems last 1200 seconds, 2
+Kitchens, 15:04:36, 19, Pitch angle 10
+Rocksaws, 15:04:56, 27, Gems last 1200 seconds, 0
+Rocksaws, 15:04:58, 27, Pitch angle 22
+Forges, 15:05:17, 22, Gems last 1200 seconds, 0
+Forges, 15:05:19, 22, Pitch angle 19
+Rocksaws, 15:12:38, 22, Cuttable Amethyst
+Kitchens, 15:13:34, 10, Cuttable Jade
+Forges, 15:15:29, 19, Cuttable Citrine
+Kitchens, 15:18:38, 10, Cuttable Turquoise
+Kitchens, 15:19:54, 10, Cuttable Garnet
+Kitchens, 15:24:58, 10, Gems last 1200 seconds, 3
+Kitchens, 15:25:00, 10, Pitch angle 24
+Rocksaws, 15:25:20, 22, Gems last 1200 seconds, 1
+Rocksaws, 15:25:21, 22, Pitch angle 18
+Forges, 15:25:40, 19, Gems last 1200 seconds, 1
+Forges, 15:25:42, 19, Pitch angle 24
+Forges, 15:32:04, 24, Medium Emerald
+Kitchens, 15:37:46, 24, Cuttable Amethyst
+Kitchens, 15:45:23, 24, Gems last 1200 seconds, 1
+Kitchens, 15:45:24, 24, Pitch angle 12
+Rocksaws, 15:45:44, 18, Gems last 1200 seconds, 0
+Rocksaws, 15:45:46, 18, Pitch angle 27
+Forges, 15:46:05, 24, Gems last 1200 seconds, 1
+Forges, 15:46:06, 24, Pitch angle 12
+Forges, 15:53:43, 12, Cuttable Amethyst
+Kitchens, 15:58:09, 12, Cuttable Sunstone
+Kitchens, 16:05:47, 12, Gems last 1200 seconds, 1
+Kitchens, 16:05:49, 12, Pitch angle 22
+Rocksaws, 16:06:09, 27, Gems last 1200 seconds, 0
+Rocksaws, 16:06:10, 27, Pitch angle 22
+Forges, 16:06:29, 12, Gems last 1200 seconds, 1
+Forges, 16:06:31, 12, Pitch angle 22
+Kitchens, 16:10:58, 22, Wind
+Rocksaws, 16:11:18, 22, Wind
+Forges, 16:11:37, 22, Wind
+Rocksaws, 16:26:32, 22, Cuttable Amethyst
+Kitchens, 16:28:44, 22, Cuttable Sunstone
+Kitchens, 16:31:17, 22, Gems last 1200 seconds, 1
+Kitchens, 16:31:18, 22, Pitch angle 19
+Rocksaws, 16:31:38, 22, Gems last 1200 seconds, 1
+Rocksaws, 16:31:39, 22, Pitch angle 18
+Forges, 16:31:59, 22, Gems last 1200 seconds, 0
+Forges, 16:32:00, 22, Pitch angle 19
+Rocksaws, 16:32:57, 22, Cuttable Jade
+Kitchens, 16:33:53, 19, Cuttable Amethyst
+Forges, 16:37:04, 19, Small Quar?
+Rocksaws, 16:41:50, 18, Small Quar?
+Kitchens, 16:44:03, 19, Small Quar?
+Rocksaws, 16:44:23, 18, Cuttable Amethyst
+Kitchens, 16:50:23, 19, Cuttable Amethyst
+Kitchens, 16:52:21, 19, Gems last 1200 seconds, 3
+Kitchens, 16:52:22, 19, Pitch angle 10
+Rocksaws, 16:52:42, 18, Cuttable Lapis
+Rocksaws, 16:52:42, 18, Gems last 1200 seconds, 4
+Rocksaws, 16:52:44, 18, Pitch angle 27
+Forges, 16:53:03, 19, Gems last 1200 seconds, 1
+Forges, 16:53:04, 19, Pitch angle 24
+Kitchens, 17:07:39, 10, Cuttable Amethyst
+Rocksaws, 17:10:33, 27, Cuttable Jade
+Forges, 17:10:52, 24, Small Quar?
+Kitchens, 17:12:46, 10, Gems last 1200 seconds, 1
+Kitchens, 17:12:47, 10, Pitch angle 24
+Rocksaws, 17:13:07, 27, Gems last 1200 seconds, 1
+Rocksaws, 17:13:08, 27, Pitch angle 22
+Forges, 17:13:28, 24, Gems last 1200 seconds, 1
+Forges, 17:13:29, 24, Pitch angle 12
+Rocksaws, 17:30:56, 22, Cuttable Sunstone
+Forges, 17:32:31, 12, Medium Topaz
+Kitchens, 17:33:08, 24, Gems last 1200 seconds, 0
+Kitchens, 17:33:10, 24, Pitch angle 12
+Rocksaws, 17:33:30, 22, Gems last 1200 seconds, 1
+Rocksaws, 17:33:31, 22, Pitch angle 18
+Forges, 17:33:50, 12, Gems last 1200 seconds, 1
+Forges, 17:33:52, 12, Pitch angle 22
+Kitchens, 17:34:29, 24, Cuttable Amethyst
+Rocksaws, 17:41:09, 18, Cuttable Lapis
+Forges, 17:41:28, 22, Cuttable Garnet
+Kitchens, 17:48:26, 12, Cuttable Amethyst
+Kitchens, 17:53:31, 12, Cuttable Jade
+Kitchens, 17:53:32, 12, Gems last 1200 seconds, 3
+Kitchens, 17:53:33, 12, Pitch angle 22
+Rocksaws, 17:53:53, 18, Gems last 1200 seconds, 1
+Rocksaws, 17:53:54, 18, Pitch angle 27
+Forges, 17:54:14, 22, Gems last 1200 seconds, 1
+Forges, 17:54:15, 22, Pitch angle 19
+Forges, 17:59:20, 19, Small Quar?
+Kitchens, 18:02:29, 22, Cuttable Sunstone
+Rocksaws, 18:02:49, 27, Cuttable Sunstone
+Forges, 18:06:56, 19, Cuttable Amethyst
+Forges, 18:09:29, 19, Cuttable Amethyst
+Kitchens, 18:10:07, 22, Wind
+Rocksaws, 18:11:37, 27, Wind
+Forges, 18:11:56, 19, Wind
+Kitchens, 18:18:55, 22, Gems last 1200 seconds, 1
+Kitchens, 18:18:56, 22, Pitch angle 19
+Rocksaws, 18:19:16, 27, Cuttable Sunstone
+Rocksaws, 18:19:16, 27, Gems last 1200 seconds, 2
+Rocksaws, 18:19:18, 27, Pitch angle 22
+Forges, 18:19:37, 19, Gems last 1200 seconds, 3
+Forges, 18:19:38, 19, Pitch angle 24
+Forges, 18:23:28, 24, Small Quar?
+Rocksaws, 18:35:57, 22, Small Quar?
+Kitchens, 18:39:28, 19, Gems last 1200 seconds, 0
+Kitchens, 18:39:29, 19, Pitch angle 10
+Rocksaws, 18:39:49, 22, Gems last 1200 seconds, 1
+Rocksaws, 18:39:51, 22, Pitch angle 18
+Forges, 18:40:10, 24, Gems last 1200 seconds, 1
+Forges, 18:40:11, 24, Pitch angle 12
+Rocksaws, 18:46:16, 18, Cuttable Turquoise
+Rocksaws, 18:53:57, 18, Cuttable Lapis
+Forges, 18:55:33, 12, Medium Quar?
+Forges, 18:56:50, 12, Cuttable Garnet
+Kitchens, 19:00:01, 10, Gems last 1200 seconds, 0
+Kitchens, 19:00:02, 10, Pitch angle 24
+Rocksaws, 19:00:23, 18, Medium Quar?
+Rocksaws, 19:00:23, 18, Gems last 1200 seconds, 3
+Rocksaws, 19:00:24, 18, Pitch angle 27
+Forges, 19:00:44, 12, Gems last 1200 seconds, 2
+Forges, 19:00:45, 12, Pitch angle 22
+Rocksaws, 19:08:06, 27, Small Quar?
+Kitchens, 19:20:33, 24, Cuttable Amethyst
+Kitchens, 19:20:33, 24, Gems last 1200 seconds, 1
+Kitchens, 19:20:34, 24, Pitch angle 12
+Rocksaws, 19:20:55, 27, Gems last 1200 seconds, 1
+Rocksaws, 19:20:56, 27, Pitch angle 22
+Forges, 19:21:15, 12, Gems last 1200 seconds, 0
+Forges, 19:21:17, 12, Pitch angle 19
+Kitchens, 19:23:11, 12, Cuttable Garnet
+Forges, 19:28:58, 19, Cuttable Jade
+Kitchens, 19:41:06, 12, Gems last 1200 seconds, 1
+Kitchens, 19:41:08, 12, Pitch angle 22
+Rocksaws, 19:41:28, 22, Gems last 1200 seconds, 0
+Rocksaws, 19:41:29, 22, Pitch angle 18
+Forges, 19:41:49, 19, Gems last 1200 seconds, 1
+Forges, 19:41:50, 19, Pitch angle 24
+Forges, 19:45:40, 24, Cuttable Lapis
+Forges, 19:46:57, 24, Cuttable Citrine
+Rocksaws, 19:53:03, 18, Cuttable Turquoise
+mine tag, (real) time, angle, event
+, 20:47:48, , Start
+mine tag, (real) time, angle, event
+, 20:47:48, , Start
+mine tag, (real) time, angle, event
+, 20:47:48, , Start
+Kitchens, 20:47:50, unknown, Pitch angle 24
+Kitchens, 20:47:51, 24, Wind
+Rocksaws, 20:48:12, unknown, Pitch angle 27
+Rocksaws, 20:48:14, 27, Wind
+Forges, 20:48:33, unknown, Pitch angle 24
+Forges, 20:48:35, 24, Wind
+Kitchens, 20:59:27, 24, Cuttable Amethyst
+Kitchens, 21:13:33, 24, Gems last 1200 seconds, 1
+Kitchens, 21:13:34, 24, Pitch angle 12
+Rocksaws, 21:13:54, 27, Cuttable Lapis
+Rocksaws, 21:13:54, 27, Gems last 1200 seconds, 1
+Rocksaws, 21:13:56, 27, Pitch angle 22
+Forges, 21:14:16, 24, Gems last 1200 seconds, 0
+Forges, 21:14:17, 24, Pitch angle 12
+Rocksaws, 21:16:32, 22, Cuttable Jade
+Rocksaws, 21:19:05, 22, Small Quar?
+Kitchens, 21:21:19, 12, Cuttable Citrine
+Rocksaws, 21:29:19, 22, Cuttable Lapis
+Kitchens, 21:31:33, 12, Cuttable Turquoise
+Kitchens, 21:34:07, 12, Cuttable Jade
+Kitchens, 21:34:07, 12, Gems last 1200 seconds, 3
+Kitchens, 21:34:09, 12, Pitch angle 22
+Rocksaws, 21:34:29, 22, Gems last 1200 seconds, 3
+Rocksaws, 21:34:30, 22, Pitch angle 18
+Forges, 21:34:49, 12, Gems last 1200 seconds, 0
+Forges, 21:34:51, 12, Pitch angle 22
+Forges, 21:36:08, 12, Small Quar?
+Rocksaws, 21:39:40, 18, Cuttable Citrine
+Rocksaws, 21:40:57, 18, Cuttable Amethyst
+Rocksaws, 21:47:21, 18, Cuttable Turquoise
+Kitchens, 21:54:42, 22, Gems last 1200 seconds, 0
+Kitchens, 21:54:43, 22, Pitch angle 19
+Rocksaws, 21:55:04, 18, Gems last 1200 seconds, 3
+Rocksaws, 21:55:05, 18, Pitch angle 27
+Forges, 21:55:25, 22, Gems last 1200 seconds, 1
+Forges, 21:55:26, 22, Pitch angle 19
+Kitchens, 21:57:21, 19, Small Quar?
+Kitchens, 22:06:21, 19, Cuttable Amethyst
+Forges, 22:09:33, 19, Small Quar?
+Kitchens, 22:15:19, 19, Gems last 1200 seconds, 2
+Kitchens, 22:15:20, 19, Pitch angle 10
+Rocksaws, 22:15:40, 27, Gems last 1200 seconds, 0
+Rocksaws, 22:15:41, 27, Pitch angle 22
+Forges, 22:16:01, 19, Gems last 1200 seconds, 1
+Forges, 22:16:02, 19, Pitch angle 24
+Forges, 22:26:15, 24, Cuttable Sunstone
+Rocksaws, 22:33:37, 22, Cuttable Lapis
+Rocksaws, 22:34:55, 22, Small Quar?
+Kitchens, 22:35:52, 10, Gems last 1200 seconds, 0
+Kitchens, 22:35:53, 10, Pitch angle 24
+Rocksaws, 22:36:13, 22, Gems last 1200 seconds, 2
+Rocksaws, 22:36:15, 22, Pitch angle 18
+Forges, 22:36:34, 24, Gems last 1200 seconds, 1
+Forges, 22:36:35, 24, Pitch angle 12
+Forges, 22:46:00, 12, Cuttable Lapis
+Kitchens, 22:46:33, 24, Wind
+Rocksaws, 22:46:51, 18, Wind
+Forges, 22:47:08, 12, Wind
+Kitchens, 22:53:10, 24, Cuttable Jade
+Kitchens, 23:01:57, 24, Cuttable Amethyst
+Kitchens, 23:01:58, 24, Gems last 1200 seconds, 2
+Kitchens, 23:01:59, 24, Pitch angle 12
+Rocksaws, 23:02:17, 18, Gems last 1200 seconds, 0
+Rocksaws, 23:02:19, 18, Pitch angle 27
+Forges, 23:02:35, 12, Gems last 1200 seconds, 1
+Forges, 23:02:36, 12, Pitch angle 22
+Kitchens, 23:08:39, 12, Cuttable Turquoise
+Rocksaws, 23:15:35, 27, Cuttable Sunstone
+Forges, 23:15:51, 22, Small Quar?
+Kitchens, 23:23:03, 12, Gems last 1200 seconds, 1
+Kitchens, 23:23:04, 12, Pitch angle 22
+Rocksaws, 23:23:22, 27, Gems last 1200 seconds, 1
+Rocksaws, 23:23:23, 27, Pitch angle 22
+Forges, 23:23:40, 22, Gems last 1200 seconds, 1
+Forges, 23:23:41, 22, Pitch angle 19
+Rocksaws, 23:26:44, 22, Cuttable Lapis
+Kitchens, 23:30:52, 22, Cuttable Sunstone
+Forges, 23:31:26, 19, Cuttable Citrine
+Rocksaws, 23:32:16, 22, Small Quar?
+Forges, 23:34:46, 19, Small Quar?
+Kitchens, 23:43:06, 22, Gems last 1200 seconds, 1
+Kitchens, 23:43:07, 22, Pitch angle 19
+Rocksaws, 23:43:25, 22, Gems last 1200 seconds, 2
+Rocksaws, 23:43:26, 22, Pitch angle 18
+Forges, 23:43:43, 19, Gems last 1200 seconds, 2
+Forges, 23:43:45, 19, Pitch angle 24
+Kitchens, 23:44:17, 22, Cuttable Jade
+Kitchens, 23:49:51, 19, Cuttable Turquoise
+Rocksaws, 23:56:49, 18, Cuttable Citrine
+Forges, 23:59:20, 24, Cuttable Sunstone
+Kitchens, 00:03:13, 19, Gems last 1200 seconds, 2
+Kitchens, 00:03:14, 19, Pitch angle 10
+Rocksaws, 00:03:32, 18, Gems last 1200 seconds, 1
+Rocksaws, 00:03:34, 18, Pitch angle 27
+Forges, 00:03:51, 24, Gems last 1200 seconds, 1
+Forges, 00:03:52, 24, Pitch angle 12
+Kitchens, 00:13:21, 10, Cuttable Turquoise
+Kitchens, 00:17:51, 10, Cuttable Turquoise
+Forges, 00:20:41, 12, Cuttable Turquoise
+Kitchens, 00:23:28, 10, Gems last 1200 seconds, 2
+Kitchens, 00:23:29, 10, Pitch angle 24
+Rocksaws, 00:23:47, 27, Gems last 1200 seconds, 0
+Rocksaws, 00:23:48, 27, Pitch angle 22
+Forges, 00:24:05, 12, Gems last 1200 seconds, 1
+Forges, 00:24:07, 12, Pitch angle 22
+Kitchens, 00:28:02, 24, Cuttable Turquoise
+Forges, 00:29:59, 22, Cuttable Lapis
+Kitchens, 00:34:33, 24, Cuttable Lapis
