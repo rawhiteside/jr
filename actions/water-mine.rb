@@ -129,7 +129,7 @@ class WaterMineWorker
     ang = 10 if ang > 30
     ang = 30 if ang < 10
     @win.refresh
-    @win.click_on("Set/Angle of #{ang}")
+    @win.click_on("Set/Angle of #{ang}") if ang != angle
     @win.refresh
     log_action("Pitch angle #{ang}")
   end
