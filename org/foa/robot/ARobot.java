@@ -22,6 +22,8 @@ public class ARobot {
 		// Checked exceptions suck.
 		try { m_robot = new Robot(); }
 		catch(Exception e) { }
+		m_robot.setAutoDelay(1);
+		m_robot.setAutoWaitForIdle(true);
 	}
 
 	public static ARobot sharedInstance() { return s_sharedInstance; }
