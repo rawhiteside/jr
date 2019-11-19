@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Water mines
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -549,9 +549,7 @@ Water mines:
 
     water_mine 1
 
-    -977, -6774
-    -973, -6778
-    -966, -6778
+    -967, -6774
     -966, -6783
 
     water_mine 2
@@ -565,4 +563,3 @@ Water mines:
 
   custom_text_0: ''
   custom_text_1: ''
-  custom_text_2: ''
