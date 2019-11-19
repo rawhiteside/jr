@@ -17,7 +17,7 @@ class Fert < KettleAction
   end
   
   def act_at(g)
-    delay = 0.3
+    delay = 0.01
     unless @first_pass
       w.click_button('Take')
       sleep_sec delay
@@ -125,8 +125,7 @@ class KettleWindow < PinnableWindow
 
   def click_button(which)
     xy = @locs[which.downcase]
-    dialog_click(Point.new(xy[0], xy[1]), 'lc', 0.1)
-    sleep_sec(0.1)
+    dialog_click(Point.new(xy[0], xy[1]), nil, 0.01)
   end
 
   # Area holding menu text
@@ -205,9 +204,9 @@ class Potash < KettleAction
     unless ignite
       # Have to pause between these to let them update.
       w.click_button(make_this)
-      sleep_sec(0.1)
+      sleep 0.1
       w.click_button('begin')
-      sleep_sec(0.1)
+      sleep 0.1
     end
     w.click_button('ignite')
     HowMuch.max
@@ -258,7 +257,6 @@ class Potash < KettleAction
     5.times do
       v = kettle_data(w)
       break if (v[:wood] && v[:water]) || v[:done]
-      w.refresh
       sleep_sec (0.1)
     end
     
