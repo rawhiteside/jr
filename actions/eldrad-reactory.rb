@@ -60,7 +60,7 @@ class EldradReactory < Action
       end
       # waiting.... Time out if it's been too long since we last did
       # something.
-      if (Time.now - start) > 120
+      if (Time.now - start) > 40
         start = Time.now
         @win.click_on 'Reheat'
         sleep post_heat_wait
