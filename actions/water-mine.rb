@@ -159,7 +159,8 @@ class WaterMineWorker
   def tend
     @win.refresh
     set_pitch_list if @pitch_list.nil?
-    sleep 0.1
+    # Seems to be slow to update the menu.
+    sleep 0.3
     take
     @angle = angle
 
