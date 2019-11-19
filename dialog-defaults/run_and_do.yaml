@@ -439,7 +439,6 @@ Apiaries:
     stash
   custom_text_0: apiary
   custom_text_1: stash
-  custom_text_2: ''
 Tree run:
   code.code: |+
     @tree_loop_count = 0
