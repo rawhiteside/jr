@@ -285,7 +285,6 @@ class SandMine < AbstractMine
     recipes.each do |recipe|
       run_one_workload(recipe, stones_by_name, delay)
     end
-    sleep_sec 4
   end
 
   def run_one_workload(recipe, stones_by_name, delay)
@@ -314,7 +313,7 @@ class SandMine < AbstractMine
     return if dismiss_strange_windows    
     
     loop do
-      sleep_sec 0.2
+      sleep_sec 0.1
       return if dismiss_strange_windows
       highlight_count = count_highlight_pixels(stone)
       if highlight_count < 20  # Magic number
