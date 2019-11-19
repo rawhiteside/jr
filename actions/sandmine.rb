@@ -274,6 +274,9 @@ class SandMine < AbstractMine
       msg = 'No recipe found for: ' + recipe_key.inspect
       log_result(msg)
     end
+    # Sometimes the gem seem slow to arrive.  Don't "Stop working" 
+    # too quickly.
+    sleep 2
   end
 
   def log_result(msg)
