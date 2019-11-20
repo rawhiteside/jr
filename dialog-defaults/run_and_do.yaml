@@ -523,42 +523,44 @@ Fetch salt water:
   custom_text_1: ''
   custom_text_2: ''
 Water mines:
-  code.code: "# Pin the three water mine menus lower left, \n# pile atip each other.\
-    \  \n# In this order:\n# First (on bottom of the pile) the kitchen mine\n# then\
-    \ the one NW of that at the tip of the lake.\n# then, the one over by the forges.\
-    \ \n# --------------------------------------------\n@tile_done = nil\n@mine_hash\
-    \ = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\nend\n\ndef\
-    \ tile_pinned_windows\n  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n\
-    \  tiler = Tiler.new(2, 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height\
-    \ - 20\n  3.times do\n    w = PinnableWindow.from_point(x, y)\n    @workers <<\
-    \ WaterMineWorker.new(w, 1200)\n    tiler.tile(w)\n  end\n  @workers.reverse!\n\
-    end\ntravel 'Kitchens CP'\n"
+  code.code: "# Pin the menus lower left, \n# pile atip each other.  \n# In this order:\n\
+    # 1. Deep well itself\n# 2. Well watermine.\n# 3. Rocksaws watermine.\n# 4. Forges\
+    \ watermine.\n# --------------------------------------------\n@tile_done = nil\n\
+    @mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\n\
+    end\n\ndef deep_well\n  @well.tend_once(false)\nend\ndef tile_pinned_windows\n\
+    \  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2,\
+    \ 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height - 20\n  4.times do\
+    \ |i|\n    win = PinnableWindow.from_point(x, y)\n    tiler.tile(win)\n    if\
+    \ i == 3\n      @well = DeepWellWindow.new(win)\n    else\n      @workers << WaterMineWorker.new(win,\
+    \ 1200)\n    end\n  end\n  @workers.reverse!\nend\ntravel 'Bricks CP'\n"
   repeat: Repeat
   path: |+
-    -1019, -6785
+    # start of run.
+    -1019, -6794
 
     tile_pinned_windows
-
+    deep_well
     water_mine 0
-    -1019, -6782
-    -1007, -6769
-    -997, -6769
-    -994, -6773
+
+    -1012, -6794
+    -1007, -6789
+    -1005, -6789
+    -994, -6778
     -994, -6774
 
+    # Rocksaws
     water_mine 1
-
+    -994, -6774
     -967, -6774
-    -966, -6783
+    -967, -6782
 
+    # Forges
     water_mine 2
 
-    -966, -6778
-    -972, -6772
-    -987, -6772
-    -991, -6768
-    -1004, -6768
-    -1019, -6783
+    -970, -6778
+    -983, -6778
+    -998, -6794
+    -1018, -6794
 
   custom_text_0: ''
   custom_text_1: ''
