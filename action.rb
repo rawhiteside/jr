@@ -3,12 +3,14 @@ require 'robot'
 require 'buildmenu'
 require 'user-io'
 require 'controllable_thread'
+require 'utils'
+
 
 import java.awt.Point
 import java.awt.Rectangle
 
 class Action  < ARobot
-  
+  include Utils
   attr_reader :name, :group
   attr_accessor :repeat
 
@@ -113,34 +115,6 @@ class Action  < ARobot
   # This will return a Point from s.x and s.y.
   def point_from_hash(h, s)
     Point.new(h["#{s}.x"].to_i, h["#{s}.y"].to_i)
-  end
-
-  # Is the skill-name present and non-red?
-  def stat_ok?(skill_name)
-    sw = SkillsWindow.new
-    color = sw.text_color(skill_name)
-
-    if color.nil? || color == :red || color == 'red'
-      return false
-    else
-      return true
-    end
-  end
-
-  # Wait for a stat to be non-red in the skills window
-  # 'Can't-find-stat' means the same as :red
-  def stat_wait(arr)
-
-    arr = [arr] unless arr.kind_of?(Array)
-
-    loop do
-      all_ok = true
-      arr.each do |stat|
-	all_ok = all_ok && stat_ok?(stat)
-      end
-      return if all_ok
-      sleep_sec 1
-    end
   end
 
   def dismiss_all
