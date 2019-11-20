@@ -273,11 +273,6 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 				}
 				else {
 					w = PinnableWindow.fromScreenClick(pt);
-					// Move the mouse out of the way. 
-					if (w != null && (pt.x > w.getRect().x)) {
-						mm(w.getRect().x, w.getRect().y);
-						sleepSec(0.1);
-					}
 				}
 				windowPopped = true;
 			}
