@@ -5,7 +5,7 @@ require 'utils'
 class RunAndDo < Action
   def initialize
     super('Run and do', 'Misc')
-    @context = Utils.new
+    @context = RunAndDoContext.new
   end
 
   def persistence_name
