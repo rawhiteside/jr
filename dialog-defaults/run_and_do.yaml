@@ -510,7 +510,6 @@ Tree run:
     \ += 1\n\n\n\n\n\n"
   custom_text_0: resin
   custom_text_1: wood
-  custom_text_2: ''
 Fetch salt water:
   code.code: '# Type Ruby code here.'
   repeat: One time
@@ -529,7 +528,7 @@ Water mines:
     @mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\n\
     end\n\ndef deep_well\n  @well.tend_once(false)\nend\ndef tile_pinned_windows\n\
     \  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2,\
-    \ 160)\n  tiler.min_width = 350\n  x = 20\n  y = dim.height - 20\n  4.times do\
+    \ 160)\n  tiler.min_width = 300\n  x = 20\n  y = dim.height - 20\n  4.times do\
     \ |i|\n    win = PinnableWindow.from_point(x, y)\n    tiler.tile(win)\n    if\
     \ i == 3\n      @well = DeepWellWindow.new(win)\n    else\n      @workers << WaterMineWorker.new(win,\
     \ 1200)\n    end\n  end\n  @workers.reverse!\nend\ntravel 'Bricks CP'\n"
@@ -541,6 +540,13 @@ Water mines:
     tile_pinned_windows
     deep_well
     water_mine 0
+
+    -1018, -6800
+    spam 'h', 5, 3
+    -1016, -6800
+    spam 'h', 5, 3
+    -1014, -6800
+    spam 'h', 5, 3
 
     -1012, -6794
     -1007, -6789
