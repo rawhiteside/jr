@@ -12,6 +12,9 @@ class PickStones < PickThings
     comps = [
       {:type => :world_loc, :name => 'start', :label => 'Starting coords.'},
       {:type => :number, :name => 'count', :label => 'Stone coubt before return to start. '},
+      {:type => :combo, :label => 'Also watch for', :name => 'baux-gyp',
+       :vals => ['Nothing', 'Bauxite', 'Gypsum'],},
+      
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
 
@@ -32,7 +35,7 @@ class PickStones < PickThings
       # or a Tower Hour.
       PopupWindow.dismiss
 
-      pt = find_point
+      pt = find_pickable
       if pt.nil?
         puts "Nothing to pick"
       else
@@ -52,44 +55,17 @@ class PickStones < PickThings
     end
   end
 
-  def bag_color?(pb, pt)
 
-    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
-       color = pb.color(pt.x + delta[0], pt.y + delta[1])
-       r = color.red
-       g = color.green
-       b = color.blue
-
-       return false unless (r - 234).abs < 8 &&  (g - 211).abs < 8  && (b - 170).abs < 8 
-     end
-
-     return true
-  end
-
-  def bauxite_color?(pb, pt)
-
-    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
-       color = pb.color(pt.x + delta[0], pt.y + delta[1])
-       r = color.red
-       g = color.green
-       b = color.blue
-
-       return false unless (r - 180).abs < 8 &&  (g - 146).abs < 8  && (b - 113).abs < 8 
-     end
-
-     return true
-  end
-
-  def find_point
+  def find_pickable
     pb = full_screen_capture
     cache = {}
     center = Point.new(pb.width/2, pb.height/2)
-    (-150 + pb.height/2).times do |r|
-      pts = square_with_radius(center, r)
+    (-190 + pb.height/2).times do |r|
+      pts = square_with_radius(center, r + 40)
       pts.each  do |pt|
-        return pt if stone_color?(pb, pt, cache)
-#        return pt if bag_color?(pb, pt)
-        # return pt if bauxite_color?(pb, pt)
+        return pt if stone?(pb, pt, cache)
+        return pt if @vals['baux-gyp'] == 'Bauxite' && bauxite?(pb, pt, cache)
+        return pt if @vals['baux-gyp'] == 'Gypsum' && gypsum?(pb, pt, cache)
       end
     end
     

@@ -34,17 +34,39 @@ class PickThings < Action
     return cache[pt]
   end
 
-  def stone_color?(pb, pt, cache)
+  def bauxite?(pb, pt, cache)
+
+    return pickable?(pb, pt, cache) do |hue, sat, val|
+      (24..30).cover?(hue) && (100..140).cover?(sat)
+    end
+  end
+
+  def gypsum?(pb, pt, cache)
+    return pickable?(pb, pt, cache) do |hue, sat, val|
+      (31..36).cover?(hue) && (85..100).cover?(sat)
+    end
+
+  end
+
+  def stone?(pb, pt, cache)
+    return pickable?(pb, pt, cache) do |hue, sat, val|
+        # Near-perfectly grey things seem weird in HSB space. 
+        return (hue == 300 && sat < 6)||
+               (hue == 120 && sat < 6) ||
+               (hue == 0 && sat == 0 && val > 0)
+    end
+  end
+
+
+  def pickable?(pb, pt, cache)
     size = 2
-    -size.upto(size) do |xoff|
-      -size.upto(size) do |yoff|
-        hsb = hsb_for_point(pb, pt, cache)
+    (-size).upto(size) do |xoff|
+      (-size).upto(size) do |yoff|
+        pt_tmp = Point.new(pt.x + xoff, pt.y + yoff)
+        hsb = hsb_for_point(pb, pt_tmp, cache)
         hue, sat, val = hsb[0], hsb[1], hsb[2]
 
-        # Near-perfectly grey things seem weird in HSB space. 
-        return false unless (hue == 300 && sat < 6)||
-                            (hue == 120 && sat < 6) ||
-                            (hue == 0 && sat == 0 && val > 0)
+        return false unless yield(hue, sat, val)
       end
      end
 
