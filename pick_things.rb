@@ -21,21 +21,31 @@ class PickThings < Action
     return pts
   end
 
-  def stone_color?(pb, pt)
+  def hsb_for_point(pb, pt, cache)
+    hsb = cache[pt]
+    return hsb unless hsb.nil?
+    color = pb.color(pt.x, pt.y)
+    hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
+    # NOTE:  Converting hue into degrees.
+    hue = (hsb[0] * 359).to_i
+    sat = (hsb[1] * 255).to_i
+    val = (hsb[2] * 255).to_i
+    cache[pt] = [hue, sat, val]
+    return cache[pt]
+  end
 
-    [[0, 0], [1, 0], [1, 1], [-1, 0], [-1, -1], [0, 1], [0, -1]].each do |delta|
-       color = pb.color(pt.x + delta[0], pt.y + delta[1])
-       r, g, b = color.red, color.green, color.blue
-       hsb = Color.RGBtoHSB(r, g, b, nil)
+  def stone_color?(pb, pt, cache)
+    size = 2
+    -size.upto(size) do |xoff|
+      -size.upto(size) do |yoff|
+        hsb = hsb_for_point(pb, pt, cache)
+        hue, sat, val = hsb[0], hsb[1], hsb[2]
 
-       # NOTE:  Converting hue into degrees.
-       hue = (hsb[0] * 359).to_i
-       sat = (hsb[1] * 255).to_i
-       val = (hsb[2] * 255).to_i
-
-       return (hue == 300 && sat < 6)||
-              (hue == 120 && sat < 6) ||
-              (hue == 0 && sat == 0 && val > 0)
+        # Near-perfectly grey things seem weird in HSB space. 
+        return false unless (hue == 300 && sat < 6)||
+                            (hue == 120 && sat < 6) ||
+                            (hue == 0 && sat == 0 && val > 0)
+      end
      end
 
      return true
