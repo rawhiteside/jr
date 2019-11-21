@@ -20,10 +20,7 @@ class Walker < ARobot
   }
   def initialize()
     super()
-    @center_y = 502
-    @center_x = 641
-    @offset = 100
-    
+
     # So we stop walking on pause. 
     unless @@listener_added
       # Button up is not guarded by the lock.
