@@ -3,15 +3,15 @@
 1: false
 Parameter set 1:
   flax-type: Old Dog
-  plant.x: '273'
-  plant.y: '755'
-  head.x: '957'
-  head.y: '546'
-  stash.x: '448'
-  stash.y: '858'
+  plant.x: '271'
+  plant.y: '781'
+  head.x: '964'
+  head.y: '563'
+  stash.x: '495'
+  stash.y: '957'
   count: '10'
   rows: '4'
   cols: '4'
-  grow: -1056, -6856
-  water: -1056, -6861
-  stash: -1056, -6861
+  grow: -1080, -6891
+  water: -1064, -6892
+  stash: -1064, -6892

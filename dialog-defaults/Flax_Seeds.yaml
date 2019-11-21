@@ -1,0 +1,18 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  flax-type: Old Dog
+  head.x: '960'
+  head.y: '559'
+  stash.x: '447'
+  stash.y: '913'
+  plant.x: '286'
+  plant.y: '811'
+  repeat: '8'
+  max_wait_secs: '10'
+  harvest_reps: '3'
+  row_len: '18'
+  start_location: -1066, -6845
+  stash_location: -1057, -6861
+  first_dir: right
