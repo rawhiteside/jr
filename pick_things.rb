@@ -31,10 +31,11 @@ class PickThings < Action
        # NOTE:  Converting hue into degrees.
        hue = (hsb[0] * 359).to_i
        sat = (hsb[1] * 255).to_i
+       val = (hsb[2] * 255).to_i
 
        return (hue == 300 && sat < 6)||
               (hue == 120 && sat < 6) ||
-              (hue == 0 && sat == 0)
+              (hue == 0 && sat == 0 && val > 0)
      end
 
      return true
