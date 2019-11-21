@@ -28,6 +28,18 @@ class Window < AWindow
   end
 end
 
+
+class ChatWindow < Window
+  def initialize(rect = Rectangle.new(0, 0, 0, 0))
+    super(rect)
+  end
+
+  def textInsets
+    # top, left, bottom, right
+    Insets.new(10, 10, 10, 35)
+  end
+end
+
 # This class is poorly designed.  Slowly improving.
 class HowMuch < Window
 

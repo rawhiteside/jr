@@ -203,6 +203,7 @@ class Potash < KettleAction
     w = pinned_kettle_window(p)
     unless ignite
       # Have to pause between these to let them update.
+      sleep 0.1
       w.click_button(make_this)
       sleep 0.1
       w.click_button('begin')

@@ -23,7 +23,7 @@ class PickThings < Action
 
   def stone_color?(pb, pt)
 
-    [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]].each do |delta|
+    [[0, 0], [1, 0], [1, 1], [-1, 0], [-1, -1], [0, 1], [0, -1]].each do |delta|
        color = pb.color(pt.x + delta[0], pt.y + delta[1])
        r, g, b = color.red, color.green, color.blue
        hsb = Color.RGBtoHSB(r, g, b, nil)

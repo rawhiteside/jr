@@ -24,6 +24,18 @@ module Utils
     end
   end
 
+  # Walk from here to the provided (x, y) location.  Path must be
+  # clear.
+  def walk(x, y)
+    Walker.new.walk_to([x, y])
+  end
+
+  # Read the chat window (which must be generally at teh lower left,
+  # with all of the borders visible.
+  def read_chat
+    return SkillsWindow.new.read_text
+  end
+
   # Wait for a stat to be non-red in the skills window
   # 'Can't-find-stat' means the same as :red
   def stat_wait(arr)
