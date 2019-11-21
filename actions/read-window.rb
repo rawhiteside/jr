@@ -33,10 +33,15 @@ class ReadWindow < Action
 
     skills = SkillsWindow.new
     # skills.display_to_user("Skills window")
+    puts "===================== Skills Window"
     puts skills.read_text
 
-
+    chat = ChatWindow.from_point(Point.new(1800, 1000))
+    puts "======================== Chat Window"
+    puts chat.read_text
+    
     # about my usual spot
+    puts "========================= Inventory Window"
     inventory = InventoryWindow.from_point(Point.new(260, 950))
     puts inventory.read_text
   end
