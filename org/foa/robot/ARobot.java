@@ -84,10 +84,15 @@ public class ARobot {
 	public void robotSync(Runnable r) {
 		checkForPause();
 		claimRobotLock();
+		Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
 
 		// Run the runnable, and make sure to release the lock
 		try { r.run(); }
-		finally {releaseRobotLock();}
+		
+		finally {
+			releaseRobotLock();
+			Thread.currentThread().setPriority(Thread.NORM_PRIORITY);
+		}
 	}
 
 	public Dimension screenSize() {return m_toolkit.getScreenSize();}
