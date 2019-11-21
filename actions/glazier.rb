@@ -1,30 +1,162 @@
 require 'action'
 import org.foa.text.TextReader
 
+# Has states:
+# :melt, :cool, :make, :done
 class GlazierWindow < PinnableWindow
   
-  attr_accessor :done, :state
+  LOGGING = false
   
-  def initialize(rect)
+  MELT_CC_FOR_GLASS_TYPE = {
+    'Soda' => 6,
+    'Normal' => 6,
+    'Jewel' => 7,
+  }
+
+  TEMP_FOR_GLASS_TYPE = {
+    'Soda' => 3200,
+    'Normal' => 3200,
+    'Jewel' => 4400,
+  }
+
+  attr_accessor :state
+  
+  def initialize(rect, make_what, index)
     super(rect)
-    @done = false
-    @state = :initializing
+    # These used in the logging messages.
+    @index = index
+    @tick_count = 0
+
+    @state = :melt
+    @melt_count = 0
+    @tick_data = nil
+    @make_what = make_what
   end
 
-  # One of the two main methods.  This one:
-  # - Raises temp to melting temp and melts (:max)
-  # - Maintains the temperature until the "done" flag
-  #   becomes true
+  # The main method.  Expects to be called repeatedly. Look at the
+  # state of the window, and decide what to do.
   def tend
-    @state = :melt
-    melt
-    @state = :maintain
-    loop do
-      break if @done
-      drop
-      break if @done
-      rise
+    @tick = tick?
+
+    # Are we melting the glass?
+    if @state == :melt
+      # changes state to :cool when it's added all the cc, and melted the glass
+      melt 
+      return
     end
+    
+    # Cooling down from the melt.
+    if @state == :cool
+      cooling_check if @tick
+      return if @state == :cool
+    end
+
+    # Making stuffs!!
+    if @state == :make
+      make
+    end
+    
+  end
+
+  def make
+    if data_vals[:glass_amount] <= 19
+      @state = :done
+    end
+
+    refresh
+      
+    # Make it if it's there.
+    click_on(@make_what)
+    return unless @tick
+    # 
+    # Tend the temperature.
+    delta = @tick_data[:delta]
+    return unless delta < 0
+
+    # Drop in temp.
+    temp = @tick_data[:temperature]
+    if temp < 1950
+      click_on('Add 12')
+    elsif temp < 2100
+      click_on('Add 6')
+    elsif temp < 2200
+      click_on('Add 2')
+    end
+  end
+
+  # Advances state to :make if we're in the zone.
+  def cooling_check
+    return unless @tick
+    return if @tick_data[:temperature] > 2400
+    @state = :make
+  end
+
+  # Heat up the bench and melt glass.
+  def melt
+    # First time
+    if @melt_count == 0
+      click_on('Add 2')
+      @melt_count += 1
+      return
+    end
+    # 
+    # Otherwise, only do things on a tick.
+    return unless @tick
+
+    if @melt_count < MELT_CC_FOR_GLASS_TYPE[@tick_data[:glass_type]]
+      click_on('Add 2')
+      @melt_count += 1
+      return
+    end
+
+    # OK, all the CC has been added.  Wait for temp
+    if @tick_data[:temperature] > TEMP_FOR_GLASS_TYPE[@tick_data[:glass_type]] 
+      # If there's somehow already 50 glass in there, then we don't have
+      # to add any.
+      #
+      # (Didn't do the expeeriment to see if clicking the "Melt" button
+      # in that case caused trouble.)
+      if data_vals[:glass_amount] >= 50
+        @state = :cool
+        return
+      end
+
+      # Melt the glass.
+      click_on("Melt/Into #{@tick_data[:glass_type]}")
+      HowMuch.max
+      AWindow.dismiss_all
+      # We're done here.
+      @state = :cool
+    end
+  end
+
+  
+  # Read the window, and decide if there's been a tick.  If so, update @data
+  def tick?
+    # Hash with the data from the window.
+    dv = data_vals
+    #
+    # First call
+    if @tick_data.nil?
+      @tick_data = dv
+      return false
+    end
+    # 
+    # Temperature tick?
+    if @tick_data[:temperature] == dv[:temperature]
+      return false
+    else
+      dv[:delta] = dv[:temperature] - @tick_data[:temperature]
+      @tick_data = dv
+      @tick_count += 1
+      log dv.to_s + ", @state = #{@state}"
+      return true
+    end
+  end
+
+  def click_on(what)
+    log what
+    super(what)
   end
 
   # The other main method, called in a separate thread from the one
@@ -41,13 +173,10 @@ class GlazierWindow < PinnableWindow
     # there
     loop do
       sleep_sec 3
-      got_it = false
-      with_robot_lock do
-	refresh
-	got_it = click_on(what)
-      end
+      refresh
+      got_it = click_on(what)
       sleep_sec 60 if got_it
-      break if data_vals[:glass_amount].to_s == '19'
+      break if data_vals[:glass_amount] == 19
     end
 
     # Wait for menu to appear again, indicating that the last thing we
@@ -59,13 +188,10 @@ class GlazierWindow < PinnableWindow
     loop_done = false
     until loop_done do
 
-      sleep_sec 6
+      sleep_sec 10
 
-      text = nil
-      with_robot_lock do
-	refresh
-	text = read_text
-      end
+      refresh
+      text = read_text
 
       if text.index(what)
 	count += 1
@@ -77,16 +203,6 @@ class GlazierWindow < PinnableWindow
     @done = true
   end
 
-  def wait_to_start_making
-    # Wait for melting to get done
-    sleep_sec 4 while @state != :maintain
-    # Wait for temp range
-    loop do
-      temp = data_vals[:temperature]
-      break if temp > 1600 && temp < 2400
-      sleep_sec 5
-    end
-  end
 
   DATA_HEIGHT = 107
 
@@ -104,10 +220,8 @@ class GlazierWindow < PinnableWindow
   def read_data
     text = nil
     3.times do
-      with_robot_lock do
-        refresh
-        text = data_text_reader.read_text
-      end
+      refresh
+      text = data_text_reader.read_text
 
       return text if !text.nil? && text =~ /Charcoal/ && text =~ /Temperature/
 
@@ -138,7 +252,7 @@ class GlazierWindow < PinnableWindow
     vals[:glass_type] = match[1].strip
     # Glass Amount
     match = Regexp.new('.* Glass[ :]+(.*)').match(text)
-    vals[:glass_amount] = match[1].strip
+    vals[:glass_amount] = match[1].strip.to_i
     # CC
     match = Regexp.new('Charcoal.*: ([0-9]+)').match(text)
     vals[:cc] = match[1].to_i if match 
@@ -146,97 +260,9 @@ class GlazierWindow < PinnableWindow
     return vals
   end
 
-  def temperature
-    return data_vals[:temperature]
-  end
-
-  # Returns stats about the tick.
-  def wait_for_tick
-    start = Time.now
-    orig = temperature
-
-    loop do
-      sleep_sec 4
-      current = temperature
-      if orig != current
-	status = {
-	  'Prev' => orig,
-	  'Temperature' => current,
-	  'Delta' => current - orig,
-	  'Time' => Time.now - start,
-	}
-	@last_delta = current - orig
-        # XXX log "Tick curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
-	return status
-      end
-    end
-  end
-
-  def each_tick
-    loop {yield(wait_for_tick)}
-  end
-
-  def melt
-    glass_type = data_vals[:glass_type]
-    temp_for_glass = {
-      'Soda' => 3200,
-      'Normal' => 3200,
-      'Jewel' => 4400,
-    }
-    num_add = 5
-    num_add = 6 if glass_type == 'Jewel'
-    num_add.times {
-      with_robot_lock {
-	refresh
-	click_on('Add 2')
-      }
-      wait_for_tick
-    }
-
-    # Wait for it to get hot enough.
-    melt_temp = temp_for_glass[glass_type]
-    each_tick {|stats| break if stats['Temperature'] > melt_temp }
-
-    # Melt max
-    with_robot_lock do
-      refresh
-      click_on("Melt/Into #{glass_type}")
-      HowMuch.max
-      AWindow.dismiss_all
-    end
-  end
-
-  def watch
-    each_tick do |stats|
-      return if temperature == 0
-    end
-  end
-  
-  def rise
-    loop do
-      log "Rise done=#{@done}"
-      return if @done
-      with_robot_lock {
-	refresh
-	click_on('Add 2')
-      }
-      sleep_sec 120
-      log "Rise checking stop. done=#{@done}, temp=#{temperature}"
-      break if temperature > 2050
-    end
-  end
-
-  # Let temp drop till round 1750--1800
-  def drop
-    each_tick do |s|
-      log "Drop  temperature=#{s['Temperature']}, delta=#{@last_delta}"
-      break if s['Temperature'] < 1800
-      break if (s['Temperature'] + @last_delta) < 1750
-    end
-  end
 
   def log(s)
-    puts s
+    puts "#{@index}, %04d, #{s}" % [@tick_count] if LOGGING
   end
 end
 
@@ -281,30 +307,32 @@ class Glazier < Action
     tiler.min_height = 400
     @threads = []
     windows = []
+    index = 0
+    make_what = @vals['what']
     GridHelper.new(@vals, 'g').each_point do |p|
       with_robot_lock {
 	w = PinnableWindow.from_screen_click(Point.new(p['x'].to_i, p['y'].to_i))
-	w = GlazierWindow.new(w.get_rect)
+	w = GlazierWindow.new(w.get_rect, make_what, index)
+        index += 1
 	w.pin
 	tiler.tile(w)
 	windows << w
       }
     end
 
-    # Start the CC-adding threads.
-    windows.each do |w|
-      @threads << ControllableThread.new {w.tend}
-    end
-
-    # Now, start up the glass-making threads.
     make_what = @vals['what']
-    windows.each do |w|
-      @threads << ControllableThread.new {w.make_glass(make_what)}
-    end
+    loop do
+      break if windows.size == 0
 
-    @threads.each {|t| t.join}
+      live_windows = []
+      windows.each do |w|
+        w.tend
+        live_windows << w unless w.state == :done
+      end
+      sleep 1
+      windows = live_windows
+    end
   end
-  
 end
 
 Action.add_action(Glazier.new)
