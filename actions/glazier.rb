@@ -79,7 +79,7 @@ class GlazierWindow < PinnableWindow
     #
     # It *may* be that we added cc last tick, but not in time.  The
     # temp dropped gain. We should not addd CC in that case
-    return if @ticks_since_add < 4
+    return if @ticks_since_add < 2
     
     # Drop in temp.
     if temp < 1950
