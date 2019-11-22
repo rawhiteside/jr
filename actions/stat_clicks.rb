@@ -34,7 +34,7 @@ class StatClicks < Action
       {:type => :point, :name => 'p', :label => 'Drag to click location'},
       {:type => :label, :label => '~ Or ~'},
       {:type => :text, :name => 'hotkeys', :label => 'Hotkeys (has priority)'},
-      {:type => :text, :name => 'delay', :label => 'Delay (for lag)'},
+      {:type => :text, :name => 'delay', :label => 'Lag delay (default 5 sec)'},
     ]
     @vals = UserIO.prompt(parent, nil, @name, comps)
   end
@@ -67,8 +67,8 @@ class StatClicks < Action
     loop do
       # PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
-      sleep_sec @delay
       rclick_at(x, y)
+      sleep_sec @delay
     end
   end
 
