@@ -5,7 +5,7 @@ import org.foa.text.TextReader
 # :melt, :cool, :make, :done
 class GlazierWindow < PinnableWindow
   
-  LOGGING = false
+  LOGGING = true
   
   MELT_CC_FOR_GLASS_TYPE = {
     'Soda' => 6,
@@ -26,6 +26,7 @@ class GlazierWindow < PinnableWindow
     # These used in the logging messages.
     @index = index
     @tick_count = 0
+    @ticks_since_add = 0
 
     @state = :melt
     @melt_count = 0
@@ -63,24 +64,33 @@ class GlazierWindow < PinnableWindow
       @state = :done
     end
 
-    refresh
+    temp = @tick_data[:temperature]
       
     # Make it if it's there.
-    click_on(@make_what)
+    refresh
+    if (1600..2400).cover?(temp)
+      refresh if click_on(@make_what)
+    end
     return unless @tick
     # 
     # Tend the temperature.
     delta = @tick_data[:delta]
     return unless delta < 0
-
+    #
+    # It *may* be that we added cc last tick, but not in time.  The
+    # temp dropped gain. We should not addd CC in that case
+    return if @ticks_since_add < 4
+    
     # Drop in temp.
-    temp = @tick_data[:temperature]
     if temp < 1950
       click_on('Add 12')
+      @ticks_since_add = 0
     elsif temp < 2100
       click_on('Add 6')
+      @ticks_since_add = 0
     elsif temp < 2200
       click_on('Add 2')
+      @ticks_since_add = 0
     end
   end
 
@@ -122,11 +132,12 @@ class GlazierWindow < PinnableWindow
       end
 
       # Melt the glass.
-      click_on("Melt/Into #{@tick_data[:glass_type]}")
-      HowMuch.max
-      AWindow.dismiss_all
-      # We're done here.
-      @state = :cool
+      if click_on("Melt/Into #{@tick_data[:glass_type]}")
+        HowMuch.max
+        AWindow.dismiss_all
+        # We're done here.
+        @state = :cool
+      end
     end
   end
 
@@ -149,6 +160,7 @@ class GlazierWindow < PinnableWindow
       dv[:delta] = dv[:temperature] - @tick_data[:temperature]
       @tick_data = dv
       @tick_count += 1
+      @ticks_since_add += 1
       log dv.to_s + ", @state = #{@state}"
       return true
     end
@@ -159,53 +171,8 @@ class GlazierWindow < PinnableWindow
     super(what)
   end
 
-  # The other main method, called in a separate thread from the one
-  # running 'tend'.
-  # This one:
-  # - Waits for the state variable to become :maintain.
-  # - Waits for the temperature to get into the working range
-  #   (1600-2400)
-  # - Makes 'what' items until the amount of glass is 19.
-  def make_glass(what)
-    wait_to_start_making
-
-    # Just keep trying to click the menu.  It's not there if it's not
-    # there
-    loop do
-      sleep_sec 3
-      refresh
-      got_it = click_on(what)
-      sleep_sec 60 if got_it
-      break if data_vals[:glass_amount] == 19
-    end
-
-    # Wait for menu to appear again, indicating that the last thing we
-    # made is done.
-    #
-    # When you add cc, this item can appear (bogusly).  Let's make
-    # sure we see it two conscutive before declaring things all done.
-    count = 0
-    loop_done = false
-    until loop_done do
-
-      sleep_sec 10
-
-      refresh
-      text = read_text
-
-      if text.index(what)
-	count += 1
-      else
-	count = 0
-      end
-      loop_done = (count >= 2)
-    end
-    @done = true
-  end
-
 
   DATA_HEIGHT = 107
-
   def text_rectangle
     rect = super
     rect.height -= DATA_HEIGHT
@@ -270,12 +237,6 @@ end
 class Glazier < Action
   def initialize
     super('Glazier', 'Buildings')
-    @threads = []
-  end
-
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
   end
 
   def get_ui_vals(parent)
@@ -305,7 +266,6 @@ class Glazier < Action
   def act
     tiler = Tiler.new(0, 115)
     tiler.min_height = 400
-    @threads = []
     windows = []
     index = 0
     make_what = @vals['what']
@@ -329,7 +289,6 @@ class Glazier < Action
         w.tend
         live_windows << w unless w.state == :done
       end
-      sleep 1
       windows = live_windows
     end
   end
