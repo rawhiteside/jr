@@ -106,3 +106,10 @@ Eldrad reactory: |
   7 copper, 1 tin, fern
   -- Pewter:
   7 iron, 4 antimony, 1 brass, royal
+Potash: "Position yourself so that all of the kettles are on one side.\nMacro will\
+  \ click each kettle many times.  Make sure that the HowMuch dialog does not overlap\
+  \ with any popped kettle windows.  Macro gets confused in that case. \nYou'll need\
+  \ to fill jugs at your position as well. \nHold necessary materials, of course. "
+Flower Fertilizer: 'See setup info for Potash. '
+Take from kettles: "This is handy when things mess up.  Why is taking from kettles\
+  \ such a pita? \n"
