@@ -158,6 +158,10 @@ class FlaxGrow < Action
         # Make sure the dialog is still there.
         dlg.refresh
         text = dlg.read_text
+	if text.strip == '' 
+	  dlg.unpin
+	  return false
+	end
         return true if dlg.click_on("Water") || dlg.click_on("Weed")
         if dlg.click_on("Harvest seeds")
           dlg.click_on("Util/Rip")
