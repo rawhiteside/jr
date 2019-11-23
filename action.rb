@@ -142,7 +142,9 @@ class GridAction < Action
 
   # Override to watch passes begin. 
   def start_pass(index)
-    puts "in grid: action"
+  end
+
+  def end_pass(index)
   end
 
   def act
@@ -158,6 +160,7 @@ class GridAction < Action
 
       wait_more = delay - (Time.now.to_f - start)
       sleep_sec wait_more if wait_more > 0
+      end_pass i
     end
   end
 end

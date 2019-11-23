@@ -42,6 +42,10 @@ class FlowerFert < KettleAction
     @first_pass = (index == 0)
   end
 
+  def end_pass(index)
+    fill_jugs
+  end
+
   def act_at(g)
     delay = 0.3
     w = KettleWindow.from_screen_click(g['x'], g['y'])
