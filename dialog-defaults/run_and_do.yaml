@@ -526,8 +526,9 @@ Water mines:
     # 1. Deep well itself\n# 2. Well watermine.\n# 3. Rocksaws watermine.\n# 4. Forges\
     \ watermine.\n# --------------------------------------------\n@tile_done = nil\n\
     @mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\n\
-    end\n\ndef deep_well\n  @well.tend_once(false)\nend\ndef tile_pinned_windows\n\
-    \  return if @tile_done\n  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2,\
+    end\n\ndef deep_well\n  @well.tend_once(false)\nend\n\ndef dig\n  if stat_ok?\
+    \ 'End'\n    send_string '5'\n  end\nend\n\ndef tile_pinned_windows\n  return\
+    \ if @tile_done\n  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2,\
     \ 160)\n  tiler.min_width = 300\n  x = 20\n  y = dim.height - 20\n  4.times do\
     \ |i|\n    win = PinnableWindow.from_point(x, y)\n    tiler.tile(win)\n    if\
     \ i == 3\n      @well = DeepWellWindow.new(win)\n    else\n      @workers << WaterMineWorker.new(win,\
@@ -540,6 +541,7 @@ Water mines:
     tile_pinned_windows
     deep_well
     water_mine 0
+    dig
 
     -1018, -6800
     spam 'h', 5, 3
@@ -548,11 +550,15 @@ Water mines:
     -1014, -6800
     spam 'h', 5, 3
 
-    -1012, -6794
-    -1007, -6789
-    -1005, -6789
-    -994, -6778
-    -994, -6774
+    -1012, -6792
+    dig
+    -1007, -6791
+    -1004, -6786
+    dig
+    -997, -6777
+    dig
+    -995, -6774
+
 
     # Rocksaws
     water_mine 1
@@ -563,8 +569,8 @@ Water mines:
     # Forges
     water_mine 2
 
-    -970, -6778
-    -983, -6778
+    -970, -6779
+    -983, -6779
     -998, -6794
     -1018, -6794
 
