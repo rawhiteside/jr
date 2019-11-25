@@ -83,10 +83,11 @@ class GravelAction < PickThings
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
     max_rad = pb.height/2 - 150
+    cache = {}
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
-        if stone_color?(pb, pt)
+        if stone?(pb, pt, cache)
           state = gather_at_pixel(pb, pt)
           return true if state == :yes
           return false if state == :done_here
