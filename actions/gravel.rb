@@ -81,21 +81,21 @@ class GravelAction < PickThings
   # gather.
   def gather_once
     pb = full_screen_capture
+    cache = {}
     center = Point.new(pb.width/2, pb.height/2)
     max_rad = pb.height/2 - 150
-    cache = {}
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
         if stone?(pb, pt, cache)
           state = gather_at_pixel(pb, pt)
           return true if state == :yes
-          return false if state == :done_here
+          return false
         end
       end
     end
     
-    return nil
+    return false
   end
 
   # Returns:
@@ -108,7 +108,6 @@ class GravelAction < PickThings
     @inventory_window.flush_text_reader
     inv_text_before = @inventory_window.read_text
     screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
-    point = Point.new(screen_x, screen_y)
     rclick_at(screen_x, screen_y, 0.2)
     sleep 0.3
     color = getColor(screen_x, screen_y)

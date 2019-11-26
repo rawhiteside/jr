@@ -27,7 +27,7 @@ class PickThings < Action
     color = pb.color(pt.x, pt.y)
     hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
     # NOTE:  Converting hue into degrees.
-    hue = (hsb[0] * 359).to_i
+    hue = (hsb[0] * 360).to_i
     sat = (hsb[1] * 255).to_i
     val = (hsb[2] * 255).to_i
     cache[pt] = [hue, sat, val]
@@ -51,24 +51,26 @@ class PickThings < Action
   def stone?(pb, pt, cache)
     return pickable?(pb, pt, cache) do |hue, sat, val|
         # Near-perfectly grey things seem weird in HSB space. 
-        return (hue == 300 && sat < 6)||
-               (hue == 120 && sat < 6) ||
-               (hue == 0 && sat == 0 && val > 0)
+      (hue == 300 && sat < 9)||
+        (hue == 120 && sat < 9) ||
+        (hue == 0 && sat == 0 && val > 0)
     end
   end
 
 
   def pickable?(pb, pt, cache)
-    size = 2
-    (-size).upto(size) do |xoff|
-      (-size).upto(size) do |yoff|
-        pt_tmp = Point.new(pt.x + xoff, pt.y + yoff)
-        hsb = hsb_for_point(pb, pt_tmp, cache)
-        hue, sat, val = hsb[0], hsb[1], hsb[2]
+    size = 1
+    (-size).upto(size) do |off|
+      pt_tmp = Point.new(pt.x + off, pt.y)
+      hsb = hsb_for_point(pb, pt_tmp, cache)
+      hue, sat, val = hsb[0], hsb[1], hsb[2]
+      return false unless yield(hue, sat, val)
 
-        return false unless yield(hue, sat, val)
-      end
-     end
+      pt_tmp = Point.new(pt.x, pt.y + off)
+      hsb = hsb_for_point(pb, pt_tmp, cache)
+      hue, sat, val = hsb[0], hsb[1], hsb[2]
+      return false unless yield(hue, sat, val)
+    end
 
      return true
   end
