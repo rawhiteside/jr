@@ -113,3 +113,7 @@ Potash: "Position yourself so that all of the kettles are on one side.\nMacro wi
 Flower Fertilizer: 'See setup info for Potash. '
 Take from kettles: "This is handy when things mess up.  Why is taking from kettles\
   \ such a pita? \n"
+acid: 'Setup info in Potash. '
+Cutstones: "Just show it the grid of rocksaws.  It uses hotkeys. \n"
+Deep Well: "Not really useful as a stand-alone.  Camp runners, though, can use the\
+  \ logic in here. \n"
