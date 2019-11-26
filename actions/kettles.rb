@@ -268,6 +268,7 @@ class Potash < KettleAction
     unless (v[:wood] && v[:water]) || v[:done]
       puts "Didn't read kettle: "
       puts kettle_data(w)
+      return true
     end
 
     if v[:done]
