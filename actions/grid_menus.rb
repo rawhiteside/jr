@@ -1,5 +1,5 @@
 class GridMenus < GridAction
-  def initialize(name = 'Grid Hotkeys', category = 'Misc')
+  def initialize(name = 'Grid Menus', category = 'Buildings')
     super(name, category)
   end
 
@@ -8,13 +8,16 @@ class GridMenus < GridAction
   end
 
   def act_at(p)
-    menu = @vals['name']
-    win = PinnableWindow.from_screen_click(p)
+    menu = @user_vals['menu']
+    win = PinnableWindow.from_screen_click(p['x'], p['y'])
     win.pin
     loop do
+      win.refresh
       break if win.click_on(menu)
       sleep 10
     end
+    win.unpin
   end
 end
+Action.add_action(GridMenus.new)
 
