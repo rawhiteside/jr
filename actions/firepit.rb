@@ -159,7 +159,7 @@ class Firepit < ARobot
   NORMAL_THRESH = 0.05
   NORMAL = 'normal'
   HOT = 'hot'
-  REPEATS = 1
+  REPEATS = 2
   # 
   # Returns a new firepit state: one of "hot", "normal"
   # Returns nil if state did not change
