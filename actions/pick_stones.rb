@@ -60,8 +60,10 @@ class PickStones < PickThings
     pb = full_screen_capture
     cache = {}
     center = Point.new(pb.width/2, pb.height/2)
-    (-190 + pb.height/2).times do |r|
-      pts = square_with_radius(center, r + 40)
+    off = 40
+    off = 0 if @vals['baux-gyp'] == 'Nothing'
+    (-(150 + off) + pb.height/2).times do |r|
+      pts = square_with_radius(center, r + off)
       pts.each  do |pt|
         return pt if stone?(pb, pt, cache)
         return pt if @vals['baux-gyp'] == 'Bauxite' && bauxite?(pb, pt, cache)
