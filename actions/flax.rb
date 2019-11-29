@@ -28,7 +28,6 @@ class FlaxGrow < Action
       {:type => :combo, :label => 'What type of flax?', :name => 'flax-type', 
        :vals => FLAX_DATA.keys.sort},
       {:type => :point, :label => 'Drag onto the pinned plant.', :name => 'plant'},
-      {:type => :point, :label => 'Drag onto your head.', :name => 'head'},
       {:type => :point, :label => 'Drag the pinned stash dialog', :name => 'stash'},
       {:type => :number, :label => 'How many crops?', :name => 'count'},
       {:type => :number, :label => 'How many rows?', :name => 'rows'},
@@ -55,7 +54,8 @@ class FlaxGrow < Action
 
   def act
 
-    center = [@vals['head.x'].to_i, @vals['head.y'].to_i]
+    dim = screen_size
+    center = [dim.width/2, dim.height/2]
     pop_points = pop_points_for_previous_step(center)
 
     count = @vals['count'].to_i
@@ -127,23 +127,25 @@ class FlaxGrow < Action
     @walker.walk_to(@plant_wl)
     windows = []
 
-    tiler = Tiler.new(0, 100)
-    tiler.min_width = 312
-    tiler.min_height = (153 - 23)
-    tiler.y_offset = 5
+    piler = Piler.new
 
     plots = step_patterns(@rows, @cols)
     plots.each do |s|
       @walker.steps([s], KEY_DELAY) unless s == :none
       dlg = plant(pop_points[s])
-      tiler.tile(dlg)
+      piler.pile(dlg)
       windows << dlg
     end
+
     # Tend the beds in sequence.
     until windows.size == 0 do
       active_windows = []
+      piler.swap
       windows.each do |w|
-        active_windows << w if tend(w) 
+        if tend(w)
+          active_windows << w
+          piler.pile(w)
+        end
       end
       windows = active_windows
     end
@@ -229,7 +231,6 @@ class FlaxSeeds < Action
     gadgets = [
       {:type => :combo, :label => 'What type of flax?', :name => 'flax-type', 
        :vals => FLAX_DATA.keys.sort},
-      {:type => :point, :label => 'Drag onto your head', :name => 'head'},
       {:type => :point, :label => 'Drag onto warehouse menu', :name => 'stash'},
       {:type => :point, :label => 'Drag onto plant menu', :name => 'plant'},
       {:type => :number, :label => 'How many major loops? (3 for carry 500)', :name => 'repeat'},
@@ -246,7 +247,8 @@ class FlaxSeeds < Action
   end
 
   def act
-    head = [@vals['head.x'].to_i, @vals['head.y'].to_i]
+    dim = screen_size
+    head = [dim.width/2, dim.height/2]
     repeat = @vals['repeat'].to_i
     @flax_type = @vals['flax-type']
     @harvest_reps = @vals['harvest_reps'].to_i
