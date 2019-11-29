@@ -42,7 +42,7 @@ class FlaxGrow < Action
 
   # Flax bed pop locations for the previous step
   def pop_points_for_previous_step(center)
-    offset = 180
+    offset = 130
     {
       # When no previous step
       :none => Point.new(center[0] + offset, center[1]), 
