@@ -149,12 +149,8 @@ class FlaxGrow < Action
           else
             # Want to wait for the last harvested window.
             # Unpin any others.  Just keep track of the last.
-            if last_w.nil?
-              last_w = w
-            else
-              last_w.unpin
-              last_w = w
-            end
+            last_w.unpin unless last_w.nil?
+            last_w = w
             piler.pile(w)
           end
         end
@@ -162,12 +158,14 @@ class FlaxGrow < Action
       windows = active_windows
     end
     # Wait for last harvested to be empty.
-    loop do
-      last_w.refresh
-      break if last_w.read_text.strip == ''
-      sleep 1
+    if last_w
+      loop do
+        last_w.refresh
+        break if last_w.read_text.strip == ''
+        sleep 1
+      end
+      last_w.unpin
     end
-    last_w.unpin
   end
 
   # Do something useful to the flax bed.
