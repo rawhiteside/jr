@@ -64,7 +64,6 @@ class FlaxGrow < Action
     plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     @flax_type = @vals['flax-type']
     @plant_point = plant_win.coords_for(@flax_type)
-                                           
 
     water_count = FLAX_DATA[@flax_type][:water]
     @plant_wl = WorldLocUtils.parse_world_location(@vals['grow'])
@@ -141,19 +140,39 @@ class FlaxGrow < Action
     until windows.size == 0 do
       active_windows = []
       piler.swap
+      last_w = nil
       windows.each do |w|
         if tend(w)
-          active_windows << w
-          piler.pile(w)
+          if w.notation != 'Harvested'
+            active_windows << w
+            piler.pile(w)
+          else
+            # Want to wait for the last harvested window.
+            # Unpin any others.  Just keep track of the last.
+            if last_w.nil?
+              last_w = w
+            else
+              last_w.unpin
+              last_w = w
+            end
+            piler.pile(w)
+          end
         end
       end
       windows = active_windows
     end
+    # Wait for last harvested to be empty.
+    loop do
+      last_w.refresh
+      break if last_w.read_text.strip == ''
+      sleep 1
+    end
+    last_w.unpin
   end
 
   # Do something useful to the flax bed.
   # true if there's more to do later.
-  # false if you harvest
+  # false if the window gets unpinned.
   def tend(dlg)
     if dlg.notation != 'Harvested'
       loop do
