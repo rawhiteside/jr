@@ -9,7 +9,7 @@ class DigStones < Action
     comps = [
       {:type => :point, :name => 'p', :label => 'Drag to pinned Dig'},
     ]
-    @vals = UserIO.prompt(parent, nil, action_name, comps)
+    @vals = UserIO.prompt(parent, @name, @name, comps)
   end
 
   def act
@@ -36,7 +36,7 @@ class StatClicks < Action
       {:type => :text, :name => 'hotkeys', :label => 'Hotkeys (has priority)'},
       {:type => :text, :name => 'delay', :label => 'Lag delay (default 5 sec)'},
     ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
+    @vals = UserIO.prompt(parent, @name, @name, comps)
   end
 
   def set_stats(stats)
@@ -110,7 +110,7 @@ class Stir < Action
     comps = [
       {:type => :point, :name => 'p', :label => 'Drag to Pinned Clinker'},
     ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
+    @vals = UserIO.prompt(parent, @name, @name, comps)
   end
 
   def act
@@ -161,7 +161,7 @@ class Eat < Action
     comps = [
       {:type => :point, :name => 'p', :label => 'Drag to click location'},
     ]
-    @vals = UserIO.prompt(parent, nil, @name, comps)
+    @vals = UserIO.prompt(parent, @name, @name, comps)
   end
 
   def act
