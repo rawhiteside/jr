@@ -120,18 +120,11 @@ class TimeTest < Action
   def act
 
     rect = nil
-    num_times = 100
+    num_times = 1000
     elapsed = nil
-    
+    rect = Rectangle.new(10, 10, 100, 100)
     elapsed = Timer.time_this do
-      num_times.times do
-        rect = WindowGeom.rectFromPoint(Point.new(50, 50))
-        if rect.nil?
-          puts "failed"
-          break
-        end
-      end
-
+      pb = PixelBlock.new(rect)
     end
     once = elapsed / num_times
     puts "Num_times = #{num_times}, total = #{elapsed}, once = #{once}"
