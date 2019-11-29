@@ -37,7 +37,11 @@ public class ARobot {
 
 	public PinnableWindow findAndPin(String imageName) {
 		Point pt = findSubImage(imageName);
-		if (pt != null) { return PinnableWindow.fromScreenClick(pt).pin();}
+		if (pt != null) {
+			PinnableWindow pw =  PinnableWindow.fromScreenClick(pt);
+			if (pw != null) {pw.pin();}
+			return pw;
+		}
 
 		return null;
 	}
