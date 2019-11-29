@@ -44,10 +44,10 @@ class FlaxGrow < Action
     offset = 130
     {
       # When no previous step
-      :none => Point.new(center[0] + offset, center[1]), 
-      :right => Point.new(center[0] + offset, center[1]), 
-      :left => Point.new(center[0] - offset, center[1]), 
-      :down => Point.new(center[0], center[1] + offset), 
+      :none => Point.new(center[0] + offset, center[1] + offset),
+      :right => Point.new(center[0] + offset, center[1] + offset),
+      :left => Point.new(center[0] - offset, center[1] + offset),
+      :down => Point.new(center[0], center[1] + offset),
     }
   end
 
