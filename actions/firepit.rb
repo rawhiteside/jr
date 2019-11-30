@@ -132,7 +132,7 @@ class Firepit < ARobot
   end
 
   BRIGHT = 450
-  IMAGE_SIZE = 20
+  IMAGE_SIZE = 30
   def get_white_fraction
     x = @x - IMAGE_SIZE/2
     y = @y - IMAGE_SIZE/2
