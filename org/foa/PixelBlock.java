@@ -67,7 +67,8 @@ public class PixelBlock extends ARobot {
 	 * get weighted, which makes things work better with the was
 	 * lighting changes during the day.
 	 */
-	public Point findPatch(PixelBlock pb) {
+	public Point findPatch(PixelBlock pb) {return findPatch(pb, "full");}
+	public Point findPatch(PixelBlock pb, String screenHalf) {
 		
 		int scale = findScale(pb);
 		BufferedImage biScene = ImageUtils.resize(bufferedImage(), scale);
@@ -78,6 +79,11 @@ public class PixelBlock extends ARobot {
 		Point bestOrigin = null;
 		toHSB(biScene);
 		toHSB(biPatch);
+		int xstart = 0;
+		int xend = biScene.getWidth() - biPatch.getWidth();
+		if (screenHalf.equals("right")) { xstart = biScene.getWidth()/2; }
+		if (screenHalf.equals("left")) { xend -= biScene.getWidth()/2; }
+		
 		for(int y = 0; y < biScene.getHeight() - biPatch.getHeight(); y++) {
 			for(int x = 0; x < biScene.getWidth() - biPatch.getWidth(); x++) {
 				int diff = weightedDiff(x, y, biScene, biPatch);
