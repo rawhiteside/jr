@@ -48,7 +48,7 @@ class AcquireFont < Action
 	if c == '0'
 	  text << '@'
 	else
-	  text << ' . '
+	  text << ' '
 	end
       end
       text << "\n"
@@ -63,7 +63,7 @@ class AcquireFont < Action
       {:type => :text, :name => 'answer', :label => 'What is that?'},
       {:type => :label, :label => line},
       {:type => :big_text, :editable => false, :label => 'Glyph',
-	:name => 'glyph', :value => glyph_text, },
+	:name => 'glyph', :value => glyph_text, :rows => 20, :cols => 50},
     ]
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
     return unless vals

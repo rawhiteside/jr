@@ -23,10 +23,11 @@ class ReadWindow < Action
     text = w.read_text
     puts text
     comps = [
-      {:type => :big_text, :value => text, :name => 'text', :label => 'Text'}
+      {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => 'Text'}
     ]
     UserIO.prompt(nil, nil, 'Read this text', comps)
 
+    return
     cl = ClockLocWindow.instance
     puts "World coordinates: (#{cl.coords[0]}, #{cl.coords[1]})"
     
@@ -46,5 +47,27 @@ class ReadWindow < Action
     puts inventory.read_text
   end
 end
-
 Action.add_action(ReadWindow.new)
+
+class KettleTest < Action
+  def initialize(name = 'Kettle test')
+    super(name, 'Test/Dev')
+  end
+
+  def setup(parent)
+    gadgets = [{:type => :point, :label => 'Drag to location', :name => 'xy'}]
+    @vals = UserIO.prompt(parent, nil, action_name, gadgets)
+  end
+
+  def act
+    w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
+    puts w.read_text
+    ['Potash', 'Weed Killer', 'Flower Fert', 'Grain Fert', 'Salt', 'Sulfur', 'Sulfuric' ].each do |button|
+      point = w.coords_for(button)
+      mm(point)
+      sleep 1
+    end
+  end
+
+end
+Action.add_action(KettleTest.new)
