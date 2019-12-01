@@ -9,10 +9,13 @@ public class RuleRemover {
 	public static ArrayList removeRules(ArrayList<String> rows, int max) {
 		byte[][] bytes = toByteArray(rows);
 		//dump(bytes, "Start");
-		removeHRules(bytes, max);
+		// Remove the vertical rules first, to transpose first. 
+
 		bytes = transpose(bytes);
 		removeHRules(bytes, max);
+
 		bytes = transpose(bytes);
+		removeHRules(bytes, max);
 
 		ArrayList<String> out = new ArrayList<String>();
 		for(int i = 0; i < bytes.length; i++) {

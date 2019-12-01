@@ -51,13 +51,13 @@ public class PixelBlock extends ARobot {
 			long count = ((long)rectMe.width/scale) * (rectOther.width/scale) *
 				(rectMe.height/scale) * (rectOther.height/scale);
 			if (count < MAX_DIFFS) {
-				System.out.println("Count of " + count + " accepted");
+				//System.out.println("Count of " + count + " accepted");
 				break;
 			}
-			System.out.println("Count of " + count + " rejected");
+			//System.out.println("Count of " + count + " rejected");
 			scale += 1;
 		}
-		System.out.println("Scale is " + scale);
+		//System.out.println("Scale is " + scale);
 		return scale;
 	}
 
