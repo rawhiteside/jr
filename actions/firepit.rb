@@ -58,12 +58,16 @@ class Firepits < Action
     burn_firepits if task =~ /Burn/
     light_firepits if task == 'Light'
     tend_firepits if task == 'Tend'
+
+    @threads.each {|t| t.join}
   end
 
 
   def burn_firepits
-    light_firepits
+    # Forks off threads to tend.
     tend_firepits
+    # We'll try to light while the tender is running. 
+    light_firepits
   end
   
   def light_firepits
@@ -72,17 +76,17 @@ class Firepits < Action
     GridHelper.new(@vals, 'g').each_point do |p|
       w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
       w.pin
-      while w.click_on('Strike')
+      w.drag_to(Point.new(200, 200))
+
+      until w.read_text =~ /merrily/
         w.refresh
-
-        if w.click_on('Remove Tinder') 
-          w.refresh
-        end
-
-        if w.click_on('Place Tinder')
-          w.refresh
-        end
+        w.click_on('Strike')
+        sleep 2
+        w.refresh
+        w.click_on('Place Tinder')
+        sleep 0.5
       end
+
       w.unpin
     end
   end
@@ -91,12 +95,9 @@ class Firepits < Action
   def tend_firepits
     # Watch the burning pits and stoke as appropriate
     GridHelper.new(@vals, 'g').each_point do |p|
-
       f = Firepit.new(p)
-
       @threads << ControllableThread.new {f.tend}
     end
-    @threads.each {|t| t.join}
   end
 end
 
@@ -159,7 +160,7 @@ class Firepit < ARobot
   NORMAL_THRESH = 0.05
   NORMAL = 'normal'
   HOT = 'hot'
-  REPEATS = 2
+  REPEATS = 3
   # 
   # Returns a new firepit state: one of "hot", "normal"
   # Returns nil if state did not change
