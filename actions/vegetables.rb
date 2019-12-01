@@ -241,7 +241,7 @@ class Vegetables < Action
       with_robot_lock do
         # At first, maybe have to wait for the menu to initialize itself.
         if index == 0
-          until w.dialog_coords_for('Water')
+          until w.coords_for('Water')
             sleep_sec 0.5 
             w.refresh
           end
