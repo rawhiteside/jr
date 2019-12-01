@@ -24,21 +24,14 @@ public class PinnableWindow extends AWindow {
 		int x = r.x + 4;
 		int y = r.y + r.height/2;
 		Rectangle rnew = WindowGeom.rectFromPoint(new Point(x, y));
-		if (rnew == null) {
-			// System.out.println("Update rect failed.");
-			/*
-			  Rectangle rect = getRect();
-			  PixelBlock pb = new PixelBlock(rect);
-			  ImagePanel.displayImage(pb.bufferedImage(), "Update rect failed.");
-			  throw new RuntimeException("Update rect failed. ");
-			*/
-		} else {
+		if (rnew != null) {
 			setRect(rnew);
 		}
 	}
 
 	public Insets textInsets() {
-		return new Insets(4, 4, 5, 32);
+		// return new Insets(4, 4, 5, 32);
+		return new Insets(0,0,0,0);
 	}
 
 	private static double MIN_DELAY = 0.05;

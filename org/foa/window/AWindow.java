@@ -180,7 +180,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 	public boolean waitForText(String text, double maxSeconds) {
 		long start = System.currentTimeMillis();
 		while(true) {
-			refresh("tl");
+			refresh("lc");
 			if(readText().indexOf(text) != -1) {
 				return true;
 			}
@@ -199,12 +199,6 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 			}
 		}
 		return null;
-	}
-
-	public Point dialogCoordsFor(String menu) {
-		Point p = coordsFor(menu);
-		if (p == null) { return null; }
-		return toDialogCoords(p);
 	}
 
 	public Point coordsFor(String menu) {

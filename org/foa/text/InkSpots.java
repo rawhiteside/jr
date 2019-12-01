@@ -13,6 +13,10 @@ public class InkSpots {
 	public int width;
 	public int height;
 
+	// Set a debug output flag.  We don't need no steenkin' properties
+	// file.
+	private static boolean s_debug = false;
+
 	public InkSpots(int[] origin, String[] irows) {
 		this.origin = origin;
 		this.rows = irows;
@@ -85,8 +89,6 @@ public class InkSpots {
 		Rectangle rect = new Rectangle(this.origin[0], this.origin[1], this.width, this.height);
 		BufferedImage bi = new ARobot().createScreenCapture(rect);
 
-			
-
 		for(int y = 0; y < this.height; y++) {
 			for(int x = 0; x < this.width; x++) {
 				Color c = new Color(bi.getRGB(x, y));
@@ -107,13 +109,16 @@ public class InkSpots {
 	public static InkSpots fromScreen(Rectangle rect, ITextHelper textHelper) {
 		BufferedImage bi = new ARobot().createScreenCapture(rect);
 
-		//Debug
-		try {
-			File outputfile = new File("saved.png");
-			ImageIO.write(bi, "png", outputfile);
-		} catch (Exception e) {
-			//TODO: handle exception
+		// Debug
+		if (s_debug) {
+			try {
+				File outputfile = new File("saved.png");
+				ImageIO.write(bi, "png", outputfile);
+			} catch (Exception e) {
+				//TODO: handle exception
+			}
 		}
+
 		ArrayList newRows = new ArrayList();
 		for(int y = 0; y < rect.height; y++) {
 			StringBuffer row = new StringBuffer();
@@ -127,19 +132,23 @@ public class InkSpots {
 			}
 			newRows.add(row.toString());
 		}
+		newRows = RuleRemover.removeRules(newRows, 10);
 
-		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter("debug.txt"));
+		if (s_debug) {
+			try {
+				BufferedWriter writer = new BufferedWriter(new FileWriter("debug.txt"));
 			
-			for (int debugCount = 0; debugCount < newRows.size(); debugCount++)
-				{
-					writer.write(newRows.get(debugCount).toString());
-					writer.newLine();
-				}
-			writer.close();
-		} catch (Exception e) {
-			//TODO: handle exception
+				for (int debugCount = 0; debugCount < newRows.size(); debugCount++)
+					{
+						writer.write(newRows.get(debugCount).toString());
+						writer.newLine();
+					}
+				writer.close();
+			} catch (Exception e) {
+				//TODO: handle exception
+			}
 		}
 		return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]));
 	}
+
 }
