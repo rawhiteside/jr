@@ -35,8 +35,9 @@ public class ARobot {
 
 	public void beep() { m_toolkit.beep(); }
 
-	public PinnableWindow findAndPin(String imageName) {
-		Point pt = findSubImage(imageName);
+	public PinnableWindow findAndPin(String imageName) { return findAndPin(imageName, "full");}
+	public PinnableWindow findAndPin(String imageName, String screenHalf) {
+		Point pt = findSubImage(imageName, screenHalf);
 		if (pt != null) {
 			PinnableWindow pw =  PinnableWindow.fromScreenClick(pt);
 			if (pw != null) {pw.pin();}
@@ -46,10 +47,11 @@ public class ARobot {
 		return null;
 	}
 
-	public Point findSubImage(String imageName) {
+	public Point findSubImage(String imageName) {return findSubImage(imageName, "full");}
+	public Point findSubImage(String imageName, String screenHalf) {
 		PixelBlock screen = fullScreenCapture();
 		PixelBlock sub = PixelBlock.loadImage("images/" + imageName + ".png");
-		return screen.findPatch(sub);
+		return screen.findPatch(sub, screenHalf);
 	}
 
 	public PixelBlock fullScreenCapture() {
