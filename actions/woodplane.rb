@@ -8,7 +8,8 @@ class WoodPlane < Action
 
   def setup(parent)
     gadgets = [
-      { :type => :point, :name => 'stack', :label => 'Drag to the stack of menus' }
+      {:type => :point, :name => 'stack', :label => 'Drag to the stack of menus'},
+      {:type => :combo, :name => 'type', :label => 'Building', :vals => ['Wood plane', 'Carpentry shop']},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -23,14 +24,19 @@ class WoodPlane < Action
   end
   
   def plane(w)
+    is_woodplane = (@vals['type'] == 'Wood plane')
     stat_wait('End')
     w.refresh
-    w.refresh if (w.click_on('Repair') || w.click_on('Install'))
+    if is_woodplane
+      w.refresh if (w.click_on('Repair') || w.click_on('Install'))
+    end
     if w.click_on('Plane')
-      w.refresh
-      if w.click_on('Repair')
+      if is_woodplane
         w.refresh
-        w.click_on('Plane')
+        if w.click_on('Repair')
+          w.refresh
+          w.click_on('Plane')
+        end
       end
     end
   end
