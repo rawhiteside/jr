@@ -22,7 +22,7 @@ class CasualSlate < Action
   def act
     loop do
       send_string '8'
-      sleep_sec 0.2
+      sleep_sec 0.4
     end
   end
 end

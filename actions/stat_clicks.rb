@@ -22,7 +22,7 @@ class DigStones < Action
       p = mouse_pos
       w.click_on('Dig')
       mm(p)
-      sleep_sec(5)  # MAGIC.  Dig happens server side and lag.
+      sleep_sec(5)  # MAGIC Number.  Dig happens server side and lag.
     end
   end
 end
