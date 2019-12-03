@@ -21,11 +21,8 @@ class CasualSlate < Action
 
   def act
     loop do
-      if Icons.hotkey_if_active(:slate)
-	sleep_sec 0.1
-      else
-	Thread.pass
-      end
+      send_string '8'
+      sleep_sec 0.2
     end
   end
 end
