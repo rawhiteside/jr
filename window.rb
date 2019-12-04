@@ -153,7 +153,7 @@ class PopupWindow < Window
   # handle.
   def dismiss
 
-    # This is an array glyphs[letters][lines]
+    # This is an array glyphs[lines][letters]
     glyphs = text_reader.glyphs
     return if glyphs.size == 0
 

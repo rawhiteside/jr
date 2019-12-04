@@ -62,10 +62,14 @@ class KettleTest < Action
   def act
     w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
     puts w.read_text
-    ['Potash', 'Weed Killer', 'Flower Fert', 'Grain Fert', 'Salt', 'Sulfur', 'Sulfuric' ].each do |button|
-      point = w.coords_for(button)
-      mm(point)
-      sleep 1
+    ['Potash', 'Weed', 'Flower', 'Grain', 'Salt', 'Sulfur', 'Sulfuric' ].each do |button|
+      point = w.coords_for_word(button)
+      if point
+        mm(point)
+      else
+        puts "Didn't find #{button}"
+      end
+        sleep 1
     end
   end
 

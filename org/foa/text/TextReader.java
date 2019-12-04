@@ -1,10 +1,13 @@
 package org.foa.text;
 
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.*;
 
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 public class TextReader {
-	public InkSpots[] lines;
 	public InkSpots[][] glyphs;
 	public String[] lineText;
 
@@ -49,11 +52,77 @@ public class TextReader {
 		return sb.toString();
 	}
 
+
+	// Return a point to click on a line starting with the provided
+	// text.
+	public Point pointForLine(String menu) {
+		InkSpots[] glyphs = findMatchingLine(menu);
+		if(glyphs == null) {
+			return null;
+		}
+		return centerOfGlyph(glyphs[0]);
+	}
+
+	private InkSpots[] findMatchingLine(String start) {
+		for(int i = 0; i < lineText.length; i++) {
+			if(lineText[i].startsWith(start)) {
+				return glyphs[i];
+			}
+		}
+		return null;
+	}
+
+	// Return a point to click on the provided word.
+	// TODO:  Worry about multiple instances of the word?
+	public Point pointForWord(String word) {
+		String regex = "\\b" + word + "\\b";
+		Pattern pattern = Pattern.compile(regex);
+		for(int i = 0; i < lineText.length; i++) {
+			String line = lineText[i];
+			Matcher matcher = pattern.matcher(line);
+			if(matcher.find()) {
+				InkSpots g = glyphForIndex(i, matcher.start());
+				if (g != null) { return centerOfGlyph(g);}
+				else {return null;}
+			}
+		}
+		return null;
+	}
+
+	private Point centerOfGlyph(InkSpots glyph) {
+		int x = glyph.origin[0] + glyph.width / 2;
+		int y = glyph.origin[1] + glyph.height / 2;
+		return new Point(x, y);
+	}
+
+	public String textColor(String s) {
+		InkSpots[] glyphs = findMatchingLine(s);
+		if(glyphs == null) {
+			return null;
+		} else {
+			return glyphs[0].color();
+		}
+	}
+
+
+	// This is complicated by a single glyph being poossibly multiple
+	// characters.
+	public InkSpots glyphForIndex(int lineIndex, int charIndex) {
+		InkSpots[] line = glyphs[lineIndex];
+		int charCount = 0;
+		for(int i = 0; i < line.length; i++) {
+			String text = line[i].toString();
+			charCount += text.length();
+			if (charCount > charIndex) {return line[i];}
+		}
+		return null;
+	}
+
 	/**
 	 * Strip off whitespace from around the glyph by removing any empty
 	 * rows from the top and bottom. 
 	 */
-	public InkSpots trimGlyph(InkSpots g) {
+	private InkSpots trimGlyph(InkSpots g) {
 
 		if (g.width == 0 || g.height == 0) {
 			return g;
@@ -84,7 +153,7 @@ public class TextReader {
 	 * split this into "glyphs", which are blots separated by empty
 	 * vertical columns of pixels.
 	 **/
-	public InkSpots[] findGlyphs(InkSpots line, int spacePixelCount) {
+	private InkSpots[] findGlyphs(InkSpots line, int spacePixelCount) {
 		ArrayList<InkSpots> glyphs = new ArrayList<InkSpots>();
 		int x = 0;
 		if (x >= line.width) {
@@ -148,7 +217,7 @@ public class TextReader {
 	 * Split the bitmap into lines.  A "line" is a contiguous group of
 	 * non-blank rows.
 	 */
-	public InkSpots[] findLines(InkSpots area) {
+	private InkSpots[] findLines(InkSpots area) {
 		ArrayList<InkSpots> lines = new ArrayList<InkSpots>();
 		String blankRow = makeRow("1", area.width);
 		int irow = 0;

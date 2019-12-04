@@ -63,7 +63,7 @@ class FlaxGrow < Action
     stash_win = PinnableWindow.from_point(stash_point)
     plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     @flax_type = @vals['flax-type']
-    @plant_point = plant_win.coords_for(@flax_type)
+    @plant_point = plant_win.coords_for_line(@flax_type)
 
     water_count = FLAX_DATA[@flax_type][:water]
     @plant_wl = WorldLocUtils.parse_world_location(@vals['grow'])

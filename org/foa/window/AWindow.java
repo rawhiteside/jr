@@ -7,6 +7,7 @@ import org.foa.*;
 import java.awt.*;
 import java.awt.event.*;
 
+
 /**
  * Yes.  I know that the proper relationship of AWindow and ARobot is not *is-a*.
  *
@@ -160,13 +161,9 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 
 	public void flushTextReader() { m_textReader = null; }
 
+	
 	public String textColor(String s) {
-		InkSpots[] glyphs = findMatchingLine(s);
-		if(glyphs == null) {
-			return null;
-		} else {
-			return glyphs[0].color();
-		}
+		return textReader().textColor(s);
 	}
 
 	/**
@@ -191,25 +188,15 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		}
 	}
 
-	public InkSpots[] findMatchingLine(String start) {
-		TextReader tr = textReader();
-		for(int i = 0; i < tr.lineText.length; i++) {
-			if(tr.lineText[i].startsWith(start)) {
-				return tr.glyphs[i];
-			}
-		}
-		return null;
+	// Return a point to click on the provided word.
+	public Point coordsForWord(String word) {
+		return textReader().pointForWord(word);
 	}
-
-	public Point coordsFor(String menu) {
-		InkSpots[] glyphs = findMatchingLine(menu);
-		if(glyphs == null) {
-			return null;
-		}
-		InkSpots glyph = glyphs[0];
-		int x = glyph.origin[0] + glyph.width / 2;
-		int y = glyph.origin[1] + glyph.height / 2;
-		return new Point(x, y);
+	
+	// Return a point to click on a line starting with the provided
+	// text.
+	public Point coordsForLine(String menu) {
+		return textReader().pointForLine(menu);
 	}
 
 	public static void dismissAll() {
@@ -257,7 +244,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 			for(int i = 0; i < path.length; i++) {
 				if(w == null) { break; }
 				String menu = path[i];
-				Point pt = w.coordsFor(menu);
+				Point pt = w.coordsForLine(menu);
 				if (pt == null) {
 					w = null;
 					break;
