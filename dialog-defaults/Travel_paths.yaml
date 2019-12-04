@@ -1,5 +1,5 @@
 ---
-2: Duki Chariot to DO Flax
+2: UThought to UWorship
 1: true
 Parameter set 1:
   path: ''
@@ -149,6 +149,7 @@ UThought to UWorship:
     630, -6227
     627, -6224
     617, -6224
+    587, -6195
     533, -6140
     485, -6140
     463, -6162
@@ -157,6 +158,7 @@ UThought to UWorship:
     420, -6165
     411, -6156
     264, -6156
+    211, -6208
     200, -6220
     67, -6220
     45, -6198
