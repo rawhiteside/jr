@@ -13,6 +13,7 @@ class EldradReactory < Action
         :vals => [
           'Steel, 9 rings',
           'Brass, 10',
+          'Electrum, 10',
           'Bronze, 11',
           'Pewter, 10',
           'Sun Steel, 11',
