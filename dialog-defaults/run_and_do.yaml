@@ -786,3 +786,24 @@ Water mines:
 
   custom_text_0: ''
   custom_text_1: ''
+Test:
+  code.code: |2+
+
+
+    def stash
+      sleep 0.3
+      win = find_and_pin 'Warehouse'
+      if win
+        HowMuch.max if win.click_on 'Stash/Honey'
+        HowMuch.max if win.click_on 'Stash/Beeswax'
+        win.unpin
+      else
+        puts "Didn't find warehouse."
+      end
+    end
+
+  repeat: One time
+  path: |
+    stash
+  custom_text_0: ''
+  custom_text_1: ''
