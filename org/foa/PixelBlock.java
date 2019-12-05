@@ -94,7 +94,7 @@ public class PixelBlock extends ARobot {
 			}
 		}
 
-		System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(biPatch.getWidth()*biPatch.getHeight())));
+		//System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(biPatch.getWidth()*biPatch.getHeight())));
 		bestOrigin.translate(biPatch.getWidth() / 2, biPatch.getHeight() / 2);
 		return new Point(bestOrigin.x * scale, bestOrigin.y * scale);
 	}
