@@ -2,7 +2,7 @@ require 'action'
 
 # Class for the PaintLab pinned window
 class PaintLab < AWindow
-  TOP_BUTTON = [16, 248]  # Relative to window. 
+  TOP_BUTTON = [16, 261]  # Relative to window. 
   INGREDIENTS = [
     :cabbage, :carrot, :clay, :dt, :ts, :fb, :red_sand, :lead,
     :silver, :iron, :copper, :sulfur, :potash, :lime, :saltpeter,
@@ -90,32 +90,10 @@ end
 
 class PpPaint < Action
   RECIPE_LINES = [
-    'AllClay : Clay 10',
-    'Beet: Cabbage 8, Clay 2',
-    'Boysenberry: Cabbage 4, Clay 6',
-    'Brown: Carrot 2, RedSand 8',
-    'BurntUmber: Clay 3, RedSand 7',
-    'CadetBlue: Cabbage 4, Copper 6',
-    'Carrot: Carrot 10',
-    'Chocolate: Carrot 8, RedSand 2',
-    'DarkKhaki: Carrot 10, Copper 6',
-    'FireBrick: Carrot 3, RedSand 7',
-    'Grey: Carrot 4, Copper 4, RedSand 2',
-    'LightSlateGrey: Cabbage 5, Copper 5',
-    'MediumAquaMarine: Carrot 1, Copper 9',
-    'MediumTurquoise: Copper 10',
-    'OliveDrab: Clay 9, EarthLight 1',
-    'Peacock: Cabbage 1, Copper 9',
-    'Peru: Carrot 9, Copper 1',
-    'RawSienna: Carrot 6, RedSand 4',
-    'RubyRed: RedSand 10',
-    'SaddleBrown: Clay 10',
-    'Sienna: Cabbage 1, Clay 9',
-    'SlateGrey: Cabbage 8, Copper 2',
-    'SteelBlue: Cabbage 4, Copper 5, Lead 1',
+    "Aquamarine: Iron 1 Copper 9",
   ]
   def initialize
-    super("PP paint", 'Misc')
+    super("Paint", 'Misc')
     @recipes = {}
     @colors = []
     RECIPE_LINES.each do |l|
@@ -154,169 +132,3 @@ class PpPaint < Action
 end
 Action.add_action(PpPaint.new)
 
-class MeasurePaint < Action
-
-  def initialize
-    super("Measure paint", 'Misc')
-
-    @recipe = [
-
-      [:cabbage, :dt],
-      [:cabbage, :red_sand, :clay],
-      [:cabbage, :silver],
-      [:cabbage, :iron],
-      [:cabbage, :copper],
-      [:cabbage, :potash],
-      [:cabbage, :lime],
-
-      [:carrot, :dt],
-      [:carrot, :ts, :cabbage],
-      [:carrot, :red_sand],
-      [:carrot, :lead],
-      [:carrot, :iron],
-      [:carrot, :potash, :red_sand],
-      [:carrot, :lime],
-
-      [:clay, :ts],
-      [:clay, :dt],
-      [:clay, :lead],
-      [:clay, :silver, :cabbage],
-      [:clay, :copper],
-      [:clay, :sulfur],
-      [:clay, :saltpeter, :cabbage],
-
-      [:dt, :cabbage],
-      [:dt, :carrot],
-      [:dt, :ts],
-      [:dt, :red_sand],
-      [:dt, :lead],
-      [:dt, :iron],
-      [:dt, :copper],
-      [:dt, :potash],
-      [:dt, :lime],
-
-      [:ts, :carrot, :cabbage],
-      [:ts, :clay],
-      [:ts, :dt],
-      [:ts, :lead],
-      [:ts, :copper, :red_sand],
-      [:ts, :potash, :red_sand],
-      [:ts, :lime, :red_sand],
-
-      
-
-      [:red_sand, :cabbage, :carrot],
-      [:red_sand, :carrot, :copper],
-      [:red_sand, :dt],
-      [:red_sand, :silver],
-
-      [:lead, :carrot],
-      [:lead, :clay],
-      [:lead, :dt],
-      [:lead, :ts],
-      [:lead, :silver],
-      [:lead, :iron],
-      [:lead, :copper],
-      [:lead, :saltpeter],
-
-      [:silver, :clay, :cabbage],
-      [:silver, :red_sand],
-      [:silver, :lead, :lead],
-      [:silver, :iron, :copper],
-      [:silver, :copper],
-      [:silver, :saltpeter, :carrot],
-
-      [:iron, :cabbage, :carrot],
-      [:iron, :dt, :silver],
-      [:iron, :lead],
-      [:iron, :silver],
-      [:iron, :sulfur],
-      [:iron, :saltpeter],
-
-      [:copper, :cabbage],
-      [:copper, :clay],
-      [:copper, :dt],
-      [:copper, :ts],
-      [:copper, :lead],
-      [:copper, :silver],
-      [:copper, :sulfur],
-      [:copper, :saltpeter],
-
-      [:sulfur, :clay],
-      [:sulfur, :iron],
-      [:sulfur, :copper],
-      [:sulfur, :potash, :lead],
-
-      [:potash, :cabbage],
-      [:potash, :carrot, :cabbage],
-      [:potash, :dt],
-      [:potash, :ts],
-      [:potash, :sulfur, :red_sand],
-
-      [:lime, :carrot],
-      [:lime, :clay],
-      [:lime, :dt],
-      [:lime, :ts],
-
-      [:saltpeter, :clay, :cabbage],
-      [:saltpeter, :red_sand],
-      [:saltpeter, :lead],
-      [:saltpeter, :silver, :carrot],
-      [:saltpeter, :iron],
-      [:saltpeter, :copper],
-    ]
-    @recipe = [
-      [:silver, :lead,],
-      [:silver, :lead, :lead],
-      [:silver, :lead, :lead, :lead],
-      [:silver, :lead, :lead, :lead, :lead],
-    ]
-    @recipe = [
-      [:carrot, :cabbage],
-      [:cabbage, :carrot],
-    ]
-                  
-  end
-
-  def get_vals(parent)
-    comps = [
-      {:type => :point, :label => "Drag to the paint window", :name => 'win'},
-    ]
-    UserIO.prompt(parent, persistence_name, action_name, comps)
-  end
-
-  def setup(parent)
-    @vals = get_vals(parent)
-  end
-
-  def act
-    win = PinnableWindow.from_point(@vals['win.x'].to_i, @vals['win.y'].to_i)
-    paint_win = PaintLab.new(win)
-    
-    check_ingredients(@recipe)
-    paint_win = PaintLab.new
-    @recipe.each do |rec|
-      p.recipe(rec)
-      r, g, b =  paint_win.measure_colors
-      show(rec, r, g, b)
-      p.take
-    end
-  end
-
-  def check_ingredients(r)
-    r.each {|rr|
-      rr.each {|i|
-	raise("Didn't find #{i}") unless PaintLab::INGREDIENTS.index(i)
-      }
-    }
-  end
-
-  def show(recipe, r, g, b)
-    File.open('m.txt', 'a+') {|file|
-      recipe.each {|rcp| file.print(rcp.to_s + ", ") }
-      file.print ", " if recipe.size < 3
-      file.puts(" #{r}, #{g}, #{b},")
-    }
-  end
-
-end
