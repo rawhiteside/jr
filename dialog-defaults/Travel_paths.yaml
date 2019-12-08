@@ -3,19 +3,19 @@
 1: true
 Parameter set 1:
   path: ''
-Flax CP to Clay CP:
+CP Flax to CP Clay:
   path: |
     -1057, -6860
     -1054, -6863
     -1054, -6876
     -1066, -6888
     -1066, -6897
-Flax CP to Bricks CP:
+CP Flax to CP Bricks:
   path: |
     -1057, -6860
     -1057, -6839
     -1013, -6795
-Bricks CP to Kitchens CP:
+CP Bricks to CP Kitchens:
   path: |
     -1013, -6795
     -1009, -6792
@@ -24,20 +24,20 @@ Bricks CP to Kitchens CP:
     -992, -6768
     -1013, -6768
     -1025, -6781
-Kitchens CP to Jaby Campsite:
+CP Kitchens to Jaby Campsite:
   path: |
     -1025, -6781
     -1039, -6781
     -1079, -6822
     -1079, -6830
-Jaby Campsite to Flax CP:
+Jaby Campsite to CP Flax:
   path: |
     -1079, -6830
     -1075, -6827
     -1064, -6827
     -1064, -6853
     -1057, -6860
-Bricks CP to Guildhall:
+CP Bricks to Guildhall:
   path: |
     -1013, -6795
     -1000, -6795
@@ -205,7 +205,7 @@ Jaby Campsite to Guildhall:
     -974, -6811
   custom_text_1: ''
   custom_text_2: ''
-Bricks CP to Charcoal CP:
+CP Bricks to CP Charcoal:
   path: |
     -1013, -6795
     -1003, -6795
@@ -213,7 +213,7 @@ Bricks CP to Charcoal CP:
     -978, -6777
   custom_text_1: ''
   custom_text_2: ''
-Charcoal CP to Apiaries:
+CP Charcoal to Apiaries:
   path: |
     -978, -6777
     -952, -6750
@@ -224,7 +224,7 @@ Beetles to Jaby Campsite:
     -1086, -6834
     -1081, -6829
     -1078, -6829
-Jaby Campsite to Bricks CP:
+Jaby Campsite to CP Bricks:
   path: |
     -1078, -6830
     -1078, -6827
@@ -239,31 +239,31 @@ Guildhall to UArt:
     -1439, -7044
     -1439, -7046
 
-Clay CP to Flower CP:
+CP Clay to Flower CP:
   path: |
     -1067, -6895
     -1083, -6879
     -1084, -6849
     -1084, -6837
     -1082, -6834
-Flower CP to Kitchens CP:
+Flower CP to CP Kitchens:
   path: |
     -1082, -6834
     -1082, -6819
     -1043, -6780
     -1025, -6780
-Charcoal CP to Stone CP:
+CP Charcoal to Stone CP:
   path: |
     -977, -6777
     -992, -6761
     -997, -6761
-Stone CP to Kitchens CP:
+Stone CP to CP Kitchens:
   path: |
     -997, -6761
     -1009, -6762
     -1025, -6778
     -1025, -6780
-Bricks CP to Salt Water Lake:
+CP Bricks to Salt Water Lake:
   path: |
     -1012, -6795
     -1023, -6806
@@ -273,12 +273,12 @@ Bricks CP to Salt Water Lake:
     -1368, -6731
     -1488, -6610
     -1548, -6549
-Charcoal CP to Ranch 1:
+CP Charcoal to Ranch 1:
   path: |
     -978, -6777
     -987, -6787
     -993, -6823
-Ranch 1 to Bricks CP:
+Ranch 1 to CP Bricks:
   path: |
     -993, -6823
     -1012, -6804
@@ -291,7 +291,7 @@ Apiaries to Ranch 2:
   path: |
     -923, -6750
     -930, -6768
-Ranch 2 to Charcoal CP:
+Ranch 2 to CP Charcoal:
   path: |
     -930, -6768
     -977, -6777
@@ -362,7 +362,7 @@ Apiaries to Copper Mine:
     -682, -6581
     -632, -6532
     -632, -6493
-Sulph water to UoW:
+Sulph water to UWorship:
   path: |
     756, -5591
     751, -5586
