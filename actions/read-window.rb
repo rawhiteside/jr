@@ -27,7 +27,7 @@ class ReadWindow < Action
     ]
     UserIO.prompt(nil, nil, 'Read this text', comps)
 
-    return
+
     cl = ClockLocWindow.instance
     puts "World coordinates: (#{cl.coords[0]}, #{cl.coords[1]})"
     
