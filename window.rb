@@ -257,8 +257,8 @@ class Piler < ARobot
     dim = ARobot.shared_instance.screen_size
 
     height= dim.height
-    @y1 = height / 5
-    @y2 = @y1 + @y1
+    @y1 = height/20
+    @y2 = @y1 * 10
     @current = Point.new(PILE_OFFSET, @y1)
     @other = Point.new(PILE_OFFSET, @y2)
   end
@@ -278,7 +278,6 @@ class Piler < ARobot
     windows    
   end
   
-
   def swap
     t = @current
     @current = @other
@@ -293,18 +292,6 @@ class Piler < ARobot
     @current.x += PILE_OFFSET
   end
 end
-
-class Pile
-
-  def initialize(y_start, min_height)
-  end
-
-  # Add to pile.  Drag it to new screen location.
-  def put(w)
-  end
-
-end
-
 
 # This class does the tiling, computing coordinates at which
 # to place dialogs.
