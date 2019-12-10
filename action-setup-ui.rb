@@ -126,6 +126,7 @@ class SetupDialog
       parent.set_visible(false)
     end
     panel.add(ok)
+    
     # 
     # Cancel button.
     cancel = JButton.new("Cancel")
@@ -156,6 +157,7 @@ class SetupDialog
     panel.add(ontop)
 
     parent.add(panel, BorderLayout::SOUTH)
+    parent.get_root_pane.set_default_button(ok)
   end
 
 
