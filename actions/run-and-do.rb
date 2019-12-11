@@ -48,7 +48,6 @@ class RunAndDo < Action
 
     walker = Walker.new
     loop do
-      puts "Starting at #{Time.now}"
       @coords.each do |c|
         if c.kind_of? Array
           walker.walk_to(c)
