@@ -19,13 +19,13 @@ class Fert < KettleAction
   def act_at(g)
     delay = 0.01
     unless @first_pass
-      w.click_button('Take')
+      w.click_word('Take')
       sleep_sec delay
     end
     w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_button('Grain Fert' )
+    w.click_word('Grain Fert' )
     sleep_sec delay
-    w.click_button('Begin')
+    w.click_word('Begin')
     sleep_sec delay
     AWindow.dismiss_all
     sleep_sec delay
@@ -50,12 +50,12 @@ class FlowerFert < KettleAction
     delay = 0.3
     w = KettleWindow.from_screen_click(g['x'], g['y'])
     unless @first_pass
-      w.click_button('Take')
+      w.click_word('Take')
       sleep_sec delay
     end
-    w.click_button('Flower Fert')
+    w.click_word('Flower Fert')
     sleep_sec delay
-    w.click_button('Begin')
+    w.click_word('Begin')
     sleep_sec delay
     AWindow.dismiss_all
     sleep_sec delay
@@ -70,11 +70,11 @@ class Salt < KettleAction
 
   def act_at(g)
     w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_button('Take')
+    w.click_word('Take')
     sleep_sec 0.1
-    w.click_button('Salt')
+    w.click_word('Salt')
     sleep_sec 0.1
-    w.click_button('Begin')
+    w.click_word('Begin')
     sleep_sec 0.1
     AWindow.dismiss_all
   end
@@ -89,83 +89,31 @@ class TakeFromKettles < KettleAction
 
   def act_at(g)
     w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_button('Take')
-    sleep_sec 0.3
+    w.click_word('Take')
+    sleep_sec 0.1
     AWindow.dismiss_all
-    sleep_sec 0.3
   end
 end
 Action.add_action(TakeFromKettles.new)
 
 
 class KettleWindow < PinnableWindow
-
   def self.from_screen_click(x, y)
     pw = PinnableWindow.from_screen_click(x, y)
     return KettleWindow.new(pw.rect)
   end
 
-  def initialize(rect)
-    super
-    yoff = 26
-    @locs = {
-
-      'take' => [50, 277],
-      'begin' => [50, 277],
-      'ignite' => [50, 277],
-      'arsenic' => [50, 277],
-
-      'potash' => [50, 175],
-      'weed killer' => [160, 175],
-      'grain fert' => [160, 202],
-      'flower fert' => [50, 202],
-
-      'acid' => [160, 277],
-      'sulfur' => [50, 277],
-      'salt' => [160, 253],
-    }
-    @locs.each_key {|k| @locs[k][1] -= yoff }
-  end
-
-  def click_button(which)
-    xy = @locs[which.downcase]
-    dialog_click(Point.new(xy[0], xy[1]), nil, 0.01)
-  end
-
-  # Area holding menu text
-  DATA_HEIGHT = 160
-  def text_rectangle
-    rect = super
-    rect.height -= DATA_HEIGHT
-    rect
-  end
-
-  def read_data
-    text = nil
-    with_robot_lock do
-      refresh
-      data_text_reader = TextReader.new(data_rect, self)
-      text = data_text_reader.read_text
+  def click_word(word)
+    5.times do
+      p = super
+      if p.nil?
+        sleep 0.1
+      else
+        return p
+      end
     end
-    text
+    return nil
   end
-
-  def data_rect
-    tr = text_rectangle
-    data_area_border_thickness = 10
-    # Measured on the screen.
-    data_area_height = 93
-    # Move in this far from left and right. 
-    off = 13
-    
-    r = Rectangle.new(tr.x + off,
-		      tr.y + tr.height + data_area_border_thickness,
-		      tr.width,  # No offset here, as the pin exclusion.
-		      data_area_height)
-    return r
-  end
-
-
 end
 
 class Potash < KettleAction
@@ -183,7 +131,11 @@ class Potash < KettleAction
   # vals[:water] and vals[:wood]
   def kettle_data(w)
     vals = {}
-    text = w.read_data
+    #puts "Window text"
+    #puts w.read_text
+    text = w.read_text
+    #puts "Data text"
+    #puts text
     match = Regexp.new('Wood: ([0-9]+)').match(text)
     vals[:wood] = match[1].to_i if match
     match = Regexp.new('Water: ([0-9]+)').match(text)
@@ -193,14 +145,18 @@ class Potash < KettleAction
     vals
   end
 
-  def pinned_kettle_window(p, pinned = true)
-    w = KettleWindow.from_screen_click(p['x'], p['y'])
-    w.pin if pinned
-    w
+  def kettle_window(p)
+    return KettleWindow.from_screen_click(p['x'], p['y'])
+  end
+
+  def pinned_kettle_window(p)
+    w = kettle_window(p)
+    w.pin
+    return w
   end
 
   def make_this
-    'potash'
+    'Potash'
   end
 
   def start_potash(p, ignite)
@@ -208,12 +164,12 @@ class Potash < KettleAction
     unless ignite
       # Have to pause between these to let them update.
       sleep 0.1
-      w.click_button(make_this)
+      w.click_word(make_this)
       sleep 0.1
-      w.click_button('begin')
+      w.click_word('Begin')
       sleep 0.1
     end
-    w.click_button('ignite')
+    w.click_word('Ignite')
     HowMuch.max
     w.unpin
   end
@@ -257,7 +213,7 @@ class Potash < KettleAction
   # anything, needs to be done. Return a true if the potash is
   # complete, false otherwise.
   def stoke_kettle(p)
-    w = pinned_kettle_window(p, false)
+    w = kettle_window(p)
     v = {}
     5.times do
       v = kettle_data(w)
@@ -267,14 +223,16 @@ class Potash < KettleAction
     
     unless (v[:wood] && v[:water]) || v[:done]
       puts "Didn't read kettle: "
+      puts w.read_text
+      puts v
       puts kettle_data(w)
+      puts "----"
       return true
     end
 
     if v[:done]
-      w.pin
-      w.click_button('take')
-      w.unpin
+      w.click_word('Take')
+      dismiss_all
       return true
     end
 
