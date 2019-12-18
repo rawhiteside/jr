@@ -43,9 +43,12 @@ class GlazierWindow < PinnableWindow
     loop do
       sleep_sec 3
       got_it = false
-      with_robot_lock do
-	refresh
-	got_it = click_on(what)
+      temperature = data_vals[:temperature]
+      if (1600..2400).cover?(temperature)
+        with_robot_lock do
+	  refresh
+	  got_it = click_on(what)
+        end
       end
       sleep_sec 60 if got_it
       break if data_vals[:glass_amount].to_s == '19'
