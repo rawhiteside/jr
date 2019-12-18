@@ -5,6 +5,9 @@ class Firepits < Action
   def initialize
     super('Firepits', 'Buildings')
     @threads = []
+    #
+    # Don't take a firepit sceeenshot while we're pinning a start-up window.
+    @firestart_lock = JMonitor.new
   end
 
   def setup(parent)
@@ -54,7 +57,11 @@ class Firepits < Action
 
   def act
     task = @vals['task']
-    load_firepits if task == 'Load'
+    if task == 'Load'
+      load_firepits 
+      return
+    end
+    return unless scan_clickpoints
     burn_firepits if task =~ /Burn/
     light_firepits if task == 'Light'
     tend_firepits if task == 'Tend'
@@ -70,13 +77,29 @@ class Firepits < Action
     light_firepits
   end
   
+  # Firepits have unclickable holes in them.  Make sure they're all OK
+  # before we do anything else.
+  def scan_clickpoints
+
+    # Check the fires.
+    GridHelper.new(@vals, 'g').each_point do |p|
+      w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+      return nil unless w
+      dismiss_all
+    end
+    return true
+  end
+  
   def light_firepits
 
     # Light the fires.
     GridHelper.new(@vals, 'g').each_point do |p|
-      w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
-      w.pin
-      w.drag_to(Point.new(200, 200))
+      w = nil
+      @firestart_lock.synchronize do
+        w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
+        w.pin
+        w.drag_to(Point.new(200, 200))
+      end
 
       until w.read_text =~ /merrily/
         w.refresh
@@ -95,14 +118,15 @@ class Firepits < Action
   def tend_firepits
     # Watch the burning pits and stoke as appropriate
     GridHelper.new(@vals, 'g').each_point do |p|
-      f = Firepit.new(p)
+      f = Firepit.new(p, @firestart_lock)
       @threads << ControllableThread.new {f.tend}
     end
   end
 end
 
 class Firepit < ARobot
-  def initialize(p)
+  def initialize(p, screenshot_lock)
+    @screenshot_lock = screenshot_lock
     super()
     @x = p['x'].to_i
     @y = p['y'].to_i
@@ -133,12 +157,16 @@ class Firepit < ARobot
   end
 
   BRIGHT = 450
-  IMAGE_SIZE = 30
+  IMAGE_SIZE = 40
   def get_white_fraction
     x = @x - IMAGE_SIZE/2
     y = @y - IMAGE_SIZE/2
     pixels = nil
-    pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
+    #
+    # To keep the fire-starting windows from messing this up.
+    @screenshot_lock.synchronize do
+      pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
+    end
     bright_count = 0
     white_count = 0
     pixels.height.times do |y|
