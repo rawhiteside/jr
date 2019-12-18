@@ -45,6 +45,8 @@ public class AFont {
 		}
 	}
 
+	public Map getFontMap() { return m_map;}
+	
 	public void add(String[] rows, String str) {
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 		if (isDuplicate(l, str)) {

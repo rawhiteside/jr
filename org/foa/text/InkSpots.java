@@ -132,7 +132,7 @@ public class InkSpots {
 			}
 			newRows.add(row.toString());
 		}
-		newRows = RuleRemover.removeRules(newRows, 10);
+		newRows = RuleRemover.removeRules(newRows, 12);
 
 		if (s_debug) {
 			try {
