@@ -188,6 +188,12 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		}
 	}
 
+	public Point clickWord(String word) {
+		Point p = coordsForWord(word);
+		if(p != null) {rclickAt(p);}
+		return p;
+	}
+
 	// Return a point to click on the provided word.
 	public Point coordsForWord(String word) {
 		return textReader().pointForWord(word);
