@@ -4,7 +4,7 @@ class GridMenus < GridAction
   end
 
   def get_gadgets
-    super + [{:type => :text, :label => 'Menu path', :name => 'menu'},]
+    super + [{:type => :text, :label => 'Menu path', :name => 'menu', :size => 20},]
   end
 
   def act_at(p)
