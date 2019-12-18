@@ -93,7 +93,21 @@ class AcquireFont < Action
     @window = get_window(comp)
   end
 
+  def dump_font(map)
+
+    # Value is an arraylist of strings
+    map.each do |k,v|
+      puts "------------#{v} =>"
+      strs = k.to_a
+      strs.each do |str|
+        puts str.to_s.gsub('0','@').gsub('1', ' ')
+      end
+    end
+  end
+
   def act
+    puts "here is the map:"
+    dump_font(AFont.instance.getFontMap)
     process_text_reader(@window.text_reader)
     if @window.respond_to?(:data_text_reader)
       process_text_reader(@window.data_text_reader)
