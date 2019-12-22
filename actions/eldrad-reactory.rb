@@ -29,7 +29,7 @@ class EldradReactory < Action
       },
       {:type => :number, :label => 'Min percent', :name => 'thresh'},
     ]
-    @vals = UserIO.prompt(parent, 'Interval keys', 'Interval keys', gadgets)
+    @vals = UserIO.prompt(parent, 'Eldrad reactory', 'Eldrad reactory', gadgets)
     @threads = []
     return @vals
   end
