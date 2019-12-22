@@ -146,9 +146,8 @@ class Firepit < ARobot
       if new_state == HOT
 	with_robot_lock do
 	  mm(@x, @y)
-          sleep 0.2
-	  send_string('s', 0.2)
-	  mm(@x - 20, @y + 20)
+          sleep 0.1
+	  send_string('s', 0.1)
 	end
         sleep 5
       end
