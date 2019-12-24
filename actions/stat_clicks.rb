@@ -34,7 +34,8 @@ class StatClicks < Action
       {:type => :point, :name => 'p', :label => 'Drag to click location'},
       {:type => :label, :label => '~ Or ~'},
       {:type => :text, :name => 'hotkeys', :label => 'Hotkeys (has priority)'},
-      {:type => :text, :name => 'delay', :label => 'Lag delay (default 5 sec)'},
+      {:type => :text, :name => 'initial-delay', :label => 'One-time initial delay (default 0 sec)'},
+      {:type => :text, :name => 'delay', :label => 'Min delay between clicks(default 5 sec)'},
     ]
     @vals = UserIO.prompt(parent, @name, @name, comps)
   end
@@ -56,9 +57,12 @@ class StatClicks < Action
 
   def act
     hotkeys = @vals['hotkeys']
+    init_delay = @vals['initial-delay'].to_i
     @delay = @vals['delay'].to_i
     @delay = 5 if @delay == 0
     stat_hotkeys(hotkeys.strip, @stats) if hotkeys.strip.size > 0
+
+    sleep_sec init_delay
     stat_clicks(@vals['p.x'].to_i, @vals['p.y'].to_i, @stats)
   end
 
