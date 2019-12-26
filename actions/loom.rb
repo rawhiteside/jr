@@ -1,20 +1,29 @@
 require 'action'
 
-class Weave < Action
-  def initialize(n)
-    super(n, 'Buildings')
+class Loom < Action
+  PRODUCTS_TO_INPUTS = {
+    'Linen' => 'Thread',
+    'Canvas' => 'Twine',
+    'Wool Cloth' => 'Yarn',
+  }
+
+  def initialize
+    super('Loom', 'Buildings')
   end
 
   def setup(parent)
     comps = [
       {:type => :point, :name => 'loom', :label => 'Pinned loom.'},
+      {:type => :combo, :name => 'what',:label => "What to do",
+       :vals => PRODUCTS_TO_INPUTS.keys},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
+    @product = @vals['what']
+    @input = PRODUCTS_TO_INPUTS[@product]
   end
-
-
+  
   def reload(loom)
-    if loom.click_on("Load the Loom with #{reload_what}")
+    if loom.click_on("Load the Loom with #{@input}")
       HowMuch.max
     end
   end    
@@ -22,12 +31,11 @@ class Weave < Action
   def restring(loom)
     if loom.click_on('Re-String')
       PopupWindow.dismiss
-      loom.refresh
-      sleep_sec(0.5)
-      if loom.click_on('Load the Loom with Twine')
-        HowMuch.max
-      end
     end
+  end
+
+  def weave_what
+    "Weave #{@input} into #{@product}"
   end
 
   def act
@@ -50,35 +58,5 @@ class Weave < Action
 end
 
 
-class Linen < Weave
-  def initialize
-    super('Weave Linen')
-  end
 
-  def weave_what
-    'Weave Thread into Linen'
-  end
-
-  def reload_what
-    'Thread'
-  end
-
-
-end
-
-class Canvas < Weave
-  def initialize
-    super('Weave Canvas')
-  end
-
-  def reload_what
-    'Twine'
-  end
-
-  def weave_what
-    'Weave Twine into Canvas'
-  end
-
-end
-Action.add_action(Linen.new)
-Action.add_action(Canvas.new)
+Action.add_action(Loom.new)
