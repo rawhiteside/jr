@@ -293,6 +293,34 @@ class Piler < ARobot
   end
 end
 
+class Cascader < ARobot
+  def initialize(x = 2, y = 50, off = 6)
+    super()
+    @x = x
+    @y = y
+    @off = off
+    @windows = []
+  end
+
+  def stage(w)
+    @windows << w
+    w.default_refresh_loc = 'tr'
+    w.drag_to(Point.new(@x, @y))
+  end
+
+  def cascade
+    first = @windows.shift
+    index = @windows.size
+    @windows.reverse.each do |w|
+      w.drag_to(Point.new(@x + index * @off, @y + index * @off))
+      index -= 1
+    end
+    first.refresh
+  end
+
+end
+
+
 # This class does the tiling, computing coordinates at which
 # to place dialogs.
 class Tiler < ARobot
