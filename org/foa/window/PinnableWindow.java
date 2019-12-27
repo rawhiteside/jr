@@ -6,19 +6,30 @@ import org.foa.robot.*;
 import java.awt.*;
 
 public class PinnableWindow extends AWindow {
+	// Currently pinned?
 	private boolean m_pinned = false;
-	// Timestamp of a click.
+
+	// Is the window size unchanging?
+	private boolean m_static = false;
 
 	public PinnableWindow(Rectangle rect) {
 		super(rect);
 	}
 
+	public boolean isStaticSize() {
+		return m_static;
+	}
+	public void setStaticSize(boolean value) {
+		m_static = value;
+	}
 
 	/**
 	 * Basically, any mouse click can now change the window bounds.
 	 * The left center seems to be preserved.
 	 */
 	private void updateRect() {
+		if (m_static) {return;}
+
 		sleepSec(0.08);
 		Rectangle r = getRect();
 		int x = r.x + 4;
