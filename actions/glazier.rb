@@ -39,44 +39,43 @@ class GlazierWindow < PinnableWindow
     wait_to_start_making
 
     # Just keep trying to click the menu.  It's not there if it's not
-    # there
+    # there.
     loop do
       sleep_sec 3
       got_it = false
-      temperature = data_vals[:temperature]
-      if (1600..2400).cover?(temperature)
-        with_robot_lock do
-	  refresh
+      with_robot_lock do
+	refresh
+        temperature = data_vals[:temperature]
+        if (1600..2400).cover?(temperature)
 	  got_it = click_on(what)
         end
       end
       sleep_sec 60 if got_it
       break if data_vals[:glass_amount].to_s == '19'
-    end
 
-    # Wait for menu to appear again, indicating that the last thing we
-    # made is done.
-    #
-    # When you add cc, this item can appear (bogusly).  Let's make
-    # sure we see it two conscutive before declaring things all done.
-    count = 0
-    loop_done = false
-    until loop_done do
+      # Wait for menu to appear again, indicating that the last thing
+      # we made is done.
+      #
+      # When you add cc, this item can appear (bogusly).  Let's make
+      # sure we see it two consecutive times before declaring things
+      # all done.
+      count = 0
+      loop_done = false
+      until loop_done do
+        sleep_sec 3
+        text = nil
+        with_robot_lock do
+          refresh
+          text = read_text
+        end
 
-      sleep_sec 6
-
-      text = nil
-      with_robot_lock do
-	refresh
-	text = read_text
+        if text.index(what)
+          count += 1
+        else
+          count = 0
+        end
+        loop_done = (count >= 2)
       end
-
-      if text.index(what)
-	count += 1
-      else
-	count = 0
-      end
-      loop_done = (count >= 2)
     end
     @done = true
   end
@@ -163,15 +162,15 @@ class GlazierWindow < PinnableWindow
       sleep_sec 4
       current = temperature
       if orig != current
-	status = {
+        status = {
 	  'Prev' => orig,
 	  'Temperature' => current,
 	  'Delta' => current - orig,
 	  'Time' => Time.now - start,
-	}
-	@last_delta = current - orig
+        }
+        @last_delta = current - orig
         # XXX log "Tick curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
-	return status
+        return status
       end
     end
   end
@@ -191,8 +190,8 @@ class GlazierWindow < PinnableWindow
     num_add = 6 if glass_type == 'Jewel'
     num_add.times {
       with_robot_lock {
-	refresh
-	click_on('Add 2')
+        refresh
+        click_on('Add 2')
       }
       wait_for_tick
     }
@@ -221,14 +220,14 @@ class GlazierWindow < PinnableWindow
       return if temperature == 0
     end
   end
-  
+
   def rise
     loop do
       log "Rise done=#{@done}"
       return if @done
       with_robot_lock {
-	refresh
-	click_on('Add 2')
+        refresh
+        click_on('Add 2')
       }
       sleep_sec 100
       log "Rise checking stop. done=#{@done}, temp=#{temperature}"
@@ -246,8 +245,10 @@ class GlazierWindow < PinnableWindow
   end
 
   def log(s)
-    puts s
+    # puts s
+
   end
+
 end
 
 
@@ -277,7 +278,7 @@ class Glazier < Action
     comps = [
       {:type => :grid, :name => 'g'},
       {:type => :combo, :name => 'what', :vals => choices,
-	:label => 'What do you want to make?'},
+       :label => 'What do you want to make?'},
     ]
     vals = UserIO.prompt(parent, persistence_name, action_name, comps)
   end
