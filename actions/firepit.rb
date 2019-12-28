@@ -127,6 +127,7 @@ end
 class Firepit < ARobot
   def initialize(p, screenshot_lock)
     @screenshot_lock = screenshot_lock
+    @log_lock = JMonitor.new
     super()
     @x = p['x'].to_i
     @y = p['y'].to_i
@@ -135,8 +136,26 @@ class Firepit < ARobot
     @state = nil
     @hot_count = 0
     @normal_count = 0
+    @start_time = Time.now
   end
 
+  def log_stoke(stoke)
+    log_msg("#{stoke},,,")
+  end
+
+  def log_data(bright, white, frac)
+    log_msg(",#{bright},#{white},#{frac}")
+  end
+
+  def log_msg(msg)
+    secs = Time.now - @start_time
+    @log_lock.synchronize do
+      File.open("firepit-#{@ix}-#{@iy}.csv", 'a') do |f|
+        f.puts("#{secs},#{@state},#{@normal_count},#{@hot_count},#{msg}")
+      end
+    end
+  end
+  
   def tend
     @tick = 0
     loop do
@@ -149,7 +168,10 @@ class Firepit < ARobot
           sleep 0.1
 	  send_string('s', 0.1)
 	end
+        log_stoke(1)
         sleep 5
+      else
+        log_stoke(0)
       end
       sleep 1
     end
@@ -178,7 +200,7 @@ class Firepit < ARobot
     end
     frac = nil
     frac = white_count.to_f / bright_count.to_f unless bright_count == 0
-    # puts "tick #{@tick}: Frac: #{frac} White: #{white_count}, Bright: #{bright_count}\n" if @ix == 0 && @iy == 0
+    log_data(bright_count, white_count, frac)
     return frac
   end
 
