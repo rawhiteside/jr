@@ -19,7 +19,7 @@ class CactusRun < Action
     x = @vals['win-stack.x'].to_i
     y = @vals['win-stack.y'].to_i
     @piler = Piler.new
-    @windows = @piler.pile_stack(x, y, 0.1)
+    @windows = @piler.pile_stack(x, y)
   end
 
   def init_stuff
