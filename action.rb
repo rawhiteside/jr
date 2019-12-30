@@ -132,7 +132,7 @@ class GridAction < Action
     [
       {:type => :grid, :name => 'g'},
       {:type => :number, :label => 'Repeat count', :name => 'repeat' },
-      {:type => :number, :label => 'Delay seconds', :name => 'delay'},
+      {:type => :number, :label => 'Delay between grid passes (seconds)', :name => 'delay'},
     ]
   end
 
