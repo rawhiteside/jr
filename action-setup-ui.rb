@@ -362,7 +362,7 @@ class SetupBigTextGadget < JPanel
     area.rows = h[:rows] || 5
     area.columns = h[:cols] || 25
 
-    area.set_border(LineBorder.create_black_line_border)
+    area.set_border(TitledBorder.new(LineBorder.create_black_line_border, h[:label]))
     data_gets[val_key] = Proc.new do
       area.text
     end
