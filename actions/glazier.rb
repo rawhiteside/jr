@@ -91,47 +91,10 @@ class GlazierWindow < PinnableWindow
     end
   end
 
-  DATA_HEIGHT = 107
-
-  def text_rectangle
-    rect = super
-    rect.height -= DATA_HEIGHT
-
-    rect
-  end
-
-  def data_text_reader
-    TextReader.new(data_rect, self)
-  end
-
-  def read_data
-    text = nil
-    3.times do
-      with_robot_lock do
-        refresh
-        text = data_text_reader.read_text
-      end
-
-      return text if !text.nil? && text =~ /Charcoal/ && text =~ /Temperature/
-
-      puts 'Glazier: retrying read_data'
-      sleep_sec(2)
-    end
-
-    text
-  end
-
-  def data_rect
-    rect = text_rectangle
-    # Move in this far from left and right. 
-    off = 20
-
-    Rectangle.new(rect.x + off, rect.y + rect.height + 1,
-		  rect.width - (2 * off), DATA_HEIGHT)
-  end
 
   def data_vals
-    text = read_data
+    flush_text_reader
+    text = read_text
     vals = {}
     # Temp
     match = Regexp.new('Temperature[ :]+([0-9]+)').match(text)
@@ -211,13 +174,6 @@ class GlazierWindow < PinnableWindow
         AWindow.dismiss_all
       end
       sleep 1
-    end
-  end
-
-  def watch
-    each_tick do |stats|
-      p stats
-      return if temperature == 0
     end
   end
 
