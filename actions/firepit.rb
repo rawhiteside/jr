@@ -127,7 +127,6 @@ end
 class Firepit < ARobot
   def initialize(p, screenshot_lock)
     @screenshot_lock = screenshot_lock
-    @log_lock = JMonitor.new
     super()
     @x = p['x'].to_i
     @y = p['y'].to_i
@@ -140,7 +139,9 @@ class Firepit < ARobot
   end
 
   def log_stoke(stoke)
+    log_msg('0,,,') if (stoke == 1)
     log_msg("#{stoke},,,")
+    log_msg('0,,,') if (stoke == 1)
   end
 
   def log_data(bright, white, frac)
@@ -149,10 +150,8 @@ class Firepit < ARobot
 
   def log_msg(msg)
     secs = Time.now - @start_time
-    @log_lock.synchronize do
-      File.open("firepit-#{@ix}-#{@iy}.csv", 'a') do |f|
-        f.puts("#{secs},#{@state},#{@normal_count},#{@hot_count},#{msg}")
-      end
+    File.open("firepit-#{@ix}-#{@iy}.csv", 'a') do |f|
+      f.puts("#{secs},#{@state},#{@normal_count},#{@hot_count},#{msg}")
     end
   end
   
@@ -164,8 +163,10 @@ class Firepit < ARobot
       new_state = get_new_firepit_state
       if new_state == HOT
 	with_robot_lock do
+          sleep 0.05
 	  mm(@x, @y)
-          sleep 0.1
+          sleep 0.05
+	  mm(@x, @y)
 	  send_string('s', 0.1)
 	end
         log_stoke(1)
