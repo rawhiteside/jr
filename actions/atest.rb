@@ -88,7 +88,7 @@ class ReduceTest < Action
 end
 
 Action.add_action(ReduceTest.new)
-class ReduceTest < Action
+class MouseWheelTest < Action
   def initialize(name = 'Use the mouse wheel')
     super(name, 'Test/Dev')
   end
@@ -105,7 +105,7 @@ class ReduceTest < Action
     mouse_wheel(-3)
   end  
 end
-Action.add_action(ReduceTest.new)
+Action.add_action(MouseWheelTest.new)
 
 class TimeTest < Action
 
