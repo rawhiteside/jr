@@ -138,6 +138,7 @@ class FlaxGrow < Action
     end
 
     # Tend the beds in sequence.
+    last_w = nil
     until windows.size == 0 do
       active_windows = []
       piler.swap
@@ -162,7 +163,8 @@ class FlaxGrow < Action
     if last_w
       loop do
         last_w.refresh
-        break if last_w.read_text.strip == ''
+        text = last_w.read_text.strip
+        break if text == '<pin>' || text == ''
         sleep 1
       end
       last_w.unpin
@@ -286,6 +288,7 @@ class FlaxSeeds < Action
       if stash_chest
         walker.walk_to(@stash_location)
         stash_chest.click_on('Stash./Flax/All')
+        HowMuch.max if stash_chest.click_on('Stash./Rotten')
         stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
         HowMuch.amount(2*@row_len + 1)
       end
