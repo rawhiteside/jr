@@ -31,14 +31,10 @@ class ThistleGardens < GridAction
   
   def act
     @vals = @user_vals
-
-    # --TODO:
     recipe = get_recipe
-    # ^^ TODO
 
     repeat = @vals['repeat'].to_i
     @shade_state = VAL_FOR_SHADE[@vals['shade']]
-
 
     if (recipe.size != 41)
       puts "Bad recipe text.  #{recipe.size} instead of 40"
@@ -46,6 +42,8 @@ class ThistleGardens < GridAction
     end
 
     windows = cascade_windows
+    # The bold text needs bigger space threshold
+    windows.each {|w| w.set_space_pixel_count(5)}
 
     repeat.times do
       make_batch(windows, recipe)
@@ -142,8 +140,8 @@ class ThistleGardens < GridAction
     windows.each do |win| 
       win.refresh
       sleep REFRESH_DELAY
-      win.refresh if win.click_on 'Crop : Harvest'
-      win.refresh until win.click_on 'Crop : Plant'
+      win.refresh if win.click_on 'Crop: Harvest'
+      win.refresh until win.click_on 'Crop: Plant'
     end
   end
 
@@ -151,7 +149,7 @@ class ThistleGardens < GridAction
     windows.each do |win| 
       win.refresh 
       sleep REFRESH_DELAY
-      win.click_on 'Crop : Harvest'
+      win.click_on 'Crop: Harvest'
     end
   end
 end
