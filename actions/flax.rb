@@ -3,6 +3,7 @@ require 'walker'
 require 'user-io'
 
 FLAX_DATA = {
+  'Orchid#109' => {:water => 1},
   'Constitution Peak' => {},
   "Jacob's Field" => {},
   "Nile Green" => {},
@@ -308,7 +309,7 @@ class FlaxSeeds < Action
     loop do
       w.refresh
       return if w.read_text.strip == ''
-      break if w.find_matching_line('The seeds')
+      break if w.coords_for_line('The seeds')
       sleep_sec 0.2
     end
     # try 3 times to rip
