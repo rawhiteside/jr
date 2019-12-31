@@ -255,7 +255,7 @@ class FlaxSeeds < Action
       {:type => :number, :label => 'Max wait seconds for harvest', :name => 'max_wait_secs'},
       {:type => :number, :label => "How many havests from each plant?", :name => 'harvest_reps'},
       {:type => :number, :label => 'Length of each of the two rows', :name => 'row_len'},
-      {:type => :world_loc, :label => 'Start planting here (Eastwards)', :name => 'start_location'},
+      {:type => :world_loc, :label => 'Start planting here', :name => 'start_location'},
       {:type => :world_loc, :label => 'Location near the stash cest', :name => 'stash_location'},
       {:type => :combo, :name => 'first_dir', :label => 'Starting direction:',
        :vals => ['left', 'right']},
@@ -360,7 +360,8 @@ class FlaxSeeds < Action
     # 
     # Plant a row to the right.
     
-    loc = [head[0] + 100, head[1]]
+    pop_offset = (first_dir == 'right') ? 100 : -100
+    loc = [head[0] + pop_offset, head[1]]
     (@row_len-1).times {
       plant_and_pin(loc)
       first_dir == 'right' ? @walker.right : @walker.left 
@@ -373,7 +374,7 @@ class FlaxSeeds < Action
     @walker.down
 
     # Now, plant the lower row
-    loc = [head[0] - 100, head[1] + 100]
+    loc = [head[0] - pop_offset, head[1] + 100]
     @row_len.times {
       plant_and_pin(loc)
       first_dir == 'left' ? @walker.right : @walker.left 
