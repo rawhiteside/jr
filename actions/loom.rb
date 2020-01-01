@@ -5,6 +5,8 @@ class Loom < Action
     'Linen' => 'Thread',
     'Canvas' => 'Twine',
     'Wool Cloth' => 'Yarn',
+    'Silk Cloth' => 'Raw Silk',
+    'a Basket' => 'Dried Papyrus',
   }
 
   def initialize
