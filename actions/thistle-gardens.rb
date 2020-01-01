@@ -1,6 +1,6 @@
 class ThistleGardens < GridAction
 
-  REFRESH_DELAY = 0.2
+  REFRESH_DELAY = 0.1
   def initialize(name = 'Thistle Gardens', category = 'Buildings')
     super(name, category)
   end
