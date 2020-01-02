@@ -154,3 +154,45 @@ class ThistleGardens < GridAction
   end
 end
 Action.add_action(ThistleGardens.new)
+
+
+
+class ThistleWarehouse < Action
+  def initialize(name = 'Thistle Warehouse', category = 'Buildings')
+    super(name, category)
+  end
+    
+  def setup(parent)
+    gadgets = [
+      {:type => :text, :cols =>10, :label => 'Requirements:', :name => 'requirements'},
+      {:type => :big_text, :cols => 30, :rows => 10, :label => 'Paste warehouse here.', :name => 'warehouse'},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+
+  def act
+    lines_matching = []
+    warehouse_text = @vals['warehouse']
+    req_text = @vals['requirements'].upcase
+    r1 = req_text[0,2]
+    r2 = req_text[2,2]
+    r3 = req_text[4,2]
+    r4 = req_text[6,2]
+    warehouse_text.split("\n").each do |line|
+      next unless line.include?('Thistle:')
+      next unless line.include?(r1)
+      next unless line.include?(r2)
+      next unless line.include?(r3)
+      next unless line.include?(r4)
+      lines_matching << line
+    end
+    msg = 'No matches found.'
+    if lines_matching.size > 0
+      msg = lines_matching.join("\n")
+    end
+    UserIO.info(msg)
+  end
+  
+end
+
+Action.add_action(ThistleWarehouse.new)
