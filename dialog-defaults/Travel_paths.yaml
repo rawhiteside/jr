@@ -1,5 +1,5 @@
 ---
-2: UThought to UWorship
+2: CP Kitchens to Napata flax
 1: true
 Parameter set 1:
   path: ''
@@ -438,3 +438,16 @@ Duki Chariot to DO Flax:
     -2732, 977
 
 
+CP Kitchens to Napata flax:
+  path: |
+    -1025, -6781
+    -1024, -6747
+    -1022, -6684
+    -1021, -6594
+    -1019, -6521
+    -1018, -6462
+    -1017, -6411
+    -979, -6349
+    -949, -6270
+    -933, -6234
+    -906, -6158
