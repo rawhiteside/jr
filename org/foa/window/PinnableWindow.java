@@ -207,6 +207,13 @@ public class PinnableWindow extends AWindow {
 	public static PinnableWindow fromScreenClick(Point pt) {
 		PinnableWindow win = null;
 		ARobot robot = new ARobot();
+
+		// Maybe we're clicking on a window, expecting a menu.  Get
+		// the undeerlying window rect, so we can tell when a *new*
+		// window pops.  We might, instead, click, then just detect
+		// the original one, thinking it's new.  Maybe this is null.
+		Rectangle rectTarget = WindowGeom.rectFromPoint(pt);
+
 		robot.claimRobotLock();
 		try {
 			double postDismissDelay = 0.0;
@@ -225,15 +232,27 @@ public class PinnableWindow extends AWindow {
 				for(int i = 0; i < 50; i++) {
 					Point inside = new Point(pt.x + 4, pt.y);
 					rectangle = WindowGeom.rectFromPoint(inside);
-					// Did we find it?
+					//
+					// Did we find a window?
 					if (rectangle != null) {
-						break;
+						//
+						// Maybe we were clicking on a window, and we
+						// found *that*.
+						//
+						// If we weren't clicking on a window, the we
+						// found the new one.
+						if(rectTarget == null) { break; }
+						//
+						// If the one we found is different than the
+						// one we clicked on, then we found the new
+						// one.
+						if(!rectTarget.equals(rectangle)) { break; }
+						// ... otherwise wait for popped window.
 					}
+
 					// Has it been too long?
 					long elapsed = System.currentTimeMillis() - startMillis;
-					if (elapsed > 500) {
-						break;
-					}
+					if (elapsed > 500) { break; }
 					robot.sleepSec(0.01);
 				}
 				if (rectangle != null) {
