@@ -24,11 +24,11 @@ class SporePapers < Action
         popup = PopupWindow.find
         text = popup.read_text
         lines = text.split("\n")
-        break if lines.size < 2
+        break if lines.size < 3
         popup.click_on(lines[1])
         sleep 0.5
         popup.click_on("OK")
-        sleep 0.5
+        sleep 5
         
         result = PopupWindow.find
         sleep 0.5
