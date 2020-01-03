@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Water mines
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -742,7 +742,7 @@ Water mines:
     \ 160)\n  tiler.min_width = 300\n  x = 20\n  y = dim.height - 20\n  4.times do\
     \ |i|\n    win = PinnableWindow.from_point(x, y)\n    tiler.tile(win)\n    if\
     \ i == 3\n      @well = DeepWellWindow.new(win)\n    else\n      @workers << WaterMineWorker.new(win,\
-    \ 1200)\n    end\n  end\n  @workers.reverse!\nend\ntravel 'Bricks CP'\n"
+    \ 1200)\n    end\n  end\n  @workers.reverse!\nend\ntravel 'CP Bricks'\n"
   repeat: Repeat
   path: |+
     # start of run.
@@ -754,7 +754,7 @@ Water mines:
     dig
 
     -1018, -6800
-    spam 'h', 5, 3
+    spam 'h', 5, 2
     -1016, -6800
     spam 'h', 5, 3
     -1014, -6800
