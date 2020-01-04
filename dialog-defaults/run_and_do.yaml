@@ -1,5 +1,5 @@
 ---
-2: Water mines
+2: Apiaries
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -16,10 +16,10 @@ Apiaries:
   code.code: "# a comment\ndef apiary\n  sleep 0.3  # Wait for running to stop. \n\
     \n  pt = find_sub_image 'Apiary', 'right'\n  mm pt\n  sleep 0.01\n  send_string\
     \ 't', 0.2\n  send_string 'c'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\n\
-    end\n\ndef stash\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n  if win\n  \
-    \  HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max if win.click_on\
-    \ 'Stash/Beeswax'\n    win.unpin\n  else\n    puts \"Didn't find warehouse.\"\n\
-    \  end\nend\ntravel 'Apiaries'\n"
+    end\n\ndef stash\n  return    # XXX Turn stashing off.\n  sleep 0.3\n  win = find_and_pin\
+    \ 'Warehouse'\n  if win\n    HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max\
+    \ if win.click_on 'Stash/Beeswax'\n    win.unpin\n  else\n    puts \"Didn't find\
+    \ warehouse.\"\n  end\nend\ntravel 'Apiaries'\n"
   repeat: One time
   path: |
     -919, -6750
