@@ -28,3 +28,11 @@ class ControllableThread < org.foa.ControllableThread
     super(name, runnable)
   end
 end
+
+# Don't use the kernel sleep.  Redispatch to ControllableThread instead.
+module Kernel
+  def sleep(sec)
+    ControllableThread.sleepSec(sec)
+  end
+end
+

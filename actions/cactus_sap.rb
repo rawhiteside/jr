@@ -45,14 +45,14 @@ class CactusRun < Action
     wait_for_collect(w)
     while w.click_on('Collect')
       w.refresh 'lc'
-      sleep_sec 0.05
+      sleep 0.05
     end
   end
 
   def wait_for_collect(w)
     w.refresh
     until w.read_text =~ /(2|3|4|5|6) drops/
-      sleep_sec(3)
+      sleep(3)
       w.refresh
     end
   end

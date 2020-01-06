@@ -40,7 +40,7 @@ class Quarry < Action
   def wait_for_others(w, orig_heading)
     loop do
       return if orig_heading != heading_for(w)
-      sleep_sec 1
+      sleep 1
     end
   end
 

@@ -54,11 +54,11 @@ class HowMuch < Window
   private
   def self.wait_for_win
     win = nil
-    ARobot.shared_instance.sleep_sec(0.1)
+    ARobot.shared_instance.sleep(0.1)
     5.times do
       win = HowMuch.find_win
       break if win 
-      ARobot.shared_instance.sleep_sec 0.1
+      ARobot.shared_instance.sleep 0.1
     end
 
     win
@@ -69,7 +69,7 @@ class HowMuch < Window
     5.times do 
       got = HowMuch.find_win
       break unless got
-      ARobot.shared_instance.sleep_sec(0.1)
+      ARobot.shared_instance.sleep(0.1)
     end
   end
   # Click on the Max button.  Returns +true+ on success, or +nil+ if
@@ -92,7 +92,7 @@ class HowMuch < Window
     return nil unless win
     robot = ARobot.shared_instance
     robot.send_string(amt.to_i.to_s, 0.05)
-    ARobot.shared_instance.sleep_sec(0.1)
+    ARobot.shared_instance.sleep(0.1)
     win.dialog_click(Point.new(170, win.rect.height - 45))
     wait_till_gone
     

@@ -13,7 +13,7 @@ class FontAcquire < ARobot
     str = str_orig.split(//).join(' ')
     send_string(str)
     send_string("\n")
-    sleep_sec 1
+    sleep 1
     tr = TextBlock.new([388, 947], 800, 17)
     
     g = tr.glyphs[0].dup
@@ -46,7 +46,7 @@ end
 
 
 if __FILE__ == $0
-  sleep_sec 5
+  sleep 5
   FontAcquire.new.run('abcdefghijklmnopqrstuvwxyz')
   FontAcquire.new.run('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
   FontAcquire.new.run('`1234567890-=')

@@ -53,7 +53,7 @@ class SandMine < AbstractMine
   	log_result 'Bad workload exception.'
   	# No need for anything.  Just mine again.
       end
-      sleep_sec 1 while dismiss_strange_windows
+      sleep 1 while dismiss_strange_windows
     end
   end
   
@@ -111,7 +111,7 @@ class SandMine < AbstractMine
     loop do
       w.refresh
       break unless w.read_text =~ /This mine can be/
-      sleep_sec(1)
+      sleep(1)
     end
   end
   
@@ -122,11 +122,11 @@ class SandMine < AbstractMine
   def mine_get_stones(w)
     wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
-    sleep_sec(5.0)
+    sleep(5.0)
     
     @empty_image = field_shot
     w.click_on('Work this Mine', 'tc')
-    sleep_sec(10.0)
+    sleep(10.0)
     @stones_image = field_shot
     
     @diff_image = ImageUtils.xor(@empty_image, @stones_image)
@@ -205,7 +205,7 @@ class SandMine < AbstractMine
   def mouse_over_stones(stones)
     stones.each do |s|
       mm(s.x, s.y)
-      sleep_sec 1.0
+      sleep 1.0
     end
   end
 
@@ -213,7 +213,7 @@ class SandMine < AbstractMine
     if win = PopupWindow.find
       log_result 'Dismissed a window'
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep_sec 0.01
+      sleep 0.01
       return true
     end
     return false
@@ -312,11 +312,11 @@ class SandMine < AbstractMine
   def wait_for_highlight_gone(stone, timeout_secs = 6)
     start = Time.new
     
-    sleep_sec 0.2
+    sleep 0.2
     return if dismiss_strange_windows    
     
     loop do
-      sleep_sec 0.1
+      sleep 0.1
       return if dismiss_strange_windows
       highlight_count = count_highlight_pixels(stone)
       if highlight_count < 20  # Magic number
@@ -360,9 +360,9 @@ class SandMine < AbstractMine
   
   def send_string_at(x, y, str, delay)
     mm(x, y)
-    sleep_sec delay
+    sleep delay
     send_string(str)
-    sleep_sec delay
+    sleep delay
     if win = PopupWindow.find
       raise BadWorkloadException.new(win)
     end

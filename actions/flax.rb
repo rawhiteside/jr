@@ -194,7 +194,7 @@ class FlaxGrow < Action
           dlg.notation = 'Harvested'
           return true
         end
-        sleep_sec 1.0
+        sleep 1.0
       end
     end
 
@@ -207,7 +207,7 @@ class FlaxGrow < Action
       else
         break
       end
-      sleep_sec 1.0
+      sleep 1.0
     end
 
     # Finally, if somethign messed up, and we just harvested seeds up there. rip it out.
@@ -299,10 +299,10 @@ class FlaxSeeds < Action
       repeat.times do
         @piler = Piler.new
 	walker.walk_to(@start_location)
-	sleep_sec 0.5
+	sleep 0.5
 	plant(head, first_dir)
 	harvest
-	sleep_sec 1
+	sleep 1
       end
     end
   end
@@ -313,7 +313,7 @@ class FlaxSeeds < Action
       w.refresh
       return if w.read_text.strip == ''
       break if w.coords_for_line('The seeds')
-      sleep_sec 0.2
+      sleep 0.2
     end
     # try 3 times to rip
     3.times do
@@ -335,7 +335,7 @@ class FlaxSeeds < Action
       rip_out(w)
       w.refresh
       w.unpin
-      sleep_sec 0.1
+      sleep 0.1
     end
     
   end
@@ -353,9 +353,9 @@ class FlaxSeeds < Action
       # Error handling.  If the Harvest doesn't appear within
       # max_wait_secs secs, assume thw worst.
       return if (Time.now - start) > @max_wait_secs
-      sleep_sec 0.5
+      sleep 0.5
     end
-    sleep_sec HARVEST_DELAY
+    sleep HARVEST_DELAY
   end
 
   def plant(head, first_dir)
@@ -368,7 +368,7 @@ class FlaxSeeds < Action
     (@row_len-1).times {
       plant_and_pin(loc)
       first_dir == 'right' ? @walker.right : @walker.left 
-      sleep_sec(0.1)
+      sleep(0.1)
     }
 
     # Plant one more and step down

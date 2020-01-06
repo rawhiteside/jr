@@ -51,9 +51,9 @@ class PaintLab < AWindow
   end
 
   def add_ingredient(i)
-    sleep_sec 0.1
+    sleep 0.1
     dialog_click(Point.new(*@buttons[i]))
-    sleep_sec 0.1
+    sleep 0.1
     @concentration += 1 unless CATALYSTS.index(i)
   end
 
@@ -67,7 +67,7 @@ class PaintLab < AWindow
   GREEN_Y = 220
   BLUE_Y = 230
   def measure_colors
-    sleep_sec(0.5)
+    sleep(0.5)
     red = count_matching(RED_Y) { |color| color.green < 10 }
     green = count_matching(GREEN_Y) { |color| color.blue < 10 }
     blue = count_matching(BLUE_Y) { |color| color.red < 10 }

@@ -9,6 +9,7 @@ class GlazierWindow < PinnableWindow
     super(rect)
     @done = false
     @state = :initializing
+    set_space_pixel_count(5)
   end
 
   # One of the two main methods.  This one:
@@ -41,7 +42,7 @@ class GlazierWindow < PinnableWindow
     # Just keep trying to click the menu.  It's not there if it's not
     # there.
     loop do
-      sleep_sec 3
+      sleep 3
       got_it = false
       with_robot_lock do
 	refresh
@@ -50,7 +51,7 @@ class GlazierWindow < PinnableWindow
 	  got_it = click_on(what)
         end
       end
-      sleep_sec 60 if got_it
+      sleep 60 if got_it
       break if data_vals[:glass_amount].to_s == '19'
 
       # Wait for menu to appear again, indicating that the last thing
@@ -62,7 +63,7 @@ class GlazierWindow < PinnableWindow
       count = 0
       loop_done = false
       until loop_done do
-        sleep_sec 3
+        sleep 3
         text = nil
         with_robot_lock do
           refresh
@@ -82,12 +83,12 @@ class GlazierWindow < PinnableWindow
 
   def wait_to_start_making
     # Wait for melting to get done
-    sleep_sec 4 while @state != :maintain
+    sleep 4 while @state != :maintain
     # Wait for temp range
     loop do
       temp = data_vals[:temperature]
       break if temp > 1600 && temp < 2400
-      sleep_sec 5
+      sleep 5
     end
   end
 
@@ -96,18 +97,21 @@ class GlazierWindow < PinnableWindow
     flush_text_reader
     text = read_text
     vals = {}
+    puts text
     # Temp
-    match = Regexp.new('Temperature[ :]+([0-9]+)').match(text)
+    match = Regexp.new('Temperature: ([0-9]+)').match(text)
     vals[:temperature] = match[1].to_i
     # Glass type
-    match = Regexp.new('(.*) Glass[ :]+').match(text)
+    match = Regexp.new('(.*) Glass: ').match(text)
     vals[:glass_type] = match[1].strip
     # Glass Amount
-    match = Regexp.new('.* Glass[ :]+(.*)').match(text)
+    match = Regexp.new('.* Glass: (.*)').match(text)
     vals[:glass_amount] = match[1].strip
     # CC
-    match = Regexp.new('Charcoal.*: ([0-9]+)').match(text)
+    match = Regexp.new('Charcoal Avail: ([0-9]+)').match(text)
     vals[:cc] = match[1].to_i if match 
+    # XXX
+    p vals
 
     return vals
   end
@@ -122,7 +126,7 @@ class GlazierWindow < PinnableWindow
     orig = temperature
 
     loop do
-      sleep_sec 4
+      sleep 4
       current = temperature
       if orig != current
         status = {
@@ -185,7 +189,7 @@ class GlazierWindow < PinnableWindow
         refresh
         click_on('Add 2')
       }
-      sleep_sec 100
+      sleep 100
       log "Rise checking stop. done=#{@done}, temp=#{temperature}"
       break if temperature > 2050
     end

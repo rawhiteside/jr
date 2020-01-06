@@ -19,7 +19,7 @@ class HarvestPapy < Action
   end
 
   def gather(origin, width, height)
-    sleep_sec 0.2
+    sleep 0.2
     2.times do
       pixels = screen_rectangle(origin[0], origin[1], width, height)
       height.times do |y|
@@ -30,7 +30,7 @@ class HarvestPapy < Action
 	    screen_x, screen_y  = pixels.to_screen(x, y)
 	    if yellow?(get_color(screen_x, screen_y))
 	      rclick_at(screen_x, screen_y)
-	      sleep_sec 0.1
+	      sleep 0.1
 	    end
 	  end
 	end
@@ -39,7 +39,7 @@ class HarvestPapy < Action
   end
 
   def old_gather(origin, width, height)
-    sleep_sec 0.2
+    sleep 0.2
     pixels = screen_rectangle(origin[0], origin[1], width, height)
     height.times do |y|
       next if y == 0 || y == height - 1
@@ -48,7 +48,7 @@ class HarvestPapy < Action
 	if yellow?(pixels.color(x, y))
 	  screen_x, screen_y  = pixels.to_screen(x, y)
 	  rclick_at(screen_x, screen_y)
-	  sleep_sec 0.1
+	  sleep 0.1
 	  pixels = screen_rectangle(origin[0], origin[1], width, height)
 	end
       end

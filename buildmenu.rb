@@ -46,7 +46,7 @@ class BuildMenu < AWindow
 
 
   def build(move)
-    sleep_sec 0.1
+    sleep 0.1
     move = [move] unless move.kind_of?(Array)
     move = optimize_moves(move)
     delay = 0.02
@@ -59,13 +59,13 @@ class BuildMenu < AWindow
 
     move.each {|dir|
       dialog_click(Point.new(*(BUTTONS[dir])))
-      sleep_sec(delay)
+      sleep(delay)
       extra_delay += big_delay if BIG_R.include?(dir)
       extra_delay += little_delay if LITTLE_R.include?(dir)
       extra_delay += t_delay unless (LITTLE_R.include?(dir) || BIG_R.include?(dir))
     }
     dialog_click(Point.new(*BUTTONS[:build]))
-    sleep_sec extra_delay
+    sleep extra_delay
   end
   
   # Look at the rotations, and optimize them.

@@ -85,7 +85,7 @@ class IronMine < Action
     stones.each do |s|
 
       mm(s.x, s.y)
-      sleep_sec 1.0
+      sleep 1.0
 
       # Signal the crystal type.
       # horizontal wiggle:  wart
@@ -93,11 +93,11 @@ class IronMine < Action
       # diagonal wiggle: finger
       case s.crystal_type
       when :wart
-        2.times {mm(s.x - off, s.y); sleep_sec(off_delay); mm(s.x + off, s.y); sleep_sec(off_delay); }
+        2.times {mm(s.x - off, s.y); sleep(off_delay); mm(s.x + off, s.y); sleep(off_delay); }
       when :finger
-        2.times {mm(s.x - off, s.y - off); sleep_sec(off_delay); mm(s.x + off, s.y + off); sleep_sec(off_delay); }
+        2.times {mm(s.x - off, s.y - off); sleep(off_delay); mm(s.x + off, s.y + off); sleep(off_delay); }
       when :spike
-        2.times {mm(s.x, s.y - off); sleep_sec(off_delay); mm(s.x, s.y + off); sleep_sec(off_delay); }
+        2.times {mm(s.x, s.y - off); sleep(off_delay); mm(s.x, s.y + off); sleep(off_delay); }
       end
     end
   end
@@ -134,10 +134,10 @@ class IronMine < Action
       watcher = StoneHighlightWatcher.new(stone) if i == 0
       
       mm(stone.x, stone.y)
-      sleep_sec(delay)
+      sleep(delay)
       str = (i == (arr.size - 1)) ? 's' : 'a'
       send_string(str)
-      sleep_sec(delay)
+      sleep(delay)
       
       watcher.wait_highlight(true) if i == 0
     end
@@ -167,7 +167,7 @@ class IronMine < Action
   def dismiss_one_popup_window
     if win = PopupWindow.find
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep_sec 0.1
+      sleep 0.1
       return true
     end
     return false
@@ -180,18 +180,18 @@ class IronMine < Action
     # First, clear the mine field and take a shot of the empty field
     win.refresh
     win.click_on('Stop')
-    sleep_sec 3
+    sleep 3
     dismiss_popup_windows
     empty_img = PixelBlock.new(rect)
 
     # Now, mine, and get another shot with the ore stones.
     win.refresh
     while win.read_text =~ /can be worked/
-      sleep_sec 3
+      sleep 3
       win.refresh
     end
     win.click_on('Work this Mine')
-    sleep_sec 5
+    sleep 5
     stones_img = PixelBlock.new(rect)
 
     # Compute a new image that's the xor of the two images.
@@ -458,7 +458,7 @@ class StoneHighlightWatcher
     loop do
       break if highlight? == expect
       break if (Time.now - start) > 4.0
-      ARobot.shared_instance.sleep_sec(0.1)
+      ARobot.shared_instance.sleep(0.1)
     end
   end
 

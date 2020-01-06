@@ -30,10 +30,10 @@ class PyramidPushStack < Action
       if text && text.include?(direction)
         stat_wait('End')
         win.click_on("Push this block #{direction}")
-        sleep_sec 1.0
+        sleep 1.0
       else
         win.unpin
-        sleep_sec 1.0
+        sleep 1.0
         break
       end
     end
@@ -74,13 +74,13 @@ class PyramidDigStack < Action
         else
           break
         end
-        sleep_sec 1.0
+        sleep 1.0
       else
         break
       end
     end
     win.unpin
-    sleep_sec 0.1
+    sleep 0.1
   end
 
 end

@@ -22,7 +22,7 @@ class DigStones < Action
       p = mouse_pos
       w.click_on('Dig')
       mm(p)
-      sleep_sec(5)  # MAGIC Number.  Dig happens server side and lag.
+      sleep(5)  # MAGIC Number.  Dig happens server side and lag.
     end
   end
 end
@@ -62,7 +62,7 @@ class StatClicks < Action
     @delay = 5 if @delay == 0
     stat_hotkeys(hotkeys.strip, @stats) if hotkeys.strip.size > 0
 
-    sleep_sec init_delay
+    sleep init_delay
     stat_clicks(@vals['p.x'].to_i, @vals['p.y'].to_i, @stats)
   end
 
@@ -72,7 +72,7 @@ class StatClicks < Action
       # PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
       rclick_at(x, y)
-      sleep_sec @delay
+      sleep @delay
     end
   end
 
@@ -125,9 +125,9 @@ class Stir < Action
       stat_wait('Str')
       win.refresh
       unless win.click_on('Stir the')
-	sleep_sec 5
+	sleep 5
       end
-      sleep_sec 1
+      sleep 1
     end
   end
 end
@@ -177,7 +177,7 @@ class Eat < Action
       if should_eat?
         break if eat(w).nil? 
       end
-      sleep_sec 2
+      sleep 2
     end
   end
 

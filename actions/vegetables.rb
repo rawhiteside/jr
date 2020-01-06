@@ -136,7 +136,7 @@ class Vegetables < Action
       walker.walk_to(@grow_location)
       walker.up
       walker.down
-      sleep_sec(1)
+      sleep(1)
       repeat.times do
         @plant_win.refresh
         one_pass(beds)
@@ -237,19 +237,19 @@ class Vegetables < Action
       target_secs = water_times[index]
       delta = (Time.new - plant_time)
       delay = target_secs - delta
-      sleep_sec(delay)
+      sleep(delay)
       with_robot_lock do
         # At first, maybe have to wait for the menu to initialize itself.
         if index == 0
           until w.coords_for_line('Water')
-            sleep_sec 0.5 
+            sleep 0.5 
             w.refresh
           end
         end
         @vegi_data[:water].times { w.click_on('Water') }
       end
     end
-    sleep_sec(harvest_time - (Time.new - plant_time))
+    sleep(harvest_time - (Time.new - plant_time))
 
 
     harvest_and_unpin(w)
@@ -272,7 +272,7 @@ class Vegetables < Action
           done = true
         end
       end
-      sleep_sec(2)
+      sleep(2)
     end
   end
 end

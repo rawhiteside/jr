@@ -50,7 +50,7 @@ class Wheat < Action
           
   def tend(w)
     loop do
-      sleep_sec(3)
+      sleep(3)
       with_robot_lock do
         w.refresh
         if w.read_text == ''
@@ -70,7 +70,7 @@ class Wheat < Action
     way = [loc[0] - 1, loc[1] + 1]
     @walker.walk_to(way)
     @walker.walk_to(loc)
-    sleep_sec(0.3)
+    sleep(0.3)
   end
   
   def plant_and_pin
@@ -79,7 +79,7 @@ class Wheat < Action
     before = PixelBlock.new(center_rect)
     r = @plant_win.rect
     @plant_win.dialog_click(Point.new(r.width/2, r.height/2))
-    sleep_sec(0.5)
+    sleep(0.5)
     after =  PixelBlock.new(center_rect)
     xor = ImageUtils.xor(before, after)
     target = ImageUtils.find_largest(ImageUtils.brightness(xor), 'top', 20)

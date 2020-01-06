@@ -46,7 +46,7 @@ class Loom < Action
       stat_wait('End')
       loom.refresh
       loom.click_on(weave_what)
-      sleep_sec(0.5)
+      sleep(0.5)
 
       loom.refresh
       restring loom
