@@ -41,7 +41,7 @@ class ThornRun < Action
   # until we fine the word "More"
   def wait_for_more(w)
     6.times do
-      sleep_sec 0.5
+      sleep 0.5
       w.refresh
       return true if w.read_text =~ /More/
     end

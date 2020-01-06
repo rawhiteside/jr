@@ -9,6 +9,7 @@ require 'utils'
 import java.awt.Point
 import java.awt.Rectangle
 
+
 class Action  < ARobot
   include Utils
   attr_reader :name, :group
@@ -159,7 +160,7 @@ class GridAction < Action
       end
 
       wait_more = delay - (Time.now.to_f - start)
-      sleep_sec wait_more if wait_more > 0
+      sleep wait_more if wait_more > 0
       end_pass i
     end
   end

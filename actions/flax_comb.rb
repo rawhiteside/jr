@@ -28,9 +28,9 @@ class FlaxComb < Action
             end
           end
           break unless did_something
-          sleep_sec(0.1)
+          sleep(0.1)
           w.refresh
-          sleep_sec(0.1)
+          sleep(0.1)
         end
         break unless did_something
       end

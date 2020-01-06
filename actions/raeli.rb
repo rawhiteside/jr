@@ -44,7 +44,7 @@ class Raeli < Action
         ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
       end
 
-      sleep_sec(10)
+      sleep(10)
       ControllableThread.check_for_pause
     end
   end

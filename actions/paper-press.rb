@@ -42,9 +42,9 @@ class PaperPress < Action
   def each_thing(what)
     GridHelper.new(@vals, what).each_point do |p|
       mm(p['x'],p['y'])
-      sleep_sec 0.1
+      sleep 0.1
       yield
-      sleep_sec 0.1
+      sleep 0.1
     end
   end
   

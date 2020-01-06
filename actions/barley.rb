@@ -37,10 +37,10 @@ class Barley < Action
     w = nil
     with_robot_lock {
       mm(*@plant)
-      sleep_sec 0.05
+      sleep 0.05
       rclick_at(*@plant)
       mm(*pop_coords)
-      sleep_sec 0.1
+      sleep 0.1
       w = PinnableWindow.from_screen_click(Point.new(pop_coords[0], pop_coords[1]))
       w = BarleyWindow.new(w.get_rect)
     }
@@ -98,7 +98,7 @@ class Barley < Action
       if warehouse_window.click_on('Take/Barley')
 	HowMuch.amount(15 * count + 5)
       end
-      sleep_sec 0.1
+      sleep 0.1
       # Take 270 grain fert
       if warehouse_window.click_on('Take/Grain')
 	HowMuch.amount(90 * count)
@@ -193,7 +193,7 @@ class BarleyWindow < PinnableWindow
     4.times do
       loop do
 	break if try_to_water
-	sleep_sec 5
+	sleep 5
       end
     end
     # Wait a final time.
@@ -207,7 +207,7 @@ class BarleyWindow < PinnableWindow
 	end
       end
       break if done
-      sleep_sec 3
+      sleep 3
     end
 
     with_robot_lock do
@@ -216,7 +216,7 @@ class BarleyWindow < PinnableWindow
       # OK, so barley windows are weird.  After harvest, they get
       # smaller both vertically and horizontally.
       # we have to re-acquire a window to un pin it.
-      sleep_sec 0.2
+      sleep 0.2
       rectangle = get_rect
       point = Point.new(rect.x, rect.y + rect.height/2)
       PinnableWindow.from_point(point).unpin

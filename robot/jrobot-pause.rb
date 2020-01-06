@@ -92,7 +92,7 @@ class RobotPauser
 	puts 'Resume...'
         notify_listeners
       end
-      ControllableThread.sleep_sec POLL_INTERVAL
+      ControllableThread.sleep POLL_INTERVAL
     end
   end
 
@@ -100,7 +100,7 @@ class RobotPauser
   # toggled on.
   def wait_until_running
     until @running
-      ControllableThread.sleep_sec POLL_INTERVAL
+      ControllableThread.sleep POLL_INTERVAL
       check_key
     end
   end    

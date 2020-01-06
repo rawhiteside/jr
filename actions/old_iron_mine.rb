@@ -57,7 +57,7 @@ class OldIronMine < Action
         p [@colors[i], @gems[i]]
       end
 
-      @stones.each {|s| mm(@stones_pb.to_screen(s.center)); sleep_sec(2.0) }
+      @stones.each {|s| mm(@stones_pb.to_screen(s.center)); sleep(2.0) }
 
     end
     
@@ -88,10 +88,10 @@ class OldIronMine < Action
     delay = 0.3
     arr.each_index do |i|
       mm(@stones_pb.to_screen(@stones[arr[i]].center))
-      sleep_sec(delay)
+      sleep(delay)
       str = (i == (arr.size - 1)) ? 's' : 'a'
       send_string(str)
-      sleep_sec(delay)
+      sleep(delay)
     end
     sleep 3
   end
@@ -119,7 +119,7 @@ class OldIronMine < Action
   def dismiss_one_popup_window
     if win = PopupWindow.find
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep_sec 0.1
+      sleep 0.1
       return true
     end
     return false
@@ -132,18 +132,18 @@ class OldIronMine < Action
     # First, clear the mine field and take a shot of the empty field
     win.refresh
     win.click_on('Stop')
-    sleep_sec 3
+    sleep 3
     dismiss_popup_windows
     empty = PixelBlock.new(rect)
 
     # Now, mine, and get another shot with the ore stones.
     win.refresh
     while win.read_text =~ /can be worked/
-      sleep_sec 3
+      sleep 3
       win.refresh
     end
     win.click_on('Work this Mine')
-    sleep_sec 5
+    sleep 5
     stones = PixelBlock.new(rect)
 
     # Compute a new image that's the xor of the two images.

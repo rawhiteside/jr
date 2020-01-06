@@ -23,7 +23,7 @@ class IntervalTab < Action
     return unless @delay > 0
 
     loop do
-      sleep_sec @delay
+      sleep @delay
       ControllableThread.check_for_pause
       if @if_tab
         send_vk(VK_TAB)

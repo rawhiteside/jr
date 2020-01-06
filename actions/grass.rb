@@ -10,7 +10,7 @@ class CasualGrass < Action
   def act
     loop do
       send_string "1"
-      sleep_sec 0.5
+      sleep 0.5
     end
   end
 end

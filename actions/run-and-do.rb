@@ -63,15 +63,15 @@ class RunAndDo < Action
   # in the GH, and the whole area is active.
   def harvest_greenhouse
     dim = screen_size
-    sleep_sec 0.1
+    sleep 0.1
     mm(dim.width/2, dim.height/2 + 100)
-    sleep_sec 0.1
+    sleep 0.1
     send_string 'h'
-    sleep_sec 0.1
+    sleep 0.1
     mm(dim.width/2, dim.height/2 - 100)
-    sleep_sec 0.1
+    sleep 0.1
     send_string 'h'
-    sleep_sec 0.1
+    sleep 0.1
   end
   
   def storage_stash(storage)

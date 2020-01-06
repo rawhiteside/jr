@@ -48,7 +48,7 @@ module Utils
 	all_ok = all_ok && stat_ok?(stat)
       end
       return if all_ok
-      sleep_sec 1
+      sleep 1
     end
   end
 

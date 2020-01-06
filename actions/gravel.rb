@@ -123,7 +123,7 @@ class GravelAction < PickThings
     # some ground that looked like something to gather.  Let's just
     # move along.
     5.times do
-      sleep_sec 1
+      sleep 1
       @inventory_window.flush_text_reader
       inv_text = @inventory_window.read_text
       if inv_text != inv_text_before

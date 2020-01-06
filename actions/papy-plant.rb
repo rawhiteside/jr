@@ -26,7 +26,7 @@ class PlantPapy < Action
     loop do
       walker.walk_loop(path) do
         win.click_on('Papyrus')
-        sleep_sec(delay)
+        sleep(delay)
       end
     end
 

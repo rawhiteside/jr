@@ -30,7 +30,7 @@ class WaterMineAction < Action
 
     loop do
       @water_mine.tend
-      sleep_sec(gem_delay)
+      sleep(gem_delay)
     end
   end
 end

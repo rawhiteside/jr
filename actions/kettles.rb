@@ -20,15 +20,15 @@ class Fert < KettleAction
     delay = 0.01
     unless @first_pass
       w.click_word('Take')
-      sleep_sec delay
+      sleep delay
     end
     w = KettleWindow.from_screen_click(g['x'], g['y'])
     w.click_word('Grain Fert' )
-    sleep_sec delay
+    sleep delay
     w.click_word('Begin')
-    sleep_sec delay
+    sleep delay
     AWindow.dismiss_all
-    sleep_sec delay
+    sleep delay
   end
 end
 Action.add_action(Fert.new)
@@ -51,14 +51,14 @@ class FlowerFert < KettleAction
     w = KettleWindow.from_screen_click(g['x'], g['y'])
     unless @first_pass
       w.click_word('Take')
-      sleep_sec delay
+      sleep delay
     end
     w.click_word('Flower Fert')
-    sleep_sec delay
+    sleep delay
     w.click_word('Begin')
-    sleep_sec delay
+    sleep delay
     AWindow.dismiss_all
-    sleep_sec delay
+    sleep delay
   end
 end
 Action.add_action(FlowerFert.new)
@@ -71,11 +71,11 @@ class Salt < KettleAction
   def act_at(g)
     w = KettleWindow.from_screen_click(g['x'], g['y'])
     w.click_word('Take')
-    sleep_sec 0.1
+    sleep 0.1
     w.click_word('Salt')
-    sleep_sec 0.1
+    sleep 0.1
     w.click_word('Begin')
-    sleep_sec 0.1
+    sleep 0.1
     AWindow.dismiss_all
   end
 end
@@ -90,7 +90,7 @@ class TakeFromKettles < KettleAction
   def act_at(g)
     w = KettleWindow.from_screen_click(g['x'], g['y'])
     w.click_word('Take')
-    sleep_sec 0.1
+    sleep 0.1
     AWindow.dismiss_all
   end
 end
@@ -199,7 +199,7 @@ class Potash < KettleAction
         grid.each_point do |p|
           done[p] = stoke_kettle(p) unless done[p]
         end
-        sleep_sec(3.0)
+        sleep(3.0)
       end
 
       break unless task =~ /Start/
@@ -218,7 +218,7 @@ class Potash < KettleAction
     5.times do
       v = kettle_data(w)
       break if (v[:wood] && v[:water]) || v[:done]
-      sleep_sec (0.1)
+      sleep (0.1)
     end
     
     unless (v[:wood] && v[:water]) || v[:done]

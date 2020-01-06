@@ -9,7 +9,7 @@ class MaltingTrays < GridAction
     loop do
       w.refresh
       break unless w.read_text =~ /germinat/
-      sleep_sec 5
+      sleep 5
     end
   end
 
@@ -19,7 +19,7 @@ class MaltingTrays < GridAction
   end
 
   def act_at(p)
-    sleep_sec 0.5
+    sleep 0.5
     w = PinnableWindow.from_screen_click(Point.new(p['x'],p['y'])).pin
     return unless w
     wait_for_no_germinate(w)

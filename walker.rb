@@ -40,26 +40,26 @@ class Walker < ARobot
 
 
   def left(delay = KEY_DELAY)
-    send_vk(VK_LEFT, delay); sleep_sec STEP_DELAY
-    send_vk(VK_LEFT, delay); sleep_sec STEP_DELAY
+    send_vk(VK_LEFT, delay); sleep STEP_DELAY
+    send_vk(VK_LEFT, delay); sleep STEP_DELAY
   end
   alias west left
 
   def right(delay = KEY_DELAY)
-    send_vk(VK_RIGHT, delay); sleep_sec STEP_DELAY
-    send_vk(VK_RIGHT, delay); sleep_sec STEP_DELAY
+    send_vk(VK_RIGHT, delay); sleep STEP_DELAY
+    send_vk(VK_RIGHT, delay); sleep STEP_DELAY
   end
   alias east right
 
   def up(delay = KEY_DELAY)
-    send_vk(VK_UP, delay); sleep_sec STEP_DELAY
-    send_vk(VK_UP, delay); sleep_sec STEP_DELAY
+    send_vk(VK_UP, delay); sleep STEP_DELAY
+    send_vk(VK_UP, delay); sleep STEP_DELAY
   end
   alias north up
 
   def down(delay = KEY_DELAY)
-    send_vk(VK_DOWN, delay); sleep_sec STEP_DELAY
-    send_vk(VK_DOWN, delay); sleep_sec STEP_DELAY
+    send_vk(VK_DOWN, delay); sleep STEP_DELAY
+    send_vk(VK_DOWN, delay); sleep STEP_DELAY
   end
   alias south down
 
@@ -178,7 +178,7 @@ class Walker < ARobot
 	start_going(direction)
 	curr_direction = direction
       end
-      sleep_sec 0.1
+      sleep 0.1
     end
   end
 end

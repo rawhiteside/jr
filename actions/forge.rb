@@ -27,7 +27,7 @@ class ForgeAction < Action
 	  w.refresh
 	  text = w.read_text
 	  break if text =~ /Make a/
-	  sleep_sec 5.0
+	  sleep 5.0
 	end
 
 	# Click on the item

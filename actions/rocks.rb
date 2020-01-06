@@ -12,7 +12,7 @@ class Cutstones < GridAction
   def act_at(p)
     with_robot_lock do
       mm(p['x'],p['y'])
-      sleep_sec 0.2
+      sleep 0.2
       send_string('c')
     end
   end
@@ -28,7 +28,7 @@ class Crucibles < GridAction
   def act_at(p)
     with_robot_lock do
       mm(p['x'],p['y'])
-      sleep_sec 0.2
+      sleep 0.2
       send_string('c')
     end
   end

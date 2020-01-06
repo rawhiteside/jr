@@ -14,7 +14,7 @@ class Bricks < GridAction
 
   def act_at(p)
     mm(p['x'],p['y'])
-    sleep_sec 0.2
+    sleep 0.2
     send_string(@user_vals['string'], 0.3)
   end
 end
@@ -52,7 +52,7 @@ class FlimsyBricks < GridAction
     key = [p['ix'],p['iy']]
     recipe = @recipes[key]
     BuildMenu.new.build(recipe)
-    sleep_sec(1)
+    sleep(1)
   end
 
   def act_at(pt)

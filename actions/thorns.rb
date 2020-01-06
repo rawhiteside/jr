@@ -33,16 +33,16 @@ class Thorns < Action
     loop do
       w.refresh
       break if w.read_text =~ /Gather/
-      sleep_sec 1
+      sleep 1
     end
     w.click_on("Gather")
-    sleep_sec 1
+    sleep 1
     # Wait until it's been harvested before going on
     # to the next.
     loop do
       w.refresh
       break unless w.read_text =~ /Gather/
-      sleep_sec 1
+      sleep 1
     end
   end
 

@@ -25,9 +25,9 @@ class Kilns < GridAction
         GridHelper.new(@user_vals, 'g').each_point do |g|
           with_robot_lock do
             mm(g['x'],g['y'])
-            sleep_sec key_delay
+            sleep key_delay
 	    send_string(c)
-            sleep_sec key_delay
+            sleep key_delay
           end
         end
       end
@@ -38,7 +38,7 @@ class Kilns < GridAction
       post_grid_hook
       
       wait_more = delay - (Time.now.to_f - start)
-      sleep_sec wait_more if wait_more > 0
+      sleep wait_more if wait_more > 0
     end
   end
 
@@ -66,7 +66,7 @@ class PotteryWheel < Kilns
   def act_at(p)
     
     mm(p['x'],p['y'])
-    sleep_sec 0.3
+    sleep 0.3
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
 
@@ -88,7 +88,7 @@ class GridHotkeys < Kilns
   def act_at(p)
     
     mm(p['x'],p['y'])
-    sleep_sec 0.3
+    sleep 0.3
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
 

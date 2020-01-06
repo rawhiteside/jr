@@ -35,23 +35,23 @@ class Firepits < Action
       while w.click_on('Add')
 	HowMuch.max
         w.refresh
-        sleep_sec(0.1)
+        sleep(0.1)
       end
       while w.click_on('Grill')
 	HowMuch.max
         w.refresh
-        sleep_sec(0.1)
+        sleep(0.1)
       end
       w.refresh('lc') while w.click_on('Place', 'lc')
 
       w.refresh
-      sleep_sec(0.1)
+      sleep(0.1)
       if w.click_on('Take./Limestone')
         HowMuch.amount(4)
       end
 
       w.unpin
-      sleep_sec 0.5
+      sleep 0.5
     end
   end
 
@@ -162,11 +162,18 @@ class Firepit < ARobot
       ControllableThread.check_for_pause
       new_state = get_new_firepit_state
       if new_state == HOT
+        # Tried: move twice to loc w 0.05 sleep around the
+        # moves. Nope.
+
+        # Tried: Add 0.15 sleep after mouse move.
+        # -- better.  Still lost pits
+
+        # Tried 0.2
+        
+        
 	with_robot_lock do
-          sleep 0.05
 	  mm(@x, @y)
-          sleep 0.05
-	  mm(@x, @y)
+          sleep 0.2
 	  send_string('s', 0.1)
 	end
         log_stoke(1)

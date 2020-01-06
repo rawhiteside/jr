@@ -66,7 +66,7 @@ class Icons
     robot.with_robot_lock do
       robot.send_string(data[:hot_key])
       HowMuch.max
-      robot.sleep_sec 0.1 
+      robot.sleep 0.1 
     end
   end
 end

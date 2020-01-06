@@ -9,7 +9,7 @@ class CasualDowse < Action
   def act
     loop do
       Icons.hotkey_if_active(:dowse)
-      sleep_sec 1
+      sleep 1
     end
   end
 end
@@ -22,7 +22,7 @@ class CasualSlate < Action
   def act
     loop do
       send_string '8'
-      sleep_sec 0.4
+      sleep 0.4
     end
   end
 end
