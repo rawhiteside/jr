@@ -142,12 +142,10 @@ class ThistleGardens < GridAction
   def start_batch(windows)
     windows.each do |win| 
       win.refresh
-      sleep REFRESH_DELAY
       win.click_on 'Crop: Plant'
 
       # I've seen the "Plant" fail.
       win.refresh
-      sleep REFRESH_DELAY
       while win.read_text.include?('Plant')
         sleep REFRESH_DELAY
         win.flush_text_reader
