@@ -140,8 +140,22 @@ class ThistleGardens < GridAction
     windows.each do |win| 
       win.refresh
       sleep REFRESH_DELAY
-      win.refresh if win.click_on 'Crop: Harvest'
-      win.refresh until win.click_on 'Crop: Plant'
+      if win.click_on 'Crop: Harvest'
+        win.refresh 
+        sleep REFRESH_DELAY
+      end
+      win.click_on 'Crop: Plant'
+
+      # I've seen the "Plant" fail.
+      win.refresh
+      sleep REFRESH_DELAY
+      win.flush_text_reader
+      while win.read_text.include?('Plant')
+        sleep REFRESH_DELAY
+        win.flush_text_reader
+        puts "clicking again"
+        win.click_on 'Crop: Plant'
+      end
     end
   end
 
