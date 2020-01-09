@@ -45,6 +45,9 @@ class ThistleGardens < GridAction
     # The bold text needs bigger space threshold
     windows.each {|w| w.set_space_pixel_count(5)}
 
+    # Make an initial pass through, harvesting if there's anything to harvest.
+    harvest_batch(windows)
+    
     repeat.times do
       make_batch(windows, recipe)
       harvest_batch(windows)
@@ -140,16 +143,11 @@ class ThistleGardens < GridAction
     windows.each do |win| 
       win.refresh
       sleep REFRESH_DELAY
-      if win.click_on 'Crop: Harvest'
-        win.refresh 
-        sleep REFRESH_DELAY
-      end
       win.click_on 'Crop: Plant'
 
       # I've seen the "Plant" fail.
       win.refresh
       sleep REFRESH_DELAY
-      win.flush_text_reader
       while win.read_text.include?('Plant')
         sleep REFRESH_DELAY
         win.flush_text_reader
