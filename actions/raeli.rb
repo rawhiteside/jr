@@ -45,7 +45,7 @@ class Raeli < Action
       end
 
       sleep(10)
-      ControllableThread.check_for_pause
+      check_for_pause
     end
   end
 

@@ -122,7 +122,7 @@ class PpPaint < Action
 
     recipe = @recipes[@vals['color']]
     count = @vals['count'].to_i
-    ControllableThread.check_for_pause
+    check_for_pause
 
     count.times do 
       color = paint_win.pp_recipe(recipe)

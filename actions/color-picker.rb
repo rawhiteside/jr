@@ -29,7 +29,7 @@ class ColorPicker < Action
 
     time_start = Time.new
     loop do
-      ControllableThread.check_for_pause
+      check_for_pause
       seconds = Time.new - time_start
       show_color(pt1, 'loc1', seconds)
       show_color(pt2, 'loc2', seconds)

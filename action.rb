@@ -32,6 +32,11 @@ class Action  < ARobot
     @@action_list.sort{|a,b| a.name.downcase <=> b.name.downcase}
   end
 
+  # Convenience method for Actions.
+  def check_for_pause
+    ControllableThread.check_for_pause
+  end
+
   # Just for clarity.  Bob gets confused.  But, you can over-ride this
   # if you want the yaml name diff from the display name.
   def persistence_name
@@ -65,7 +70,7 @@ class Action  < ARobot
     @action_thread = ControllableThread.new(@name) do
       begin
 	if setup(check)
-	  ControllableThread.check_for_pause
+	  check_for_pause
 	  run
 	end
       rescue java.lang.InterruptedException => e
@@ -94,7 +99,7 @@ class Action  < ARobot
   def run
     puts "Running #{name}"
     begin
-      ControllableThread.check_for_pause
+      check_for_pause
       act
     rescue java.lang.InterruptedException => e
       # Don't need to do anything.
@@ -144,7 +149,6 @@ class GridAction < Action
   # Override to watch passes begin. 
   def start_pass(index)
   end
-
   def end_pass(index)
   end
 
@@ -155,7 +159,7 @@ class GridAction < Action
       start_pass i
       start = Time.now.to_f
       GridHelper.new(@user_vals, 'g').each_point do |g|
-        ControllableThread.check_for_pause
+        check_for_pause
 	act_at(g)
       end
 

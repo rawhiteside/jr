@@ -5,9 +5,6 @@ class Firepits < Action
   def initialize
     super('Firepits', 'Buildings')
     @threads = []
-    #
-    # Don't take a firepit sceeenshot while we're pinning a start-up window.
-    @firestart_lock = JMonitor.new
   end
 
   def setup(parent)
@@ -95,7 +92,8 @@ class Firepits < Action
     # Light the fires.
     GridHelper.new(@vals, 'g').each_point do |p|
       w = nil
-      @firestart_lock.synchronize do
+      # Bracket all this, so it doesn't interfere with screen shots. 
+      with_robot_lock do
         w = PinnableWindow.from_screen_click(Point.new(p['x'], p['y']))
         w.pin
         w.drag_to(Point.new(200, 200))
@@ -118,15 +116,16 @@ class Firepits < Action
   def tend_firepits
     # Watch the burning pits and stoke as appropriate
     GridHelper.new(@vals, 'g').each_point do |p|
-      f = Firepit.new(p, @firestart_lock)
+      f = Firepit.new(p)
       @threads << ControllableThread.new {f.tend}
     end
   end
 end
 
+# Holds the robot lock during screenshots, so popped windows don't
+# interfere.
 class Firepit < ARobot
-  def initialize(p, screenshot_lock)
-    @screenshot_lock = screenshot_lock
+  def initialize(p)
     super()
     @x = p['x'].to_i
     @y = p['y'].to_i
@@ -159,7 +158,7 @@ class Firepit < ARobot
     @tick = 0
     loop do
       @tick += 1
-      ControllableThread.check_for_pause
+      check_for_pause
       new_state = get_new_firepit_state
       if new_state == HOT
         # Tried: move twice to loc w 0.05 sleep around the
@@ -168,14 +167,23 @@ class Firepit < ARobot
         # Tried: Add 0.15 sleep after mouse move.
         # -- better.  Still lost pits
 
-        # Tried 0.2
+        # Tried 0.2 -- no better.
+
+        # OK,  Use menus.
         
         
 	with_robot_lock do
-	  mm(@x, @y)
-          sleep 0.2
-	  send_string('s', 0.1)
-	end
+          w = PinnableWindow.from_screen_click(@x, @y)
+          if w
+            unless w.click_on 'Stoke'
+              puts 'Failed to click on stoke'
+              log_stoke 'Failed to click on stoke'
+              puts w.read_text
+              dismiss_all
+            end
+          end
+
+        end
         log_stoke(1)
         sleep 5
       else
@@ -193,7 +201,7 @@ class Firepit < ARobot
     pixels = nil
     #
     # To keep the fire-starting windows from messing this up.
-    @screenshot_lock.synchronize do
+    with_robot_lock do
       pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
     end
     bright_count = 0

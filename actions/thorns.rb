@@ -50,7 +50,7 @@ class Thorns < Action
   def act
     return unless get_windows
 
-    ControllableThread.check_for_pause
+    check_for_pause
     loop do
       @windows.each { |w| harvest(w)}
     end

@@ -162,7 +162,7 @@ class Walker < ARobot
     # accordingly.
     curr_direction = nil
     loop do
-      ControllableThread.check_for_pause
+      check_for_pause
       count += 1
       curr = ClockLocWindow.instance.coords.to_a
 

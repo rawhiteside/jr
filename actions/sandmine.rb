@@ -45,7 +45,7 @@ class SandMine < AbstractMine
     
     loop do
       begin
-        ControllableThread.check_for_pause
+        check_for_pause
         stones = mine_get_stones(w)
         assign_colors_to_stones(stones)
         mine_stones(stones, true, @delay)
@@ -222,7 +222,7 @@ class SandMine < AbstractMine
 
   def mine_stones(stones, want_larges, delay)
 
-    ControllableThread.check_for_pause
+    check_for_pause
 
     # OK, put them into a {color => [stone, stone, ...]} hash.
     by_color = {}

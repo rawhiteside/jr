@@ -110,7 +110,7 @@ class Barley < Action
 
   def grow_one_field
     #
-    ControllableThread.check_for_pause
+    check_for_pause
     @walker.walk_to(START_PLANT_LOC)
     @tiler = Tiler.new(0, 77)
     @tiler.y_offset = 330

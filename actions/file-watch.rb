@@ -1,4 +1,6 @@
 require 'action'
+require 'robot/keycodes.rb'
+
 class FileWatch < Action
   BASE = "C:/eGenesis/A Tale in the Desert/egyptc/"
   THING_TO_FILE = {
@@ -16,10 +18,13 @@ class FileWatch < Action
   def act
     files = THING_TO_FILE['Pigs']
     loop do
+      check_for_pause
       files.each do |f|
         if File.exist?(BASE + f)
           beep
-          UserIO.info('Found a pig')
+          send_vk(VK_NUMLOCK)
+          sleep 1
+          UserIO.info 'Found a pig'
           return
         end
       end

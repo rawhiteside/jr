@@ -52,7 +52,7 @@ class Slate < Action
   end
 
   def act
-    ControllableThread.check_for_pause
+    check_for_pause
     @walker.walk_to(@loop[0])
     start_slate_watcher
     @walker.walk_loop(@loop, 9999)

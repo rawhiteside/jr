@@ -71,7 +71,7 @@ public class ARobot {
 		return m_robot.createScreenCapture(rect);
 	}
 
-	public static void checkForPause() {
+	public void checkForPause() {
 		ControllableThread.checkForPause();
 	}
 
@@ -220,7 +220,7 @@ public class ARobot {
 
 	public void keyPress(int vk)  {keyPress(vk, 0.0);}
 	public void keyPress(int vk, double delaySecs)  {
-		ControllableThread.checkForPause();
+		checkForPause();
 		m_robot.keyPress(vk);
 		sleepSec(delaySecs);
 	}
