@@ -367,10 +367,8 @@ class SetupBigTextGadget < JPanel
       area.text
     end
     data_puts[val_key] = Proc.new do |val|
-      if !val.nil? && val.size > 0
-        area.text = val
-        area.caret_position = 0
-      end
+      area.text = val
+      area.caret_position = 0
     end
 
     area.line_wrap = h[:line_wrap]
@@ -735,7 +733,7 @@ class DialogDefaultsManager < Box
     set_name = current_selection_name
     vals = @dialog_defaults[set_name]
     @data_puts.each do |k, v|
-      if vals[k] 
+      if vals[k]
         v.call(vals[k])
       else
         v.call('')
