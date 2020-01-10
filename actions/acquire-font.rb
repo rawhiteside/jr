@@ -106,12 +106,9 @@ class AcquireFont < Action
   end
 
   def act
-    puts "here is the map:"
-    dump_font(AFont.instance.getFontMap)
+    # puts "here is the map:"
+    # dump_font(AFont.instance.getFontMap)
     process_text_reader(@window.text_reader)
-    if @window.respond_to?(:data_text_reader)
-      process_text_reader(@window.data_text_reader)
-    end
   end
 end
 
