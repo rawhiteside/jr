@@ -201,3 +201,19 @@ end
 Action.add_action(Eat.new)
 
 
+class DismissPopups < Action
+  def initialize
+    super('Dismiss Popups', 'Misc')
+  end
+
+  def act
+    loop do
+      PopupWindow.dismiss
+      sleep 0.5
+    end
+  end
+
+end
+Action.add_action(DismissPopups.new)
+
+
