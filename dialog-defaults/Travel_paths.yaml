@@ -1,5 +1,5 @@
 ---
-2: Hades 4 to Memphis
+2: CP Kitchens to WH Gravel
 1: true
 Parameter set 1:
   path: ''
@@ -466,3 +466,10 @@ Hades 4 to Memphis:
     -2302, -6373
     -2322, -6357
     -2367, -6328
+CP Kitchens to WH Gravel:
+  path: |
+    -1024, -6779
+    -1024, -6765
+    -1024, -6761
+    -1039, -6746
+    -1039, -6728
