@@ -21,33 +21,38 @@ class Raeli < Action
     start = Time.now
     w.click_on('Begin') if @vals['task'] =~ /Burn/
 
-    prev_color = nil
-    counter = 0
+    black_count_prev = -1
+
     loop do
-      px = w.rect.x + 30
-      py = w.rect.y + 200
-      color = get_color(px, py)
-      if color != prev_color
-
-        counter += 1
-
         w.refresh
-        prev_color = color
-        hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
-        hsb_str = sprintf("%0.3f, %0.3f, %0.3f", hsb[0], hsb[1], hsb[2])
 
-        File.open('Raeli.log', 'a') do |f|
-	  f.puts("#{counter}, #{Time.now}, minutes:=> , #{(Time.now - start).to_i/60}, RGB:=>, #{color.red}, #{color.green}, #{color.blue}, HSB:=>, #{hsb_str}")
-        end
-        filename = "raeli-shots/image.%04d.%03d.%03d.%03d.png" % [counter, color.red, color.green, color.blue]
         pb = PixelBlock.new(w.rect)
-        ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
-      end
+        black_count = count_black(pb)
 
-      sleep(10)
-      check_for_pause
+        if black_count != black_count_prev
+          black_count_prev = black_count
+          minutes = (Time.now - start).to_i/60
+          filename = "raeli-shots/image.%d.png" % [minutes]
+          ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
+        end
     end
+
+    sleep(10)
+    check_for_pause
   end
+
+  def count_black(pb)
+    count = 0
+    pb.width.times do |x|
+      pb.height.times do |y|
+        if pb.color(x, y) == Color.black
+          count += 1
+        end
+      end
+    end
+    return count
+  end
+
 
 
 end

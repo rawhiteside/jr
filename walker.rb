@@ -151,6 +151,7 @@ class Walker < ARobot
   end
 
   # Walk from current location to the provided coordinates
+  # Target coords are as [x,y]
   def walk_to(target)
     # Count pases though the loc-walker loop.  We refresh the keys
     # every refresh_count passes.  Thus, in case of a wild r-click,
