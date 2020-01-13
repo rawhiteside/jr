@@ -1,5 +1,5 @@
 ---
-2: UThought to UWorship
+2: CP Kitchens to WH Gravel
 1: true
 Parameter set 1:
   path: ''
@@ -150,7 +150,6 @@ UThought to UWorship:
     627, -6224
     617, -6224
     587, -6195
-    582, -6190
     533, -6140
     485, -6140
     463, -6162
@@ -467,3 +466,10 @@ Hades 4 to Memphis:
     -2302, -6373
     -2322, -6357
     -2367, -6328
+CP Kitchens to WH Gravel:
+  path: |
+    -1024, -6779
+    -1024, -6765
+    -1024, -6761
+    -1039, -6746
+    -1039, -6728
