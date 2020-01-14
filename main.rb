@@ -30,7 +30,7 @@ class TopFrame < JFrame
     self.get_content_pane.add(content_panel)
 
 
-    content_panel.add(make_show_hide_button, BorderLayout::NORTH)
+    content_panel.add(make_top_stuff, BorderLayout::NORTH)
 
     @action_panel = JPanel.new
     box_layout = BoxLayout.new(@action_panel, BoxLayout::X_AXIS)
@@ -41,6 +41,16 @@ class TopFrame < JFrame
   end
 
   
+  def make_top_stuff
+    box = Box.create_horizontal_box()
+    box.add(make_show_hide_button)
+    box.add(make_global_setup_button)
+    box.add(Box.create_horizontal_glue)
+    box.add(make_run_indicator)
+
+    return box
+  end
+
   SHOW_ALL = 'Show all'
   HIDE_SOME = 'Show only favorites'
   def make_show_hide_button
@@ -57,35 +67,55 @@ class TopFrame < JFrame
       end
       pack
     end
+    return box
+  end
 
-
+  def make_global_setup_button
+    
     # Now, add a "Global setup" help button.
     ghelp = JButton.new("Global setup")
-    box.add(ghelp)
     ghelp.add_action_listener do |event|
       UserIO.show_help('Global setup', self)
     end
+    return ghelp
+  end
 
-    # Refactor this.  Adding the numlock status, too.
-    label = JLabel.new
-    label.border = LineBorder.create_black_line_border
-    label.background = Color::YELLOW
-    box.add(Box.create_horizontal_glue)
-    box.add(label)
+  def make_run_indicator
+    box = Box.create_horizontal_box()
+
+    # XX Testing gadget
+    checkbox = JCheckBox.new("test")
+    checkbox.border = LineBorder.create_black_line_border
+    checkbox.border_painted = true
+    checkbox.background = Color::YELLOW
+    # Should be a better way to do this.  Need to curcumvent the
+    # pausing that ARobot does.
+    robot = java.awt.Robot.new
+    checkbox.add_action_listener do |e|
+      robot.keyPress VK_NUMLOCK
+      sleep 0.01
+      robot.keyRelease VK_NUMLOCK
+    end
+    # A pause listener that fiddles with the checkbox.
     listener = Proc.new do |running|
       if running
-        label.opaque = true
-        label.text = 'Running'
+        checkbox.opaque = true
+        checkbox.text = 'Running'
+        checkbox.selected = true
       else
-        label.opaque = false
-        label.text = 'Paused'
+        checkbox.opaque = false
+        checkbox.text = 'Paused'
+        checkbox.selected = false
       end
     end
     listener.call(RobotPauser.instance.active?)
     RobotPauser.instance.add_pause_listener(listener)
+    box.add(checkbox)
 
-    box
+    return box
   end
+
+
 
   def add_action(action)
     group = group_for(action.group)
