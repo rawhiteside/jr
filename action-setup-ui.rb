@@ -349,13 +349,13 @@ end
 # either non-persistent, or is persisted in other ways (i.e., the
 # help text).
 #
+#
 class SetupBigTextGadget < JPanel
   def initialize(prefix, initial_value, h, data_gets, data_puts)
     super()
 
     area = JTextArea.new
     area.setFont(Font.new("monospaced", Font::PLAIN, 12))
-
 
     val_key = prefix + h[:name].to_s
     editable = (h.has_key?(:editable) ? h[:editable] : true)
@@ -366,9 +366,19 @@ class SetupBigTextGadget < JPanel
     data_gets[val_key] = Proc.new do
       area.text
     end
+
+    # Don't accept data puts if the initial value was provided.
+    #
+    # This is used both in action setups, which need to get populated
+    # from saved parameter settings, AND in just general text
+    # presentations.  (Help info, read-window, etc.)
+    # 
+    # Confusing.  Should make a subclase for the help, etc.
     data_puts[val_key] = Proc.new do |val|
-      area.text = val
-      area.caret_position = 0
+      if initial_value.nil?
+        area.text = val
+        area.caret_position = 0
+      end
     end
 
     area.line_wrap = h[:line_wrap]
@@ -379,7 +389,7 @@ class SetupBigTextGadget < JPanel
     scroll = JScrollPane.new(area)
     scroll.vertical_scroll_bar_policy = JScrollPane::VERTICAL_SCROLLBAR_AS_NEEDED
     scroll.horizontal_scroll_bar_policy = JScrollPane::HORIZONTAL_SCROLLBAR_NEVER
-    
+
     add(scroll)
     @area = area
   end
@@ -576,7 +586,7 @@ class SetupWorldPathGadget < JPanel
     box = Box.create_horizontal_box
 
     # Text box
-    scroll = SetupBigTextGadget.new(prefix, "", h, data_gets, data_puts)
+    scroll = SetupBigTextGadget.new(prefix, nil, h, data_gets, data_puts)
 
     box.add(scroll)
 
