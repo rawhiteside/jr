@@ -94,7 +94,7 @@ class HelpForTopic
     gadgets = [
       {
 	:type => :big_text, :editable => true, :label => title,
-	:name => 'help', :value => text, :rows => 15, :cols => 30,
+	:name => 'help', :value => text, :rows => 15, :cols => 40,
         :line_wrap => true
       }
     ]
