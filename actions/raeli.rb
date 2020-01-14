@@ -21,16 +21,16 @@ class Raeli < Action
     start = Time.now
     w.click_on('Begin') if @vals['task'] =~ /Burn/
 
-    black_count_prev = -1
+    bw_count_prev = -1
 
     loop do
         w.refresh
 
         pb = PixelBlock.new(w.rect)
-        black_count = count_black(pb)
+        bw_count = count_black_and_white(pb)
 
-        if black_count != black_count_prev
-          black_count_prev = black_count
+        if bw_count != bw_count_prev
+          bw_count_prev = bw_count
           minutes = (Time.now - start).to_i/60
           filename = "raeli-shots/image.%d.png" % [minutes]
           ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
@@ -41,13 +41,11 @@ class Raeli < Action
     check_for_pause
   end
 
-  def count_black(pb)
+  def count_black_and_white(pb)
     count = 0
     pb.width.times do |x|
       pb.height.times do |y|
-        if pb.color(x, y) == Color.black
-          count += 1
-        end
+        count += 1 if pb.color(x, y) == Color.black || pb.color(x, y) == Color.white
       end
     end
     return count
