@@ -8,6 +8,7 @@ import javax.swing.JPanel
 import javax.swing.ToolTipManager
 import javax.swing.border.TitledBorder
 import javax.swing.border.LineBorder
+import javax.swing.border.CompoundBorder
 import java.awt.event.ActionListener
 import java.awt.event.ItemListener
 import java.awt.event.ItemEvent
@@ -85,7 +86,9 @@ class TopFrame < JFrame
 
     # XX Testing gadget
     checkbox = JCheckBox.new("test")
-    checkbox.border = LineBorder.create_black_line_border
+    margin = 6
+    checkbox.border =
+      CompoundBorder.new(LineBorder.create_black_line_border, EmptyBorder.new(margin, margin, margin, margin))
     checkbox.border_painted = true
     checkbox.background = Color::YELLOW
     # Should be a better way to do this.  Need to curcumvent the
