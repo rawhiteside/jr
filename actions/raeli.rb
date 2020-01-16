@@ -31,8 +31,8 @@ class Raeli < Action
 
         if bw_count != bw_count_prev
           bw_count_prev = bw_count
-          minutes = (Time.now - start).to_i/60
-          filename = "raeli-shots/image.%d.png" % [minutes]
+          minutes = (Time.now - start)/60.0
+          filename = "raeli-shots/image.%02f.png" % [minutes]
           ImageIO.write(pb.buffered_image, 'png', java.io.File.new(filename))
         end
     end
