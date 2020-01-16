@@ -86,6 +86,7 @@ class TopFrame < JFrame
 
     # XX Testing gadget
     checkbox = JCheckBox.new("test")
+    checkbox.tool_tip_text = 'Click or press NUMLOCK to toggle'
     margin = 6
     checkbox.border =
       CompoundBorder.new(LineBorder.create_black_line_border, EmptyBorder.new(margin, margin, margin, margin))
