@@ -18,7 +18,6 @@ class RunAndDo < Action
         :gadgets => [
           {
             :type => :big_text, :label => 'Setup Ruby code', :name => 'code',
-            :value => '# Type Ruby code here.',
             :rows => 10, :cols => 50
           },
         ]
