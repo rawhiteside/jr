@@ -224,6 +224,9 @@ class SkillsWindow < DarkWindow
     set_rect(rect)
   end
 
+  def stat_boosted?
+    read_text.index('[')
+  end
 end
 
 class InventoryWindow < DarkWindow
