@@ -12,8 +12,8 @@ class PotencyPush < Action
 
   def act
     pt = point_from_hash(@vals, 'kitchen')
-    kw = Kitchen.new(pt)
-    kw = Kitchen.from_pinnable(kw)
+    w = PinnableWindow.from_point(pt)
+    kw = Kitchen.new(w)
 
     loop do
       kw.clean_pot
@@ -27,16 +27,10 @@ class PotencyPush < Action
 end
 
 class Kitchen < PinnableWindow
-  def initialize(pt)
-    rnew = WindowGeom.rectFromPoint(pt);
-    super(rnew)
+  def initialize(pinnable)
+    super(pinnable.rect)
   end
 
-  def self.from_pinnable(w)
-    rect = w.rect
-    pt = Point.new(rect.x + 5, rect.y + 5)
-    Kitchen.new(pt)
-  end
   
   # Clean out the pot
   def clean_pot
