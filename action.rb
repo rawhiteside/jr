@@ -64,7 +64,7 @@ class Action  < ARobot
 
   # Fork a worker thread
   def start_worker_thread
-    @worker_threads << ControllableThread.new {yield}
+    @worker_threads << ControllableThread.new(@name + "-worker") {yield}
   end
 
   def wait_for_worker_threads
