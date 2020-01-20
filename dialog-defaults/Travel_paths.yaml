@@ -1,5 +1,5 @@
 ---
-2: CP Kitchens to WH Gravel
+2: CP Charcoal to Guildhall
 1: true
 Parameter set 1:
   path: ''
@@ -473,3 +473,9 @@ CP Kitchens to WH Gravel:
     -1024, -6761
     -1039, -6746
     -1039, -6728
+CP Charcoal to Guildhall:
+  path: |
+    -977, -6777
+    -982, -6782
+    -982, -6804
+    -975, -6811
