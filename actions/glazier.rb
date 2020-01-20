@@ -215,12 +215,6 @@ end
 class Glazier < Action
   def initialize
     super('Glazier', 'Buildings')
-    @threads = []
-  end
-
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
   end
 
   def get_ui_vals(parent)
@@ -250,7 +244,6 @@ class Glazier < Action
   def act
     tiler = Tiler.new(0, 115)
     tiler.min_height = 400
-    @threads = []
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
       with_robot_lock {
@@ -264,16 +257,16 @@ class Glazier < Action
 
     # Start the CC-adding threads.
     windows.each do |w|
-      @threads << ControllableThread.new {w.tend}
+      start_worker_thread {w.tend}
     end
 
     # Now, start up the glass-making threads.
     make_what = @vals['what']
     windows.each do |w|
-      @threads << ControllableThread.new {w.make_glass(make_what)}
+      start_worker_thread {w.make_glass(make_what)}
     end
 
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
   end
   
 end

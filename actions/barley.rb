@@ -59,11 +59,6 @@ class Barley < Action
     ]
   end
 
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
-
   def setup(parent)
     comps = [
       {:type => :point, :label => 'Drag onto your head', :name => 'head'},
@@ -114,21 +109,20 @@ class Barley < Action
     @walker.walk_to(START_PLANT_LOC)
     @tiler = Tiler.new(0, 77)
     @tiler.y_offset = 330
-    @threads = []
     start_lock = JMonitor.new
     prev_patt = [:right]
     # Keep tending from starting while we plant
     start_lock.synchronize do
       step_patterns.each do |patt|
         w = plant_and_tile(pop = @pop_for_step[prev_patt])
-        @threads << ControllableThread.new do 
+        start_worker_thread do
 	  w.tend(start_lock)
         end
         with_robot_lock { @walker.steps(patt) }
         prev_patt = patt
       end
     end
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
     @walker.walk_to(START_PLANT_LOC)
   end
 end

@@ -20,6 +20,7 @@ class Action  < ARobot
     @name = name
     @group = group
     @action_thread = nil
+    @worker_threads = []
     super()
   end
 
@@ -47,17 +48,27 @@ class Action  < ARobot
     @name
   end
 
-  # If your macro itself is multi-threaded, you should override this
-  # method, and kill all of your threads, then dispatch to this super.
-  def stop
-    @action_thread.kill if @action_thread
-    @action_thread = nil
-  end
-
   # Override to prompt user for info.
   # Return nil if it got canceled.
   def setup(swing_component)
     true
+  end
+
+  # Kill the action thread, and all of the worker threads.
+  def stop
+    @action_thread.kill if @action_thread
+    @action_thread = nil
+    @worker_threads.each {|t| t.kill}
+    @worker_threads = []
+  end
+
+  # Fork a worker thread
+  def start_worker_thread
+    @worker_threads << ControllableThread.new {yield}
+  end
+
+  def wait_for_worker_threads
+    @worker_threads.each {|t| t.join}
   end
 
   # Don't over-ride this. I barely undersand it myself. 

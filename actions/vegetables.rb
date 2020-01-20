@@ -5,7 +5,6 @@ require 'window'
 class Vegetables < Action
   def initialize(name = "Grow vegetables", category = 'Plants')
     super(name, category)
-    @threads = []
   end
 
   VEGETABLE_DATA = {
@@ -107,11 +106,6 @@ class Vegetables < Action
     @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
-
   def act
     walker = Walker.new
     @vegi_choice =  @vals['veggie']
@@ -164,7 +158,7 @@ class Vegetables < Action
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
 
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
   end
 
   def plant_side(num, tiler, build_recipe, left_right)
@@ -175,7 +169,7 @@ class Vegetables < Action
         next unless w
 
         tiler.tile(w)
-        @threads << ControllableThread.new { tend(w, plant_time) }
+        start_worker_thread { tend(w, plant_time) }
         sleep 0.001
       end
   end

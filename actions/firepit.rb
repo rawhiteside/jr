@@ -4,7 +4,6 @@ require 'window'
 class Firepits < Action
   def initialize
     super('Firepits', 'Buildings')
-    @threads = []
   end
 
   def setup(parent)
@@ -18,10 +17,6 @@ class Firepits < Action
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
 
   def load_firepits
     # Fill up each firepit
@@ -63,14 +58,16 @@ class Firepits < Action
     light_firepits if task == 'Light'
     tend_firepits if task == 'Tend'
 
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
   end
 
 
   def burn_firepits
     # Forks off threads to tend.
+    puts "tend..."
     tend_firepits
     # We'll try to light while the tender is running. 
+    puts "light..."
     light_firepits
   end
   
@@ -117,7 +114,7 @@ class Firepits < Action
     # Watch the burning pits and stoke as appropriate
     GridHelper.new(@vals, 'g').each_point do |p|
       f = Firepit.new(p)
-      @threads << ControllableThread.new {f.tend}
+      start_worker_thread {f.tend}
     end
   end
 end
@@ -129,6 +126,7 @@ class Firepit < ARobot
     super()
     @x = p['x'].to_i
     @y = p['y'].to_i
+    @max_ss_time = 0
     @ix = p['ix']
     @iy = p['iy']
     @state = nil
@@ -138,9 +136,17 @@ class Firepit < ARobot
   end
 
   def log_stoke(stoke)
-    log_msg('0,,,') if (stoke == 1)
-    log_msg("#{stoke},,,")
-    log_msg('0,,,') if (stoke == 1)
+    if stoke == 1
+      log_msg('0,,,')
+      log_msg("1,,,")
+    elsif stoke == 0
+      log_msg('1,,,')
+      log_msg("0,,,")
+    else
+      log_msg("#{stoke},,,")
+      log_msg('5,,,')
+      log_msg("0,,,")
+    end
   end
 
   def log_data(bright, white, frac)
@@ -171,7 +177,7 @@ class Firepit < ARobot
 
         # OK,  Use menus.
         
-        
+        log_stoke(1)
 	with_robot_lock do
           w = PinnableWindow.from_screen_click(@x, @y)
           if w
@@ -184,10 +190,8 @@ class Firepit < ARobot
           end
 
         end
-        log_stoke(1)
-        sleep 5
-      else
         log_stoke(0)
+        sleep 5
       end
       sleep 1
     end
@@ -201,9 +205,17 @@ class Firepit < ARobot
     pixels = nil
     #
     # To keep the fire-starting windows from messing this up.
+    start = Time.now
     with_robot_lock do
       pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
     end
+
+    delta = Time.now - start
+    if delta > @max_ss_time
+      puts "New ss max for (#{@ix}, #{@iy}): #{delta}"
+      @max_ss_time = delta
+    end
+
     bright_count = 0
     white_count = 0
     pixels.height.times do |y|

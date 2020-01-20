@@ -23,8 +23,6 @@ class Wheat < Action
     read_vals
     tiler = Tiler.new(160, 70)
     tiler.y_offset = 30
-    @threads = []
-    thread_info = {}
     @row_count.times do |yoff|
       @col_count.times do |xoff|
         plant_loc = [@start_loc[0] + xoff, @start_loc[1] + yoff]
@@ -32,21 +30,15 @@ class Wheat < Action
         w = plant_and_pin
         tiler.tile(w)
         screen_rect = w.rect
-        thread = ControllableThread.new { tend(w) }
-        @threads << thread
-        thread_info[thread] = {'plant_loc' => plant_loc, 'win_rect' => screen_rect}
+        start_worker_thread { tend(w) }
       end
     end
     center = [@start_loc[0] + @col_count/2, @start_loc[1] + @row_count/2]
     @walker.walk_to(center)
 
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
   end
 
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
           
   def tend(w)
     loop do

@@ -30,12 +30,11 @@ end
 class Slate < Action
   def initialize
     super('Slate', 'Gather')
-    @threads = []
     @walker = Walker.new
   end
 
   def start_slate_watcher
-    @threads << ControllableThread.new { CasualSlate.new.act }
+    start_worker_thread { CasualSlate.new.act }
   end
 
   def setup(parent)
@@ -58,10 +57,6 @@ class Slate < Action
     @walker.walk_loop(@loop, 9999)
   end
 
-  def stop
-    @threads.each {|t| t.kill}
-    super
-  end
 end
 
 Action.add_action(Slate.new)

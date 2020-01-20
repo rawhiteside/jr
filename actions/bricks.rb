@@ -14,8 +14,8 @@ class Bricks < GridAction
 
   def act_at(p)
     mm(p['x'],p['y'])
-    sleep 0.2
-    send_string(@user_vals['string'], 0.3)
+    sleep 0.1
+    send_string(@user_vals['string'], 0.1)
   end
 end
 Action.add_action(Bricks.new)
@@ -65,7 +65,6 @@ class FlimsyBricks < GridAction
     return if skip_these.index(ij)
 
     check_build(pt)
-
 
     mm(pt['x'], pt['y'])
     sleep 0.2

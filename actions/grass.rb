@@ -18,14 +18,13 @@ end
 class Grass < Action
   def initialize
     super('Grass', 'Gather')
-    @threads = []
     @walker = Walker.new
     @pause = false
     @stash_window = nil
   end
 
   def start_grass_watcher
-    @threads << ControllableThread.new {CasualGrass.new.act}
+    start_worker_thread {CasualGrass.new.act}
   end
 
   def setup(parent)
@@ -59,10 +58,6 @@ class Grass < Action
     end
   end
 
-  def stop
-    @threads.each {|t| t.kill}
-    super
-  end
 end
 
 Action.add_action(Grass.new)

@@ -30,7 +30,6 @@ class EldradReactory < Action
       {:type => :number, :label => 'Min percent', :name => 'thresh'},
     ]
     @vals = UserIO.prompt(parent, 'Eldrad reactory', 'Eldrad reactory', gadgets)
-    @threads = []
     return @vals
   end
 
@@ -42,20 +41,15 @@ class EldradReactory < Action
     @what = @vals['what'].split(',')[0].strip
     @thresh = @vals['thresh'].to_i
 
-    @threads << ControllableThread.new { tend(@win1) }
+    start_worker_thread{ tend(@win1) }
 
     if @vals['count'] == '2'
-      @threads << ControllableThread.new { tend(@win2) }
+      start_worker_thread{ tend(@win2) }
     end
 
-    @threads.each {|t| t.join}
+    wait_for_worker_threads
   end
 
-  def stop
-    @threads.each {|t| t.kill} if @threads
-    super
-  end
-  
   def tend(win)
     post_heat_wait = 20
     start = Time.now
