@@ -27,17 +27,14 @@ class Firepits < Action
       while w.click_on('Add')
 	HowMuch.max
         w.refresh
-        sleep(0.1)
       end
       while w.click_on('Grill')
 	HowMuch.max
         w.refresh
-        sleep(0.1)
       end
       w.refresh('lc') while w.click_on('Place', 'lc')
 
       w.refresh
-      sleep(0.1)
       if w.click_on('Take./Limestone')
         HowMuch.amount(4)
       end
@@ -130,8 +127,6 @@ class Firepit < ARobot
     @ix = p['ix']
     @iy = p['iy']
     @state = nil
-    @hot_count = 0
-    @normal_count = 0
     @start_time = Time.now
   end
 
@@ -149,17 +144,18 @@ class Firepit < ARobot
     end
   end
 
-  def log_data(bright, white, frac)
-    log_msg(",#{bright},#{white},#{frac}")
+  def log_data(bright, white, frac, avg)
+    log_msg(",#{bright},#{white},#{frac},#{avg}")
   end
 
   def log_msg(msg)
     secs = Time.now - @start_time
     File.open("firepit-#{@ix}-#{@iy}.csv", 'a') do |f|
-      f.puts("#{secs},#{@state},#{@normal_count},#{@hot_count},#{msg}")
+      f.puts("#{secs},#{@state},#{msg}")
     end
   end
   
+  LOOK_DELAY = 1.5
   def tend
     @tick = 0
     loop do
@@ -185,7 +181,7 @@ class Firepit < ARobot
               puts 'Failed to click on stoke'
               log_stoke 'Failed to click on stoke'
               puts w.read_text
-              dismiss_all
+              AWindow.dismiss_all
             end
           end
 
@@ -193,7 +189,7 @@ class Firepit < ARobot
         log_stoke(0)
         sleep 5
       end
-      sleep 1
+      sleep LOOK_DELAY
     end
   end
 
@@ -209,8 +205,8 @@ class Firepit < ARobot
     with_robot_lock do
       pixels = screen_rectangle(x, y, IMAGE_SIZE, IMAGE_SIZE)
     end
-
     delta = Time.now - start
+
     if delta > @max_ss_time
       puts "New ss max for (#{@ix}, #{@iy}): #{delta}"
       @max_ss_time = delta
@@ -228,47 +224,51 @@ class Firepit < ARobot
     end
     frac = nil
     frac = white_count.to_f / bright_count.to_f unless bright_count == 0
-    log_data(bright_count, white_count, frac)
-    return frac
+    avg = rolling_avg(frac.nil? ? 0 : frac)
+    log_data(bright_count, white_count, frac, avg)
+    return avg
   end
 
   
-  HOT_THRESH = 0.15
+  HOT_THRESH = 0.1
   NORMAL_THRESH = 0.05
   NORMAL = 'normal'
   HOT = 'hot'
-  REPEATS = 3
   # 
   # Returns a new firepit state: one of "hot", "normal"
   # Returns nil if state did not change
   def get_new_firepit_state
-    frac = get_white_fraction
+    avg = get_white_fraction
     # Frac is nil if there are no bright spots at all. This happens
     # (apart from startup) when heavy lag causes the fire to vanish
     # for a few moments.  We just ignore these states entirely.
-    return nil unless frac
+    return nil unless avg
 
     # We're just getting going. Start in "normal" state.
     return @state = NORMAL if @state == nil
 
-    # We enter "hot", if we're in "normal" and this is the
-    # REPEATS consecutive tick of high fraction
-    if frac >= HOT_THRESH
-      @hot_count += 1
-      @normal_count = 0
-      return @state = HOT if @state != HOT && @hot_count > REPEATS
+    # We enter "hot", if we're in "normal" and the avg is abover or
+    # below the threshold.
+    if avg >= HOT_THRESH
+      return @state = HOT if @state != HOT
       return nil
-    elsif frac < NORMAL_THRESH
-      @normal_count += 1
-      @hot_count = 0
-      return @state = NORMAL if @state != NORMAL && @normal_count > REPEATS
+    elsif avg < NORMAL_THRESH
+      return @state = NORMAL if @state != NORMAL
       return nil
     else
-      @normal_count = @hot_count = 0
       return nil
     end
     
     
+  end
+  
+  AVG_SIZE = 3
+  def rolling_avg(val)
+    @rolling_vals = [] if @rolling_vals.nil?
+    @rolling_vals << val
+    @rolling_vals.shift if @rolling_vals.size > AVG_SIZE
+    sum = @rolling_vals.inject(0) {|s, v| s + v}
+    return sum / @rolling_vals.size
   end
 
 end
