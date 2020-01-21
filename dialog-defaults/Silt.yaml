@@ -2,56 +2,15 @@
 2: Parameter set 1
 1: false
 Parameter set 1:
-  stash.x: '45'
-  stash.y: '376'
-  inventory.x: '262'
-  inventory.y: '577'
-  path: |
-    -528, -7017
-    Silt
-    -528, -7022
-    Silt
-    -528, -7027
-    Silt
-    -528, -7032
-    Silt
-    -524, -7032
-    Silt
-    -524, -7027
-    Silt
-    -524, -7022
-    Silt
-    -524, -7017
-    Silt
-    -520, -7017
-    Silt
-    -520, -7022
-    Silt
-    -520, -7027
-    Silt
-    -520, -7032
-    Silt
-    -516, -7032
-    Silt
-    -516, -7027
-    Silt
-    -516, -7022
-    Silt
-    -516, -7017
-    Silt
-    -512, -7017
-    Silt
-    -512, -7022
-    Silt
-    -512, -7027
-    Silt
-    -512, -7033
-    Stash
-    -508, -7033
-    Silt
-    -508, -7028
-    Silt
-    -499, -7026
-    Stash
+  stash.x: '475'
+  stash.y: '949'
+  inventory.x: '228'
+  inventory.y: '895'
+  path: "-528, -7017\nSilt\t\n-528, -7022\nSilt\n-528, -7027\nSilt\n-528, -7032\n\
+    Silt\n-524, -7032\nSilt\n-524, -7027\nSilt\n-524, -7022\nSilt\n-524, -7017\nSilt\n\
+    -520, -7017\nSilt\n-520, -7022\nSilt\n-520, -7027\nSilt\n-520, -7032\nSilt\n-516,\
+    \ -7032\nSilt\n-516, -7027\nSilt\n-516, -7022\nSilt\n-516, -7017\nSilt\n-512,\
+    \ -7017\nSilt\n-512, -7022\nSilt\n-512, -7027\nSilt\n-512, -7033\nSilt\n-508,\
+    \ -7033\nSilt\n-508, -7028\nSilt\n-499, -7026\n-497, -7026\n\nStash\n"
   custom_text_0: Silt
   custom_text_1: Stash
