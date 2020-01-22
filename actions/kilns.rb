@@ -43,7 +43,7 @@ class Kilns < GridAction
   end
 
   def post_grid_hook
-    repair_kilns
+    # repair_kilns
   end
 
   def repair_kilns
