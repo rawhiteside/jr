@@ -83,7 +83,7 @@ class SiltAction < PickThings
   def gather_once
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
-    max_rad = pb.height/2 - 100
+    max_rad = pb.height/2 - 200
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
