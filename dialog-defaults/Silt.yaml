@@ -2,10 +2,10 @@
 2: Parameter set 1
 1: false
 Parameter set 1:
-  stash.x: '45'
-  stash.y: '376'
-  inventory.x: '262'
-  inventory.y: '577'
+  stash.x: '445'
+  stash.y: '972'
+  inventory.x: '229'
+  inventory.y: '948'
   path: |
     -528, -7017
     Silt
@@ -46,7 +46,7 @@ Parameter set 1:
     -512, -7027
     Silt
     -512, -7033
-    Stash
+    Silt
     -508, -7033
     Silt
     -508, -7028
