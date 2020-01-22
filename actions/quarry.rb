@@ -21,7 +21,7 @@ class Quarry < Action
 
     loop do
       heading = heading_for(w)
-      work(w, @vals['number'].to_i - 1)
+      break unless work(w, @vals['number'].to_i - 1)
       wait_for_others(w, heading)
     end
     
@@ -51,7 +51,8 @@ class Quarry < Action
 
     stat_wait('End')
 
-    w.click_on(work_lines[index])
+    w.click_on(work_lines[index]) if work_lines[index]
+    return work_lines[index]
   end
 
 end
