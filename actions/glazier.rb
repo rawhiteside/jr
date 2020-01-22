@@ -95,23 +95,30 @@ class GlazierWindow < PinnableWindow
 
   def data_vals
     flush_text_reader
-    text = read_text
+    text = nil
+    with_robot_lock do
+      refresh
+      text = read_text
+    end
     vals = {}
-    puts text
     # Temp
     match = Regexp.new('Temperature: ([0-9]+)').match(text)
+    puts text unless match
+
     vals[:temperature] = match[1].to_i
     # Glass type
     match = Regexp.new('(.*) Glass: ').match(text)
+    puts text unless match
     vals[:glass_type] = match[1].strip
     # Glass Amount
     match = Regexp.new('.* Glass: (.*)').match(text)
+    puts text unless match
     vals[:glass_amount] = match[1].strip
     # CC
     match = Regexp.new('Charcoal Avail: ([0-9]+)').match(text)
+    puts text unless match
     vals[:cc] = match[1].to_i if match 
     # XXX
-    p vals
 
     return vals
   end
@@ -184,8 +191,8 @@ class GlazierWindow < PinnableWindow
   def rise
     loop do
       log "Rise done=#{@done}"
-      return if @done
       with_robot_lock {
+        return if @done
         refresh
         click_on('Add 2')
       }
@@ -201,6 +208,7 @@ class GlazierWindow < PinnableWindow
       log "Drop  temperature=#{s['Temperature']}, delta=#{@last_delta}"
       break if s['Temperature'] < 1800
       break if (s['Temperature'] + @last_delta) < 1750
+      return if @done
     end
   end
 
