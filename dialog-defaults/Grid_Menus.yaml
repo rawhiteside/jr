@@ -1,0 +1,33 @@
+---
+2: Wire
+1: true
+Parameter set 1:
+  g.top-left.x: '846'
+  g.top-left.y: '468'
+  g.bottom-right.x: '1203'
+  g.bottom-right.y: '618'
+  g.num-cols: '3'
+  g.num-rows: '2'
+  repeat: '1'
+  delay: '5'
+  menu: Gear/Medium/Make Platinum
+Sheets:
+  g.top-left.x: '617'
+  g.top-left.y: '423'
+  g.bottom-right.x: '1270'
+  g.bottom-right.y: '663'
+  g.num-cols: '4'
+  g.num-rows: '2'
+  repeat: '11'
+  delay: '5'
+  menu: Sheet/Make Moon
+Wire:
+  g.top-left.x: '635'
+  g.top-left.y: '400'
+  g.bottom-right.x: '1287'
+  g.bottom-right.y: '633'
+  g.num-cols: '4'
+  g.num-rows: '2'
+  repeat: '5'
+  delay: '5'
+  menu: Wire/Make Steel
