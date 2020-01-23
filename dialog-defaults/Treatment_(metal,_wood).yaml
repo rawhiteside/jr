@@ -1,0 +1,44 @@
+---
+2: Rotproof, Rigid, Non-toxic.
+1: true
+Parameter set 1:
+  win.x: '202'
+  win.y: '308'
+  tank: Metal
+  count: '1'
+  metal-type: Iron
+  recipe: |
+    40,Saltpeter
+    8,Coal
+Insulative, Corrosion-Resistant:
+  win.x: '1411'
+  win.y: '285'
+  tank: Metal
+  count: '2'
+  metal-type: Sun Steel
+  recipe: |
+    40,Saltpeter
+    8,Coal
+Hard Rotproof:
+  win.x: '1339'
+  win.y: '199'
+  tank: Wood
+  count: '19'
+  metal-type: ''
+  recipe: |
+    20, Sulfur
+    10, Lime
+    30, Petrol
+    8,Lead
+Rotproof, Rigid, Non-toxic.:
+  win.x: '1538'
+  win.y: '273'
+  tank: Wood
+  count: '50'
+  metal-type: ''
+  recipe: |-
+    50, Charcoal
+    30, Lime
+    30, Bone
+    10, Oil
+    10, Petrol
