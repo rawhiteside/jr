@@ -188,6 +188,10 @@ public class PinnableWindow extends AWindow {
 		finally {releaseRobotLock();}
 	}
 
+	public PinnableWindow dragTo(int x, int y) {
+		return dragTo(new Point(x, y), 0.0);
+	}
+
 	public PinnableWindow dragTo(Point p) {
 		return dragTo(p, 0.0);
 	}
