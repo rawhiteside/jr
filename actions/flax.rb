@@ -14,7 +14,6 @@ FLAX_DATA = {
   "Symphony Ridge Gold" => {:water => 0},
 }
 
-# Plant centered aligned with --Jaby-- lines in name.
 class FlaxGrow < Action
 
 
