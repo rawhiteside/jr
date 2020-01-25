@@ -11,7 +11,7 @@ class PickStones < PickThings
   def setup(parent)
     comps = [
       {:type => :world_loc, :name => 'start', :label => 'Starting coords.'},
-      {:type => :number, :name => 'count', :label => 'Stone coubt before return to start. '},
+      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :combo, :label => 'Also watch for', :name => 'baux-gyp',
        :vals => ['Nothing', 'Bauxite', 'Gypsum'],},
       
@@ -22,13 +22,13 @@ class PickStones < PickThings
   end
 
   def act
-    count_max = @vals['count'].to_i
     start_coords = WorldLocUtils.parse_world_location(@vals['start'])
+    inventory_win = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+
     walker = Walker.new
     walker.walk_to(start_coords)
     sleep 1
-    count = 0
-
+    prev_text = nil
     loop do
 
       # Get rid of a popup message if it's there. Like, from digging
@@ -37,20 +37,25 @@ class PickStones < PickThings
 
       pt = find_pickable
       if pt.nil?
-        puts "Nothing to pick"
+        walker.walk_to(start_coords)
+        sleep 0.5
       else
+        prev_text = inventory_win.read_text
+        inventory_win.flush_text_reader
         rclick_at(pt, 0.1)
         sleep 0.1
         color = getColor(pt)
         AWindow.dismissAll if WindowGeom.isOuterBorder(color)
       end        
       sleep 4
-      if count >= count_max
+      curr_text = inventory_win.read_text
+      inventory_win.flush_text_reader
+
+      if prev_text == curr_text
         walker.walk_to(start_coords)
         sleep 0.5
-        count = 0
       else
-        count += 1
+        prev_text = curr_text
       end
     end
   end
