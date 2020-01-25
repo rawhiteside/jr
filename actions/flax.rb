@@ -3,6 +3,7 @@ require 'walker'
 require 'user-io'
 
 FLAX_DATA = {
+  'Qwu#212' => {:water => 1},
   'Orchid#109' => {:water => 1},
   'Constitution Peak' => {},
   "Jacob's Field" => {},
