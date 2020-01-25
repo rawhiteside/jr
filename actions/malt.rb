@@ -18,14 +18,14 @@ class MaltingTrays < GridAction
       w.click_on('Take/Everything')
   end
 
-  def act_at(p)
+  def act_at(ginfo)
     sleep 0.5
-    w = PinnableWindow.from_screen_click(Point.new(p['x'],p['y'])).pin
+    w = PinnableWindow.from_screen_click(Point.new(ginfo['x'], ginfo['y'])).pin
     return unless w
     wait_for_no_germinate(w)
     take(w)
     w.unpin
-    mm(p['x'],p['y'], 0.1)
+    mm(ginfo['x'], ginfo['y'], 0.1)
     send_string('m')
   end
 end

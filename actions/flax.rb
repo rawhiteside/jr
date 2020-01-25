@@ -15,9 +15,6 @@ FLAX_DATA = {
 }
 
 class FlaxGrow < Action
-
-
-
   def initialize
     super('Grow flax', 'Plants')
     @walker = Walker.new

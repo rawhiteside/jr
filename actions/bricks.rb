@@ -12,8 +12,8 @@ class Bricks < GridAction
     super + add
   end
 
-  def act_at(p)
-    mm(p['x'],p['y'])
+  def act_at(ginfo)
+    mm(ginfo['x'], ginfo['y'])
     sleep 0.1
     send_string(@user_vals['string'], 0.1)
   end
@@ -55,18 +55,18 @@ class FlimsyBricks < GridAction
     sleep(1)
   end
 
-  def act_at(pt)
+  def act_at(ginfo)
     @project_menu = PinnableWindow.from_point(Point.new(50, 60)) unless @project_menu
     
     raise Exception.new('Expected projects menu pinned UL') unless @project_menu
 
     skip_these = [ [2, 2], ]
-    ij = [pt['ix'], pt['iy']]
+    ij = [ginfo['ix'], ginfo['iy']]
     return if skip_these.index(ij)
 
-    check_build(pt)
+    check_build(ginfo)
 
-    mm(pt['x'], pt['y'])
+    mm(ginfo['x'], ginfo['y'])
     sleep 0.2
     send_string(@user_vals['string'], 0.4)
   end

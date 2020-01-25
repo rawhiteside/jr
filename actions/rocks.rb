@@ -9,9 +9,9 @@ class Cutstones < GridAction
     super
   end
 
-  def act_at(p)
+  def act_at(ginfo)
     with_robot_lock do
-      mm(p['x'],p['y'])
+      mm(ginfo['x'], ginfo['y'])
       sleep 0.2
       send_string('c')
     end
@@ -25,9 +25,9 @@ class Crucibles < GridAction
     super('Crucibles', 'Buildings')
   end
 
-  def act_at(p)
+  def act_at(ginfo)
     with_robot_lock do
-      mm(p['x'],p['y'])
+      mm(ginfo['x'], ginfo['y'])
       sleep 0.2
       send_string('c')
     end

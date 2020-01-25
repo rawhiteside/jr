@@ -16,13 +16,13 @@ class Fert < KettleAction
     @first_pass = (index == 0)
   end
   
-  def act_at(g)
+  def act_at(ginfo)
     delay = 0.01
     unless @first_pass
       w.click_word('Take')
       sleep delay
     end
-    w = KettleWindow.from_screen_click(g['x'], g['y'])
+    w = KettleWindow.from_screen_click(ginfo['x'], ginfo['y'])
     w.click_word('Grain Fert' )
     sleep delay
     w.click_word('Begin')

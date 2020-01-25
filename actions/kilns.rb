@@ -8,8 +8,11 @@ class Kilns < GridAction
 
   def get_gadgets
     super +
-      [{:type => :text, :label => 'String to send', :name => 'string'},
-       {:type => :number, :label => 'Mouse/key delay', :name => 'key-delay'}]
+      [
+        {:type => :text, :label => 'String to send', :name => 'string'},
+        {:type => :number, :label => 'Mouse/key delay', :name => 'key-delay'},
+        {:type => :checkbox, :label => 'Repair kilns', :name => 'repair'},
+      ]
   end
 
   def act
@@ -17,6 +20,9 @@ class Kilns < GridAction
     key_delay = @user_vals['key-delay'].to_f
     repeat = @user_vals['repeat'].to_i
     str = @user_vals['string']
+    @repair = @user_vals['repair'] == 'true'
+    puts "repair:"
+    p @repair
     start = nil
     repeat.times do
       str.each_char do |c|
@@ -35,6 +41,7 @@ class Kilns < GridAction
         win.dismiss
         sleep 0.1
       end
+
       post_grid_hook
       
       wait_more = delay - (Time.now.to_f - start)
@@ -43,7 +50,7 @@ class Kilns < GridAction
   end
 
   def post_grid_hook
-    # repair_kilns
+    repair_kilns if @repair
   end
 
   def repair_kilns
@@ -63,9 +70,9 @@ class PotteryWheel < Kilns
   def initialize
     super('Pottery Wheels', 'Buildings')
   end
-  def act_at(p)
+  def act_at(ginfo)
     
-    mm(p['x'],p['y'])
+    mm(ginfo['x'], ginfo['y'])
     sleep 0.3
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
@@ -85,9 +92,9 @@ class GridHotkeys < Kilns
     super + [{:type => :combo, :label => 'Refill jugs?', :name => 'jugs', :vals => ['Yes', 'No']},]
   end
 
-  def act_at(p)
+  def act_at(ginfo)
     
-    mm(p['x'],p['y'])
+    mm(ginfo['x'], ginfo['y'])
     sleep 0.3
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
