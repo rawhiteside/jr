@@ -78,7 +78,7 @@ class HowMuch < Window
   def self.max
     win = wait_for_win
     return nil unless win
-    win.dialog_click(Point.new(110, win.rect.height - 30), 'lc', 0.1)
+    win.click_on('Max')
     wait_till_gone
 
     true
@@ -93,7 +93,7 @@ class HowMuch < Window
     robot = ARobot.shared_instance
     robot.send_string(amt.to_i.to_s, 0.05)
     ARobot.shared_instance.sleep(0.1)
-    win.dialog_click(Point.new(170, win.rect.height - 45))
+    win.click_on('Ok')
     wait_till_gone
     
     true
@@ -102,7 +102,7 @@ class HowMuch < Window
   # Click on the cancel button.
   private
   def self.cancel(w)
-    w.dialog_click(Point.new(170, w.rect.height - 20))
+    w.click_on('Cancel')
   end
 
   
@@ -119,7 +119,9 @@ class HowMuch < Window
     wid, height = dim.width, dim.height
     win = Window.from_point(Point.new(wid/2, height/2))
     if win && win.read_text =~ /(much|many)/
-      return win
+      # Re-get the window because of a race condition when HowMuch is
+      # over another window.
+      return Window.from_point(Point.new(wid/2, height/2))
     else
       return nil
     end
