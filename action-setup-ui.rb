@@ -54,7 +54,8 @@ class SetupDialog
   # A text field:
   # {:type => :text, :label => 'A label', :name => 'the_text'}
   # The allowed types:
-  #    :text, :number, :frame, :point, :grid, :big_text, :label, :combo, :world_loc, :world_path
+  #    :text, :number, :frame, :point, :grid, :big_text, :label, :combo,
+  #    :world_loc, :world_path, :checkbox
   def initialize(parent_win, name, title, gadgets)
     @parent_win = parent_win
     @name = name
@@ -428,6 +429,34 @@ class SetupCombo < Box
   end
 end
 
+# Adds a Checkbox
+# 
+# {:type => :checkbox, :label => 'Go Fast!', :name => 'speed',}
+#
+# The return value hash will have an entry for 'speed'
+class SetupCheckBox < JPanel
+  def initialize(prefix, h, data_gets, data_puts)
+    super()
+    set_layout(BoxLayout.new(self, BoxLayout::X_AXIS))
+
+    check = JCheckBox.new(h[:label])
+
+    add(check)
+    add(Box.create_horizontal_glue)
+
+    val_key = prefix + h[:name].to_s
+
+    data_gets[val_key] = Proc.new do
+      check.selected?.to_s
+    end
+    
+    data_puts[val_key] = Proc.new do |val|
+      check.selected = (val.to_s == 'true')
+    end
+
+  end
+end
+
 class WorldLocUtils
 
   # Create a Button that will get the current world coordinates and
@@ -522,6 +551,8 @@ class GadgetFactory
       parent.add(SetupTextGadget.new(prefix, h, data_gets, data_puts))
     when :combo
       parent.add(SetupCombo.new(prefix, h, data_gets, data_puts))
+    when :checkbox
+      parent.add(SetupCheckBox.new(prefix, h, data_gets, data_puts))
     when :frame
       parent.add(SetupFrameGadget.new(prefix, h, data_gets, data_puts))
     when :point
