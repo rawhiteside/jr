@@ -262,8 +262,8 @@ class Piler < ARobot
     dim = ARobot.shared_instance.screen_size
 
     height= dim.height
-    @y1 = height/20
-    @y2 = @y1 * 10
+    @y1 = height/10
+    @y2 = height/2
     @current = Point.new(PILE_OFFSET, @y1)
     @other = Point.new(PILE_OFFSET, @y2)
   end
