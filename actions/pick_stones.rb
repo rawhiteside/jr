@@ -41,7 +41,6 @@ class PickStones < PickThings
         sleep 0.5
       else
         prev_text = inventory_win.read_text
-        inventory_win.flush_text_reader
         rclick_at(pt, 0.1)
         sleep 0.1
         color = getColor(pt)
@@ -49,7 +48,6 @@ class PickStones < PickThings
       end        
       sleep 4
       curr_text = inventory_win.read_text
-      inventory_win.flush_text_reader
 
       if prev_text == curr_text
         walker.walk_to(start_coords)

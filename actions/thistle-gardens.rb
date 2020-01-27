@@ -43,7 +43,7 @@ class ThistleGardens < GridAction
 
     windows = cascade_windows
     # The bold text needs bigger space threshold
-    windows.each {|w| w.set_space_pixel_count(5)}
+    windows.each {|w| w.set_space_pixel_count(6)}
 
     # Make an initial pass through, harvesting if there's anything to harvest.
     harvest_batch(windows)

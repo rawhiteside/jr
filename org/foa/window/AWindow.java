@@ -127,7 +127,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 	private static int RMIN = 0xca;
 	private static int GMIN = 0xb4;
 	private static int BMIN = 0x81;
-	private int m_spacePixelCount = 3;
+	private int m_spacePixelCount = 4;
 	// ITextHelper methods.
 	public boolean isInk(Color c) {
 		//if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) 

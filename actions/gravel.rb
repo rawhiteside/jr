@@ -105,7 +105,6 @@ class GravelAction < PickThings
 
   def gather_at_pixel(pb, pt)
 
-    @inventory_window.flush_text_reader
     inv_text_before = @inventory_window.read_text
     screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
     rclick_at(screen_x, screen_y, 0.2)
@@ -124,7 +123,6 @@ class GravelAction < PickThings
     # move along.
     5.times do
       sleep 1
-      @inventory_window.flush_text_reader
       inv_text = @inventory_window.read_text
       if inv_text != inv_text_before
         sleep 2.5

@@ -202,6 +202,11 @@ class DarkWindow < AWindow
     !background?(color)
   end
 
+  def read_text
+    flush_text_reader
+    super
+  end
+
   def background?(color)
     color.red < 50 &&
     color.green < 75  &&
