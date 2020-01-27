@@ -148,10 +148,10 @@ class SetupDialog
     end
     #
     # Always On Top checkbox
-    ontop = JCheckBox.new('Keep on top')
+    ontop = JCheckBox.new('Keep on top', true)
     ontop.tool_tip_text = 'Keep this dialog always on top.'
     frame = SwingUtilities.getWindowAncestor(parent)
-    frame.always_on_top = false
+    frame.always_on_top = true
     ontop.add_item_listener do |event|
       frame.always_on_top = (event.get_state_change == ItemEvent::SELECTED)
     end
