@@ -39,7 +39,7 @@ public class WindowGeom extends ARobot {
 		}
 		// Need to fix, but this returns the rectangle inner border.
 		// We're expected to return the whole window, which is 3
-		// pixels larger alll 'round.  Fix that.
+		// pixels larger all 'round.  Fix that.
 		return new Rectangle(rv.x - 3, rv.y - 3, rv.width + 6, rv.height + 6);
 	}
 
@@ -108,8 +108,8 @@ public class WindowGeom extends ARobot {
 		int width = findWidth(pb, origin);
 		int height = findHeight(pb, origin.x, origin.y);
 
-		if (height <= 10 || width <= 10) {
-			if(debug) { System.out.println("Rectangle was too small: " + width + ", " + height); }
+		if (height <= 30 || width <= 50) {
+			if(debug) { System.out.println("WindowGeom: Rectangle was too small: " + width + ", " + height); }
 			return null;
 		}
 

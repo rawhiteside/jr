@@ -32,7 +32,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 
 	// A default one. You will prolly want to over-ride this.
 	public Insets textInsets(){
-		return new Insets(4, 4, 5, 5);
+		return new Insets(0, 0, 0, 0);
 	}
 
 	// Just a note that can be attached to the window as needed.

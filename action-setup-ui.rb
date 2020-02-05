@@ -139,7 +139,7 @@ class SetupDialog
     # 
     # Help button, but just for things with a name.
     if @name
-      help = JButton.new("Notes")
+      help = JButton.new("Help")
       help.tool_tip_text = 'View or edit the setup instructions.'
       help.add_action_listener do |e|
         UserIO.show_help(@name, panel)
@@ -827,6 +827,10 @@ class DialogDefaultsManager < Box
 
     copy_button = JButton.new('Copy')
     copy_button.add_action_listener do |e| 
+      copy = "Copy of #{@combo.selected_item}"
+      @dialog_defaults[copy] = @dialog_defaults[@combo.selected_item].dup
+      @combo.add_item(copy)
+      @combo.selected_item = copy
       @combo.editable = true
       @combo.editor.select_all
       @last_button_text = 'Copy'

@@ -146,8 +146,7 @@ class PopupWindow < Window
   end
 
   def textInsets
-    # { :right => 32, :left => 14, :top => 14, :bottom => 5 }
-    Insets.new(14, 14, 5, 32)
+    Insets.new(5, 5, 5, 5)
   end
 
   # try to dismiss the popup thing.  Click on the last glyph from the
@@ -194,8 +193,7 @@ class DarkWindow < AWindow
   end
   
   def textInsets
-    # { :right => 3, :left => 0, :top => 0, :bottom => 0 }
-    Insets.new(4, 4, 4, 4)
+      Insets.new(4, 4, 4, 4)
   end
 
   def isInk(color)

@@ -41,7 +41,6 @@ public class PinnableWindow extends AWindow {
 	}
 
 	public Insets textInsets() {
-		// return new Insets(4, 4, 5, 32);
 		return new Insets(0,0,0,0);
 	}
 

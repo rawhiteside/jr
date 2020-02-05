@@ -127,3 +127,11 @@ Firepits: "Stand to the left, right at the green/brown edge between the firepits
   \ clear so that the \"Striking...\" popup doesn't obscure the firepits.\n"
 Potency Push: "Kitchen must be freshly cleaned at start.\n\nHold ingredients, of course.\
   \ \n"
+Gravel: "Drop, smash, gether: \nDrop:\n- Grab 300 of something, along with a sledge.\
+  \  \n- Run N from teh WH to y = ~-6722.  \n- Drop\n- Continue on to -xx19.\n- Pin\
+  \ \"Drop XX\" so that it's over the \"OK\" HowMany button.\n- Use \"Interval Keys\"\
+  \ with <Tab>, and interval of 0.01, and run. \n\nSmash: \n- Go back and pick up\
+  \ the sledge, then back to the pile of stones. \n- Use Interval Keys, again, this\
+  \ time with \"s\".\n- Wave the pointer around a bit over the stones as it runs.\
+  \ \n- If you stop being interrupted in the animation, R-click on the ground and\
+  \ continue. \n\nGather.:\n- Stash sledge and gravel, then run this macro. \n"
