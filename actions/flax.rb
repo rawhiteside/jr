@@ -181,7 +181,7 @@ class FlaxGrow < Action
 	  dlg.unpin
 	  return false
 	end
-        return true if dlg.click_on("Water") || dlg.click_on("Weed")
+        return true if water_or_weed(dlg)
         if dlg.click_on("Harvest seeds")
           dlg.click_on("Util/Rip")
           dlg.unpin
@@ -216,6 +216,17 @@ class FlaxGrow < Action
   end
 
                 
+  def water_or_weed(dlg)
+    if dlg.click_on("Water") || dlg.click_on("Weed")
+      if dlg.read_text.include?('This is too far')
+        return false
+      else
+        return true
+      end
+    else
+      return false
+    end
+  end
 
   def plant(pop_point)
     rclick_at(@plant_point)
