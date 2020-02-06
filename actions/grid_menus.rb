@@ -24,7 +24,6 @@ Action.add_action(GridMenus.new)
 class FillDistaffs < GridAction
   def initialize
     super('Fill Distaffs', 'Buildings')
-    @piler = Piler.new
   end
 
   def get_gadgets
@@ -32,6 +31,11 @@ class FillDistaffs < GridAction
       {:type => :checkbox, :label => 'Skip center 4', :name => 'should-skip'},
       {:type => :checkbox, :label => 'Start spinning', :name => 'start-spin'},
     ]
+  end
+
+  def start_pass(index)
+    @piler = Piler.new
+    @windows = nil
   end
 
   def act_at(ginfo)
