@@ -23,32 +23,46 @@ Action.add_action(GridMenus.new)
 
 class FillDistaffs < GridAction
   def initialize
-    super('Fill Distaffs', 'Buildings')
+    super('Distaffs', 'Buildings')
   end
 
+  TAKE = 'Take'
+  FILL = 'Fill'
+  FILL_START = 'Fill and start'
+  
+  TASKS = [TAKE, FILL, FILL_START]
   def get_gadgets
     super  + [
+      {:type => :combo, :label => 'What do to', :name => 'task', :vals => TASKS },
       {:type => :checkbox, :label => 'Skip center 4', :name => 'should-skip'},
-      {:type => :checkbox, :label => 'Start spinning', :name => 'start-spin'},
     ]
   end
 
   def start_pass(index)
     @piler = Piler.new
     @windows = nil
+    @spin = (@user_vals['task'] == FILL_START)
+    @take_only = (@user_vals['task'] == TAKE)
   end
 
   def act_at(ginfo)
     return if should_skip?(ginfo)
-    should_spin = (@user_vals['start-spin'] == 'true')
     
     win = PinnableWindow.from_screen_click(ginfo['x'], ginfo['y'])
-
+    
     win.pin
     @piler.pile(win)
+    if @take_only
+      win.click_on('Take/Everything')
+      win.unpin
+      return
+    end
+    # Maybe something left.  Take it.
+    win.refresh if win.click_on('Take/Everything')
+
     HowMuch.max if win.click_on('Load')
 
-    if should_spin
+    if @spin
       spin(ginfo, win)
     else
       win.unpin
