@@ -37,7 +37,7 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	// ITextHelper methods
-	private int m_spacePixelCount = 6;
+	private int m_spacePixelCount = 5;
 	public boolean isInk(Color c) {
 		//if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) {
 		if (c.getBlue() > 50) {
@@ -81,26 +81,18 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	public int[] coords() {
-		// All this error catching is because of a really
-		// low-probability failure that I don't understand.  Perhaps
-		// the output here will let me figure it out.
-		for(int i = 0; i < 5; i++) {
-			String text = ClockLocWindow.instance().readText();
-			try 
-				{ 
-					return attemptCoords(text); 
-				}
-			catch (NumberFormatException e) 
-				{
-					System.out.println("Coords failed with \"" + text + "\" Retrying.");
-				}
-			catch (Exception e)
-				{
-					System.out.println("General exception of " + e.toString());
-					System.out.println("Text of " + text);
-				}
-			sleepSec(0.1);
+		String text = ClockLocWindow.instance().readText();
+		try { 
+			return attemptCoords(text); 
 		}
+		catch (NumberFormatException e) {
+			System.out.println("Coords failed with text:\"" + text + "\".");
+		}
+		catch (Exception e) {
+			System.out.println("General exception of " + e.toString());
+			System.out.println("Text was:" + text);
+		}
+		sleepSec(0.1);
 		return null;
 	}
 

@@ -10,20 +10,14 @@ class GravelAction < PickThings
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
-      {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
       {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :world_loc, :label => 'Smash location', :name => 'smash_loc'},
-      {:type => :world_loc, :label => 'Location near WH', :name => 'stash_loc'},
-      {:type => :number, :label => 'Count until stash', :name => 'pick_count'}
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act
-    @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
     @inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
-    @stash_count = @vals['pick_count'].to_i
-    @picked_count = 0
 
     walker = Walker.new
 
@@ -35,7 +29,6 @@ class GravelAction < PickThings
 	walker.walk_to(coord)
         sleep 2
         gather_at(walker, coord)
-        go_and_stash if @picked_count >= @stash_count
       end
     end
   end

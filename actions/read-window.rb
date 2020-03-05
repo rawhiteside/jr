@@ -31,8 +31,6 @@ class ReadWindow < Action
     cl = ClockLocWindow.instance
     puts "World coordinates: (#{cl.coords[0]}, #{cl.coords[1]})"
     
-    return
-
     skills = SkillsWindow.new
     # skills.display_to_user("Skills window")
     puts "===================== Skills Window"
