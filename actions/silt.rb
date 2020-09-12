@@ -38,7 +38,7 @@ class SiltAction < PickThings
           HowMuch.max if @stash_window.click_on('Stash/Silt')
         elsif coord == 'Silt'
           sleep 0.2
-          gather_until_none(walker, last_coord)
+          count = gather_until_none(walker, last_coord)
         end
       end
     end
