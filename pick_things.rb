@@ -3,7 +3,7 @@ require 'action'
 # A super class for gathering stuff:  silt, gravel, dig stones...
 # Main entry is "gather_until_done".
 # 
-# You must implement gatherable?(pb, pt), which tells whether you
+# You must implement click_on_this?(pb, pt), which tells whether you
 # might gather by clicking on the provided point.
 #
 # You might also need to override check_for_post_click_window
@@ -82,7 +82,7 @@ class PickThings < Action
   # :no - Nothing at this screen point
   # :done_here - Nothing in range.  Done at these world coordinates.
   def try_gather(pb, pt)
-    if gatherable?(pb, pt)
+    if click_on_this?(pb, pt)
       inv_text_before = @inventory_window.read_text
       screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
       point = Point.new(screen_x, screen_y)
@@ -142,47 +142,5 @@ class PickThings < Action
     cache[pt] = [hue, sat, val]
     return cache[pt]
   end
-
-  def bauxite?(pb, pt, cache)
-
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-      (24..30).cover?(hue) && (100..140).cover?(sat)
-    end
-  end
-
-  def gypsum?(pb, pt, cache)
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-      (31..36).cover?(hue) && (85..100).cover?(sat)
-    end
-
-  end
-
-  def stone?(pb, pt, cache)
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-        # Near-perfectly grey things seem weird in HSB space. 
-      (hue == 300 && sat < 9)||
-        (hue == 120 && sat < 9) ||
-        (hue == 0 && sat == 0 && val > 0)
-    end
-  end
-
-
-  def pickable?(pb, pt, cache)
-    size = 1
-    (-size).upto(size) do |off|
-      pt_tmp = Point.new(pt.x + off, pt.y)
-      hsb = hsb_for_point(pb, pt_tmp, cache)
-      hue, sat, val = hsb[0], hsb[1], hsb[2]
-      return false unless yield(hue, sat, val)
-
-      pt_tmp = Point.new(pt.x, pt.y + off)
-      hsb = hsb_for_point(pb, pt_tmp, cache)
-      hue, sat, val = hsb[0], hsb[1], hsb[2]
-      return false unless yield(hue, sat, val)
-    end
-
-     return true
-  end
-
 
 end

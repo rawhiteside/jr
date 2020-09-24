@@ -54,7 +54,7 @@ class SiltAction < PickThings
   end
 
 
-  def gatherable?(pb, pt)
+  def click_on_this?(pb, pt)
     silt_color?(pb, pt.x, pt.y) &&
       silt_color?(pb, pt.x + 1, pt.y) &&
       silt_color?(pb, pt.x - 1, pt.y) &&

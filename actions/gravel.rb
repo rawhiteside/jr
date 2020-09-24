@@ -28,9 +28,22 @@ class GravelAction < PickThings
       coords.each do |coord|
 	walker.walk_to(coord)
         sleep 2
-        gather_at(walker, coord)
+        gather_until_none(walker, coord)
       end
     end
+  end
+
+  def click_on_this?(pb, pt)
+    color = pb.color(pt.x, pt.y)
+    r, g, b = color.red, color.green, color.blue
+    hsb = Color.RGBtoHSB(r, g, b, nil)
+    hue = hsb[0]
+    sat = hsb[1]
+    val = hsb[2]
+    # Near-perfectly grey things seem weird in HSB space. 
+    return (hue == 300 && sat < 9)||
+           (hue == 120 && sat < 9) ||
+           (hue == 0 && sat == 0 && val > 0)
   end
 
 
@@ -45,84 +58,19 @@ class GravelAction < PickThings
     return coords
   end
 
-  # Gather nearby things repeatedly, just wandering wherever it takes
-  # you. When you run out of things, return to these coords and do it
-  # again.  Repeat *that* until there's nothing at the coords.
-  def gather_at(walker, coords)
-    loop do
-      # Gather as many as we find, going from one silt pile to
-      # another.
-      got_some = gather_several
-      return unless got_some
-      # Go back to the starting point and check again for more.
-      walker.walk_to(coords)
-      sleep 2
-    end
-  end
-
-  # Just gather the nearest thing until there's nothing to gather.
-  # You may wander off following the things to gather.
-  def gather_several
-    gathered_once = gather_once
-    if gathered_once
-      loop { break unless gather_once }
-    end
-    return gathered_once
-  end
-
-  # Gather the nearest thing. Return whether there was anything to
-  # gather.
-  def gather_once
-    pb = full_screen_capture
-    cache = {}
-    center = Point.new(pb.width/2, pb.height/2)
-    max_rad = pb.height/2 - 150
-    max_rad.times do |r|
-      pts = square_with_radius(center, r)
-      pts.each  do |pt|
-        if stone?(pb, pt, cache)
-          state = gather_at_pixel(pb, pt)
-          return true if state == :yes
-          return false
-        end
-      end
-    end
-    
-    return false
-  end
-
-  # Returns:
-  # :yes - gathered silt
-  # :no - Nothing at this screen point
-  # :done_here - Nothing in range.  Done at these world coordinates.
-
-  def gather_at_pixel(pb, pt)
-
-    inv_text_before = @inventory_window.read_text
-    screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
-    rclick_at(screen_x, screen_y, 0.2)
-    sleep 0.3
-    color = getColor(screen_x, screen_y)
+  def check_for_post_click_window(screen_x, screen_y)
     if (w = PinnableWindow.from_point(screen_x + 4, screen_y))
       if w.read_text.include?('too far')
         AWindow.dismiss_all
-        return :done_here
+        return :true
       end
-      AWindow.dismiss_all unless w.click_on('Pick')
-    end
-
-    # Wait for the inventory to change.  If not, then we clicked on
-    # some ground that looked like something to gather.  Let's just
-    # move along.
-    5.times do
-      sleep 1
-      inv_text = @inventory_window.read_text
-      if inv_text != inv_text_before
-        sleep 2.5
-        return :yes
+      if w.click_on('Pick')
+        return false
+      else
+        AWindow.dismiss_all
+        return :true
       end
     end
-    return :done_here
   end
 end
 
