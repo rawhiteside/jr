@@ -17,12 +17,12 @@ class PickThings < Action
   # you. When you run out of things, return to these coords and do it
   # again.  Repeat *that* until there's nothing at the coords.
   # Returns count of things gathered.
-  def gather_until_none(walker, coords)
+  def gather_until_none(walker, coords, inventory_window)
     total_count = 0
     loop do
       # Gather as many as we find, going from one silt pile to
       # another.
-      count = gather_nearest_until_none
+      count = gather_nearest_until_none(inventory_window)
       total_count += count
       return total_count unless count > 0
       # Go back to the starting point and check again for more.
@@ -34,11 +34,11 @@ class PickThings < Action
 
   # Just gather the nearest thing until there's nothing to gather.
   # You may wander off following the things to gather.
-  def gather_nearest_until_none
-    gather_count = gather_once
+  def gather_nearest_until_none(inventory_window)
+    gather_count = gather_once(inventory_window)
     if gather_count > 0
       loop do
-        break unless gather_once > 0
+        break unless gather_once(inventory_window) > 0
         gather_count += 1
       end
     end
@@ -46,14 +46,14 @@ class PickThings < Action
   end
 
   # Gather the nearest thing. Return number gathered (0/1)
-  def gather_once
+  def gather_once(inventory_window)
     pb = full_screen_capture
     center = Point.new(pb.width/2, pb.height/2)
     max_rad = pb.height/2 - 200
     max_rad.times do |r|
       pts = square_with_radius(center, r)
       pts.each  do |pt|
-        state = try_gather(pb, pt)
+        state = try_gather(pb, pt, inventory_window)
         return 1 if state == :yes
         return 0 if state == :done_here
       end
@@ -81,9 +81,9 @@ class PickThings < Action
   # :yes - gathered silt
   # :no - Nothing at this screen point
   # :done_here - Nothing in range.  Done at these world coordinates.
-  def try_gather(pb, pt)
+  def try_gather(pb, pt, inventory_window)
     if click_on_this?(pb, pt)
-      inv_text_before = @inventory_window.read_text
+      inv_text_before = inventory_window.read_text
       screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
       point = Point.new(screen_x, screen_y)
 
@@ -102,7 +102,7 @@ class PickThings < Action
       # move along.
       5.times do
         sleep 1
-        inv_text = @inventory_window.read_text
+        inv_text = inventory_window.read_text
         if inv_text != inv_text_before
           sleep 2.5
           return :yes

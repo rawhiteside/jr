@@ -17,18 +17,17 @@ class GravelAction < PickThings
   end
 
   def act
-    @inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
-
+    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
     walker = Walker.new
 
     coords = grid_from_smash_loc
 
     loop do
       last_coord = nil
-      coords.each do |coord|
-	walker.walk_to(coord)
-        sleep 2
-        gather_until_none(walker, coord)
+          coords.each do |coord|
+            walker.walk_to(coord)
+            sleep 2
+            gather_until_none(walker, coord, inventory_window)
       end
     end
   end

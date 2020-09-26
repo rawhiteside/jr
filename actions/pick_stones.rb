@@ -5,7 +5,7 @@ require 'pick_things'
 
 class PickStones < PickThings
   def initialize
-    super("Pick Stones", "Misc")
+    super("Pick Stones", "Gather")
   end
 
   def setup(parent)
@@ -22,6 +22,25 @@ class PickStones < PickThings
   end
 
   def act
+    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+    walker = Walker.new
+    c  = WorldLocUtils.parse_world_location(@vals['start'])
+    grid = [
+      [c[0], c[1] - 1],
+      [c[0], c[1] + 1],
+      [c[0] - 1, c[1]],
+      [c[0] + 1, c[1]],
+    ]
+    loop do
+      grid.each do |coord|
+        walker.walk_to(coord)
+        sleep 1
+        gather_until_none(walker, coord, inventory_window)
+      end
+    end
+  end
+
+  def xact
     start_coords = WorldLocUtils.parse_world_location(@vals['start'])
     inventory_win = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
 
@@ -58,6 +77,13 @@ class PickStones < PickThings
     end
   end
 
+  def click_on_this?(pb, pt)
+    # XXX cache
+    cache = {}
+    return pt if stone?(pb, pt, cache)
+    return pt if @vals['baux-gyp'] == 'Bauxite' && bauxite?(pb, pt, cache)
+    return pt if @vals['baux-gyp'] == 'Gypsum' && gypsum?(pb, pt, cache)
+  end
 
   def find_pickable
     pb = full_screen_capture

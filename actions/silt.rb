@@ -19,10 +19,9 @@ class SiltAction < PickThings
 
   def act
     @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
-    @inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
 
+    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
     walker = Walker.new
-
     coords = WorldLocUtils.parse_world_path(@vals['path'])
 
     loop do
@@ -38,7 +37,7 @@ class SiltAction < PickThings
           HowMuch.max if @stash_window.click_on('Stash/Silt')
         elsif coord == 'Silt'
           sleep 0.2
-          count = gather_until_none(walker, last_coord)
+          count = gather_until_none(walker, last_coord, inventory_window)
         end
       end
     end
