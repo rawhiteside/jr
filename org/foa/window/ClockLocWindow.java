@@ -39,12 +39,16 @@ public class ClockLocWindow extends AWindow {
 	// ITextHelper methods
 	private int m_spacePixelCount = 5;
 	public boolean isInk(Color c) {
-		//if (Math.abs(c.getRed() - c.getGreen()) < 25 || Math.abs(c.getGreen() - c.getBlue()) < 25) {
-		if (c.getBlue() > 50) {
-			return true;
-		} else {
+		// Backgrounds:
+		// Kush: b < 50
+		// Mesh: r == 0
+		// Kyksos: b < 50
+		if (c.getBlue() < 50 || c.getRed() < 5) {
 			return false;
+		} else {
+			return true;
 		}
+
 	}
 	public void setSpacePixelCount(int count) {
 		m_spacePixelCount = count;
