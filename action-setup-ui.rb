@@ -629,7 +629,7 @@ class SetupWorldPathGadget < JPanel
     count = 0
     count = h[:custom_buttons] unless h[:custom_buttons].nil?
     count.times do |i|
-      button_box.add(custom_text_inserter("custom_text_#{i}", area, data_gets, data_puts))
+      button_box.add(custom_text_inserter("#{h[:name]}.custom_text_#{i}", area, data_gets, data_puts))
       button_box.add(Box.create_vertical_glue)
     end
     box.add(Box.create_horizontal_glue)
