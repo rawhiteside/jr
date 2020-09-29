@@ -18,8 +18,25 @@ class Walker < ARobot
     [-1, 1] => :nw, 
     [-1, -1] => :sw, 
   }
+
+  # Keys that make us walk in the provided direction.
+  DIR_KEYS = {
+    :n => [VK_UP],
+    :s => [VK_DOWN],
+    :w => [VK_LEFT],
+    :e => [VK_RIGHT],
+    :ne => [VK_UP, VK_RIGHT],
+    :nw => [VK_UP, VK_LEFT],
+    :se => [VK_DOWN, VK_RIGHT],
+    :sw => [VK_DOWN, VK_LEFT],
+  }
+
   def initialize()
     super()
+    
+    # Directions to try going if we get stuck. 
+    # We try one, then rotate the array. 
+    @unstick_directions = DIR_KEYS.keys
 
     # So we stop walking on pause. 
     unless @@listener_added
@@ -32,6 +49,10 @@ class Walker < ARobot
   end
 
   
+  # After we "stop" walking, animation continues for a bit.  This
+  # pause will get past that.
+  POST_WALK_PAUSE = 0.5
+
   # Time for the key to be down for a good "step"
   KEY_DELAY=0.075
 
@@ -73,16 +94,6 @@ class Walker < ARobot
   end
 
 
-  DIR_KEYS = {
-    :n => [VK_UP],
-    :s => [VK_DOWN],
-    :w => [VK_LEFT],
-    :e => [VK_RIGHT],
-    :ne => [VK_UP, VK_RIGHT],
-    :nw => [VK_UP, VK_LEFT],
-    :se => [VK_DOWN, VK_RIGHT],
-    :sw => [VK_DOWN, VK_LEFT],
-  }
   # dir is one of :n, :s, :w, :e, :ne, :nw, :se, :sw
   def start_going(dir)
     all_up
@@ -95,6 +106,10 @@ class Walker < ARobot
 
   def stop_going
     all_up
+  end
+
+  def post_walk_pause
+    sleep POST_WALK_PAUSE
   end
 
   # +coords+: a set of coordinates through which to walk in order.
@@ -162,6 +177,7 @@ class Walker < ARobot
     # Loop that watches the loc window, and adjusts direction
     # accordingly.
     curr_direction = nil
+    check_for_stuck(nil)
     loop do
       check_for_pause
       count += 1
@@ -179,8 +195,60 @@ class Walker < ARobot
 	start_going(direction)
 	curr_direction = direction
       end
+      check_for_stuck(curr)
       sleep 0.1
     end
+  end
+
+  # *****************************************************************
+  # Try to deal with getting stuck.
+  # 
+  # If coords don't change in this many seconds, we're stuck. 
+  STUCK_SECONDS = 2
+
+  # Stuck handler.  If we stay at the same coords too long, try
+  # walking in some direction for a bit, and hope we get out of
+  # trouble.
+  # 
+  # Give it the current coords each time we read them during walk_to.
+  # Give nil to reset it (at the start of walk_to).
+  def check_for_stuck(coords)
+    # 
+    # Reset the stuck-checker
+    if coords.nil?
+      @prev_time = @prev_coords = nil
+      return
+    end
+    # First non-nil coords?
+    if @prev_coords.nil? 
+      @prev_coords = coords
+      @prev_time = Time.now
+      return
+    end
+    # .. Maybe everything's OK:
+    if coords != @prev_coords
+      @prev_coords = coords
+      @prev_time = Time.now
+      return
+    end
+    # Coords the same as last time.  Maybe it's been a short time.
+    return if (Time.now - @prev_time) < STUCK_SECONDS
+    # 
+    # Ooops.  We're stuck.  Try to handle.
+    handle_stuck
+    @prev_time = @prev_coords = nil
+  end
+  #
+  # We're stuck.  Try to just walk in some direction and hope that
+  # clears things up.
+  def handle_stuck
+    all_up
+    dir = @unstick_directions[0]
+    @unstick_directions.rotate!
+    puts "We're stuck.  trying to go #{dir} for a second"
+    start_going(dir)
+    sleep 1
+    all_up
   end
 end
 
