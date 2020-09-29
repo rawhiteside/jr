@@ -5,6 +5,7 @@ require 'pick_things'
 class GravelAction < PickThings
   def initialize
     super('Gravel', 'Gather')
+    @post_gather_wait = 2.5
   end
 
   def setup(parent)
@@ -14,6 +15,7 @@ class GravelAction < PickThings
       {:type => :world_loc, :label => 'Smash location', :name => 'smash_loc'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+
   end
 
   def act
@@ -32,17 +34,10 @@ class GravelAction < PickThings
     end
   end
 
-  def click_on_this?(pb, pt)
-    color = pb.color(pt.x, pt.y)
+  def gather_color?(pb, x, y)
+    color = pb.color(x, y)
     r, g, b = color.red, color.green, color.blue
-    hsb = Color.RGBtoHSB(r, g, b, nil)
-    hue = hsb[0]
-    sat = hsb[1]
-    val = hsb[2]
-    # Near-perfectly grey things seem weird in HSB space. 
-    return (hue == 300 && sat < 9)||
-           (hue == 120 && sat < 9) ||
-           (hue == 0 && sat == 0 && val > 0)
+    return r > 150 && (r - g).abs < 15 && (r - b).abs < 15
   end
 
 

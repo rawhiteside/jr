@@ -6,6 +6,8 @@ require 'pick_things'
 class PickStones < PickThings
   def initialize
     super("Pick Stones", "Gather")
+
+    @post_gather_wait = 2.5
   end
 
   def setup(parent)
@@ -40,109 +42,33 @@ class PickStones < PickThings
     end
   end
 
-  def xact
-    start_coords = WorldLocUtils.parse_world_location(@vals['start'])
-    inventory_win = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
 
-    walker = Walker.new
-    walker.walk_to(start_coords)
-    sleep 1
-    prev_text = nil
-    loop do
-
-      # Get rid of a popup message if it's there. Like, from digging
-      # or a Tower Hour.
-      PopupWindow.dismiss
-
-      pt = find_pickable
-      if pt.nil?
-        walker.walk_to(start_coords)
-        sleep 0.5
-      else
-        prev_text = inventory_win.read_text
-        rclick_at(pt, 0.1)
-        sleep 0.1
-        color = getColor(pt)
-        AWindow.dismissAll if WindowGeom.isOuterBorder(color)
-      end        
-      sleep 4
-      curr_text = inventory_win.read_text
-
-      if prev_text == curr_text
-        walker.walk_to(start_coords)
-        sleep 0.5
-      else
-        prev_text = curr_text
-      end
+  # This will cause the searcher to find a hit on a *mixture* of stone
+  # and gypsum/bauxite colors.  I think that case rare, and an extra
+  # click isn't a big deal, anyway.
+  def gather_color?(pb, x, y)
+    color = pb.color(x, y)
+    r, g, b = color.red, color.green, color.blue
+    # Stone.
+    if r > 150 && (r - g).abs < 15 && (r - b).abs < 15
+      return true
     end
-  end
 
-  def click_on_this?(pb, pt)
-    # XXX cache
-    cache = {}
-    return pt if stone?(pb, pt, cache)
-    return pt if @vals['baux-gyp'] == 'Bauxite' && bauxite?(pb, pt, cache)
-    return pt if @vals['baux-gyp'] == 'Gypsum' && gypsum?(pb, pt, cache)
-  end
+    return false if @vals['baux-gyp'] == 'Nothing'
+    hsb = Color.RGBtoHSB(r, g, b, nil)
+    hsb[0] = (360 * hsb[0]).to_i
+    hsb[1] = (256 * hsb[1]).to_i
 
-  def find_pickable
-    pb = full_screen_capture
-    cache = {}
-    center = Point.new(pb.width/2, pb.height/2)
-    off = 40
-    off = 0 if @vals['baux-gyp'] == 'Nothing'
-    (-(150 + off) + pb.height/2).times do |r|
-      pts = square_with_radius(center, r + off)
-      pts.each  do |pt|
-        return pt if stone?(pb, pt, cache)
-        return pt if @vals['baux-gyp'] == 'Bauxite' && bauxite?(pb, pt, cache)
-        return pt if @vals['baux-gyp'] == 'Gypsum' && gypsum?(pb, pt, cache)
-      end
+    # Gypsum
+    if @vals['baux-gyp'] == 'Gypsum'
+      return (31..36).cover?(hsb[0]) && (85..100).cover?(hsb[1])
     end
     
-    return nil
-  end
-
-  def pickable?(pb, pt, cache)
-    size = 1
-    (-size).upto(size) do |off|
-      pt_tmp = Point.new(pt.x + off, pt.y)
-      hsb = hsb_for_point(pb, pt_tmp, cache)
-      hue, sat, val = hsb[0], hsb[1], hsb[2]
-      return false unless yield(hue, sat, val)
-
-      pt_tmp = Point.new(pt.x, pt.y + off)
-      hsb = hsb_for_point(pb, pt_tmp, cache)
-      hue, sat, val = hsb[0], hsb[1], hsb[2]
-      return false unless yield(hue, sat, val)
+    # Bauxite
+    if @vals['baux-gyp'] == 'Bauxite'
+      return (24..30).cover?(hsb[0]) && (100..140).cover?(hsb[1])
     end
-
-    return true
-  end
-
-
-  def stone?(pb, pt, cache)
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-      # Near-perfectly grey things seem weird in HSB space. 
-      (hue == 300 && sat < 9)||
-        (hue == 120 && sat < 9) ||
-        (hue == 0 && sat == 0 && val > 0)
-    end
-  end
-
-
-  def bauxite?(pb, pt, cache)
-
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-      (24..30).cover?(hue) && (100..140).cover?(sat)
-    end
-  end
-
-  def gypsum?(pb, pt, cache)
-    return pickable?(pb, pt, cache) do |hue, sat, val|
-      (31..36).cover?(hue) && (85..100).cover?(sat)
-    end
-
+    false
   end
 
 end

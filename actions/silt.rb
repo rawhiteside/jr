@@ -4,6 +4,7 @@ require 'walker'
 class SiltAction < PickThings
   def initialize
     super('Silt', 'Gather')
+    @post_gather_wait = 3
   end
 
   def setup(parent)
@@ -43,26 +44,12 @@ class SiltAction < PickThings
     end
   end
   
-  def silt_color?(pixel_block, x, y)
+  def gather_color?(pixel_block, x, y)
     color = pixel_block.color(x, y)
     r, g, b = color.red, color.green, color.blue
-    hsb = Color.RGBtoHSB(r, g, b, nil)
-    hue = hsb[0]
-    sat = hsb[1]
-    return (hue > 0.08 && hue < 0.11 && sat < 0.18)
+    return r > g && g > b && r > 200 && (r-b) < 25
   end
 
-
-  def click_on_this?(pb, pt)
-    silt_color?(pb, pt.x, pt.y) &&
-      silt_color?(pb, pt.x + 1, pt.y) &&
-      silt_color?(pb, pt.x - 1, pt.y) &&
-      silt_color?(pb, pt.x, pt.y + 1) &&
-      silt_color?(pb, pt.x, pt.y - 1)
-  end
-
-  def get_vals(parent)
-  end
 end
 
 Action.add_action(SiltAction.new)
