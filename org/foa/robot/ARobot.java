@@ -15,8 +15,9 @@ public class ARobot {
 	private static final double MOUSE_MOVE_DELAY = 0.01;
 	private static final double MOUSE_WHEEL_DELAY = 0.5;
 	private Robot m_robot = null;
-	private Toolkit m_toolkit = Toolkit.getDefaultToolkit();
+	private static Toolkit s_toolkit = Toolkit.getDefaultToolkit();
 	private static ARobot s_sharedInstance = new ARobot();
+	public static Dimension s_screenDim = s_toolkit.getScreenSize();
 
 	public ARobot() {
 		// Checked exceptions suck.
@@ -33,7 +34,7 @@ public class ARobot {
 		catch(javax.sound.sampled.LineUnavailableException e) { beep(); }
 	}
 
-	public void beep() { m_toolkit.beep(); }
+	public void beep() { s_toolkit.beep(); }
 
 	public PinnableWindow findAndPin(String imageName) { return findAndPin(imageName, "full");}
 	public PinnableWindow findAndPin(String imageName, String screenHalf) {
@@ -54,8 +55,17 @@ public class ARobot {
 		return screen.findPatch(sub, screenHalf);
 	}
 
+	public static boolean isOffScreen(Point pt) { return isOffScreen(pt.x, pt.y); }
+	public static boolean isOffScreen(int x, int y) {
+		if (x < 0 || y < 0) { return true; }
+		Dimension dim = s_screenDim;
+		if (x >= dim.width || y >= dim.height) { return true; }
+		return false;
+	}
+	
+
 	public PixelBlock fullScreenCapture() {
-		Dimension dim = screenSize();
+		Dimension dim = s_screenDim;
 		return screenRectangle(0, 0, dim.width, dim.height);
 	}
 
@@ -101,7 +111,7 @@ public class ARobot {
 		}
 	}
 
-	public Dimension screenSize() {return m_toolkit.getScreenSize();}
+	public Dimension screenSize() {return s_screenDim;}
 
 	/**
 	 * Get an int holding the rgb values for screen coordinates [x, y]

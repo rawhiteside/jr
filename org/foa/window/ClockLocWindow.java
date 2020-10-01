@@ -17,7 +17,7 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	private static ClockLocWindow createInstance() {
-		int screenWidth = new ARobot().screenSize().width;
+		int screenWidth = ARobot.sharedInstance().screenSize().width;
 
 		//Method used to find cloc pre-T9
 		//Rectangle rect = WindowGeom.rectFromPoint(new Point(screenWidth/2, 50));

@@ -9,7 +9,7 @@ public class WindowGeom extends ARobot {
 
 	public static void waitForChatMinimized() {
 		ARobot robot = ARobot.sharedInstance();
-		Dimension screen = robot.screenSize();
+		Dimension screen = ARobot.sharedInstance().screenSize();
 		int x = screen.width - 2;
 		int y = screen.height - 34;
 		Point p = new Point(x, y);
@@ -26,6 +26,7 @@ public class WindowGeom extends ARobot {
 	}
 
 	public static Rectangle rectFromPoint(Point p, boolean debug) {
+		if (isOffScreen(p)) { return null; }
 		PixelBlock pb = ARobot.sharedInstance().fullScreenCapture();
 		int x = findLeftEdge(pb, p.x, p.y);
 		if (x < 0) {
