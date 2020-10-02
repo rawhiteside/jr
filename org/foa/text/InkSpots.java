@@ -8,6 +8,11 @@ import javax.imageio.*;
 import java.io.*;
 
 public class InkSpots {
+	//
+	// Poor decision sometime in the past. Seemed like a good idea at the time. 
+	public static String INK_CHAR = "0";   // 0 = black = ink
+	public static String BACKGROUND_CHAR = "1";  // 1 = white = background
+
 	public int[] origin;
 	public String[] rows;
 	public int width;
@@ -125,9 +130,9 @@ public class InkSpots {
 			for(int x = 0; x < rect.width; x++) {
 				Color c = new Color(bi.getRGB(x, y));
 				if (textHelper.isInk(c)) {
-					row.append("0"); // 0 = black = ink
+					row.append(INK_CHAR); 
 				} else {
-					row.append("1"); // 1 = white = background
+					row.append(BACKGROUND_CHAR); 
 				}
 			}
 			newRows.add(row.toString());

@@ -60,9 +60,158 @@ public class AFont {
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 		
 		String val = (String) m_map.get(l);
-		return val == null ? UNKNOWN_GLYPH : val;
+		if (val != null) {
+			return val;
+		} else {
+			// XXX
+			return UNKNOWN_GLYPH;
+			// work in progress.
+			// return textForComplexGlyph(rows);
+		}
 	}
 
+	/**
+	 * Some pairs of characters are jammed together.  For example,
+	 * "th" is rendered as the two characters without any whitespace
+	 * between.  This method, then, looks for some glyph that we *do*
+	 * know about that matches exactly the leading part of the
+	 * provided one.
+	 *
+	 * The goal here is to strip off known letters from the front of
+	 * the provided glyph.
+	 *
+	 * This task is complicated by design choices I made early on
+	 * (i.e., glyphs as an array of Strings.)
+	 *
+	 */
+	private String textForComplexGlyph(String[] complexGlyph) {
+		// Elements in keys are themselves arraylists of Strings.
+		int bestCount = 0;
+		String[] bestGlyph = null;
+		String bestText = null;
+		ArrayList[] keys = (ArrayList[]) m_map.keySet().toArray();
+		for(int i = 0; i < keys.length; i++) {
+			String[] template = (String[]) keys[i].toArray();
+			int matchCount = countWidthOfMatchingTemplate(template, complexGlyph);
+			if (matchCount > bestCount) {
+				bestCount = matchCount;
+				bestGlyph = template;
+				bestText = (String) m_map.get(keys[i]);
+			}
+		}
+		// Did we find a match?
+		if (bestCount > 0) {
+			String[] newRows = stripMatchedRows(complexGlyph, bestCount);
+			if (newRows[0].length() == 0) {
+				return bestText;
+			} else {
+				return bestText + textFor(newRows);
+			}
+		}
+		return null;
+	}
+
+	// Returns zero unless the template completely matches.  That is
+	// it'll return either 0, or the width of the template.
+	private int countWidthOfMatchingTemplate(String[] template, String[] complexGlyph) {
+		// The two may not be the same height (taller letters, descenders).  Add rows of non-ink to
+		// the top and/or the bottom of the template if necessary.
+		// Return null if, during that process, we determine a match
+		// is not possible.
+		template = padIfNecessary(template, complexGlyph);
+		if (template == null) { return 0; }
+
+		// 
+		int ncols = template[0].length();
+		for(int icol = 0; icol < ncols; icol++) {
+			for(int irow = 0; irow < template.length; irow++) {
+				if (template[irow].charAt(icol) != complexGlyph[irow].charAt(icol)) {
+					return 0;
+				}
+			}
+		}
+		return ncols;
+	}
+
+	/**
+	 * The template height may not match that of the complexGlyph:
+	 * - Template may be taller:  No possible match, so return null.
+	 * 
+	 * Find the top left ink spot in template and complexGlyph.  Use
+	 * this to determine whether need to pad at the top and/or at the
+	 * bottom
+	 * 
+	 * - Template may be shorter (due to taller letters in complexGlyph):
+	 *   Pad template at the top.
+	 * - Template may be shorter (due to descenders in complexGlyph):
+	 *   Pad template at the bottom.
+	 * 
+	 * If, after the upper and lower padding the template is taller
+	 * than complexGlyph, then no match is possible.  Return null.
+	 * 
+	 */
+	private String[] padIfNecessary(String[] template, String[] complexGlyph) {
+		// Is the bare template taller?
+		if (template.length > complexGlyph.length) { return null; }
+		//
+		// Find the first ink in the first column. 
+		int complexOffset = findFirstInk(complexGlyph);
+		int templateOffset = findFirstInk(template);
+		//
+		// If complex is *lower* than template, then it cannot match.
+		if (complexOffset < templateOffset) { return null; }
+		// 
+		// If complex is *higher* than template, pad above.
+		if (complexOffset > templateOffset) {
+			int padAboveCount = complexOffset - templateOffset;
+			template = padAbove(template, padAboveCount);
+		}
+		// Finally, if the heights are not the same, pad below.
+		int count = complexGlyph.length - template.length;
+		if (count != 0) { template = padBelow(template, count); }
+
+		return template;
+	}
+
+	private int findFirstInk(String[] glyph) {
+		return 0;
+	}
+
+	private String[] padAbove(String[] template, int count) {
+		ArrayList alist = new ArrayList();
+		String pad = makePadString(template[0].length());
+		for(int i = 0; i < count; i++) { alist.add(pad); }
+		for(int i = 0; i < template.length; i++) { alist.add(template[i]); }
+		return (String[]) alist.toArray();
+	}
+
+	private String[] padBelow(String[] template, int count) {
+		ArrayList alist = new ArrayList();
+		String pad = makePadString(template[0].length());
+		for(int i = 0; i < template.length; i++) { alist.add(template[i]); }
+		for(int i = 0; i < count; i++) { alist.add(pad); }
+		return (String[]) alist.toArray();
+	}
+
+	private String makePadString(int width) {
+		StringBuffer sb = new StringBuffer();
+		for(int i = 0; i < width; i++) { sb.append(InkSpots.BACKGROUND_CHAR); }
+		return sb.toString();
+	}
+
+	// XXX
+	private String[] stripMatchedRows(String[] complexGlyph, int count) {
+		return complexGlyph;
+	}
+
+	public void dumpGlyph(String[] glyph, String label) {
+		System.out.println(label);
+		for (int i = 0; i < glyph.length; i++) {
+			System.out.println(glyph[i]);
+		}
+	}
+
+	
 	private boolean isDuplicate(ArrayList rows, String str) {
 		String val = (String) m_map.get(rows);
 		if (val != null) {
