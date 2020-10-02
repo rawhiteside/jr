@@ -9,8 +9,24 @@ class ReadWindow < Action
 
 
   def setup(parent)
-    gadgets = [{:type => :point, :label => 'Drag to location', :name => 'xy'}]
+    gadgets = [
+      {:type => :checkbox, :label => 'Chat History', :name => 'chat-history-p' },
+      {:type => :checkbox, :label => 'ClockLoc', :name => 'clock-loc-p' },
+      {:type => :checkbox, :label => 'Skills', :name => 'skills-p' },
+      {:type => :checkbox, :label => 'Inventory', :name => 'inventory-p' },
+      {:type => :checkbox, :label => 'Pinnable window', :name => 'pinnable-p' },
+      {:type => :point, :label => 'Drag to Pinnable if checked', :name => 'xy'},
+      
+    ]
     @vals = UserIO.prompt(parent, nil, action_name, gadgets)
+  end
+
+  def show_text(text, title)
+    comps = [
+      {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => title}
+    ]
+    UserIO.prompt(nil, nil, title, comps)
+
   end
 
   def act
@@ -18,32 +34,41 @@ class ReadWindow < Action
     dim = screen_size
     puts dim.width/2
     puts dim.height
-    w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
-
-    text = w.read_text
-    puts text
-    comps = [
-      {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => 'Text'}
-    ]
-    UserIO.prompt(nil, nil, 'Read this text', comps)
+    p @vals
+    if @vals['pinnable-p'] == 'true'
+      w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
+      show_text(w.read_text, 'Pinnable')
+    end
 
 
-    cl = ClockLocWindow.instance
-    puts "World coordinates: (#{cl.coords[0]}, #{cl.coords[1]})"
+    if @vals['clock-loc-p'] == 'true'
+      cl = ClockLocWindow.instance
+      text = cl.read_text
+      text += "\nWorld Coordinates: #{cl.coords.to_s}\n"
+      text += "\nDate: #{cl.date}\n"
+      text += "\nTime: #{cl.time}\n"
+      text += "\nDateTime: #{cl.date_time}\n"
+      show_text(text, 'ClockLoc')
+    end
     
-    skills = SkillsWindow.new
-    # skills.display_to_user("Skills window")
-    puts "===================== Skills Window"
-    puts skills.read_text
+    if @vals['skills-p'] == 'true'
+      skills = SkillsWindow.new
+      show_text(skills.read_text, 'Skills')
+    end
+      
 
-    chat = ChatWindow.from_point(Point.new(1800, 1000))
-    puts "======================== Chat Window"
-    puts chat.read_text
+    if @vals['chat-history-p'] == 'true'
+      dim = screen_size
+      # chat = ChatWindow.from_point(Point.new(1800, 1000))
+      chat = ChatWindow.from_point(Point.new(dim.width - 100, dim.height - 50))
+      show_text(chat.read_text, 'Chat history')
+    end
     
-    # about my usual spot
-    puts "========================= Inventory Window"
-    inventory = InventoryWindow.from_point(Point.new(260, 950))
-    puts inventory.read_text
+    if @vals['inventory-p'] == 'true'
+      # about my usual spot
+      inventory = InventoryWindow.from_point(Point.new(260, 950))
+      show_text(inventory.read_text, 'Inventory')
+    end
   end
 end
 Action.add_action(ReadWindow.new)
