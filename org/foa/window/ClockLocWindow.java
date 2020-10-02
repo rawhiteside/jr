@@ -81,7 +81,7 @@ public class ClockLocWindow extends AWindow {
 
 	private String[] dtFields() {
 		String dt = dateTime();
-		return dt.split(",");
+		return dt.split("\\.");
 	}
 
 	public int[] coords() {
