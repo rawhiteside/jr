@@ -9,38 +9,23 @@ class AcquireFont < Action
     super('Acquire font', 'Test/Dev')
   end
 
-  def get_window(parent)
-    comps = [
-      {:type => :point, :label => 'Drag to window', :name => 'w'}
+  CHAT_WINDOW = 'Chat Window'
+  CLOCK_LOC = 'ClockLoc Window'
+  SKILLS = 'Skills Window'
+  INVENTORY = 'Inventory Window'
+  PINNABLE = 'Pinnable Window'
+  DUMP_GLYPHS = 'Dump glyphs to stdout'
+  def setup(parent)
+    gadgets = [
+      {:type => :combo, :label => 'Which window?', :name => 'which',
+       :vals => [CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, PINNABLE, DUMP_GLYPHS],
+      },
+      {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
+      
     ]
-    vals = UserIO.prompt(parent, nil, 'Window to read', comps)
-    return nil unless vals
-
-    dim = screen_size
-    s_width, s_height = dim.width, dim.height
-    
-    x = vals['w.x'].to_i
-    y = vals['w.y'].to_i
-    pt = point_from_hash(vals, 'w')
-    p [x, y]
-    if x > (s_width - 100) && y > (s_height - 200) && y < (s_height - 62)
-      puts 'Chat History'
-      return ChatHistoryWindow.new
-    elsif x > 1160 && y > 962
-      puts 'Chat Line'
-      return ChatLineWindow.new
-    elsif  x < 60 && y > 940
-      puts 'Items/Skills'
-      return SkillsWindow.new
-    elsif  y < 64
-      puts 'ClockLoc'
-      return ClockLocWindow.instance
-    else
-      puts 'Pinnable'
-      return PinnableWindow.from_point(pt)
-    end
+    @vals = UserIO.prompt(parent, nil, action_name, gadgets)
   end
-
+  
   def make_text_for_glyph(g)
     text = ''
     g.rows.each do |row|
@@ -71,6 +56,23 @@ class AcquireFont < Action
     AFont.instance.add(g.rows, chars)
   end
 
+  def get_target_window
+    case @vals['which']
+    when CHAT_WINDOW
+      ChatWindow.find
+    when CLOCK_LOC
+      ClockLocWindow.instance
+    when SKILLS
+      SkillsWindow.new
+    when INVENTORY
+      InventoryWindow.find
+    when PINNABLE
+      PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
+    else
+      nil
+    end
+  end
+
   def process_line(glyph_line, glyphs)
     glyphs.each do |g|
       if g.to_s == '?'
@@ -89,10 +91,6 @@ class AcquireFont < Action
     puts tr.read_text
   end
 
-  def setup(comp)
-    @window = get_window(comp)
-  end
-
   def dump_font(map)
 
     # Value is an arraylist of strings
@@ -104,11 +102,17 @@ class AcquireFont < Action
       end
     end
   end
+  
+
 
   def act
-    # puts "here is the map:"
-    # dump_font(AFont.instance.getFontMap)
-    process_text_reader(@window.text_reader)
+    if @vals['which'] == DUMP_GLYPHS
+      dump_font(AFont.instance.getFontMap)
+      return
+    else
+      window = get_target_window
+      process_text_reader(@window.text_reader)
+    end
   end
 end
 
