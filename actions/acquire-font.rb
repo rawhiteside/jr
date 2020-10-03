@@ -18,7 +18,7 @@ class AcquireFont < Action
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'Which window?', :name => 'which',
-       :vals => [CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, PINNABLE, DUMP_GLYPHS],
+       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, DUMP_GLYPHS],
       },
       {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
       
@@ -75,7 +75,7 @@ class AcquireFont < Action
 
   def process_line(glyph_line, glyphs)
     glyphs.each do |g|
-      if g.to_s == '?'
+      if g.to_s.include?('?')
 	line = ''
 	glyphs.each {|gl| line << gl.to_s}
 	handle_glyph(line, g)
@@ -111,7 +111,7 @@ class AcquireFont < Action
       return
     else
       window = get_target_window
-      process_text_reader(@window.text_reader)
+      process_text_reader(window.text_reader)
     end
   end
 end
