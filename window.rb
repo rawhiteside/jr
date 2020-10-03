@@ -30,13 +30,14 @@ end
 
 
 class ChatWindow < Window
-  def initialize(rect = Rectangle.new(0, 0, 0, 0))
-    super(rect)
+  # TODO:  Search. 
+  def self.find
+    dim = ARobot.sharedInstance.screen_size
+    ChatWindow.from_point(Point.new(dim.width - 100, dim.height - 50))
   end
 
-  def textInsets
-    # top, left, bottom, right
-    Insets.new(10, 10, 10, 35)
+  def initialize(rect = Rectangle.new(0, 0, 0, 0))
+    super(rect)
   end
 end
 
@@ -145,10 +146,6 @@ class PopupWindow < Window
     w.dismiss if w
   end
 
-  def textInsets
-    Insets.new(5, 5, 5, 5)
-  end
-
   # Click on OK. 
   def dismiss
     click_word 'OK'
@@ -181,10 +178,6 @@ class DarkWindow < AWindow
     super(rect)
   end
   
-  def textInsets
-      Insets.new(4, 4, 4, 4)
-  end
-
   def isInk(color)
     !background?(color)
   end
@@ -224,6 +217,12 @@ class SkillsWindow < DarkWindow
 end
 
 class InventoryWindow < DarkWindow
+  # TODO:  Search for it. 
+  def self.find
+    # XX about my usual spot
+    inventory = InventoryWindow.from_point(Point.new(260, 950))
+  end
+
   def initialize(rect)
     super(rect)
   end
