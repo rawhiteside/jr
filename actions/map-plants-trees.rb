@@ -20,9 +20,9 @@ class MapPlantsTrees < Action
   end
 
   RECORD_STUFF = 'Record more trees and plants.'
-  SHOW_LOCATIONS = 'Survey locations.'
-  SHOW_PLANT = 'Locations for a plant.'
-  SHOW_TREE = 'Locations for a tree.'
+  SHOW_LOCATIONS = 'Display survey locations.'
+  SHOW_PLANT = 'Display locations for a plant.'
+  SHOW_TREE = 'Display locations for a tree.'
   def setup(parent)
     tree_names = @trees.values.collect {|h| h.keys}.flatten.uniq.sort
     plant_names = @plants.values.collect {|h| h.keys}.flatten.uniq.sort
