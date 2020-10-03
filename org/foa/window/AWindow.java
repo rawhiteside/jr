@@ -30,11 +30,6 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		setRect(rect);
 	}
 
-	// A default one. You will prolly want to over-ride this.
-	public Insets textInsets(){
-		return new Insets(0, 0, 0, 0);
-	}
-
 	// Just a note that can be attached to the window as needed.
 	public void setNotation(String note) {
 		m_notation = note;
@@ -87,13 +82,9 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 
 	public Color dialogColor(Point p) { return getColor(toScreenCoords(p)); }
 
+	// This used to do something. XXX
 	public Rectangle textRectangle() {
-		Insets margin = textInsets();
-		Rectangle rect = getRect();
-		return new Rectangle(rect.x + margin.left,
-							 rect.y + margin.top,
-							 rect.width - margin.left - margin.right,
-							 rect.height - margin.top - margin.bottom);
+		return getRect();
 	}
 
 	public String getDefaultRefreshLoc() { return m_defaultRefreshLoc; }

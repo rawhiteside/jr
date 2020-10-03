@@ -3,6 +3,7 @@ package org.foa.text;
 import java.util.*;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.Arrays;
 
 import org.yaml.snakeyaml.Yaml;
 
@@ -12,6 +13,13 @@ public class AFont {
 	private Map m_map;
 	private String UNKNOWN_GLYPH = "?";
 	private String FONT_FILE = "font.yaml";
+	//
+	// When dealing with complex glyphs, consider only templates at
+	// least this wide.
+	private int MIN_COMPLEX_HEAD_WIDTH = 4;
+
+	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
+	private boolean m_logging = false;
 
 	public AFont() throws Exception {
 
@@ -56,17 +64,33 @@ public class AFont {
 		save();
 	}
 
+	private void p(String output) {
+		if (!m_logging) {return;}
+		System.out.println(output);
+	}
+
 	public String textFor(String[] rows) {
+		dumpGlyph(rows, "textFor this");
 		ArrayList l = new ArrayList(Arrays.asList(rows));
+
+		// Ignore single, isolated pixels.
+		if(rows.length == 1 && rows[0].length() == 1) {
+			return "";
+		}
 		
 		String val = (String) m_map.get(l);
 		if (val != null) {
 			return val;
 		} else {
-			// XXX
-			return UNKNOWN_GLYPH;
-			// work in progress.
-			// return textForComplexGlyph(rows);
+			dumpGlyph(rows, "This is complex");
+			String text =  textForComplexGlyph(rows);
+			if (text == null) {
+				dumpGlyph(rows, "This was unknown");
+				return UNKNOWN_GLYPH;
+			} else {
+				p("return complex: " + text);
+				return text;
+			}
 		}
 	}
 
@@ -89,14 +113,24 @@ public class AFont {
 		int bestCount = 0;
 		String[] bestGlyph = null;
 		String bestText = null;
-		ArrayList[] keys = (ArrayList[]) m_map.keySet().toArray();
-		for(int i = 0; i < keys.length; i++) {
-			String[] template = (String[]) keys[i].toArray();
+		Iterator itr = m_map.keySet().iterator();
+		while (itr.hasNext()) {
+			ArrayList<String> key = (ArrayList<String>) itr.next();
+			String val = (String) m_map.get(key);
+			if (key.size() == 0) {continue;}
+			String[] template = key.toArray(new String[0]);
+
+			// Ignore very narrow templates for this.
+			if (template[0].length() < MIN_COMPLEX_HEAD_WIDTH) {continue;}
+
+			// If template is wider than complex, no joy
+			if(template[0].length() >= complexGlyph[0].length()) {continue;}
+
 			int matchCount = countWidthOfMatchingTemplate(template, complexGlyph);
 			if (matchCount > bestCount) {
 				bestCount = matchCount;
 				bestGlyph = template;
-				bestText = (String) m_map.get(keys[i]);
+				bestText = (String) m_map.get(key);
 			}
 		}
 		// Did we find a match?
@@ -105,6 +139,7 @@ public class AFont {
 			if (newRows[0].length() == 0) {
 				return bestText;
 			} else {
+				p ("Complex found " + bestText + " and looking for more");
 				return bestText + textFor(newRows);
 			}
 		}
@@ -114,6 +149,7 @@ public class AFont {
 	// Returns zero unless the template completely matches.  That is
 	// it'll return either 0, or the width of the template.
 	private int countWidthOfMatchingTemplate(String[] template, String[] complexGlyph) {
+
 		// The two may not be the same height (taller letters, descenders).  Add rows of non-ink to
 		// the top and/or the bottom of the template if necessary.
 		// Return null if, during that process, we determine a match
@@ -121,7 +157,6 @@ public class AFont {
 		template = padIfNecessary(template, complexGlyph);
 		if (template == null) { return 0; }
 
-		// 
 		int ncols = template[0].length();
 		for(int icol = 0; icol < ncols; icol++) {
 			for(int irow = 0; irow < template.length; irow++) {
@@ -130,6 +165,7 @@ public class AFont {
 				}
 			}
 		}
+		p("match succeeded.");
 		return ncols;
 	}
 
@@ -164,8 +200,11 @@ public class AFont {
 		// If complex is *higher* than template, pad above.
 		if (complexOffset > templateOffset) {
 			int padAboveCount = complexOffset - templateOffset;
+			// If this would make template *taller* that complex, the can't match.
+			if(template.length + padAboveCount > complexGlyph.length) { return null; }
 			template = padAbove(template, padAboveCount);
 		}
+
 		// Finally, if the heights are not the same, pad below.
 		int count = complexGlyph.length - template.length;
 		if (count != 0) { template = padBelow(template, count); }
@@ -174,23 +213,30 @@ public class AFont {
 	}
 
 	private int findFirstInk(String[] glyph) {
-		return 0;
+		char ink = InkSpots.INK_CHAR.charAt(0);
+		for(int i = 0; i < glyph.length; i++) {
+			if(glyph[i].charAt(0) == ink) { return i; }
+		}
+		// should not happen. 
+		return -1;
 	}
 
+	// Add *count* pad whitespace rows to the top of template.
 	private String[] padAbove(String[] template, int count) {
-		ArrayList alist = new ArrayList();
+		ArrayList<String> alist = new ArrayList<String>();
 		String pad = makePadString(template[0].length());
 		for(int i = 0; i < count; i++) { alist.add(pad); }
 		for(int i = 0; i < template.length; i++) { alist.add(template[i]); }
-		return (String[]) alist.toArray();
+		return (String[]) alist.toArray(new String[0]);
 	}
 
+	// Add *count* pad whitespace rows to the bottom of template.
 	private String[] padBelow(String[] template, int count) {
-		ArrayList alist = new ArrayList();
+		ArrayList<String> alist = new ArrayList<String>();
 		String pad = makePadString(template[0].length());
 		for(int i = 0; i < template.length; i++) { alist.add(template[i]); }
 		for(int i = 0; i < count; i++) { alist.add(pad); }
-		return (String[]) alist.toArray();
+		return (String[]) alist.toArray(new String[0]);
 	}
 
 	private String makePadString(int width) {
@@ -199,15 +245,36 @@ public class AFont {
 		return sb.toString();
 	}
 
-	// XXX
+	// Remove the leading count columns and return the result.
+	// trim whitespace?
 	private String[] stripMatchedRows(String[] complexGlyph, int count) {
-		return complexGlyph;
+		// remove the leading columns.
+		String[] out = new String[complexGlyph.length];
+		for(int i = 0; i < complexGlyph.length; i++) {
+			out[i] = complexGlyph[i].substring(count);
+		}
+
+		dumpGlyph(out, "after strip");
+		//
+		// Check to see if top and/or bottom are all whitespace now. 
+		String pad = makePadString(out[0].length());
+		ArrayList<String> list = new ArrayList<String>();
+		for(int i = 0; i < out.length; i++) {
+			if(!out[i].equals(pad)) {
+				list.add(out[i]);
+			}
+		}
+		out = (String[]) list.toArray(new String[0]);
+		dumpGlyph(out, "after trim");
+		
+		return out;
 	}
 
 	public void dumpGlyph(String[] glyph, String label) {
+		if (!m_logging) {return;}
 		System.out.println(label);
 		for (int i = 0; i < glyph.length; i++) {
-			System.out.println(glyph[i]);
+			System.out.println(glyph[i].replace('1',' ').replace('0','@'));
 		}
 	}
 

@@ -7,20 +7,6 @@ import java.awt.*;
 
 public class WindowGeom extends ARobot {
 
-	public static void waitForChatMinimized() {
-		ARobot robot = ARobot.sharedInstance();
-		Dimension screen = ARobot.sharedInstance().screenSize();
-		int x = screen.width - 2;
-		int y = screen.height - 34;
-		Point p = new Point(x, y);
-		while(true) {
-			Color c = robot.getColor(p);
-			if ((c.getRed() + c.getGreen() + c.getBlue()) < 250) { return; }
-			robot.sleepSec(0.5);
-		}
-	
-	}
-
 	public static Rectangle rectFromPoint(Point p) {
 		return rectFromPoint(p, false);
 	}

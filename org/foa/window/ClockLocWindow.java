@@ -19,21 +19,16 @@ public class ClockLocWindow extends AWindow {
 	private static ClockLocWindow createInstance() {
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 
-		//Method used to find cloc pre-T9
-		//Rectangle rect = WindowGeom.rectFromPoint(new Point(screenWidth/2, 50));
-		//New system is 150 wide and 60 tall and not a rectangle but can probably be models as such.
-		//  It is immovable and 30 pixels off the top on my system other milage may vary.
-		Rectangle rect = new Rectangle(screenWidth/2 - 110, 37, 220, 39);
+		//New system is 150 wide and 60 tall and not a rectangle but
+		//  can probably be models as such.  It is immovable and 30
+		//  pixels off the top on my system other milage may vary.
+		Rectangle rect = new Rectangle(screenWidth/2 - 110, 37, 220, 34);
 		if (rect == null) {
 			System.out.println("Failed to find clock loc window.");
 			return null;
 		} else {
 			return new ClockLocWindow(rect);
 		}
-	}
-
-	public Insets textInsets() {
-		return new Insets(5, 5, 5, 5);
 	}
 
 	// ITextHelper methods

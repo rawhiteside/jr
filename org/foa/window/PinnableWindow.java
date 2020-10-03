@@ -40,10 +40,6 @@ public class PinnableWindow extends AWindow {
 		}
 	}
 
-	public Insets textInsets() {
-		return new Insets(0,0,0,0);
-	}
-
 	private static double MIN_DELAY = 0.05;
 
 	public void dialogClick(Point p, String refreshLoc, double delay) {
