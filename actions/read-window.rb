@@ -10,7 +10,7 @@ class ReadWindow < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :checkbox, :label => 'Chat History', :name => 'chat-history-p' },
+      {:type => :checkbox, :label => 'Chat Window', :name => 'chat-history-p' },
       {:type => :checkbox, :label => 'ClockLoc', :name => 'clock-loc-p' },
       {:type => :checkbox, :label => 'Skills', :name => 'skills-p' },
       {:type => :checkbox, :label => 'Inventory', :name => 'inventory-p' },
@@ -30,11 +30,7 @@ class ReadWindow < Action
   end
 
   def act
-
     dim = screen_size
-    puts dim.width/2
-    puts dim.height
-    p @vals
     if @vals['pinnable-p'] == 'true'
       w = PinnableWindow.from_point(point_from_hash(@vals, 'xy'))
       show_text(w.read_text, 'Pinnable')
@@ -44,7 +40,8 @@ class ReadWindow < Action
     if @vals['clock-loc-p'] == 'true'
       cl = ClockLocWindow.instance
       text = cl.read_text
-      text += "\nWorld Coordinates: #{cl.coords.to_s}\n"
+      coords = cl.coords
+      text += "\nWorld Coordinates: #{coords[0]}, #{coords[1]}\n"
       text += "\nDate: #{cl.date}\n"
       text += "\nTime: #{cl.time}\n"
       text += "\nDateTime: #{cl.date_time}\n"
@@ -60,13 +57,13 @@ class ReadWindow < Action
     if @vals['chat-history-p'] == 'true'
       dim = screen_size
       # chat = ChatWindow.from_point(Point.new(1800, 1000))
-      chat = ChatWindow.from_point(Point.new(dim.width - 100, dim.height - 50))
+      chat = ChatWindow.find
       show_text(chat.read_text, 'Chat history')
     end
     
     if @vals['inventory-p'] == 'true'
       # about my usual spot
-      inventory = InventoryWindow.from_point(Point.new(260, 950))
+      inventory = InventoryWindow.find
       show_text(inventory.read_text, 'Inventory')
     end
   end
