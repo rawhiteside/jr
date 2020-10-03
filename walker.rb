@@ -167,7 +167,38 @@ class Walker < ARobot
 
   # Walk from current location to the provided coordinates
   # Target coords are as [x,y]
+
+
+  SHORT_DISTANCE = 3
   def walk_to(target)
+    # If it's a long ways, walk to intermediate waypoints along the
+    # direction.
+    loop do
+      curr = ClockLocWindow.instance.coords.to_a
+      if (distance(curr, target).round < SHORT_DISTANCE)
+        walk_to_nearby(target)
+        return
+      else
+        walk_to_nearby(find_waypoint(target, SHORT_DISTANCE))
+      end
+    end
+  end
+
+  def distance(pt1, pt2)
+    Math.sqrt((pt1[0] - pt2[0])**2 + (pt1[1] - pt2[1]) **2)
+  end
+
+  # Find a point +dist+ way along a line towards +target+
+  def find_waypoint(target, dist)
+    curr = ClockLocWindow.instance.coords.to_a
+    dist = distance(curr, target)
+    fract = SHORT_DISTANCE/dist
+    deltax = ((target[0] - curr[0]) * fract).round
+    deltay = ((target[1] - curr[1]) * fract).round
+    return [curr[0] + deltax, curr[1] + deltay]
+  end
+
+  def walk_to_nearby(target)
     # Count pases though the loc-walker loop.  We refresh the keys
     # every refresh_count passes.  Thus, in case of a wild r-click,
     # it'll start back going.
