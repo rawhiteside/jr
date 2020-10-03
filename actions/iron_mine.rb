@@ -5,7 +5,7 @@ require 'set'
 require 'm_choose_n'
 
 
-import org.foa.ImageUtils
+import org.foa.Globifier
 
 class IronMine < Action
   def initialize
@@ -216,7 +216,7 @@ class IronMine < Action
   def get_globs(brightness, threshold)
 
     # +got+ is an array of HashMaps (Java) in which keys are points.  values are just 1's.
-    got = ImageUtils.globify(brightness, threshold)
+    got = Globifier.globify(brightness, threshold)
     # Convert from java land to ruby land.
     globs = []
     got.each do |hash_map|
@@ -443,7 +443,7 @@ class StoneHighlightWatcher
 
   def highlight?
     xor = ImageUtils.brightness(ImageUtils.xor(@empty, PixelBlock.new(@rect)))
-    globs = ImageUtils.globify(xor, 10)
+    globs = Globifier.globify(xor, 10)
 
     return false if (globs.nil? || globs.size < 8)
     globs = globs.sort { |a,b| b.size <=> a.size }

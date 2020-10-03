@@ -155,7 +155,7 @@ class SandMine < AbstractMine
   def get_globs(brightness, threshold)
     # A +glob+ is just a hash with points as keys.  Points are in the
     # coord system of the +brightness+ image.
-    got = ImageUtils.globify(brightness, threshold)
+    got = Globifier.globify(brightness, threshold)
     # Convert from java land to ruby land.
     globs = []
     got.each do |hash_map|
