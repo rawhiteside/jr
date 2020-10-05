@@ -3,20 +3,16 @@ require 'window.rb'
 # Handes the Icons that appear on the action bar
 class Icons
 
-  # Center bottom on my screen, the reference. 
-  REF_CENTER_X = 960
-  REF_HEIGHT = 1080
-
   ICON_DATA = {
-    :grass => {:x => 713 - REF_CENTER_X, :y => 1015 - REF_HEIGHT, :hot_key => '1'},
-    :sand => {:hot_key => '2' },
-    :mud => {:hot_key => '3' },
-    :clay => {:x => 920 - REF_CENTER_X, :y => 1039 - REF_HEIGHT, :hot_key => '4'},
-    :dirt => {:hot_key => '5'},
-    :limestone => {:hot_key => '6'},
-    :water => { :hot_key => '7' },
-    :slate => {:x => 1191 - REF_CENTER_X, :y => 1004 - REF_HEIGHT, :hot_key => '8'},
-    :dowse => {:hot_key => '9' },
+    :grass => {:image => 'GrassIcon.png',:hot_key => '1'},
+    :sand => {:image => 'SandIcon.png', :hot_key => '2' },
+    :mud => {:image => 'MudIcon.png', :hot_key => '3' },
+    :clay => {:image => 'ClayIcon.png', :hot_key => '4'},
+    :dirt => {:image => 'DirtIcon.png', :hot_key => '5'},
+    :limestone => {:image => 'LimestoneIcon.png', :hot_key => '6'},
+    :water => {:image => 'WaterIcon.png',  :hot_key => '7' },
+    :slate => {:image => 'SlateIcon.png',  :hot_key => '8'},
+    :dowse => {:image => 'DowseIcon.png', :hot_key => '9' },
     
   }
   
@@ -26,7 +22,7 @@ class Icons
     robot = ARobot.shared_instance
     dim = robot.screen_size
     data = ICON_DATA[icon]
-    if lit_up(data[:x] + dim.width / 2, data[:y] + dim.height)
+    if lit_up(data[:image])
       robot.send_string(data[:hot_key])
       return true
     end
@@ -34,29 +30,31 @@ class Icons
     return false
   end
 
-  def self.lit_up(x, y)
-    # Look at a little 5x5 patch for bright things.
-    rect = Rectangle.new(x-2, y-2, 5, 5)
-    pb = PixelBlock.new(rect)
+  CENTER_OFFSET = 375
+  BOTTOM_OFFSET = 180
+  @@template_hash = {}
+  def self.lit_up(image_file)
+    dim = ARobot.shared_instance.screen_size
+    x = dim.width/2 - CENTER_OFFSET
+    width = CENTER_OFFSET * 2
+    y = dim.height - BOTTOM_OFFSET
+    rect = Rectangle.new(x, y, width, BOTTOM_OFFSET)
+    image = PixelBlock.new(rect)
 
-
-    5.times do |i|
-      5.times do |j|
-        return true if bright?(pb.color(i, j))
-      end
-    end
-    return false
+    template = load_template(image_file)
+    pt = image.find_template_exact(template)
+    pt = image.to_screen(pt) if pt
+    return pt
   end
 
-  BRIGHT_THRESH = 400
-  def self.bright?(color)
-    b = color.red + color.green + color.blue
-    if (b > BRIGHT_THRESH)
-      return true
-    else
-      false
+  def self.load_template(name)
+    template = @@template_hash[name]
+    if template.nil?
+      filename = "images/#{name}"
+      template = PixelBlock.load_image(filename)
+      @@template_hash[name] = template
     end
-    
+    return template
   end
 
   # Specifically for filling water jugs.

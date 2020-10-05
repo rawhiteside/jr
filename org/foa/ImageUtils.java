@@ -12,6 +12,38 @@ import org.foa.PixelBlock;
 
 public class ImageUtils {
 
+	/**
+	 * Search image for an exact subimage match for template. Return
+	 * the furst found. Null if not found.
+	 */
+	public static Point findTemplateExact(BufferedImage image, BufferedImage template) {
+		for(int y = 0; y < (image.getHeight() - template.getHeight()); y++) {
+			for(int x = 0; x < (image.getWidth() - template.getWidth()); x++) {
+				if (templateMatchesHere(image, template, x, y))
+					return new Point(x, y);
+			}
+		}
+		return null;
+	}
+
+
+	private static boolean templateMatchesHere(BufferedImage image, BufferedImage template, int x, int y) {
+		int height = template.getHeight();
+		int width =  template.getWidth();
+		for(int iy = 0; iy < height; iy++) {
+			for(int ix = 0; ix < width; ix++) {
+
+				int cTemplate = template.getRGB(ix, iy) & 0xFFFFFF;
+
+				int cImage = image.getRGB(x + ix, y + iy) & 0xFFFFFF;
+				if(cImage != cTemplate) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	public static BufferedImage resize(BufferedImage inputImage, float factor) {
  
 		int outputWidth = (int) (inputImage.getWidth() / factor);
@@ -49,6 +81,7 @@ public class ImageUtils {
 		}
 		return biOut;
 	}
+
 	/**
 	 * Return an image constructed from the xor of the two input images.
 	 */
@@ -64,6 +97,9 @@ public class ImageUtils {
 		return biOut;
 	}
 
+	/**
+	 * XOR the two pixelblocks. 
+	 */
 	public static PixelBlock xor(PixelBlock pb1, PixelBlock pb2) {
 		return new PixelBlock(pb1.origin(),
 							  xor(pb1.bufferedImage(), pb2.bufferedImage()));

@@ -66,6 +66,31 @@ end
 
 Action.add_action(FindPatchTest.new)
 
+class FindExactTest < Action
+
+  def initialize(name = 'Find Exact Template')
+    super(name, 'Test/Dev')
+  end
+
+  def setup(parent)
+    gadgets = [
+      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'}
+    ]
+    @vals = UserIO.prompt(parent, nil, 'Patch to find', gadgets)
+  end
+
+
+  def act
+    filename = "images/#{@vals['name']}.png"
+    template = PixelBlock.load_image(filename)
+    pb_full = full_screen_capture
+    pt = pb_full.find_template_exact(template)
+    mm(pt) if pt
+  end
+end
+
+Action.add_action(FindExactTest.new)
+
 class ReduceTest < Action
   def initialize(name = 'Reduce Image')
     super(name, 'Test/Dev')

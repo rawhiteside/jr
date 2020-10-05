@@ -37,6 +37,13 @@ public class PixelBlock extends ARobot {
 	}
 
 	/**
+	 * Find and exact match for a template image in this larger image.
+	 */
+	public Point findTemplateExact(PixelBlock template) {
+		return ImageUtils.findTemplateExact(m_bufferedImage, template.bufferedImage());
+	}
+	   
+	/**
 	 * Find a scaling that will give acceptable performance.  We
 	 * compute the number of color diffs required, and reduce sizes
 	 * until that count is below a threshold.  200M is too large.  52M
