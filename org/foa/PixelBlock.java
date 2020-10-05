@@ -43,115 +43,41 @@ public class PixelBlock extends ARobot {
 		return ImageUtils.findTemplateExact(m_bufferedImage, template.bufferedImage());
 	}
 	   
-	/**
-	 * Find a scaling that will give acceptable performance.  We
-	 * compute the number of color diffs required, and reduce sizes
-	 * until that count is below a threshold.  200M is too large.  52M
-	 * was OK.
-	 */
-	private final static int MAX_DIFFS = 52000000;
-	private int findScale(PixelBlock pb) {
-		int scale = 1;
-		Rectangle rectMe = rect();
-		Rectangle rectOther = pb.rect();
-		while(true) {
-			long count = ((long)rectMe.width/scale) * (rectOther.width/scale) *
-				(rectMe.height/scale) * (rectOther.height/scale);
-			if (count < MAX_DIFFS) {
-				//System.out.println("Count of " + count + " accepted");
-				break;
-			}
-			//System.out.println("Count of " + count + " rejected");
-			scale += 1;
-		}
-		//System.out.println("Scale is " + scale);
-		return scale;
-	}
-
 	/** 
-	 * Search within self for the best mach for the subimage pb.
-	 * Convert everything into HSB instead of RGB.  The HSB components
-	 * get weighted, which makes things work better with the was
-	 * lighting changes during the day.
+	 * Search within self for the best mach for the subimage template.
 	 */
-	public Point findPatch(PixelBlock pb) {return findPatch(pb, "full");}
-	public Point findPatch(PixelBlock pb, String screenHalf) {
-		
-		int scale = findScale(pb);
-		BufferedImage biScene = ImageUtils.resize(bufferedImage(), scale);
-		BufferedImage biPatch = ImageUtils.resize(pb.bufferedImage(), scale);
-		
-		
-		int bestDiff = Integer.MAX_VALUE;
-		Point bestOrigin = null;
-		toHSB(biScene);
-		toHSB(biPatch);
-		int xstart = 0;
-		int xend = biScene.getWidth() - biPatch.getWidth();
-		if (screenHalf.equals("right")) { xstart = biScene.getWidth()/2; }
-		if (screenHalf.equals("left")) { xend -= biScene.getWidth()/2; }
-		
-		for(int y = 0; y < biScene.getHeight() - biPatch.getHeight(); y++) {
-			for(int x = 0; x < biScene.getWidth() - biPatch.getWidth(); x++) {
-				int diff = weightedDiff(x, y, biScene, biPatch);
-				if (bestDiff > diff) {
-					bestDiff = diff;
-					bestOrigin = new Point(x, y);
+	public Point findTemplateBest(PixelBlock template) {
+		PixelBlock brightTemplate = ImageUtils.brightness(template);
+		PixelBlock brightImage = ImageUtils.brightness(this);
+		Point bestPoint = null;
+		int bestDistSq = Integer.MAX_VALUE;
+
+		int maxX = getWidth() - brightTemplate.getWidth();
+		int maxY = getHeight() - brightTemplate.getHeight();
+		for(int y = 0; y < maxY; y++) {
+			for(int x = 0; x < maxX; x++) {
+				int distSq = computeDist(brightImage, brightTemplate, x, y, bestDistSq);
+				if (distSq < bestDistSq) {
+					bestPoint = new Point(x, y);
+					bestDistSq = distSq;
 				}
 			}
 		}
-
-		//System.out.println("Best: " + bestDiff + ", best/pixel: " + (bestDiff/(biPatch.getWidth()*biPatch.getHeight())));
-		bestOrigin.translate(biPatch.getWidth() / 2, biPatch.getHeight() / 2);
-		return new Point(bestOrigin.x * scale, bestOrigin.y * scale);
+		System.out.println("Best distsq: " + bestDistSq);
+		return bestPoint;
 	}
 
-	/*
-	 * Replace the RBG values with HSB values.
-	 */
-	private void toHSB(BufferedImage bi) {
-		float[] hsb = new float[3];
-		for(int i = 0; i < bi.getWidth(); i++) {
-			for(int j = 0; j < bi.getHeight(); j++) {
-				Color c = new Color(bi.getRGB(i, j));
-				Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), hsb);
-				int h = (int) (hsb[0] * 255);
-				int s = (int) (hsb[1] * 255);
-				int b = (int) (hsb[2] * 255);
-				int hsbVal = (h << 16) | (s << 8) | b;
-				bi.setRGB(i, j, hsbVal);
+	private int computeDist(PixelBlock image, PixelBlock template, int xoff, int yoff, int bestSoFar) {
+		BufferedImage biImage = image.bufferedImage();
+		BufferedImage biTemplate = template.bufferedImage();
+		int dist = 0;
+		for(int y = 0; y < biTemplate.getHeight(); y++) {
+			for(int x = 0; x < biTemplate.getWidth(); x++) {
+				dist += Math.pow(biTemplate.getRGB(x, y) - biImage.getRGB(x + xoff, y + yoff), 2);
+				if (dist > bestSoFar) {return dist;}
 			}
 		}
-	}
-
-	/* 
-	 * Compute a weighted color diff between +this+ and the provided
-	 * subimage pixel.  Should have HSB in the RGB slots of each pixel
-	 * already.  Components get weighted with magic numbers from
-	 * looking at the screen.
-	 */
-	private int weightedDiff(int x, int y, BufferedImage scene, BufferedImage patch) {
-		int totalDiff = 0;
-		for(int i = 0; i < patch.getWidth(); i++) {
-			for(int j = 0; j < patch.getHeight(); j++) {
-				Color c1 = new Color(patch.getRGB(i, j));
-				Color c2 = new Color(scene.getRGB(x + i, y + j));
-				totalDiff += weightedColorDiff(c1, c2);
-			}
-		}
-		return totalDiff;
-	}
-
-	private int HUE_WEIGHT = 4;
-	private int SAT_WEIGHT = 2;
-	private int weightedColorDiff(Color c1, Color c2) {
-		int hueDiff = c1.getRed() - c2.getRed();
-		hueDiff = (hueDiff < 0 ? -hueDiff : hueDiff);
-		int satDiff = c1.getGreen() - c2.getGreen();
-		satDiff = (satDiff < 0 ? -satDiff : satDiff);
-		int brightDiff = c1.getBlue() - c2.getBlue();
-		brightDiff = (brightDiff < 0 ? -brightDiff : brightDiff);
-		return (hueDiff << HUE_WEIGHT) + (satDiff << SAT_WEIGHT) + brightDiff;
+		return dist;
 	}
 
 	/**

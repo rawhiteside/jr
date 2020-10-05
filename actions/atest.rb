@@ -5,7 +5,7 @@ require 'actions/kettles'
 
 class DefinePatchTest < Action
 
-  def initialize(name = 'Define patch')
+  def initialize(name = 'Define screen patch')
     super(name, 'Test/Dev')
   end
 
@@ -15,9 +15,9 @@ class DefinePatchTest < Action
       {:type => :point, :label => 'Drag center of rect', :name => 'center'},
       {:type => :number, :label => 'Width', :name => 'width'},
       {:type => :number, :label => 'Height', :name => 'height'},
-      {:type => :text, :label => 'Name of patch (one word)', :name => 'name', :size => 12}
+      {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Define patch', gadgets)
+    @vals = UserIO.prompt(parent, nil, 'Define subimage', gadgets)
 
   end
 
@@ -41,7 +41,7 @@ Action.add_action(DefinePatchTest.new)
 
 class FindPatchTest < Action
 
-  def initialize(name = 'Find patch')
+  def initialize(name = 'Find template best')
     super(name, 'Test/Dev')
   end
 
@@ -49,7 +49,7 @@ class FindPatchTest < Action
     gadgets = [
       {:type => :text, :label => 'Name of patch (one word)', :name => 'name'}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Patch to find', gadgets)
+    @vals = UserIO.prompt(parent, nil, 'Subimage to find', gadgets)
   end
 
 
@@ -58,13 +58,13 @@ class FindPatchTest < Action
     pb_patch = PixelBlock.load_image(filename)
     pb_full = full_screen_capture
     puts "finding"
-    pt = pb_full.find_patch(pb_patch)
+    pt = pb_full.find_template_best(pb_patch)
     p pt.to_s
     mm(pt)
   end
 end
-
 Action.add_action(FindPatchTest.new)
+
 
 class FindExactTest < Action
 
@@ -74,9 +74,9 @@ class FindExactTest < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'}
+      {:type => :text, :label => 'Name of template (one word)', :name => 'name'}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Patch to find', gadgets)
+    @vals = UserIO.prompt(parent, nil, 'Template image to find', gadgets)
   end
 
 
@@ -113,6 +113,7 @@ class ReduceTest < Action
 end
 
 Action.add_action(ReduceTest.new)
+
 class MouseWheelTest < Action
   def initialize(name = 'Use the mouse wheel')
     super(name, 'Test/Dev')
