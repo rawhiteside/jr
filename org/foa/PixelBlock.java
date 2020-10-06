@@ -47,10 +47,13 @@ public class PixelBlock extends ARobot {
 	 * Search within self for the best mach for the subimage template.
 	 */
 	public Point findTemplateBest(PixelBlock template) {
+		return findTemplateBest(template, Integer.MAX_VALUE);
+	}
+	public Point findTemplateBest(PixelBlock template, int bestDistSq) {
 		PixelBlock brightTemplate = ImageUtils.brightness(template);
 		PixelBlock brightImage = ImageUtils.brightness(this);
 		Point bestPoint = null;
-		int bestDistSq = Integer.MAX_VALUE;
+
 
 		int maxX = getWidth() - brightTemplate.getWidth();
 		int maxY = getHeight() - brightTemplate.getHeight();
