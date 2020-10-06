@@ -227,10 +227,16 @@ class SkillsWindow < DarkWindow
 end
 
 class InventoryWindow < DarkWindow
-  # TODO:  Search for it. 
   def self.find
-    # XX about my usual spot
-    inventory = InventoryWindow.from_point(Point.new(260, 950))
+    screen = ARobot.shared_instance.full_screen_capture
+    inv = PixelBlock.load_image("images/Inventory.png")
+    pt = screen.find_template_best(inv, 12000)
+
+    if pt
+      return InventoryWindow.from_point(pt)
+    else
+      return nil
+    end
   end
 
   def initialize(rect)

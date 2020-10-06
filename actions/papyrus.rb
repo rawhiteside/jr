@@ -17,7 +17,6 @@ class PapyrusAction < PickThings
       {:type => :combo, :label => 'What to do:', :name => 'what',
        :vals => [HARVEST_EAST, HARVEST_WEST, PLANT, LOOP]},
       {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
-      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :point, :label => 'Drag to the pinned Plant button.', :name => 'plant-button'},
       # {:type => :label, :label => 'All paths start & end near WH.'},
       {:type => :world_path, :label => 'Planting path ["Plant"]', :name => 'plant-path',
@@ -33,7 +32,7 @@ class PapyrusAction < PickThings
   def act
     @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
     plant_button = PinnableWindow.from_point(point_from_hash(@vals, 'plant-button'))
-    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+    inventory_window = InventoryWindow.find
     return unless @stash_window && plant_button && inventory_window
 
     what_to_do = @vals['what']

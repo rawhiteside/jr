@@ -11,7 +11,6 @@ class SiltAction < PickThings
     # Coords are relative to your head in cart view.
     gadgets = [
       {:type => :point, :label => 'Drag to the pinned WH menu.', :name => 'stash'},
-      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :world_path, :label => 'Path to walk', :name => 'path',
        :rows => 12, :custom_buttons => 2},
     ]
@@ -21,7 +20,7 @@ class SiltAction < PickThings
   def act
     @stash_window = PinnableWindow.from_point(point_from_hash(@vals, 'stash'))
 
-    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+    inventory_window = InventoryWindow.find
     walker = Walker.new
     coords = WorldLocUtils.parse_world_path(@vals['path'])
 

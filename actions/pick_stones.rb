@@ -13,7 +13,6 @@ class PickStones < PickThings
   def setup(parent)
     comps = [
       {:type => :world_loc, :name => 'start', :label => 'Starting coords.'},
-      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :combo, :label => 'Also watch for', :name => 'baux-gyp',
        :vals => ['Nothing', 'Bauxite', 'Gypsum'],},
       
@@ -24,7 +23,7 @@ class PickStones < PickThings
   end
 
   def act
-    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+    inventory_window = InventoryWindow.find
     walker = Walker.new
     c  = WorldLocUtils.parse_world_location(@vals['start'])
     grid = [

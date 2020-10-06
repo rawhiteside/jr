@@ -11,7 +11,6 @@ class GravelAction < PickThings
   def setup(parent)
     # Coords are relative to your head in cart view.
     gadgets = [
-      {:type => :point, :label => 'Drag to the Inventory window.', :name => 'inventory'},
       {:type => :world_loc, :label => 'Smash location', :name => 'smash_loc'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
@@ -19,7 +18,7 @@ class GravelAction < PickThings
   end
 
   def act
-    inventory_window = InventoryWindow.from_point(point_from_hash(@vals, 'inventory'))
+    inventory_window = InventoryWindow.find
     walker = Walker.new
 
     coords = grid_from_smash_loc
