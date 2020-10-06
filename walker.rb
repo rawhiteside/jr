@@ -235,7 +235,7 @@ class Walker < ARobot
   # Try to deal with getting stuck.
   # 
   # If coords don't change in this many seconds, we're stuck. 
-  STUCK_SECONDS = 2
+  STUCK_SECONDS = 4
 
   # Stuck handler.  If we stay at the same coords too long, try
   # walking in some direction for a bit, and hope we get out of
