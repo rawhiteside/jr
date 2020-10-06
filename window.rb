@@ -32,8 +32,18 @@ end
 class ChatWindow < Window
   # TODO:  Search. 
   def self.find
-    dim = ARobot.sharedInstance.screen_size
-    ChatWindow.from_point(Point.new(dim.width - 100, dim.height - 50))
+    # Look for the Main chat tab.
+    screen = ARobot.shared_instance.full_screen_capture
+    ['MainChatWhite', 'MainChatRed'].each do |file|
+      pb = PixelBlock.load_image("images/#{file}.png")
+      pt = screen.find_template_exact(pb)
+      if pt
+        # Chat area is 40 pixels below.
+        pt.y += 40
+        return ChatWindow.from_point(pt)
+      end
+    end
+    return nil
   end
 
   def initialize(rect = Rectangle.new(0, 0, 0, 0))

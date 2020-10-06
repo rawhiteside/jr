@@ -56,7 +56,6 @@ class ReadWindow < Action
 
     if @vals['chat-history-p'] == 'true'
       dim = screen_size
-      # chat = ChatWindow.from_point(Point.new(1800, 1000))
       chat = ChatWindow.find
       show_text(chat.read_text, 'Chat history')
     end
