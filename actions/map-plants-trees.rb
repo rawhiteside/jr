@@ -63,10 +63,15 @@ class MapPlantsTrees < Action
         text += "(#{pin_for_count(count)}) #{coords[0]}, #{coords[1]}, #{count} items.\n"
       end
     end
+    text = cond_map_text(text)
     comps = [
       {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => item}
     ]
     UserIO.prompt(nil, nil, 'Locations recorded.', comps)
+  end
+  
+  def cond_map_text(text)
+    return "{{CondMap|\n#{text}\n}}\n"
   end
 
   def pin_for_count(count)
@@ -79,7 +84,8 @@ class MapPlantsTrees < Action
 
   def show_locs
     locs = (@plants.keys + @trees.keys).uniq
-    text = locs.inject("") {|accum, loc| accum + "(Bl0) #{loc[0]}, #{loc[1]}, Point\n"}
+    text = locs.inject('') {|accum, loc| accum + "(Bl0) #{loc[0]}, #{loc[1]}, Point\n"}
+    text = cond_map_text(text)
     comps = [
       {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => 'Locations'}
     ]
