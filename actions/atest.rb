@@ -47,7 +47,8 @@ class FindPatchTest < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'}
+      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'},
+      {:type => :number, :label => 'Max dist sq', :name => 'distsq'},
     ]
     @vals = UserIO.prompt(parent, nil, 'Subimage to find', gadgets)
   end
@@ -55,10 +56,16 @@ class FindPatchTest < Action
 
   def act
     filename = "images/#{@vals['name']}.png"
+    distsq = @vals['distsq']
     pb_patch = PixelBlock.load_image(filename)
     pb_full = full_screen_capture
     puts "finding"
-    pt = pb_full.find_template_best(pb_patch)
+    pt = nil
+    if distsq == ''
+      pt = pb_full.find_template_best(pb_patch)
+    else
+      pt = pb_full.find_template_best(pb_patch, distsq.to_i)
+    end
     p pt.to_s
     mm(pt)
   end
