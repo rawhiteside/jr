@@ -1,3 +1,9 @@
+#
+# It appears this was to provide access to things *not* directly in robot. 
+#
+
+# Ooooh.  Maybe it was for the camp worker.
+# 
 module Utils
 
   def travel(dest)
@@ -30,12 +36,6 @@ module Utils
     Walker.new.walk_to([x, y])
   end
 
-  # Read the chat window (which must be generally at teh lower left,
-  # with all of the borders visible.
-  def read_chat
-    return SkillsWindow.new.read_text
-  end
-
   # Wait for a stat to be non-red in the skills window
   # 'Can't-find-stat' means the same as :red
   def stat_wait(arr)
@@ -54,30 +54,3 @@ module Utils
 
 end
 
-#
-# Holds context for run-and-do.
-# Needs a better name, methinks.
-#
-class RunAndDoContext < ARobot
-  include Utils
-
-  def initialze
-    super
-  end
-  
-
-  # send hotkeys to the screen.  Used for, for example, gathering wood
-  # from trees, resin from trees, and the greehouses.
-  # 
-  def spam(str, gridx = 10, gridy = 8)
-    dim = screen_size
-    x_size = dim.width/gridx
-    y_size = dim.height/gridy
-    1.upto(gridy - 1) do |y|
-      1.upto(gridx - 1) do |x|
-        mm x * x_size, y * y_size
-        send_string str, 0.03
-      end
-    end
-  end
-end

@@ -2,6 +2,34 @@ require 'action'
 require 'walker'
 require 'utils'
 
+#
+# Holds context for run-and-do.
+# Needs a better name, methinks.
+#
+class RunAndDoContext < ARobot
+  include Utils
+
+  def initialze
+    super
+  end
+  
+
+  # send hotkeys to the screen.  Used for, for example, gathering wood
+  # from trees, resin from trees, and the greehouses.
+  # 
+  def spam(str, gridx = 10, gridy = 8)
+    dim = screen_size
+    x_size = dim.width/gridx
+    y_size = dim.height/gridy
+    1.upto(gridy - 1) do |y|
+      1.upto(gridx - 1) do |x|
+        mm x * x_size, y * y_size
+        send_string str, 0.03
+      end
+    end
+  end
+end
+
 class RunAndDo < Action
   def initialize
     super('Run and do', 'Misc')
@@ -80,6 +108,6 @@ class RunAndDo < Action
     storage.click_on('Stash./Insect/All')
   end
 end
-
 Action.add_action(RunAndDo.new)
+
 
