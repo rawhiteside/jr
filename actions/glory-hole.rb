@@ -17,9 +17,9 @@ class GloryHole < Action
   def setup(parent)
     gadgets = [
       {:type => :point, :label => 'Drag to pinned glory hole window', :name => 'window'},
-      {:type => :text, :label => 'Item to make (menu path)', :size => 20, :name => 'what'},
+      {:type => :text, :label => 'Item to make (menu path)', :size => 15, :name => 'what'},
       {:type => :checkbox, :label => 'Continuous rotate', :name => 'rot?'},
-      {:type => :number, :label => 'Rotation interval', :name => 'rot-interval'},
+      {:type => :number, :label => 'Rotation interval (secs)', :name => 'rot-interval'},
       {:type => :big_text, :label => 'Recipe', :name => 'recipe'},
       {:type => :number, :label => 'Repeat times', :name => 'count'},
     ]
