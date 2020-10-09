@@ -433,7 +433,8 @@ end
 # 
 # {:type => :checkbox, :label => 'Go Fast!', :name => 'speed',}
 #
-# The return value hash will have an entry for 'speed'
+# The return value hash will have an entry for 'speed'.  String values
+# of "true" or "false".
 class SetupCheckBox < JPanel
   def initialize(prefix, h, data_gets, data_puts)
     super()
