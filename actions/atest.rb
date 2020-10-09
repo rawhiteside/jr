@@ -12,9 +12,8 @@ class DefinePatchTest < Action
   def setup(parent)
     gadgets = [
       {:type => :label, :label => 'Define a screen rectangle to capture.'},
-      {:type => :point, :label => 'Drag center of rect', :name => 'center'},
-      {:type => :number, :label => 'Width', :name => 'width'},
-      {:type => :number, :label => 'Height', :name => 'height'},
+      {:type => :point, :label => 'Drag Top Left of rect', :name => 'tl'},
+      {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
       {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
     @vals = UserIO.prompt(parent, nil, 'Define subimage', gadgets)
@@ -23,11 +22,10 @@ class DefinePatchTest < Action
 
 
   def act
-    x = @vals['center.x'].to_i
-    y = @vals['center.y'].to_i
-    width = @vals['width'].to_i
-    height = @vals['height'].to_i
-    rect = Rectangle.new(x - width/2, y - height/2, width, height)
+    tl = point_from_hash(@vals, 'tl')
+    br = point_from_hash(@vals, 'br')
+
+    rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
     pb = PixelBlock.new(rect)
     filename = "images/#{@vals['name']}.png"
     pb.save_image(filename)
