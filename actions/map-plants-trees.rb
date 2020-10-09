@@ -103,6 +103,7 @@ class MapPlantsTrees < Action
       text = win.read_text
       next if text.nil?
       line1 = text.split("\n")[0]
+      next if line1.nil?
       # 
       # Plant?
       match = line1.match("This is a (.*)")
