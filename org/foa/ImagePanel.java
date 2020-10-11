@@ -21,29 +21,40 @@ public class ImagePanel extends JPanel implements ActionListener {
 		setImage(img);
 	}
 
+
 	private void setImage(Image img) {
 		m_label.setIcon(new ImageIcon(img));
 		m_label.repaint();
 	}
 
+	private static final String ORIGINAL  = "Original";
+	private static final String RED = "Red";
+	private static final String GREEN = "Green";
+	private static final String BLUE = "Blue";
+	private static final String HUE = "Hue";
+	private static final String SAT = "Sat";
+	private static final String LUM = "Lum";
+	private static final String EDGES = "Edges";
+	private static final String SHARPEN = "Sharpen";
+
 	private void addButtons() {
 		Box box = Box.createVerticalBox();
 		add(box, BorderLayout.WEST);
-		box.add(makeButton("O"));
+		box.add(makeButton(ORIGINAL));
 		box.add(Box.createVerticalStrut(20));
-		box.add(makeButton("R"));
-		box.add(makeButton("G"));
-		box.add(makeButton("B"));
+		box.add(makeButton(RED));
+		box.add(makeButton(GREEN));
+		box.add(makeButton(BLUE));
 		box.add(Box.createVerticalStrut(20));
-		box.add(makeButton("H"));
-		box.add(makeButton("S"));
-		box.add(makeButton("L"));
+		box.add(makeButton(HUE));
+		box.add(makeButton(SAT));
+		box.add(makeButton(LUM));
 	}
 
 	public void actionPerformed(ActionEvent e) {
 		JButton b = (JButton) e.getSource();
 		String cmd = b.getText();
-		if(cmd.equals("O")) {
+		if(cmd.equals(ORIGINAL)) {
 			setImage(m_image);
 		} else {
 			changeImage(cmd);
@@ -69,24 +80,24 @@ public class ImagePanel extends JPanel implements ActionListener {
 		int val;
 	
 		switch (cmd) {
-		case "R":
+		case RED:
 			c = new Color(c.getRed(), c.getRed(), c.getRed());
 			break;
-		case "G":
+		case GREEN:
 			c = new Color(c.getGreen(), c.getGreen(), c.getGreen());
 			break;
-		case "B":
-			c = new Color(c.getGreen(), c.getGreen(), c.getBlue());
+		case BLUE:
+			c = new Color(c.getBlue(), c.getBlue(), c.getBlue());
 			break;
-		case "H":
+		case HUE:
 			hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 			c = new Color(hsb[0], hsb[0], hsb[0]);
 			break;
-		case "S":
+		case SAT:
 			hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 			c = new Color(hsb[1], hsb[1], hsb[1]);
 			break;
-		case "L":
+		case LUM:
 			hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 			c = new Color(hsb[2], hsb[2], hsb[2]);
 			break;
