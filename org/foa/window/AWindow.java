@@ -82,7 +82,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 
 	public Color dialogColor(Point p) { return getColor(toScreenCoords(p)); }
 
-	// This used to do something. XXX
+	// PinnableWindow overrides this to get rid of the pin. 
 	public Rectangle textRectangle() {
 		return getRect();
 	}

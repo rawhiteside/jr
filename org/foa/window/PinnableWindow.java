@@ -23,6 +23,13 @@ public class PinnableWindow extends AWindow {
 		m_static = value;
 	}
 
+	// Reduce width to exclude the pin. 
+	public Rectangle textRectangle() {
+		Rectangle rect = getRect();
+		rect.width -= 30;
+		return rect;
+	}
+
 	/**
 	 * Basically, any mouse click can now change the window bounds.
 	 * The left center seems to be preserved.
