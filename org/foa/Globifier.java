@@ -17,8 +17,8 @@ import org.foa.PixelBlock;
  * Used, e.g., in mining to find the stones from a before/after xor. 
  */
 public class Globifier {
-	public static HashMap[] globify(PixelBlock m, int threshold) {
-		return globify(m.bufferedImage(), threshold);
+	public static HashMap[] globify(PixelBlock m) {
+		return globify(m.bufferedImage());
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class Globifier {
 	 * @returns An array of hashmaps, one for each contiguous glob.
 	 * Keys are the points, values just "1".
 	 */
-	public static HashMap[] globify(BufferedImage bi, int threshold) {
+	public static HashMap[] globify(BufferedImage bi) {
 		ArrayList<HashMap> globs = new ArrayList<HashMap>();
 
 		// Do something with each point that is a "hit" (non-zero pixel value).
@@ -61,7 +61,7 @@ public class Globifier {
 			for(int x = 0; x < bi.getWidth() - 1; x++)  {
 				Point p = new Point(x, y);
 				// is it a hit or a miss?
-				if ((bi.getRGB(x, y) & 0xFFFFFF) > threshold) { globifyPoint(globs, p); }
+				if ((bi.getRGB(x, y) & 0xFFFFFF) != 0) { globifyPoint(globs, p); }
 			}
 			if ((y % 10) == 9) { pruneGlobs(globs, y, 15); }
 		}

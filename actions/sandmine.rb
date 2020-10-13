@@ -130,10 +130,13 @@ class SandMine < AbstractMine
     @stones_image = field_shot
     
     @diff_image = ImageUtils.xor(@empty_image, @stones_image)
-    brightness = ImageUtils.shrink(ImageUtils.brightness(@diff_image), 40)
-    globs = get_globs(brightness, 1)
+    # brightness = ImageUtils.shrink(ImageUtils.brightness(@diff_image), 0)
+    brightness = ImageUtils.brightness(@diff_image)
+    globs = get_globs(brightness)
+    puts globs.size
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     globs = globs.slice(0, @stone_count)
+    puts globs.size
     stones = []
 
     globs.each { |g| 
@@ -152,10 +155,10 @@ class SandMine < AbstractMine
     
   end
 
-  def get_globs(brightness, threshold)
+  def get_globs(brightness)
     # A +glob+ is just a hash with points as keys.  Points are in the
     # coord system of the +brightness+ image.
-    got = Globifier.globify(brightness, threshold)
+    got = Globifier.globify(brightness)
     # Convert from java land to ruby land.
     globs = []
     got.each do |hash_map|
