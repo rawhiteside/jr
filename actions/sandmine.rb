@@ -8,13 +8,6 @@ class SandMine < AbstractMine
 
   def setup(parent)
     gadgets = [
-      {:type => :frame, :label => 'Ore field', :name => 'field',
-       :gadgets =>
-       [
-  	 {:type => :point, :label => 'UL corner', :name => 'ul'},
-  	 {:type => :point, :label => 'LR corner', :name => 'lr'},
-       ]
-      },
       {:type => :point, :label => 'Drag to pinned mine menu', :name => 'mine'},
       
       {:type => :text, :label => 'How many stones?', :name => 'stone-count',},
@@ -31,10 +24,6 @@ class SandMine < AbstractMine
   end
   
   def act
-    origin = point_from_hash(@vals, 'field.ul')
-    width = @vals['field.lr.x'].to_i - origin.x
-    height = @vals['field.lr.y'].to_i - origin.y
-    @field_rect = Rectangle.new(origin.x, origin.y, width, height)
     @debug = @vals['debug'] == 'y'
     log_result "Debug = #{@debug}"
     @stone_count = @vals['stone-count'].to_i
@@ -115,28 +104,25 @@ class SandMine < AbstractMine
     end
   end
   
-  def field_shot
-    PixelBlock.new(@field_rect)
-  end
-
   def mine_get_stones(w)
     wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
     sleep(5.0)
     
-    @empty_image = field_shot
+    @empty_image = full_screen_capture
     w.click_on('Work this Mine', 'tc')
     sleep(10.0)
-    @stones_image = field_shot
+    @stones_image = full_screen_capture
     
     @diff_image = ImageUtils.xor(@empty_image, @stones_image)
-    # brightness = ImageUtils.shrink(ImageUtils.brightness(@diff_image), 0)
     brightness = ImageUtils.brightness(@diff_image)
+    # 
+    # Clear mine window, since they changed.
+    zero_menu_rect(brightness, w.rect)
+
     globs = get_globs(brightness)
-    puts globs.size
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     globs = globs.slice(0, @stone_count)
-    puts globs.size
     stones = []
 
     globs.each { |g| 
@@ -155,6 +141,14 @@ class SandMine < AbstractMine
     
   end
 
+  def zero_menu_rect(pb, rect)
+    rect.x.upto(rect.x + rect.width) do |x|
+      rect.y.upto(rect.y + rect.height) do |y|
+        pb.set_pixel(x, y, 0)
+      end
+    end
+  end
+  
   def get_globs(brightness)
     # A +glob+ is just a hash with points as keys.  Points are in the
     # coord system of the +brightness+ image.

@@ -137,6 +137,13 @@ public class PixelBlock extends ARobot {
 	}
 
 
+	public void setPixel(Point p, int val) {
+		setPixel(p.x, p.y, val);
+	}
+	public void setPixel(int x, int y, int val) {
+		m_bufferedImage.setRGB(x, y, val);
+	}
+
 	/*
 	 * return screen coords for the provided image coords.
 	 */
@@ -144,7 +151,6 @@ public class PixelBlock extends ARobot {
 		Point p = toScreen(new Point(x, y));
 		return new int[] {p.x, p.y};
 	}
-
 	public Point toScreen(Point p) {
 		return new Point(m_origin.x + p.x, m_origin.y + p.y);
 	}
