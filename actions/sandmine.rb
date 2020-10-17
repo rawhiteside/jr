@@ -1,5 +1,8 @@
 require 'action'
 require 'actions/abstract_mine'
+require 'set'
+
+import org.foa.Globifier
 
 class SandMine < AbstractMine
   def initialize
@@ -36,6 +39,8 @@ class SandMine < AbstractMine
       begin
         check_for_pause
         stones = mine_get_stones(w)
+        # XXX
+        # XXX show_stones(stones)
         assign_colors_to_stones(stones)
         mine_stones(stones, true, @delay)
       rescue BadWorkloadException => e
@@ -43,6 +48,14 @@ class SandMine < AbstractMine
   	# No need for anything.  Just mine again.
       end
       sleep 1 while dismiss_strange_windows
+    end
+  end
+  
+  def show_stones(stones)
+    stones.each do |glob|
+      pb = PixelBlock.construct_blank(glob.rectangle, 0x000000);
+      pb.set_pixels_from_screen_points(glob.points, 0xffffff)
+      pb.display_to_user 'A glob'
     end
   end
   
@@ -112,15 +125,14 @@ class SandMine < AbstractMine
     @empty_image = full_screen_capture
     w.click_on('Work this Mine', 'tc')
     sleep(10.0)
+
     @stones_image = full_screen_capture
-    
-    @diff_image = ImageUtils.xor(@empty_image, @stones_image)
-    brightness = ImageUtils.brightness(@diff_image)
+    diff_image = ImageUtils.xor(@empty_image, @stones_image)
     # 
     # Clear mine window, since they changed.
-    zero_menu_rect(brightness, w.rect)
+    zero_menu_rect(diff_image, w.rect)
 
-    globs = get_globs(brightness)
+    globs = get_globs(diff_image)
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     globs = globs.slice(0, @stone_count)
     stones = []
@@ -149,20 +161,13 @@ class SandMine < AbstractMine
     end
   end
   
+  # We have to copy the Java arrays into Ruby arrays, so they get the
+  # expected methods.
   def get_globs(brightness)
-    # A +glob+ is just a hash with points as keys.  Points are in the
-    # coord system of the +brightness+ image.
     got = Globifier.globify(brightness)
-    # Convert from java land to ruby land.
     globs = []
-    got.each do |hash_map|
-      points = []
-      hash_map.key_set.each {|k| points << k}
-      globs << points
-    end
-
+    got.each { |g| globs << g.to_a }
     globs
-
   end
 
 
@@ -390,8 +395,8 @@ class OreStone
 
   def rectangle
     Rectangle.new(@min_point.x, @min_point.y,
-                  @max_point.x - @min_point.x, 
-                  @max_point.y - @min_point.y)
+                  @max_point.x - @min_point.x + 1, 
+                  @max_point.y - @min_point.y + 1)
   end
 end
 

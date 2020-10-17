@@ -24,6 +24,16 @@ public class PixelBlock extends ARobot {
 		m_rect = new Rectangle(m_origin.x, m_origin.y, img.getWidth(), img.getHeight());
 	}
 
+	public static PixelBlock constructBlank(Rectangle rect, int rgb) {
+		BufferedImage bi = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
+		for(int x = 0; x < rect.width; x++) {
+			for(int y = 0; y < rect.height; y++) {
+				bi.setRGB(x, y, rgb);
+			}
+		}
+		return new PixelBlock(new Point(rect.x, rect.y), bi);
+	}
+
 	public Rectangle rect() {
 		return new Rectangle(m_rect);
 	}
@@ -111,17 +121,17 @@ public class PixelBlock extends ARobot {
 	 * Returns a pixel from the image, given the screen coords.
 	 * It'd be Bad if those corrdinates weren't in the image.
 	 */
-	public int pixelFromScreen(Point p) { return pixelFromScreen(p.x, p.y); }
-	public int pixelFromScreen(int x, int y) {
+	public int getPixelFromScreen(Point p) { return getPixelFromScreen(p.x, p.y); }
+	public int getPixelFromScreen(int x, int y) {
 		x = x - m_origin.x;
 		y = y - m_origin.y;
-		return pixel(x, y);
+		return getPixel(x, y);
 	}
 
 	/**
 	 * returns an int with RRGGBB encoded.
 	 */
-	public int pixel(int x, int y) {
+	public int getPixel(int x, int y) {
 		try {
 			return m_bufferedImage.getRGB(x, y) & 0xFFFFFF;
 		}
@@ -132,16 +142,22 @@ public class PixelBlock extends ARobot {
 			throw new ArrayIndexOutOfBoundsException(msg);
 		}
 	}
-	public int pixel(Point p) {
-		return pixel(p.x, p.y);
+	public int getPixel(Point p) {
+		return getPixel(p.x, p.y);
 	}
 
 
-	public void setPixel(Point p, int val) {
-		setPixel(p.x, p.y, val);
+	public void setPixel(Point p, int rgb) {
+		setPixel(p.x, p.y, rgb);
 	}
-	public void setPixel(int x, int y, int val) {
-		m_bufferedImage.setRGB(x, y, val);
+	public void setPixel(int x, int y, int rgb) {
+		m_bufferedImage.setRGB(x, y, rgb);
+	}
+
+	public void setPixelsFromScreenPoints(Point[] pts, int rgb) {
+		for(int i = 0; i < pts.length; i++) {
+			setPixel(fromScreen(pts[i]), rgb);
+		}
 	}
 
 	/*
@@ -154,6 +170,13 @@ public class PixelBlock extends ARobot {
 	public Point toScreen(Point p) {
 		return new Point(m_origin.x + p.x, m_origin.y + p.y);
 	}
+	/*
+	 * Return image coords from screen points.  No error checking,
+	 * since I want it to just crash if I've made an error.
+	 */
+	public Point fromScreen(Point p) {
+		return new Point(p.x - m_origin.x, p.y - m_origin.y);
+	}
 
 	public int getWidth() {
 		return m_rect.width;
@@ -165,6 +188,10 @@ public class PixelBlock extends ARobot {
 
 	public void displayToUser(String title) {
 		ImagePanel.displayImage(m_bufferedImage, title);
+	}
+
+	public String toString() {
+		return "Origin = " + m_origin.toString() + ", rect = " + m_rect.toString();
 	}
 
 	public void saveImage(String filename) {

@@ -17,7 +17,7 @@ import org.foa.PixelBlock;
  * Used, e.g., in mining to find the stones from a before/after xor. 
  */
 public class Globifier {
-	public static HashMap[] globify(PixelBlock m) {
+	public static Point[][] globify(PixelBlock m) {
 		return globify(m.bufferedImage());
 	}
 
@@ -53,7 +53,7 @@ public class Globifier {
 	 * @returns An array of hashmaps, one for each contiguous glob.
 	 * Keys are the points, values just "1".
 	 */
-	public static HashMap[] globify(BufferedImage bi) {
+	public static Point[][] globify(BufferedImage bi) {
 		ArrayList<HashMap> globs = new ArrayList<HashMap>();
 
 		// Do something with each point that is a "hit" (non-zero pixel value).
@@ -67,7 +67,8 @@ public class Globifier {
 		}
 		// Now, remove all of the keys with value = 0.
 		for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
-		return globs.toArray(new HashMap[globs.size()]);
+
+		return globsAsArrays(globs);
 	}
 
 	// Remove small globs that cannot get larger.
@@ -91,15 +92,6 @@ public class Globifier {
 				globs.remove(maps[i]);
 			}
 		}
-	}
-
-	public static Point[][] globifyPoints(Point[] points) {
-		ArrayList<HashMap> globs = new ArrayList<HashMap>();
-		for(int i = 0; i < points.length; i++) { globifyPoint(globs, points[i]); }
-	
-		// Now, remove all of the keys with value = 0.
-		for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }
-		return globsAsArrays(globs);
 	}
 
 	private static Point[][] globsAsArrays(ArrayList<HashMap> globs) {
