@@ -125,14 +125,14 @@ public class WindowGeom extends ARobot {
 
 
 	private static boolean isInnerBorder(PixelBlock pb, int x, int y) {
-		Color color = pb.colorFromScreen(x, y);
+		Color color = pb.getColorFromScreen(x, y);
 		return Math.abs(color.getRed() - INNER_BROWN.getRed()) <= 4 &&
 			Math.abs(color.getGreen() - INNER_BROWN.getGreen()) <= 4 &&
 			Math.abs(color.getBlue() - INNER_BROWN.getBlue()) <= 4;
 	}
 
 	private static boolean isOuterBorder(PixelBlock pb, int x, int y) {
-		return isOuterBorder(pb.color(x, y));
+		return isOuterBorder(pb.getColor(x, y));
 	}
 	
 	public static boolean isOuterBorder(Color color) {

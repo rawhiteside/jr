@@ -96,24 +96,24 @@ public class PixelBlock extends ARobot {
 	/**
 	 * Coordinates are image coords, not screen coords.
 	 */
-	public Color color(int x, int y) {
+	public Color getColor(int x, int y) {
 		return new Color(m_bufferedImage.getRGB(x, y));
 	}
-	public Color color(Point p) {
-		return color(p.x, p.y);
+	public Color getColor(Point p) {
+		return getColor(p.x, p.y);
 	}
 
 	/**
 	 * Returns a Color from the image, given the screen coords.
 	 * It'd be Bad if those corrdinates weren't in the image.
 	 */
-	public Color colorFromScreen(int x, int y) {
+	public Color getColorFromScreen(int x, int y) {
 		x = x - m_origin.x;
 		y = y - m_origin.y;
-		return color(x, y);
+		return getColor(x, y);
 	}
-	public Color colorFromScreen(Point p) {
-		return colorFromScreen(p.x, p.y);
+	public Color getColorFromScreen(Point p) {
+		return getColorFromScreen(p.x, p.y);
 	}
 
 
@@ -185,6 +185,39 @@ public class PixelBlock extends ARobot {
 	public int getHeight() {
 		return m_rect.height;
 	}
+
+	/*
+	 * Extract a sub-image.
+	 */
+	public PixelBlock slice(Rectangle rect) {
+		PixelBlock pb = constructBlank(rect, 0x0);
+		for(int x = 0; x < rect.width; x++) {
+			for(int y = 0; y < rect.height; y++) {
+				pb.setPixel(x, y, getPixel(x + rect.x, y + rect.y));
+			}
+		}
+		return pb;
+	}
+
+	/*
+	 *  Return a new rectangle that's all on the screen. 
+	 */
+	public static Rectangle clipToScreen(Rectangle rect) {
+		Dimension dim = ARobot.sharedInstance().screenSize();
+		Rectangle out = new Rectangle(rect);
+		if (out.x < 0) {
+			out.width += out.x;
+			out.x = 0;
+		}
+		if (out.y < 0) {
+			out.height += out.y;
+			out.y = 0;
+		}
+		if (out.x + out.width > dim.width) { out.width = dim.width - out.x; }
+		if (out.y + out.height > dim.height) { out.height = dim.height - out.y; }
+		return out;
+	}
+
 
 	public void displayToUser(String title) {
 		ImagePanel.displayImage(m_bufferedImage, title);

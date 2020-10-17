@@ -2,6 +2,7 @@ package org.foa;
 
 import java.awt.Color;
 import java.awt.Point;
+import java.awt.Robot;
 import java.awt.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.image.*;
@@ -85,7 +86,7 @@ public class ImageUtils {
 	/**
 	 * Return an image constructed from the xor of the two input images.
 	 */
-	public static BufferedImage xor(BufferedImage bi1, BufferedImage bi2) {
+	private static BufferedImage xor(BufferedImage bi1, BufferedImage bi2) {
 		BufferedImage biOut =
 			new BufferedImage(bi1.getWidth(), bi1.getHeight(), BufferedImage.TYPE_INT_RGB);
 		for(int x = 0; x < bi1.getWidth(); x++) {
@@ -103,6 +104,29 @@ public class ImageUtils {
 	public static PixelBlock xor(PixelBlock pb1, PixelBlock pb2) {
 		return new PixelBlock(pb1.origin(),
 							  xor(pb1.bufferedImage(), pb2.bufferedImage()));
+	}
+
+	/**
+	 * Return an image constructed from the xor of the two input images.
+	 */
+	private static BufferedImage and(BufferedImage bi1, BufferedImage bi2) {
+		BufferedImage biOut =
+			new BufferedImage(bi1.getWidth(), bi1.getHeight(), BufferedImage.TYPE_INT_RGB);
+		for(int x = 0; x < bi1.getWidth(); x++) {
+			for(int y = 0; y < bi1.getHeight(); y++) {
+				int pixel = bi1.getRGB(x, y) & bi2.getRGB(x, y);
+				biOut.setRGB(x, y, pixel);
+			}
+		}
+		return biOut;
+	}
+
+	/**
+	 * AND the two pixelblocks. 
+	 */
+	public static PixelBlock and(PixelBlock pb1, PixelBlock pb2) {
+		return new PixelBlock(pb1.origin(),
+							  and(pb1.bufferedImage(), pb2.bufferedImage()));
 	}
 
 
@@ -320,7 +344,7 @@ public class ImageUtils {
 	public static PixelBlock edges(PixelBlock pb) {
 		return new PixelBlock(pb.origin(), edges(pb.bufferedImage()));
 	}
-	public static BufferedImage edges(BufferedImage bi) {
+	private static BufferedImage edges(BufferedImage bi) {
 		BufferedImage biOut =
 			new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 
@@ -340,7 +364,7 @@ public class ImageUtils {
 	public static PixelBlock blur(PixelBlock pb) {
 		return new PixelBlock(pb.origin(), blur(pb.bufferedImage()));
 	}
-	public static BufferedImage blur(BufferedImage bi) {
+	private static BufferedImage blur(BufferedImage bi) {
 		BufferedImage biOut =
 			new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 

@@ -3,6 +3,8 @@ require 'actions/abstract_mine'
 require 'set'
 
 import org.foa.Globifier
+import org.foa.ImageUtils
+import org.foa.PixelBlock
 
 class SandMine < AbstractMine
   def initialize
@@ -40,7 +42,9 @@ class SandMine < AbstractMine
         check_for_pause
         stones = mine_get_stones(w)
         # XXX
-        # XXX show_stones(stones)
+        # XXX
+        show_stones(stones)
+
         assign_colors_to_stones(stones)
         mine_stones(stones, true, @delay)
       rescue BadWorkloadException => e
@@ -53,9 +57,17 @@ class SandMine < AbstractMine
   
   def show_stones(stones)
     stones.each do |glob|
-      pb = PixelBlock.construct_blank(glob.rectangle, 0x000000);
-      pb.set_pixels_from_screen_points(glob.points, 0xffffff)
-      pb.display_to_user 'A glob'
+      # Make the rect a bit larger.
+      gr = glob.rectangle
+      incr = 5
+      rect = Rectangle.new(gr.x - incr, gr.y - incr, gr.width + 2*incr, gr.height + 2*incr)
+      rect = PixelBlock.clip_to_screen(rect)
+      pbMask = PixelBlock.construct_blank(rect, 0x000000);
+      pbMask.set_pixels_from_screen_points(glob.points, 0xffffff)
+
+      pbScene = @stones_image.slice(rect)
+      pbAND = ImageUtils.and(pbMask, pbScene)
+      pbAND.display_to_user 'A glob'
     end
   end
   
@@ -69,7 +81,7 @@ class SandMine < AbstractMine
       rect.x.upto(rect.x + rect.width) do |x|
         rect.y.upto(rect.y + rect.height) do |y|
           
-          color = @stones_image.color_from_screen(x, y)
+          color = @stones_image.get_color_from_screen(x, y)
           sym = Clr.color_symbol(color, @gem_color, @debug)
           sums[sym] = sums[sym] + 1 if (sym)
         end
