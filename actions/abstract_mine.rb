@@ -33,6 +33,24 @@ class AbstractMine < Action
     globs
   end
 
+  # Wait until the mine can be worked again.
+  def wait_for_mine(w)
+    loop do
+      w.refresh
+      break unless w.read_text =~ /This mine can be/
+      sleep(1)
+    end
+  end
+  
+  # Zero out the pixels in the provided rectangle.
+  def zero_menu_rect(pb, rect)
+    rect.x.upto(rect.x + rect.width) do |x|
+      rect.y.upto(rect.y + rect.height) do |y|
+        pb.set_pixel(x, y, 0)
+      end
+    end
+  end
+  
 end
 
 class Clr
@@ -86,3 +104,49 @@ class Clr
     nil
   end
 end
+
+
+class OreStone
+  attr_accessor :points, :min_point, :max_point, :centroid
+  attr_accessor :color_symbol
+
+  def initialize(points)
+    @points = points
+    xmin = ymin = 99999999
+    xmax = ymax = 0
+    xsum = ysum = 0
+    points.each do |p|
+      x, y = p.x, p.y
+      xmin = x if x < xmin 
+      ymin = y if y < ymin 
+
+      xmax = x if x > xmax 
+      ymax = y if y > ymax
+
+      xsum += x
+      ysum += y
+    end
+
+    @min_point = Point.new(xmin, ymin)
+    @max_point = Point.new(xmax, ymax)
+    @centroid = Point.new(xsum / points.size, ysum / points.size)
+  end
+
+  def x
+    @centroid.x
+  end
+  def y
+    @centroid.y
+  end
+
+  def to_s
+    "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}, rectangle: #{rectangle.toString()}"
+  end
+
+  def rectangle
+    Rectangle.new(@min_point.x, @min_point.y,
+                  @max_point.x - @min_point.x + 1, 
+                  @max_point.y - @min_point.y + 1)
+  end
+end
+

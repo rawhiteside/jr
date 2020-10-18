@@ -29,9 +29,6 @@ class SandMine < AbstractMine
         check_for_pause
         globs = mine_get_globs(w, stone_count)
         stones = orestones_from_globs(globs)
-        # XXX
-        # XXX show_stones(stones)
-
         assign_colors_to_stones(stones)
         mine_stones(stones, true, key_delay)
       rescue BadWorkloadException => e
@@ -41,23 +38,6 @@ class SandMine < AbstractMine
       sleep 1 while dismiss_strange_windows
     end
   end
-  
-  def show_stones(stones)
-    stones.each do |glob|
-      # Make the rect a bit larger.
-      gr = glob.rectangle
-      incr = 5
-      rect = Rectangle.new(gr.x - incr, gr.y - incr, gr.width + 2*incr, gr.height + 2*incr)
-      rect = PixelBlock.clip_to_screen(rect)
-      pbMask = PixelBlock.construct_blank(rect, 0x000000);
-      pbMask.set_pixels_from_screen_points(glob.points, 0xffffff)
-
-      pbScene = @stones_image.slice(rect)
-      pbAND = ImageUtils.and(pbMask, pbScene)
-      pbAND.display_to_user 'A glob'
-    end
-  end
-  
 
   HITS_NEEDED = 10  
   def find_bare_stone_color(rect)
@@ -76,7 +56,6 @@ class SandMine < AbstractMine
       end
       return :black
   end
-  
 
   def assign_colors_to_stones(stones)
     stones.each do |ore_stone|
@@ -86,15 +65,6 @@ class SandMine < AbstractMine
 
     picked = stones.collect {|s| s.color_symbol}
     log_result picked.to_s
-  end
-  
-  
-  def wait_for_mine(w)
-    loop do
-      w.refresh
-      break unless w.read_text =~ /This mine can be/
-      sleep(1)
-    end
   end
   
   def orestones_from_globs(globs)
@@ -107,14 +77,6 @@ class SandMine < AbstractMine
     stones
   end
 
-  def zero_menu_rect(pb, rect)
-    rect.x.upto(rect.x + rect.width) do |x|
-      rect.y.upto(rect.y + rect.height) do |y|
-        pb.set_pixel(x, y, 0)
-      end
-    end
-  end
-  
   def dismiss_strange_windows
     if win = PopupWindow.find
       log_result 'Dismissed a window'
@@ -124,7 +86,6 @@ class SandMine < AbstractMine
     end
     return false
   end
-
 
   def mine_stones(stones, want_larges, delay)
 
@@ -277,50 +238,6 @@ class SandMine < AbstractMine
 end
 
 Action.add_action(SandMine.new)
-
-class OreStone
-  attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol
-
-  def initialize(points)
-    @points = points
-    xmin = ymin = 99999999
-    xmax = ymax = 0
-    xsum = ysum = 0
-    points.each do |p|
-      x, y = p.x, p.y
-      xmin = x if x < xmin 
-      ymin = y if y < ymin 
-
-      xmax = x if x > xmax 
-      ymax = y if y > ymax
-
-      xsum += x
-      ysum += y
-    end
-
-    @min_point = Point.new(xmin, ymin)
-    @max_point = Point.new(xmax, ymax)
-    @centroid = Point.new(xsum / points.size, ysum / points.size)
-  end
-
-  def x
-    @centroid.x
-  end
-  def y
-    @centroid.y
-  end
-
-  def to_s
-    "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}, rectangle: #{rectangle.toString()}"
-  end
-
-  def rectangle
-    Rectangle.new(@min_point.x, @min_point.y,
-                  @max_point.x - @min_point.x + 1, 
-                  @max_point.y - @min_point.y + 1)
-  end
-end
 
 
 class BadWorkloadException < Exception
