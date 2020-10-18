@@ -14,39 +14,25 @@ class SandMine < AbstractMine
   def setup(parent)
     gadgets = [
       {:type => :point, :label => 'Drag to pinned mine menu', :name => 'mine'},
-      
-      {:type => :text, :label => 'How many stones?', :name => 'stone-count',},
-      
-      {:type => :text, :label => 'Key delay?', :name => 'delay',},
-      
-      {:type => :combo, :label => 'Gem color', :name => 'gem_color',
-       :vals => ['red', 'green', 'blue', 'cyan', 'magenta', 'yellow', 'black'],},
-      
-      {:type => :combo, :label => 'Debug mode?', :name => 'debug',
-       :vals => ['y', 'n']},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
   
   def act
-    @debug = @vals['debug'] == 'y'
-    log_result "Debug = #{@debug}"
-    @stone_count = @vals['stone-count'].to_i
-    @delay = @vals['delay'].to_f
-    @gem_color = @vals['gem_color']
+    stone_count = 7
+    key_delay = 0.1
     
     w = PinnableWindow.from_point(point_from_hash(@vals, 'mine'))
     
     loop do
       begin
         check_for_pause
-        stones = mine_get_stones(w)
+        stones = mine_get_stones(w, stone_count)
         # XXX
-        # XXX
-        show_stones(stones)
+        # XXX show_stones(stones)
 
         assign_colors_to_stones(stones)
-        mine_stones(stones, true, @delay)
+        mine_stones(stones, true, key_delay)
       rescue BadWorkloadException => e
   	log_result 'Bad workload exception.'
   	# No need for anything.  Just mine again.
@@ -73,8 +59,7 @@ class SandMine < AbstractMine
   
   def assign_colors_to_stones(stones)
     stones.each do |ore_stone|
-      
-      
+
       rect = ore_stone.rectangle
       sums = Hash.new(0)
       sums[:red] = 0  # put at least one element in there. 
@@ -82,16 +67,11 @@ class SandMine < AbstractMine
         rect.y.upto(rect.y + rect.height) do |y|
           
           color = @stones_image.get_color_from_screen(x, y)
-          sym = Clr.color_symbol(color, @gem_color, @debug)
+          sym = Clr.color_symbol(color)
           sums[sym] = sums[sym] + 1 if (sym)
         end
       end
       log_result sums.to_s
-      if @debug
-        sums.each_key do |k|
-          log_result "Color: #{k}, count #{sums[k]}, area: #{rect.width * rect.height}, ratio: #{sums[k].to_f/(rect.width * rect.height)}"
-        end
-      end
       max_count = sums.values.max
       ratio = max_count.to_f / (rect.width * rect.height)
       if ratio > 0.002     # Magic number!!
@@ -101,11 +81,7 @@ class SandMine < AbstractMine
             break
           end
         end
-      else
-        ore_stone.color_symbol = @gem_color.to_sym
       end
-      log_result "Picked: #{ore_stone.color_symbol}" if @debug
-      log_result "--" if @debug
       unless ore_stone.color_symbol
         log_result "this should not happen"
         puts "this should not happen"
@@ -114,9 +90,6 @@ class SandMine < AbstractMine
     end
     picked = stones.collect {|s| s.color_symbol}
     log_result picked.to_s
-    if @debug
-      p picked
-    end
     
   end
   
@@ -129,7 +102,23 @@ class SandMine < AbstractMine
     end
   end
   
-  def mine_get_stones(w)
+  def mine_get_stones(w, stone_count)
+
+    globs = mine_get_globs(w, stone_count)
+    stones = []
+
+    globs.each { |g| 
+      # Stones will hold the sets of points.  These points will be in
+      # screen coordinates.
+      stones << points_to_stone(@stones_image, g) 
+    }
+    
+    stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
+    
+    stones
+  end
+
+  def mine_get_globs(w, stone_count)
     wait_for_mine(w)
     w.click_on('Stop Working', 'tc')
     sleep(5.0)
@@ -146,23 +135,7 @@ class SandMine < AbstractMine
 
     globs = get_globs(diff_image)
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
-    globs = globs.slice(0, @stone_count)
-    stones = []
-
-    globs.each { |g| 
-      # Stones will hold the sets of points.  These points will be in
-      # screen coordinates.
-      stones << points_to_stone(@stones_image, g) 
-    }
-    
-    stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
-    
-    if (@debug)
-      mouse_over_stones(stones)
-    end
-    
-    stones
-    
+    return globs.slice(0, stone_count)
   end
 
   def zero_menu_rect(pb, rect)
@@ -215,13 +188,6 @@ class SandMine < AbstractMine
 
   end
 
-
-  def mouse_over_stones(stones)
-    stones.each do |s|
-      mm(s.x, s.y)
-      sleep 1.0
-    end
-  end
 
   def dismiss_strange_windows
     if win = PopupWindow.find
@@ -345,7 +311,7 @@ class SandMine < AbstractMine
   end
   
   def highight_color?(pb, x, y)
-    color = pb.color(x, y)
+    color = pb.getColor(x, y)
     hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
     hue = hsb[0] * 360  # Angle
     sat = hsb[1] * 255

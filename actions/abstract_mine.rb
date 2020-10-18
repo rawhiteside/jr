@@ -1,7 +1,28 @@
 require 'action'
 
 class AbstractMine < Action
-  
+  # 
+  # Mine, then identify the new stones in the scene.
+  # Returned as globs, which are Point[][].
+  def mine_get_globs(w, stone_count)
+    wait_for_mine(w)
+    w.click_on('Stop Working', 'tc')
+    sleep(5.0)
+    
+    @empty_image = full_screen_capture
+    w.click_on('Work this Mine', 'tc')
+    sleep(10.0)
+
+    @stones_image = full_screen_capture
+    diff_image = ImageUtils.xor(@empty_image, @stones_image)
+    # 
+    # Clear mine window, since they changed.
+    zero_menu_rect(diff_image, w.rect)
+
+    globs = get_globs(diff_image)
+    globs = globs.sort { |g1, g2| g2.size <=> g1.size }
+    return globs.slice(0, stone_count)
+  end
 end
 
 class Clr
@@ -39,7 +60,7 @@ class Clr
     return (54..60).cover?(hue) && sat > 100
   end
   
-  def self.color_symbol(color, gem_color = 'none', debug = false)
+  def self.color_symbol(color)
     r, g, b = color.getRed(), color.getGreen(), color.getBlue()
     hsb = Color.RGBtoHSB(r, g, b, nil)
     hue = hsb[0] * 359
@@ -47,11 +68,8 @@ class Clr
     bright = hsb[2] * 255
     
     METHOD_MAP.each_key do |k|
-      if gem_color != k
-        if self.send(METHOD_MAP[k], hue, sat, bright)
-          # puts "Stone color #{k} from [#{hue}, #{r}, #{g}, #{b} ]" if debug
-          return k.to_sym
-        end
+      if self.send(METHOD_MAP[k], hue, sat, bright)
+        return k.to_sym
       end
     end
     
