@@ -23,6 +23,16 @@ class AbstractMine < Action
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
     return globs.slice(0, stone_count)
   end
+
+  # We have to copy the Java arrays into Ruby arrays, so they get the
+  # expected methods.
+  def get_globs(pb_xor)
+    got = Globifier.globify(pb_xor)
+    globs = []
+    got.each { |g| globs << g.to_a }
+    globs
+  end
+
 end
 
 class Clr

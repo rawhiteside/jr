@@ -27,7 +27,8 @@ class SandMine < AbstractMine
     loop do
       begin
         check_for_pause
-        stones = mine_get_stones(w, stone_count)
+        globs = mine_get_globs(w, stone_count)
+        stones = orestones_from_globs(globs)
         # XXX
         # XXX show_stones(stones)
 
@@ -96,40 +97,14 @@ class SandMine < AbstractMine
     end
   end
   
-  def mine_get_stones(w, stone_count)
-
-    globs = mine_get_globs(w, stone_count)
+  def orestones_from_globs(globs)
     stones = []
-
     globs.each { |g| 
       # Stones will hold the sets of points.  These points will be in
       # screen coordinates.
-      stones << points_to_stone(@stones_image, g) 
+      stones << OreStone.new(g) 
     }
-    
-    stones.sort! {|a, b| a.min_point.y  <=> b.min_point.y}
-    
     stones
-  end
-
-  def mine_get_globs(w, stone_count)
-    wait_for_mine(w)
-    w.click_on('Stop Working', 'tc')
-    sleep(5.0)
-    
-    @empty_image = full_screen_capture
-    w.click_on('Work this Mine', 'tc')
-    sleep(10.0)
-
-    @stones_image = full_screen_capture
-    diff_image = ImageUtils.xor(@empty_image, @stones_image)
-    # 
-    # Clear mine window, since they changed.
-    zero_menu_rect(diff_image, w.rect)
-
-    globs = get_globs(diff_image)
-    globs = globs.sort { |g1, g2| g2.size <=> g1.size }
-    return globs.slice(0, stone_count)
   end
 
   def zero_menu_rect(pb, rect)
@@ -140,49 +115,6 @@ class SandMine < AbstractMine
     end
   end
   
-  # We have to copy the Java arrays into Ruby arrays, so they get the
-  # expected methods.
-  def get_globs(brightness)
-    got = Globifier.globify(brightness)
-    globs = []
-    got.each { |g| globs << g.to_a }
-    globs
-  end
-
-
-  # Input here is a hash with Points as a key.
-  # Input points are in the coordinate system of +pb+.
-  # Points stored into the stone will be screen coordinates.
-  # Returns an OreStone, which just has a bunch of attrs.
-  def points_to_stone(pb, points)
-    points.collect!{|p| pb.to_screen(p)}
-    xmin = ymin = 99999999
-    xmax = ymax = 0
-    xsum = ysum = 0
-    points.each do |p|
-      x, y = p.x, p.y
-      xmin = x if x < xmin 
-      ymin = y if y < ymin 
-
-      xmax = x if x > xmax 
-      ymax = y if y > ymax
-
-      xsum += x
-      ysum += y
-    end
-
-    stone = OreStone.new
-    stone.points = points
-    stone.point_set = Set.new(points)
-    stone.min_point = Point.new(xmin, ymin)
-    stone.max_point = Point.new(xmax, ymax)
-    stone.centroid = Point.new(xsum / points.size, ysum / points.size)
-
-    stone
-
-  end
-
-
   def dismiss_strange_windows
     if win = PopupWindow.find
       log_result 'Dismissed a window'
@@ -348,10 +280,28 @@ Action.add_action(SandMine.new)
 
 class OreStone
   attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol, :gem_type, :point_set
+  attr_accessor :color_symbol
 
-  def initialize
+  def initialize(points)
+    @points = points
+    xmin = ymin = 99999999
+    xmax = ymax = 0
+    xsum = ysum = 0
+    points.each do |p|
+      x, y = p.x, p.y
+      xmin = x if x < xmin 
+      ymin = y if y < ymin 
 
+      xmax = x if x > xmax 
+      ymax = y if y > ymax
+
+      xsum += x
+      ysum += y
+    end
+
+    @min_point = Point.new(xmin, ymin)
+    @max_point = Point.new(xmax, ymax)
+    @centroid = Point.new(xsum / points.size, ysum / points.size)
   end
 
   def x
