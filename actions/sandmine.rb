@@ -57,40 +57,34 @@ class SandMine < AbstractMine
     end
   end
   
-  def assign_colors_to_stones(stones)
-    stones.each do |ore_stone|
 
-      rect = ore_stone.rectangle
+  HITS_NEEDED = 10  
+  def find_bare_stone_color(rect)
+    # Magic number.  Require this many hits of a color before deciding
+    # we've detected the color.
       sums = Hash.new(0)
-      sums[:red] = 0  # put at least one element in there. 
       rect.x.upto(rect.x + rect.width) do |x|
         rect.y.upto(rect.y + rect.height) do |y|
-          
-          color = @stones_image.get_color_from_screen(x, y)
+          color = @stones_image.get_color(x, y)
           sym = Clr.color_symbol(color)
-          sums[sym] = sums[sym] + 1 if (sym)
-        end
-      end
-      log_result sums.to_s
-      max_count = sums.values.max
-      ratio = max_count.to_f / (rect.width * rect.height)
-      if ratio > 0.002     # Magic number!!
-        sums.each_key do |k|
-          if sums[k] == max_count
-            ore_stone.color_symbol = k
-            break
+          if sym
+            sums[sym] = sums[sym] + 1
+            return sym if sums[sym] > HITS_NEEDED
           end
         end
       end
-      unless ore_stone.color_symbol
-        log_result "this should not happen"
-        puts "this should not happen"
-      end
-      
+      return :black
+  end
+  
+
+  def assign_colors_to_stones(stones)
+    stones.each do |ore_stone|
+      rect = ore_stone.rectangle
+      ore_stone.color_symbol = find_bare_stone_color(rect)
     end
+
     picked = stones.collect {|s| s.color_symbol}
     log_result picked.to_s
-    
   end
   
   
