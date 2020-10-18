@@ -219,6 +219,10 @@ public class PixelBlock extends ARobot {
 	}
 
 
+	public void displayToUser() {
+		ImagePanel.displayImage(m_bufferedImage, "Title goes here");
+	}
+
 	public void displayToUser(String title) {
 		ImagePanel.displayImage(m_bufferedImage, title);
 	}
