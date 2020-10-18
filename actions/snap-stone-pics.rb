@@ -8,7 +8,7 @@ import org.foa.PixelBlock
 
 class SnapStonePics < AbstractMine
   def initialize
-    super('Snapshot stone images', 'Misc')
+    super('Snapshot stone images', 'Test/Dev')
   end
 
   def setup(parent)
