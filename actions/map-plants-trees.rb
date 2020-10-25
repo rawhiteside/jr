@@ -23,13 +23,14 @@ class MapPlantsTrees < Action
   SHOW_LOCATIONS = 'Display survey locations.'
   SHOW_PLANT = 'Display locations for a plant.'
   SHOW_TREE = 'Display locations for a tree.'
+  SHOW_STATS = 'Counts for trees and plants..'
   def setup(parent)
     tree_names = @trees.values.collect {|h| h.keys}.flatten.uniq.sort
     plant_names = @plants.values.collect {|h| h.keys}.flatten.uniq.sort
 
     gadgets = [
       {:type => :combo, :name => 'what', :label => 'Do what:',
-       :vals => [RECORD_STUFF, SHOW_LOCATIONS, SHOW_PLANT, SHOW_TREE],
+       :vals => [RECORD_STUFF, SHOW_LOCATIONS, SHOW_PLANT, SHOW_TREE, SHOW_STATS],
       },
 
       {:type => :combo, :name => 'which-plant', :label => 'Which plant?',
@@ -52,15 +53,40 @@ class MapPlantsTrees < Action
       show_item(@trees, @vals['which-tree'])
     elsif what == SHOW_PLANT
       show_item(@plants, @vals['which-plant'])
+    elsif what == SHOW_STATS
+      show_stats
     end
   end
     
+  def show_stats
+    total_hash = {}
+    add_stat_entries(total_hash, @plants)
+    add_stat_entries(total_hash, @trees)
+    text = ''
+    total_hash.keys.sort.each do |item|
+      text += "#{item}, #{total_hash[item]}\n"
+    end
+    comps = [
+      {:type => :big_text, :rows => 20, :cols => 60, :value => text, :name => 'text', :label => 'Counts'}
+    ]
+    UserIO.prompt(nil, nil, 'Item counts.', comps)
+  end
+
+  def add_stat_entries(total, location_hash)
+    location_hash.each_key do |loc|
+      items = location_hash[loc]
+      items.each_pair do |item, count|
+        total[item] = (total[item] || 0) + count
+      end
+    end
+  end
+
   def show_item(hash, item)
     text = ''
     hash.each_pair do |coords, item_counts|
       count = item_counts[item]
       if count
-        text += "(#{pin_for_count(count)}) #{coords[0]}, #{coords[1]}, #{count} items.\n"
+        text += "(#{pin_for_count(count)}) #{coords[0]}, #{coords[1]}, #{count} items at #{coords[0]}, #{coords[1]}\n"
       end
     end
     text = cond_map_text(text)
@@ -112,7 +138,7 @@ class MapPlantsTrees < Action
         send_vk VK_ESCAPE
       else
 
-        match = line1.match("This (.*) produces")
+        match = line1.match("This (.*) produces") || line1.match("This (.*) has no Wood")
         if match
           add_entry(@trees, match[1].strip, @trees_file)
           send_vk VK_ESCAPE
