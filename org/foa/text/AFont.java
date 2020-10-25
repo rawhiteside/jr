@@ -19,7 +19,7 @@ public class AFont {
 	private int MIN_COMPLEX_HEAD_WIDTH = 2;
 
 	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
-	private boolean m_logging = false;
+	private boolean m_logging = true;
 
 	public AFont() throws Exception {
 
@@ -258,11 +258,22 @@ public class AFont {
 		//
 		// Check to see if top and/or bottom are all whitespace now. 
 		String pad = makePadString(out[0].length());
-		ArrayList<String> list = new ArrayList<String>();
+		int topBlankCount = 0;
 		for(int i = 0; i < out.length; i++) {
-			if(!out[i].equals(pad)) {
-				list.add(out[i]);
-			}
+			if(!out[i].equals(pad)) { break; }
+			else { topBlankCount += 1;}
+		}
+
+		int bottomBlankCount = 0;
+		for(int i = 0; i < out.length; i++) {
+			if(!out[out.length - 1 - i].equals(pad)) { break; }
+			else { bottomBlankCount += 1;}
+		}
+
+		ArrayList<String> list = new ArrayList<String>();
+
+		for(int i = topBlankCount; i < (out.length- bottomBlankCount); i++) {
+			list.add(out[i]);
 		}
 		out = (String[]) list.toArray(new String[0]);
 		dumpGlyph(out, "after trim");
