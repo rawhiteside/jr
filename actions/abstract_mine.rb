@@ -15,13 +15,17 @@ class AbstractMine < Action
 
     @stones_image = full_screen_capture
     diff_image = ImageUtils.xor(@empty_image, @stones_image)
+    ImageUtils.xor_threshold(diff_image)
     # 
     # Clear mine window, since they changed.
     zero_menu_rect(diff_image, w.rect)
 
     globs = get_globs(diff_image)
+    diff_image.display_to_user if globs.size < 2
     globs = globs.sort { |g1, g2| g2.size <=> g1.size }
-    return globs.slice(0, stone_count)
+    globs = globs.slice(0, stone_count)
+    log_result "Glob sizes:  #{globs.collect { |g| g.size }}"
+    return globs
   end
 
   # We have to copy the Java arrays into Ruby arrays, so they get the
@@ -31,6 +35,11 @@ class AbstractMine < Action
     globs = []
     got.each { |g| globs << g.to_a }
     globs
+  end
+
+  def log_result(msg)
+    tsmsg = "#{Time.now.to_s} : #{msg}"
+    File.open('mine.log', 'a') {|f| f.puts(tsmsg)}
   end
 
   # Wait until the mine can be worked again.

@@ -54,6 +54,9 @@ public class Globifier {
 	 * Keys are the points, values just "1".
 	 */
 	public static Point[][] globify(BufferedImage bi) {
+		return globify(bi, 40000);  // 10x a typical ore stone.
+	}
+	public static Point[][] globify(BufferedImage bi, int maxSize) {
 		ArrayList<HashMap> globs = new ArrayList<HashMap>();
 
 		// Do something with each point that is a "hit" (non-zero pixel value).
@@ -64,6 +67,12 @@ public class Globifier {
 				if ((bi.getRGB(x, y) & 0xFFFFFF) != 0) { globifyPoint(globs, p); }
 			}
 			if ((y % 10) == 9) { pruneGlobs(globs, y, 15); }
+			// If a glob gets too big, something went wrong.
+			// (Sometimes the whole screen changes, I think.)
+			// Return null.
+			for(HashMap glob : globs) {
+				if(glob.size() > maxSize) { return new Point[0][]; }
+			}
 		}
 		// Now, remove all of the keys with value = 0.
 		for(HashMap glob : globs) { removeNeighborsFromGlob(glob); }

@@ -25,7 +25,7 @@ class SnapStonePics < AbstractMine
     
     loop do
       globs = mine_get_globs(w, stone_count)
-      save_stones(globs, 'orestone-pics')
+      save_stones(globs, '../discrete-tale/orestone-pics')
     end
   end
 

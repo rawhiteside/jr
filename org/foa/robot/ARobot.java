@@ -54,7 +54,6 @@ public class ARobot {
 		return screenRectangle(new Rectangle(x, y, width, height));
 	}
 	public PixelBlock screenRectangle(Rectangle rect) {
-		checkForPause();
 		return new PixelBlock(rect);
 	}
 

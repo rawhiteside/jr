@@ -19,7 +19,7 @@ public class AFont {
 	private int MIN_COMPLEX_HEAD_WIDTH = 2;
 
 	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
-	private boolean m_logging = true;
+	private boolean m_logging = false;
 
 	public AFont() throws Exception {
 

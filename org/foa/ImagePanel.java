@@ -64,7 +64,7 @@ public class ImagePanel extends JPanel implements ActionListener {
 	private void changeImage(String cmd) {
 		BufferedImage bi =
 			new BufferedImage(m_image.getWidth(), m_image.getHeight(),
-							  BufferedImage.TYPE_INT_RGB);   
+							  BufferedImage.TYPE_INT_RGB);
 		for(int x = 0; x < bi.getWidth(); x++) {
 			for(int y = 0; y < bi.getHeight(); y++) {
 				bi.setRGB(x, y, changePixel(m_image.getRGB(x, y), cmd));

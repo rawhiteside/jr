@@ -122,6 +122,43 @@ public class ImageUtils {
 	}
 
 	/**
+	 * OK, this is a weird method used in the mining.  The XOR of the
+	 * two screenshots sometimes gives a cloud of small changes.  This
+	 * method is to scan the pixels, and remove the small ones.
+	 *
+	 * XOR is not a distance measure, but it's related.  Specifically:  
+	 * - Large image changes will give a large XOR value numeric, but
+	 * - Small XOR changes might *also* give a large XOR value.  Many
+	 *   of the small image changes will still give a small numeric
+	 *   XOR value, though.
+	 *
+	 * This method removes the pixels that differ only in the low
+	 * order bit.
+	 */
+	public static void xorThreshold(PixelBlock pb) {
+		BufferedImage bi = pb.bufferedImage();
+		for(int x = 0; x < bi.getWidth(); x++) {
+			for(int y = 0; y < bi.getHeight(); y++) {
+				int pixel = bi.getRGB(x, y) & 0xFFFFFF;
+				if(pixel != 0) {
+					int c = (pixel & 0xFF);
+					if (c > 1 && c != 3 && c != 7 && c != 15 && c != 31 && c != 63 && c != 127) { continue; }
+
+					pixel = pixel >> 8;
+					c = (pixel & 0xFF);
+					if (c > 1 && c != 3 && c != 7 && c != 15 && c != 31 && c != 63 && c != 127) { continue; }
+
+					pixel = pixel >> 8;
+					c = (pixel & 0xFF);
+					if (c > 1 && c != 3 && c != 7 && c != 15 && c != 31 && c != 63 && c != 127) { continue; }
+
+					bi.setRGB(x, y, 0);
+				}
+			}
+		}
+	}
+
+	/**
 	 * AND the two pixelblocks. 
 	 */
 	public static PixelBlock and(PixelBlock pb1, PixelBlock pb2) {
