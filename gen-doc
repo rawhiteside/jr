@@ -1,0 +1,4 @@
+#!/bin/sh
+
+javadoc -d doc org.foa org.foa.robot org.foa.window org.foa.test
+rdoc -o doc *.rb robot/*.rb org
