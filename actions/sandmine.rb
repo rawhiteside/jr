@@ -72,7 +72,7 @@ class SandMine < AbstractMine
     globs.each { |g| 
       # Stones will hold the sets of points.  These points will be in
       # screen coordinates.
-      stones << OreStone.new(g) 
+      stones << OreStone.new(@stones_image, g) 
     }
     stones
   end

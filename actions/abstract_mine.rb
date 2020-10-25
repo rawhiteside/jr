@@ -116,11 +116,13 @@ end
 
 
 class OreStone
-  attr_accessor :points, :min_point, :max_point, :centroid
-  attr_accessor :color_symbol
+  attr_accessor :points, :min_point, :max_point, :centroid, :color_symbol
 
-  def initialize(points)
+  # An image/PixelBlock and a list of points im the image that
+  # comprise the stone.
+  def initialize(image, points)
     @points = points
+    @image = image
     xmin = ymin = 99999999
     xmax = ymax = 0
     xsum = ysum = 0
@@ -149,13 +151,11 @@ class OreStone
   end
 
   def to_s
-    "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], color=#{@color_symbol}, rectangle: #{rectangle.toString()}"
+    "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], rectangle: #{rectangle.toString()}"
   end
 
   def rectangle
-    Rectangle.new(@min_point.x, @min_point.y,
-                  @max_point.x - @min_point.x + 1, 
-                  @max_point.y - @min_point.y + 1)
+    Rectangle.new(@min_point.x, @min_point.y, @max_point.x - @min_point.x + 1, @max_point.y - @min_point.y + 1)
   end
 end
 
