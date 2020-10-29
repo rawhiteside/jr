@@ -24,6 +24,17 @@ public class PixelBlock extends ARobot {
 		m_rect = new Rectangle(m_origin.x, m_origin.y, img.getWidth(), img.getHeight());
 	}
 
+	public PixelBlock (PixelBlock pb) {
+		m_bufferedImage =
+			new BufferedImage(pb.m_rect.width, pb.m_rect.height, BufferedImage.TYPE_INT_RGB);
+		m_rect = new Rectangle(pb.m_rect);
+		for(int x = 0; x < m_rect.width; x++) {
+			for(int y = 0; y < m_rect.height; y++) {
+				m_bufferedImage.setRGB(x, y, pb.m_bufferedImage.getRGB(x, y));
+			}
+		}
+	}
+
 	public static PixelBlock constructBlank(Rectangle rect, int rgb) {
 		BufferedImage bi = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
 		for(int x = 0; x < rect.width; x++) {
@@ -153,6 +164,14 @@ public class PixelBlock extends ARobot {
 	public void setPixel(int x, int y, int rgb) {
 		m_bufferedImage.setRGB(x, y, rgb);
 	}
+
+	/**
+	 * Copy pixels into this from pb. 
+	 */
+	public void copyPixels(Point[] pts, PixelBlock pb) {
+		for(int i = 0; i < pts.length; i++) { setPixel(pts[i], pb.getPixel(pts[i])); }
+	}
+
 
 	public void setPixelsFromScreenPoints(Point[] pts, int rgb) {
 		for(int i = 0; i < pts.length; i++) {
