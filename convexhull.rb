@@ -1,9 +1,19 @@
 require 'java'
 import java.awt.Point
+import java.awt.Polygon
 
-module ConvexHull
+class ConvexHull < Polygon
+  # Points for which the convex hull is to be computed. 
+  def initialize(points)
+    super()
+    hull_points = calculate(points)
+    # need x and y arrays.
+    hull_points.each { |p| add_point(p.x, p.y) }
+  end
+
   # after graham & andrew
-  def self.calculate(points)
+  private
+  def calculate(points)
     lop = points.sort_by { |p| p.x }
     left = lop.shift
     right = lop.pop
@@ -40,12 +50,12 @@ module ConvexHull
   end
   
   private
-  
-  def self.determinant_function(p0, p1)
+  def determinant_function(p0, p1)
     proc { |p| ((p0.x-p1.x)*(p.y-p1.y))-((p.x-p1.x)*(p0.y-p1.y)) }
   end
   
-  def self.convex?(list_of_three, lower)
+  private
+  def convex?(list_of_three, lower)
     p0, p1, p2 = list_of_three
     (determinant_function(p0, p2).call(p1) > 0) ^ lower
   end

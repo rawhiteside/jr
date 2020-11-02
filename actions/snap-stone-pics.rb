@@ -31,7 +31,7 @@ class SnapStonePics < AbstractMine
 
   def save_stones(stones, dir)
     stones.each do |glob|
-      stone = OreStone.new(@stones_image, glob)
+      stone = OldOreStone.new(@stones_image, glob)
       # Make the rect a bit larger.
       gr = stone.rectangle
       incr = 5

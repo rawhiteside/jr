@@ -115,14 +115,20 @@ class Clr
 end
 
 
-class OreStone
-  attr_accessor :points, :min_point, :max_point, :centroid, :color_symbol
+class OldOreStone
+  attr_accessor :color_symbol
 
-  # An image/PixelBlock and a list of points im the image that
+
+  # An image/PixelBlock and a list of points in the image that
   # comprise the stone.
-  def initialize(image, points)
-    @points = points
+  def initialize(image, screen_points)
+    @screen_points = screen_points
     @image = image
+    set_centroid(screen_points)
+  end
+
+  private
+  def set_centroid(points)
     xmin = ymin = 99999999
     xmax = ymax = 0
     xsum = ysum = 0
@@ -140,15 +146,17 @@ class OreStone
 
     @min_point = Point.new(xmin, ymin)
     @max_point = Point.new(xmax, ymax)
+
     @centroid = Point.new(xsum / points.size, ysum / points.size)
   end
 
-  def x
-    @centroid.x
+  public
+  def centroid
+    @centroid ||= set_centroid
   end
-  def y
-    @centroid.y
-  end
+
+  def x; @centroid.x; end
+  def y; @centroid.y; end
 
   def to_s
     "stone: size=#{@points.size}, centroid=[#{@centroid.x}, #{@centroid.y}], rectangle: #{rectangle.toString()}"

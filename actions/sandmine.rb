@@ -72,7 +72,7 @@ class SandMine < AbstractMine
     globs.each { |g| 
       # Stones will hold the sets of points.  These points will be in
       # screen coordinates.
-      stones << OreStone.new(@stones_image, g) 
+      stones << OldOreStone.new(@stones_image, g) 
     }
     stones
   end
@@ -105,7 +105,7 @@ class SandMine < AbstractMine
     # Now, make an array of [color, count] elements,
     # so we can sort it.
     color_count = []
-    by_color.each {|color, stones| color_count << [color, stones.size]}
+    by_color.each {|color, stone| color_count << [color, stone.size]}
     color_count = color_count.sort {|a,b| b[1] <=> a[1] }
     recipe_key = color_count.collect{|elt| elt[1]}
     recipe =  (want_larges ?
