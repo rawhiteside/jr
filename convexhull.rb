@@ -11,6 +11,20 @@ class ConvexHull < Polygon
     hull_points.each { |p| add_point(p.x, p.y) }
   end
 
+  # Computing the area of a polygon looked complicated.  Just count
+  # the pixels inside.
+  def area
+    rect = bounds
+    count = 0
+    rect.x.upto(rect.x + rect.width - 1) do |x|
+      rect.y.upto(rect.y + rect.height - 1) do |y|
+        count += 1 if contains(x, y)
+      end
+    end
+
+    count
+  end
+
   # after graham & andrew
   private
   def calculate(points)
