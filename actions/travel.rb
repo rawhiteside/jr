@@ -98,7 +98,6 @@ class Travel < Action
     # Compute the total distance for our travel.
     route_infos.each do |r|
       dist = r[:offset]
-      r[:path].uniq!
       path = r[:path]
       (path.size - 1).times do |i|
         dist += distance(path[i], path[i+1])
@@ -106,7 +105,6 @@ class Travel < Action
       r[:distance] = dist
     end
     route_infos.sort! {|a, b| a[:distance] <=> b[:distance]}
-    #  print_routes(route_infos, "Final")
 
     Walker.new.walk_path(route_infos[0][:path])
   end
