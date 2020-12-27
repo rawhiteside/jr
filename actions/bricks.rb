@@ -38,11 +38,12 @@ class FlimsyBricks < GridAction
     color = get_color(x, y)
     r, g, b = color.red, color.green, color.blue
     hsb = Color.RGBtoHSB(r, g, b, nil)
-
     # NOTE:  Converting hue into degrees.
     hue = (hsb[0] * 359).to_i
     sat = (hsb[1] * 255).to_i
-    return hue > 20 && hue < 45 && sat > 50
+    val = (hsb[2] * 255).to_i
+    
+    return val < 110 && hue > 25 && hue < 40 && sat > 50 
   end
 
   def check_build(p)
@@ -58,7 +59,7 @@ class FlimsyBricks < GridAction
   def act_at(ginfo)
     @project_menu = PinnableWindow.from_point(Point.new(50, 60)) unless @project_menu
     
-    raise Exception.new('Expected projects menu pinned UL') unless @project_menu
+    raise Exception.new('Expected "Build a flimsy" pinned UL') unless @project_menu
 
     skip_these = [ [2, 2], ]
     ij = [ginfo['ix'], ginfo['iy']]
