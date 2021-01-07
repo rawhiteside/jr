@@ -84,7 +84,7 @@ class AcquireFont < Action
   end
 
   def process_text_reader(tr)
-    text_lines = tr.read_text.split("\n")
+    text_lines = tr.read_text(false).split("\n")
     text_lines.size.times do |i|
       process_line(text_lines[i], tr.glyphs[i])
     end

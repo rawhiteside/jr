@@ -70,6 +70,9 @@ public class AFont {
 	}
 
 	public String textFor(String[] rows) {
+		return textFor(rows, true);
+	}
+	public String textFor(String[] rows, boolean split_glyphs) {
 		dumpGlyph(rows, "textFor this");
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
@@ -82,6 +85,7 @@ public class AFont {
 		if (val != null) {
 			return val;
 		} else {
+			if (!split_glyphs) {return UNKNOWN_GLYPH;}
 			dumpGlyph(rows, "This is complex");
 			String text =  textForComplexGlyph(rows);
 			if (text == null) {

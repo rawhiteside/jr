@@ -33,21 +33,26 @@ public class TextReader {
 	/**
 	 * Returns the window text as one big string.
 	 */ 
-	public String readText() 
-	{
+	public String readText() {
+		return readText(true);
+	}
+	public String readText(boolean splitGlyphs) {
 		StringBuilder sb = new StringBuilder();
 		for (InkSpots[] line : glyphs) {
-			sb.append(readLine(line));
+			sb.append(readLine(line, splitGlyphs));
 			sb.append("\n");
 		}
 		return sb.toString();
 	}
 
-	private String readLine(InkSpots[] glyphLine) 
+	private String readLine(InkSpots[] glyphLine) {
+		return readLine(glyphLine, true);
+	}
+	private String readLine(InkSpots[] glyphLine, boolean splitGlyphs) 
 	{
 		StringBuilder sb = new StringBuilder();
 		for (InkSpots g : glyphLine) {
-			sb.append(g.toString());
+			sb.append(g.toString(splitGlyphs));
 		}
 		return sb.toString();
 	}

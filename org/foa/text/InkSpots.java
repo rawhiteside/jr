@@ -63,10 +63,13 @@ public class InkSpots {
 	}
 
 	public String toString() {
+		return toString(true);
+	}
+	public String toString(boolean splitGlyphs) {
 		if (this.width > 15 && this.height <= 3) {
 			return "-----";
 		}
-		return AFont.instance().textFor(this.rows);
+		return AFont.instance().textFor(this.rows, splitGlyphs);
 	}
 
 	/**
