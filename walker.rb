@@ -56,9 +56,25 @@ class Walker < ARobot
   # Time for the key to be down for a good "step"
   KEY_DELAY=0.075
 
+  # Time for the key to be down for a big "step"
+  KEY_DELAY_BIG=0.25
+
   # Time necessary for the walk animation to complete.
   STEP_DELAY = 0.2
 
+
+  def left_big(delay = KEY_DELAY_BIG)
+    send_vk(VK_LEFT, delay); sleep STEP_DELAY
+  end
+  def right_big(delay = KEY_DELAY_BIG)
+    send_vk(VK_RIGHT, delay); sleep STEP_DELAY
+  end
+  def up_big(delay = KEY_DELAY_BIG)
+    send_vk(VK_UP, delay); sleep STEP_DELAY
+  end
+  def down_big(delay = KEY_DELAY_BIG)
+    send_vk(VK_DOWN, delay); sleep STEP_DELAY
+  end
 
   def left(delay = KEY_DELAY)
     send_vk(VK_LEFT, delay); sleep STEP_DELAY

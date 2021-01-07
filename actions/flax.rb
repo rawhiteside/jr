@@ -46,6 +46,9 @@ class FlaxGrow < Action
       :right => Point.new(center[0] + offset, center[1] + offset),
       :left => Point.new(center[0] - offset, center[1] + offset),
       :down => Point.new(center[0], center[1] + offset),
+      :right_big => Point.new(center[0] + offset, center[1] + offset),
+      :left_big => Point.new(center[0] - offset, center[1] + offset),
+      :down_big => Point.new(center[0], center[1] + offset),
     }
   end
 
@@ -105,11 +108,11 @@ class FlaxGrow < Action
     steps = [:none]
     rows.times do |irow|
       if (irow % 2 == 0)
-        steps << [:right] * (cols-1)
+        steps << [:right_big] * (cols-1)
       else
-        steps << [:left] * (cols-1)
+        steps << [:left_big] * (cols-1)
       end
-      steps << [:down] unless irow == rows - 1
+      steps << [:down_big] unless irow == rows - 1
     end
     
     return steps.flatten
@@ -262,7 +265,7 @@ class FlaxSeeds < Action
        :vals => FLAX_DATA.keys.sort},
       {:type => :point, :label => 'Drag onto warehouse menu', :name => 'stash'},
       {:type => :point, :label => 'Drag onto plant menu', :name => 'plant'},
-      {:type => :number, :label => 'How many major loops? (3 for carry 500)', :name => 'repeat'},
+      {:type => :number, :label => 'How many major grow/stash loops?', :name => 'repeat'},
       {:type => :number, :label => 'Max wait seconds for harvest', :name => 'max_wait_secs'},
       {:type => :number, :label => "How many havests from each plant?", :name => 'harvest_reps'},
       {:type => :number, :label => 'Length of each of the two rows', :name => 'row_len'},
@@ -296,8 +299,9 @@ class FlaxSeeds < Action
       # Go stash whatever you have, and pick up seeds.
       if stash_chest
         walker.walk_to(@stash_location)
+        stash_chest.refresh
         stash_chest.click_on('Stash./Flax/All')
-        HowMuch.max if stash_chest.click_on('Stash./Rotten')
+        stash_chest.refresh
         stash_chest.click_on("Take/Flax Seeds/#{@flax_type}")
         HowMuch.amount(2*@row_len + 1)
       end
@@ -335,7 +339,10 @@ class FlaxSeeds < Action
   end
 
   def harvest
-    (@harvest_reps - 1).times do
+    index = 0
+    @windows.each {|w| w.notation = index.to_s; index += 1}
+
+    (@harvest_reps - 1).times do |i|
       @piler.swap
       @windows.each do |w|
         harvest_one(w)
@@ -345,16 +352,7 @@ class FlaxSeeds < Action
 
     @piler.swap
     delayed_rip(nil)
-    @windows.each do |w|
-      delayed_rip(w)
-
-
-      harvest_one(w)
-      rip_out(w)
-      w.refresh
-      w.unpin
-      sleep 0.2
-    end
+    @windows.each { |w| delayed_rip(w) }
     delayed_rip(nil)
     
   end
@@ -391,7 +389,7 @@ class FlaxSeeds < Action
       break if w.click_on('Harvest')
       # 
       # Error handling.  If the Harvest doesn't appear within
-      # max_wait_secs secs, assume thw worst.
+      # max_wait_secs secs, assume the worst.
       return if (Time.now - start) > @max_wait_secs
       sleep 0.5
     end
