@@ -4,7 +4,7 @@ require 'yaml'
 
 class MapPlantsTrees < Action
   def initialize
-    super("Map plants and trees", "Misc")
+    super("Map plant/tree", "Misc")
     
     # Maps of locations of things.
     # Key is [x, y] world location.

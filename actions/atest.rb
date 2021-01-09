@@ -140,7 +140,7 @@ Action.add_action(MouseWheelTest.new)
 
 class TimeTest < Action
 
-  def initialize(name = 'Time something (change code for target)')
+  def initialize(name = 'Time something')
     super(name, 'Test/Dev')
   end
 

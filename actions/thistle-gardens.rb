@@ -168,7 +168,7 @@ Action.add_action(ThistleGardens.new)
 
 
 class ThistleWarehouse < Action
-  def initialize(name = 'Thistle Warehouse', category = 'Buildings')
+  def initialize(name = 'Thistle WH', category = 'Buildings')
     super(name, category)
   end
     

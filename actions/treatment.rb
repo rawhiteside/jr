@@ -10,7 +10,7 @@ class Treatment < Action
   DONE_TEXT = 'Processing Complete'
 
   def initialize
-    super('Treatment (metal, wood)', 'Buildings')
+    super('Treat metal/wood', 'Buildings')
   end
 
   def setup(parent)
