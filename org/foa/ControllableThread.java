@@ -22,15 +22,27 @@ public class ControllableThread extends Thread {
 	boolean m_killed = false;
 	/* A place for thread-local info usable from Java or Ruby. */
 	private HashMap m_thread_vars = new HashMap();
+	private Runnable m_runnable = null;
 
 	public ControllableThread(Runnable runnable) {
-		super(runnable);
+		m_runnable = runnable;
 		start();
 	}
 	public ControllableThread(String name, Runnable runnable) {
-		super(runnable, name);
+		super(name);
+		m_runnable = runnable;
 		start();
 	}
+
+	public void run() {
+		try {runThatThrows();}
+		catch(InterruptedException e) {}
+	}
+
+	private void runThatThrows() throws InterruptedException {
+		m_runnable.run();
+	}
+	
 	public void kill() {
 		m_killed = true;
 		interrupt();
