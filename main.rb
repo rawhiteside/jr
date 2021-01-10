@@ -4,6 +4,7 @@ require 'action'
 import javax.swing.JFrame
 import javax.swing.JCheckBox
 import javax.swing.JButton
+import javax.swing.JComboBox
 import javax.swing.JPanel
 import javax.swing.ToolTipManager
 import javax.swing.border.TitledBorder
@@ -53,18 +54,20 @@ class TopFrame < JFrame
   end
 
   SHOW_ALL = 'Show all'
-  HIDE_SOME = 'Show only favorites'
+  HIDE_SOME = 'Favorites'
+  SHOW_RECENTS = 'Recently used'
   def make_show_hide_button
     box = Box.create_horizontal_box()
-    button = JButton.new(SHOW_ALL)
-    box.add(button)
-    button.add_action_listener do |event|
-      if button.text == SHOW_ALL
-        button.text = HIDE_SOME
+    combo = JComboBox.new([SHOW_ALL, HIDE_SOME, SHOW_RECENTS].to_java)
+    combo.selected_item = HIDE_SOME
+    box.add(combo)
+    combo.add_action_listener do |event|
+      if combo.selected_item == SHOW_ALL
         ActionButton.show_all
-      else
-        button.text = SHOW_ALL
+      elsif combo.selected_item == HIDE_SOME
         ActionButton.hide_some
+      else
+        ActionButton.show_recents
       end
       pack
     end
@@ -177,9 +180,29 @@ class TopFrame < JFrame
   end
 end
 
+class RecentsManager
+  FILE_NAME = 'recents.yaml'
+  def self.update(name)
+    t = Time.now.to_i
+    recents = {}
+    recents = YAML.load_file(FILE_NAME) if File.exist?(FILE_NAME)
+    recents[name] = t
+    File.open(FILE_NAME, 'w') {|f| YAML.dump(recents, f)}
+  end
+
+  def self.most_recent(num)
+    recents = {}
+    recents = YAML.load_file(FILE_NAME) if File.exist?(FILE_NAME)
+    recents.default = 0
+    sorted = recents.keys.sort {|a, b| recents[b].to_i <=> recents[a].to_i}
+    return sorted[0, num]
+  end
+end
+
 
 # A UI thingy that represents an action.
 class ActionButton < JPanel
+  attr_reader :name
   
   # Favorite checkbox as a key pointing to action button.
   # These tables don't really belong here...
@@ -200,6 +223,7 @@ class ActionButton < JPanel
 
     add(make_help_button(action))
     check_box = JCheckBox.new(action.name)
+    @name = action.name
 
     check_box.tool_tip_text = 'Run the macro.'
     check_box.add_item_listener(ActionController.new(action, check_box))
@@ -252,6 +276,18 @@ class ActionButton < JPanel
     @@fav_to_action.each do |key, value|
       key.visible = false
       if key.selected
+        value.visible = true
+      else
+        value.visible = false
+      end
+    end
+  end
+
+  def self.show_recents
+    top_10 = RecentsManager.most_recent(10)
+    @@fav_to_action.each do |key, value|
+      key.visible = false
+      if top_10.include?(value.name)
         value.visible = true
       else
         value.visible = false

@@ -81,6 +81,9 @@ class Action  < ARobot
     @action_thread = ControllableThread.new(@name) do
       begin
 	if setup(check)
+          # update the "recently used" list. 
+          RecentsManager.update(@name)
+          puts RecentsManager.most_recent(10)
 	  check_for_pause
 	  run
 	end
