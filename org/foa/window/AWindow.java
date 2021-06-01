@@ -115,7 +115,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		sleepSec(0.05);
 	}
 
-	private static int RMIN = 0xca;
+	private static int RMIN = 0xb9;
 	private static int GMIN = 0xb4;
 	private static int BMIN = 0x81;
 	private int m_spacePixelCount = 4;
