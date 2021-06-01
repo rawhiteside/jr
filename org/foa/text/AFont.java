@@ -37,7 +37,9 @@ public class AFont {
 	public static AFont instance() {
 		if(s_instance == null) {
 			try { s_instance = new AFont(); }
-			catch(Exception e){}
+			catch(Exception e){
+				System.out.println("Exception: in AFont.instance" + e.toString());
+			}
 		}
 		return s_instance;
 	}
