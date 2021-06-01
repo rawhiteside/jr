@@ -43,9 +43,9 @@ class ReadWindow < Action
       puts text
       coords = cl.coords
       text += "\nWorld Coordinates: #{coords[0]}, #{coords[1]}\n"
-      text += "\nDate: #{cl.date}\n"
-      text += "\nTime: #{cl.time}\n"
-      text += "\nDateTime: #{cl.date_time}\n"
+      # text += "\nDate: #{cl.date}\n"
+      # text += "\nTime: #{cl.time}\n"
+      # text += "\nDateTime: #{cl.date_time}\n"
       show_text(text, 'ClockLoc')
     end
     

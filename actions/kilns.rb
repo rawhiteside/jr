@@ -83,13 +83,18 @@ end
 Action.add_action(PotteryWheel.new)
 
 
-class GridHotkeys < Kilns
+class GridHotkeys < GridAction
   def initialize
     super('Grid Hotkeys', 'Buildings')
   end
 
   def get_gadgets
-    super + [{:type => :combo, :label => 'Refill jugs?', :name => 'jugs', :vals => ['Yes', 'No']},]
+    super +
+      [
+        {:type => :text, :label => 'String to send', :name => 'string'},
+        {:type => :number, :label => 'Mouse/key delay', :name => 'key-delay'},
+        {:type => :combo, :label => 'Refill jugs?', :name => 'jugs', :vals => ['Yes', 'No']},
+      ]
   end
 
   def act_at(ginfo)
@@ -99,7 +104,7 @@ class GridHotkeys < Kilns
     send_string(@user_vals['string'], @user_vals['key-delay'].to_f)
   end
 
-  def post_grid_hook
+  def end_pass(index)
     if @user_vals['jugs'] == 'Yes'
       Icons.refill
     end
