@@ -30,20 +30,16 @@ end
 
 
 class ChatWindow < Window
-  # TODO:  Search. 
   def self.find
-    # Look for the Main chat tab.
-    screen = ARobot.shared_instance.full_screen_capture
-    ['MainChatWhite', 'MainChatRed'].each do |file|
-      pb = PixelBlock.load_image("images/#{file}.png")
-      pt = screen.find_template_exact(pb)
-      if pt
-        # Chat area is 40 pixels below.
-        pt.y += 40
-        return ChatWindow.from_point(pt)
-      end
-    end
-    return nil
+    dim = ARobot.shared_instance.screen_size
+    pt = Point.new(dim.width - 100, dim.height - 100)
+    win = ChatWindow.from_point(pt)
+    # Crop off the right side, and the chat area at the bottom
+    r = win.rect
+    r.width -= 30
+    r.height -= 32
+    win.rect = r
+    return win
   end
 
   def initialize(rect = Rectangle.new(0, 0, 0, 0))
@@ -182,7 +178,6 @@ class ConfirmationWindow < PopupWindow
 end
 
 
-
 class DarkWindow < AWindow
   def initialize(rect)
     super(rect)
@@ -198,9 +193,9 @@ class DarkWindow < AWindow
   end
 
   def background?(color)
-    color.red < 50 &&
-    color.green < 75  &&
-    color.blue < 75 
+    color.red < 85 &&
+    color.green < 85  &&
+    color.blue < 85 
   end
 end
 
@@ -228,15 +223,9 @@ end
 
 class InventoryWindow < DarkWindow
   def self.find
-    screen = ARobot.shared_instance.full_screen_capture
-    inv = PixelBlock.load_image("images/Inventory.png")
-    pt = screen.find_template_best(inv, 12000)
-
-    if pt
-      return InventoryWindow.from_point(pt)
-    else
-      return nil
-    end
+    dim = ARobot.shared_instance.screen_size
+    pt = Point.new(50, dim.height - 100)
+    return InventoryWindow.from_point(pt)
   end
 
   def initialize(rect)
