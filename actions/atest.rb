@@ -48,7 +48,7 @@ class CaptureBackground < Action
       {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
       {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Capture background pixels', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, 'Capture background pixels', gadgets)
 
   end
 
@@ -75,10 +75,11 @@ class CaptureBackground < Action
         end
       end
     end
-    puts "Start size: #{start_size}, Final size: #{pixel_set.size}, Added: #{added_count}"
+    msg =  "Start size: #{start_size}\nFinal size: #{pixel_set.size}\nAdded: #{added_count}"
     File.open(filename, 'w') do |f|
       YAML.dump(pixel_set, f)
     end
+    UserIO.info(msg)
   end
 
 end
