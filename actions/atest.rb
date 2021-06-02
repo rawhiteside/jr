@@ -35,7 +35,54 @@ class DefinePatchTest < Action
 
 end
 
-Action.add_action(DefinePatchTest.new)
+class CaptureBackground < Action
+
+  def initialize(name = 'Capture background')
+    super(name, 'Test/Dev')
+  end
+
+  def setup(parent)
+    gadgets = [
+      {:type => :label, :label => 'Define a screen rectangle to capture.'},
+      {:type => :point, :label => 'Drag Top Left of rect', :name => 'tl'},
+      {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
+      {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
+    ]
+    @vals = UserIO.prompt(parent, nil, 'Capture background pixels', gadgets)
+
+  end
+
+
+  def act
+    tl = point_from_hash(@vals, 'tl')
+    br = point_from_hash(@vals, 'br')
+
+    rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
+    pb = PixelBlock.new(rect)
+    filename = "data/#{@vals['name']}.yaml"
+    pixel_set = Set.new
+    if File.exist?(filename)
+      pixel_set = YAML.load_file(filename)
+    end
+    start_size = pixel_set.size
+    added_count = 0
+    0.upto(pb.width - 1) do |x|
+      0.upto(pb.height - 1) do |y|
+        pixel = pb.get_pixel(x, y)
+        if !pixel_set.include?(pixel)
+          pixel_set.add(pixel)
+          added_count += 1
+        end
+      end
+    end
+    puts "Start size: #{start_size}, Final size: #{pixel_set.size}, Added: #{added_count}"
+    File.open(filename, 'w') do |f|
+      YAML.dump(pixel_set, f)
+    end
+  end
+
+end
+Action.add_action(CaptureBackground.new)
 
 class FindPatchTest < Action
 
@@ -164,3 +211,29 @@ end
 
 
 Action.add_action(TimeTest.new)
+
+class CoordWatcher < Action
+  def initialize
+    super('Watch Coords', 'Test/Dev')
+  end
+  
+  def setup(parent)
+    true
+  end
+
+  def act
+    win = ClockLocWindow.instance
+    loop do
+      coords = win.coords
+      if coords.nil?
+        send_vk VK_ESCAPE
+        beep
+        return
+      else
+        # puts coords.to_a
+      end
+      sleep 0.5
+    end
+  end
+end
+Action.add_action(CoordWatcher.new)
