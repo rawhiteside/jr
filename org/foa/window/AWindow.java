@@ -133,6 +133,10 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		}
 	}
 
+	public boolean doRemoveRules() {
+		return true;
+	}
+
 	public void setSpacePixelCount(int count) {
 		m_spacePixelCount = count;
 	}

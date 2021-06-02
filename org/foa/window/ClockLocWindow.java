@@ -1,14 +1,31 @@
 package org.foa.window;
 
 import java.awt.*;
+import java.util.Map;
+import java.io.*;
+import org.yaml.snakeyaml.Yaml;
 
 import org.foa.text.TextReader;
 import org.foa.robot.ARobot;
 
 public class ClockLocWindow extends AWindow {
-
+	private Map m_backgroundColors = null;
 	public ClockLocWindow(Rectangle rect) {
 		super(rect);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream("data/clockloc-green.yaml");
+			// I don't know what I'm doing, so I have to skip the
+			// first two lines of the yml file so it reads into Java.
+			skipLine(fis);
+			skipLine(fis);
+		} catch(Exception e) {
+			System.out.println("File trouble for clocklocwindow" );
+			e.printStackTrace();
+		}
+		Yaml yaml = new Yaml();
+		m_backgroundColors = (Map) yaml.load(fis);
+		
 	}
 	// Find the clock loc window at its default place.
 	// Not really a singleton anymore. 
@@ -16,6 +33,12 @@ public class ClockLocWindow extends AWindow {
 		return createInstance();
 	}
 
+	private static void skipLine(FileInputStream fis) throws Exception {
+		while(true) {
+			int c = fis.read();
+			if (c == 0x0a) {break;}
+		}
+	}
 	private static ClockLocWindow createInstance() {
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 
@@ -23,22 +46,23 @@ public class ClockLocWindow extends AWindow {
 		//  can probably be models as such.  It is immovable and 30
 		//  pixels off the top on my system other milage may vary.
 		Rectangle rect = new Rectangle(screenWidth/2 - 110, 37, 220, 48);
-		if (rect == null) {
-			System.out.println("Failed to find clock loc window.");
-			return null;
-		} else {
-			return new ClockLocWindow(rect);
-		}
+
+		return new ClockLocWindow(rect);
 	}
 
 	// ITextHelper methods
-	private int m_spacePixelCount = 5;
+	private int m_spacePixelCount = 7;
+	
 	public boolean isInk(Color c) {
-		float[] hsb = null;
-		hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
-		int sat = (int) (hsb[1]*255);
-		return  sat < 150;
+		Integer rgb = new Integer(c.getRGB() & 0xFFFFFF);
+		Object val = m_backgroundColors.get(rgb);
+		return val == null;
 	}
+
+	public boolean doRemoveRules() {
+		return false;
+	}
+
 	public void setSpacePixelCount(int count) {
 		m_spacePixelCount = count;
 	}
@@ -74,12 +98,13 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	public int[] coords() {
-		String text = ClockLocWindow.instance().readText();
+		String text = readText();
 		try { 
 			return attemptCoords(text); 
 		}
 		catch (NumberFormatException e) {
 			System.out.println("Coords failed with text:\"" + text + "\".");
+			System.out.println("Exception of " + e.toString());
 		}
 		catch (Exception e) {
 			System.out.println("General exception of " + e.toString());
@@ -91,9 +116,11 @@ public class ClockLocWindow extends AWindow {
 
 	private int[] attemptCoords(String text) {
 		String[] lines = text.split("\n");
-		String position = lines[1];
+
+		// Not stripping rules, we get an extra empty line at the top. 
+		String position = lines[2];
 		String[] chunks = position.split(":");
-		String[] words = chunks[1].split("[.,]");
+		String[] words = chunks[1].trim().split("[.,]");
 		int y = Integer.parseInt(words[words.length - 1].replaceAll(" ",""));
 
 		String xstring = words[words.length - 2].replaceAll(",", "").replaceAll(" ","");

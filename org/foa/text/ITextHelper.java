@@ -7,4 +7,6 @@ public interface ITextHelper {
 	public boolean isInk(Color c);
 	// How many bg pixels is a space character? 
 	public int spacePixelCount();
+	// Should remove rules?
+	public boolean doRemoveRules();
 }
