@@ -132,7 +132,7 @@ public class TextReader {
 		if (g.width == 0 || g.height == 0) {
 			return g;
 		}
-		String emptyRow = makeRow("1", g.width);
+		String emptyRow = makeRow(InkSpots.BACKGROUND_STR, g.width);
 		int firstRow = 0;
 		// Find the first non-empty row.
 		while (g.rows[firstRow].equals(emptyRow)) {
@@ -202,7 +202,7 @@ public class TextReader {
 
 	private boolean isEmptyColumn(InkSpots line, int x) {
 		for(int y = 0; y < line.height; y++) {
-			if (line.pixel(x, y) == '0') {
+			if (line.pixel(x, y) == InkSpots.INK_CHAR) {
 				return false;
 			}
 		}
@@ -224,7 +224,7 @@ public class TextReader {
 	 */
 	private InkSpots[] findLines(InkSpots area) {
 		ArrayList<InkSpots> lines = new ArrayList<InkSpots>();
-		String blankRow = makeRow("1", area.width);
+		String blankRow = makeRow(InkSpots.BACKGROUND_STR, area.width);
 		int irow = 0;
 		while (true) {
 			// Skip blank lines.

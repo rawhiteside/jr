@@ -8,10 +8,10 @@ import javax.imageio.*;
 import java.io.*;
 
 public class InkSpots {
-	//
-	// Poor decision sometime in the past. Seemed like a good idea at the time. 
-	public static String INK_CHAR = "0";   // 0 = black = ink
-	public static String BACKGROUND_CHAR = "1";  // 1 = white = background
+	public static String INK_STR = "0"; 
+	public static char INK_CHAR = INK_STR.charAt(0);
+ 	public static String BACKGROUND_STR = "1"; 
+ 	public static char BACKGROUND_CHAR = BACKGROUND_STR.charAt(0);
 
 	public int[] origin;
 	public String[] rows;
@@ -44,9 +44,9 @@ public class InkSpots {
 		}
 	}
 	/**
-	 * The "pixel" for this class will be either the character '0' (==
-	 * black == ink) or the character '1' (== white == background).
-	 * Coordinates are local to the block: not screen coordinates.
+	 * The "pixel" for this class will be either the character '@'
+	 * (ink) or the character ' ' (background).  Coordinates are local
+	 * to the block: not screen coordinates.
 	 */
 	public char pixel(int x, int y) {
 		return this.rows[y].charAt(x);
@@ -133,9 +133,9 @@ public class InkSpots {
 			for(int x = 0; x < rect.width; x++) {
 				Color c = new Color(bi.getRGB(x, y));
 				if (textHelper.isInk(c)) {
-					row.append(INK_CHAR); 
+					row.append(INK_STR); 
 				} else {
-					row.append(BACKGROUND_CHAR); 
+					row.append(BACKGROUND_STR); 
 				}
 			}
 			newRows.add(row.toString());

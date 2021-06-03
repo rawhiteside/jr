@@ -219,7 +219,7 @@ public class AFont {
 	}
 
 	private int findFirstInk(String[] glyph) {
-		char ink = InkSpots.INK_CHAR.charAt(0);
+		char ink = InkSpots.INK_CHAR;
 		for(int i = 0; i < glyph.length; i++) {
 			if(glyph[i].charAt(0) == ink) { return i; }
 		}
@@ -247,7 +247,7 @@ public class AFont {
 
 	private String makePadString(int width) {
 		StringBuffer sb = new StringBuffer();
-		for(int i = 0; i < width; i++) { sb.append(InkSpots.BACKGROUND_CHAR); }
+		for(int i = 0; i < width; i++) { sb.append(InkSpots.BACKGROUND_STR); }
 		return sb.toString();
 	}
 
@@ -291,7 +291,7 @@ public class AFont {
 		if (!m_logging) {return;}
 		System.out.println(label);
 		for (int i = 0; i < glyph.length; i++) {
-			System.out.println(glyph[i].replace('1',' ').replace('0','@'));
+			System.out.println(glyph[i].replace(InkSpots.BACKGROUND_CHAR,' ').replace(InkSpots.INK_CHAR,'@'));
 		}
 	}
 

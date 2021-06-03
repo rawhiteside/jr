@@ -28,7 +28,7 @@ public class RuleRemover {
 		System.out.println("-----------------" + title);
 		for(int i = 0; i < bytes.length; i++) {
 			String s = new String(bytes[i]);
-			s = s.replaceAll("1", " ").replaceAll("0", "@");
+			s = s.replaceAll(InkSpots.BACKGROUND_STR, " ").replaceAll(InkSpots.INK_STR, "@");
 			System.out.println(s);
 		}
 	}
@@ -51,7 +51,7 @@ public class RuleRemover {
 
 			for(int j = 0; j < line.length; j++) {
 				// It's ink
-				if (line[j] == '0') {
+				if (line[j] == InkSpots.INK_CHAR) {
 					if(first == -1) { first = j; }
 					last = j;
 				}
