@@ -32,7 +32,7 @@ class BuildMenu < AWindow
   def initialize
     rect = nil
     3.times do
-      rect = WindowGeom.rectFromPoint(Point.new(50, 100))
+      rect = LegacyWindowGeom.rectFromPoint(Point.new(50, 100))
       break if rect
       sleep 0.1
     end

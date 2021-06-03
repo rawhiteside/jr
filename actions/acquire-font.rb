@@ -48,7 +48,7 @@ class AcquireFont < Action
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
     return unless vals
     chars = vals['answer']
-    AFont.instance.add(g.rows, chars)
+    @window.getFontMap().add(g.rows, chars) unless chars == ''
   end
 
   def get_target_window
@@ -105,8 +105,8 @@ class AcquireFont < Action
       dump_font(AFont.instance.getFontMap)
       return
     else
-      window = get_target_window
-      process_text_reader(window.text_reader)
+      @window = get_target_window
+      process_text_reader(@window.text_reader)
     end
   end
 end

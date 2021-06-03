@@ -91,6 +91,13 @@ class CaptureBackground < Action
     end
     msg =  "Start size: #{start_size}, Final size: #{pixel_set.size}, Added: #{added_count}"
     puts(msg)
+    b_max = 0
+    pixel_set.each do |pixel|
+      rgb = Color.new(pixel)
+      hsb = Color.RGBtoHSB(rgb.red, rgb.green, rgb.blue, nil)
+      b_max = hsb[2] if hsb[2] > b_max
+    end
+    puts "Max brighness = #{255 * b_max}"
   end
 
 end
