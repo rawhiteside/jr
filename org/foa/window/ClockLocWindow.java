@@ -6,6 +6,7 @@ import java.io.*;
 import org.yaml.snakeyaml.Yaml;
 
 import org.foa.text.TextReader;
+import org.foa.text.AFont;
 import org.foa.robot.ARobot;
 
 public class ClockLocWindow extends AWindow {
@@ -51,8 +52,9 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	// ITextHelper methods
-	private int m_spacePixelCount = 7;
-	
+	public AFont getFontMap() {
+		return AFont.instance();
+	}
 	public boolean isInk(Color c, int x, int y) {
 		Integer rgb = new Integer(c.getRGB() & 0xFFFFFF);
 		Object val = m_backgroundColors.get(rgb);
@@ -63,6 +65,7 @@ public class ClockLocWindow extends AWindow {
 		return false;
 	}
 
+	private int m_spacePixelCount = 7;
 	public void setSpacePixelCount(int count) {
 		m_spacePixelCount = count;
 	}

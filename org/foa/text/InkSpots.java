@@ -61,7 +61,7 @@ public class InkSpots {
 		if (this.width > 15 && this.height <= 3) {
 			return "-----";
 		}
-		return AFont.instance().textFor(this.rows);
+		return m_textHelper.getFontMap().textFor(this.rows);
 	}
 
 	/**
