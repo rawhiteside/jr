@@ -53,7 +53,7 @@ public class ClockLocWindow extends AWindow {
 	// ITextHelper methods
 	private int m_spacePixelCount = 7;
 	
-	public boolean isInk(Color c) {
+	public boolean isInk(Color c, int x, int y) {
 		Integer rgb = new Integer(c.getRGB() & 0xFFFFFF);
 		Object val = m_backgroundColors.get(rgb);
 		return val == null;

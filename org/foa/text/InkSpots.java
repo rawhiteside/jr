@@ -63,13 +63,10 @@ public class InkSpots {
 	}
 
 	public String toString() {
-		return toString(true);
-	}
-	public String toString(boolean splitGlyphs) {
 		if (this.width > 15 && this.height <= 3) {
 			return "-----";
 		}
-		return AFont.instance().textFor(this.rows, splitGlyphs);
+		return AFont.instance().textFor(this.rows);
 	}
 
 	/**
@@ -132,7 +129,7 @@ public class InkSpots {
 			StringBuffer row = new StringBuffer();
 			for(int x = 0; x < rect.width; x++) {
 				Color c = new Color(bi.getRGB(x, y));
-				if (textHelper.isInk(c)) {
+				if (textHelper.isInk(c, x, y)) {
 					row.append(INK_STR); 
 				} else {
 					row.append(BACKGROUND_STR); 

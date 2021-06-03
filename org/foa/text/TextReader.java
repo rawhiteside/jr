@@ -52,7 +52,7 @@ public class TextReader {
 	{
 		StringBuilder sb = new StringBuilder();
 		for (InkSpots g : glyphLine) {
-			sb.append(g.toString(splitGlyphs));
+			sb.append(g.toString());
 		}
 		return sb.toString();
 	}
