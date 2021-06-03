@@ -3,6 +3,7 @@ require 'window'
 require 'actions/kettles'
 
 import org.foa.text.AFont
+import org.foa.text.InkSpots
 
 class AcquireFont < Action
   def initialize
@@ -29,16 +30,10 @@ class AcquireFont < Action
   def make_text_for_glyph(g)
     text = ''
     g.rows.each do |row|
-      row.split('').each do |c|
-	if c == '0'
-	  text << '@'
-	else
-	  text << ' '
-	end
-      end
+      text << row
       text << "\n"
     end
-    
+
     text
   end
 
@@ -98,7 +93,7 @@ class AcquireFont < Action
       puts "------------#{v} =>"
       strs = k.to_a
       strs.each do |str|
-        puts str.to_s.gsub('0','@').gsub('1', ' ')
+        puts str.to_s
       end
     end
   end

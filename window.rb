@@ -183,7 +183,7 @@ class DarkWindow < AWindow
     super(rect)
   end
   
-  def isInk(color)
+  def isInk(color, x, y)
     !background?(color)
   end
 
@@ -196,28 +196,6 @@ class DarkWindow < AWindow
     color.red < 85 &&
     color.green < 85  &&
     color.blue < 85 
-  end
-end
-
-
-# what a hack.  I got tired of trying to solve the transparency
-# problem in the face of time-of-day lighting changes.
-# 
-# So, you've gotta stretch the friends list down.  Put the skills
-# window atop this near the bottom.  Both of these have to he on the
-# left near the bottom.  Borders of the friends list have to be all
-# visible.
-class SkillsWindow < DarkWindow
-
-  def initialize
-    super(Rectangle.new(0, 0, 0, 0))
-    dim = screen_size
-    rect = WindowGeom.rect_from_point(Point.new(70, dim.height - 150))
-    set_rect(rect)
-  end
-
-  def stat_boosted?
-    read_text.index('[')
   end
 end
 

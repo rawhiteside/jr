@@ -46,6 +46,8 @@ class CaptureBackground < Action
       {:type => :label, :label => 'Define a screen rectangle to capture.'},
       {:type => :point, :label => 'Drag Top Left of rect', :name => 'tl'},
       {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
+      {:type => :number, :label => 'Repetitions', :name => 'reps'},
+      {:type => :number, :label => 'Delay between reps', :name => 'delay'},
       {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
     @vals = UserIO.prompt(parent, persistence_name, 'Capture background pixels', gadgets)
@@ -57,13 +59,22 @@ class CaptureBackground < Action
     tl = point_from_hash(@vals, 'tl')
     br = point_from_hash(@vals, 'br')
 
-    rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
-    pb = PixelBlock.new(rect)
     filename = "data/#{@vals['name']}.yaml"
     pixel_set = Set.new
     if File.exist?(filename)
       pixel_set = YAML.load_file(filename)
     end
+    delay = @vals['delay'].to_f
+    reps = @vals['reps'].to_i
+    reps.times do
+      rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
+      pb = PixelBlock.new(rect)
+      capture_bg(pb, pixel_set, filename)
+      sleep delay
+    end
+  end
+
+  def capture_bg(pb, pixel_set, filename)
     start_size = pixel_set.size
     added_count = 0
     0.upto(pb.width - 1) do |x|
@@ -75,11 +86,11 @@ class CaptureBackground < Action
         end
       end
     end
-    msg =  "Start size: #{start_size}\nFinal size: #{pixel_set.size}\nAdded: #{added_count}"
     File.open(filename, 'w') do |f|
       YAML.dump(pixel_set, f)
     end
-    UserIO.info(msg)
+    msg =  "Start size: #{start_size}, Final size: #{pixel_set.size}, Added: #{added_count}"
+    puts(msg)
   end
 
 end

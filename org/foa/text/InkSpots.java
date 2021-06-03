@@ -8,9 +8,9 @@ import javax.imageio.*;
 import java.io.*;
 
 public class InkSpots {
-	public static String INK_STR = "0"; 
+	public static String INK_STR = "@"; 
 	public static char INK_CHAR = INK_STR.charAt(0);
- 	public static String BACKGROUND_STR = "1"; 
+ 	public static String BACKGROUND_STR = " "; 
  	public static char BACKGROUND_CHAR = BACKGROUND_STR.charAt(0);
 
 	public int[] origin;

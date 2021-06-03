@@ -59,7 +59,7 @@ public class RuleRemover {
 				else {
 					if(first > -1 && (last - first + 1) > maxlen) {
 						// Rule found.  Clobber it.
-						for(int k = first; k <= last; k++) { line[k] = '1'; }
+						for(int k = first; k <= last; k++) { line[k] = (byte) InkSpots.BACKGROUND_CHAR; }
 						first = -1;
 					}
 					// A line, but not a rule.
@@ -68,7 +68,7 @@ public class RuleRemover {
 			}
 			if(first > -1 && (last - first + 1) > maxlen) {
 				// Rule found.  Clobber it.
-				for(int k = first; k <= last; k++) { line[k] = '1'; }
+				for(int k = first; k <= last; k++) { line[k] = (byte) InkSpots.BACKGROUND_CHAR; }
 				first = -1;
 			}
 		}

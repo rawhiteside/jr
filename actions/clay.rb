@@ -33,11 +33,8 @@ class CasualWater < Action
 
   def act
     loop do
-      if Icons.hotkey_if_active(:water)
-	sleep 0.1
-      else
-	Thread.pass
-      end
+      send_string "7"
+      sleep 0.5
     end
   end
 end
@@ -51,12 +48,8 @@ class CasualClay < Action
 
   def act
     loop do
-      if Icons.hotkey_if_active(:clay)
-	@jug_count.used_one if @jug_count
-	sleep 0.5
-      else
-	Thread.pass
-      end
+      send_string "4"
+      sleep 0.5
     end
   end
 end
