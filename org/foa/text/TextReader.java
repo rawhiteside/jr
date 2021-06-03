@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 public class TextReader {
 	public InkSpots[][] glyphs;
 	public String[] lineText;
+	private ITextHelper m_textHelper;
 
 	public TextReader(Rectangle rect, ITextHelper textHelper) {
+		m_textHelper = textHelper;
 		InkSpots bits = InkSpots.fromScreen(rect, textHelper);
 		InkSpots[] lines =  findLines(bits);
 		glyphs = new InkSpots[lines.length][];
@@ -138,7 +140,7 @@ public class TextReader {
 		while (g.rows[firstRow].equals(emptyRow)) {
 			firstRow += 1;
 			if (firstRow >= g.height) {
-				return new InkSpots(g.origin, new String[0]);
+				return new InkSpots(g.origin, new String[0], m_textHelper);
 			}
 		}
 
@@ -147,7 +149,7 @@ public class TextReader {
 		while(g.rows[lastRow].equals(emptyRow)) {
 			lastRow -= 1;
 			if (lastRow < firstRow || lastRow < 0) {
-				return new InkSpots(g.origin, new String[0]);
+				return new InkSpots(g.origin, new String[0], m_textHelper);
 			}
 		}
 		return g.slice(0, firstRow, g.width, lastRow - firstRow + 1);

@@ -17,12 +17,14 @@ public class InkSpots {
 	public String[] rows;
 	public int width;
 	public int height;
+	private ITextHelper m_textHelper;
 
 	// Set a debug output flag.  We don't need no steenkin' properties
 	// file.
 	private static boolean s_debug = false;
 
-	public InkSpots(int[] origin, String[] irows) {
+	public InkSpots(int[] origin, String[] irows, ITextHelper textHelper) {
+		m_textHelper = textHelper;
 		this.origin = origin;
 		this.rows = irows;
 		this.height = irows.length;
@@ -33,15 +35,8 @@ public class InkSpots {
 		}
 	}
 
-	public InkSpots(int x, int y, String[] irows) {
-		this.origin = new int[] {x, y};
-		this.rows = irows;
-		this.height = irows.length;
-		if (rows.length == 0) {
-			this.width = 0;
-		} else {
-			this.width = irows[0].length();
-		}
+	public InkSpots(int x, int y, String[] irows, ITextHelper textHelper) {
+		this(new int[] {x, y}, irows, textHelper);
 	}
 	/**
 	 * The "pixel" for this class will be either the character '@'
@@ -53,7 +48,7 @@ public class InkSpots {
 	}
 
 	public InkSpots create(int[] origin, String[] irows) {
-		return new InkSpots(origin, irows);
+		return new InkSpots(origin, irows, m_textHelper);
 	}
 
 	public int[] toScreen(int x, int y) {
@@ -155,7 +150,7 @@ public class InkSpots {
 				//TODO: handle exception
 			}
 		}
-		return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]));
+		return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]), textHelper);
 	}
 
 }
