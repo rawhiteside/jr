@@ -5,7 +5,7 @@ import org.foa.PixelBlock;
 
 import java.awt.*;
 
-public class WindowGeom extends ARobot {
+public class LegacyWindowGeom extends ARobot {
 
 	public static Rectangle rectFromPoint(Point p) {
 		return rectFromPoint(p, false);
@@ -96,7 +96,7 @@ public class WindowGeom extends ARobot {
 		int height = findHeight(pb, origin.x, origin.y);
 
 		if (height <= 30 || width <= 50) {
-			if(debug) { System.out.println("WindowGeom: Rectangle was too small: " + width + ", " + height); }
+			if(debug) { System.out.println("LegacyWindowGeom: Rectangle was too small: " + width + ", " + height); }
 			return null;
 		}
 

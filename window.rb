@@ -5,7 +5,7 @@ require 'robot'
 
 import org.foa.PixelBlock
 
-import org.foa.window.WindowGeom
+import org.foa.window.LegacyWindowGeom
 import org.foa.window.AWindow
 import org.foa.window.PinnableWindow
 import org.foa.window.ClockLocWindow
@@ -22,7 +22,7 @@ class Window < AWindow
 
   # Return a Window from a point in the dialog
   def self.from_point(pt)
-    rect = WindowGeom.rect_from_point(pt)
+    rect = LegacyWindowGeom.rect_from_point(pt)
     return nil unless rect
     self.new(rect)
   end
@@ -38,6 +38,9 @@ class ChatWindow < Window
     r = win.rect
     r.width -= 30
     r.height -= 32
+    # Now, crop off the left side by 11 pixels
+    r.x += 11
+    r.width -= 11
     win.rect = r
     return win
   end
@@ -211,7 +214,7 @@ class InventoryWindow < DarkWindow
   end
 
   def self.from_point(pt)
-    rect = WindowGeom.rect_from_point(pt)
+    rect = LegacyWindowGeom.rect_from_point(pt)
     return InventoryWindow.new(rect)
   end
 end

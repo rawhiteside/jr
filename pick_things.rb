@@ -94,7 +94,8 @@ class PickThings < Action
   # In either case, this method should make the window go away. 
   def check_for_post_click_window(screen_x, screen_y)
     color = getColor(screen_x, screen_y)
-    if WindowGeom.isOuterBorder(color)
+    # PinnableWindowGeom
+    if LegacyWindowGeom.isOuterBorder(color)
       AWindow.dismissAll
       return true
     else

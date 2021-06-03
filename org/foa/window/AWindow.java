@@ -209,7 +209,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 		// A more or less random point that should be on everyone's screen.
 		final Point p = new Point(230, 600);
 		// Now, search left/up until we find a non-border pixel
-		while(WindowGeom.isOuterBorder(robot.getColor(p))) {
+		while(LegacyWindowGeom.isOuterBorder(robot.getColor(p))) {
 			p.x -= 1;
 			p.y -= 1;
 			if (p.x == 0 || p.y == 0) {
@@ -225,7 +225,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 					// This happens when there wasn't anything to dismiss, so the
 					// self menu appeared.  If so, dismiss that.
 					robot.mm(p, 0.1);
-					if (WindowGeom.isOuterBorder(robot.getColor(p))) {
+					if (LegacyWindowGeom.isOuterBorder(robot.getColor(p))) {
 						robot.sendVk(KeyEvent.VK_ESCAPE);
 					}
 				}
