@@ -25,7 +25,10 @@ public class AFont {
 
 		FileReader r = new FileReader(FONT_FILE);
 		Yaml yaml = new Yaml();
-		try { m_map = (Map) yaml.load(r); }
+		try {
+			m_map = (Map) yaml.load(r);
+			if(m_map == null) {m_map = new HashMap();}
+		}
 		catch(Exception e) {
 			System.out.println("Exception: in AFont" + e.toString());
 			e.printStackTrace();
@@ -72,12 +75,10 @@ public class AFont {
 	}
 
 	public String textFor(String[] rows) {
-		return textFor(rows, true);
-	}
-	public String textFor(String[] rows, boolean split_glyphs) {
 		dumpGlyph(rows, "textFor this");
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
+		if (rows.length == 0) { return " ";}
 		// Ignore single, isolated pixels.
 		if(rows.length == 1 && rows[0].length() == 1) {
 			return "";
@@ -87,7 +88,6 @@ public class AFont {
 		if (val != null) {
 			return val;
 		} else {
-			if (!split_glyphs) {return UNKNOWN_GLYPH;}
 			dumpGlyph(rows, "This is complex");
 			String text =  textForComplexGlyph(rows);
 			if (text == null) {
