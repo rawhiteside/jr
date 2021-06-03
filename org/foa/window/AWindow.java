@@ -122,7 +122,7 @@ public abstract class AWindow extends ARobot implements ITextHelper {
 	// ITextHelper methods.
 
 	public AFont getFontMap() {
-		return AFont.instance();
+		return AFont.instance("data/font.yaml");
 	}
 	public boolean isInk(Color c, int x, int y) {
 		if (c.getRed() < RMIN || c.getGreen() < GMIN || c.getBlue() < BMIN) {

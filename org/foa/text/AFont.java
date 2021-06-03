@@ -9,10 +9,11 @@ import org.yaml.snakeyaml.Yaml;
 
 
 public class AFont {
-	private static AFont s_instance;
+	
+	private static Map s_instances = new HashMap();
 	private Map m_map;
 	private String UNKNOWN_GLYPH = "?";
-	private String FONT_FILE = "font.yaml";
+	private String FONT_FILE = "data/font.yaml";
 	//
 	// When dealing with complex glyphs, consider only templates at
 	// least this wide.
@@ -21,30 +22,29 @@ public class AFont {
 	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
 	private boolean m_logging = false;
 
-	public AFont() throws Exception {
+	public AFont(String filename) {
 
-		FileReader r = new FileReader(FONT_FILE);
+		FileReader r = null;
 		Yaml yaml = new Yaml();
 		try {
+			r = new FileReader(filename);
 			m_map = (Map) yaml.load(r);
 			if(m_map == null) {m_map = new HashMap();}
+			r.close();
 		}
 		catch(Exception e) {
 			System.out.println("Exception: in AFont" + e.toString());
 			e.printStackTrace();
-			throw e;
 		}
-		finally { r.close(); }
 	}
 
-	public static AFont instance() {
-		if(s_instance == null) {
-			try { s_instance = new AFont(); }
-			catch(Exception e){
-				System.out.println("Exception: in AFont.instance" + e.toString());
-			}
+	public static AFont instance(String filename) {
+		AFont fontMap = (AFont) s_instances.get(filename);
+		if(fontMap == null) {
+			fontMap = new AFont(filename);
+			s_instances.put(filename, fontMap);
 		}
-		return s_instance;
+		return fontMap;
 	}
 
 	public void save() {

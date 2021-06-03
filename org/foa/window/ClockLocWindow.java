@@ -53,7 +53,7 @@ public class ClockLocWindow extends AWindow {
 
 	// ITextHelper methods
 	public AFont getFontMap() {
-		return AFont.instance();
+		return AFont.instance("data/clockloc-font.yaml");
 	}
 	public boolean isInk(Color c, int x, int y) {
 		Integer rgb = new Integer(c.getRGB() & 0xFFFFFF);
