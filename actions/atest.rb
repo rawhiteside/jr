@@ -35,73 +35,31 @@ class DefinePatchTest < Action
 
 end
 
-class CaptureBackground < Action
+class CaptureCLBackground < Action
 
-  def initialize(name = 'Capture background')
+  def initialize(name = 'Capture ClockLoc background')
     super(name, 'Test/Dev')
   end
 
   def setup(parent)
     gadgets = [
-      {:type => :label, :label => 'Define a screen rectangle to capture.'},
-      {:type => :point, :label => 'Drag Top Left of rect', :name => 'tl'},
-      {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
-      {:type => :number, :label => 'Repetitions', :name => 'reps'},
-      {:type => :number, :label => 'Delay between reps', :name => 'delay'},
       {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
-    @vals = UserIO.prompt(parent, persistence_name, 'Capture background pixels', gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, 'Capture ClockLoc background image', gadgets)
 
   end
 
 
   def act
-    tl = point_from_hash(@vals, 'tl')
-    br = point_from_hash(@vals, 'br')
-
-    filename = "data/#{@vals['name']}.yaml"
-    pixel_set = Set.new
-    if File.exist?(filename)
-      pixel_set = YAML.load_file(filename)
-    end
-    delay = @vals['delay'].to_f
-    reps = @vals['reps'].to_i
-    reps.times do
-      rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
-      pb = PixelBlock.new(rect)
-      capture_bg(pb, pixel_set, filename)
-      sleep delay
-    end
-  end
-
-  def capture_bg(pb, pixel_set, filename)
-    start_size = pixel_set.size
-    added_count = 0
-    0.upto(pb.width - 1) do |x|
-      0.upto(pb.height - 1) do |y|
-        pixel = pb.get_pixel(x, y)
-        if !pixel_set.include?(pixel)
-          pixel_set.add(pixel)
-          added_count += 1
-        end
-      end
-    end
-    File.open(filename, 'w') do |f|
-      YAML.dump(pixel_set, f)
-    end
-    msg =  "Start size: #{start_size}, Final size: #{pixel_set.size}, Added: #{added_count}"
-    puts(msg)
-    b_max = 0
-    pixel_set.each do |pixel|
-      rgb = Color.new(pixel)
-      hsb = Color.RGBtoHSB(rgb.red, rgb.green, rgb.blue, nil)
-      b_max = hsb[2] if hsb[2] > b_max
-    end
-    puts "Max brighness = #{255 * b_max}"
+    filename = "images/#{@vals['name']}.png"
+    puts filename
+    cl = ClockLocWindow.instance
+    pb = PixelBlock.new(cl.rect)
+    pb.save_image(filename)
   end
 
 end
-Action.add_action(CaptureBackground.new)
+Action.add_action(CaptureCLBackground.new)
 
 class PinnableGeomTest < Action
 

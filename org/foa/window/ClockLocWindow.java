@@ -10,23 +10,8 @@ import org.foa.text.AFont;
 import org.foa.robot.ARobot;
 
 public class ClockLocWindow extends AWindow {
-	private Map m_backgroundColors = null;
 	public ClockLocWindow(Rectangle rect) {
 		super(rect);
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream("data/clockloc-green.yaml");
-			// I don't know what I'm doing, so I have to skip the
-			// first two lines of the yml file so it reads into Java.
-			skipLine(fis);
-			skipLine(fis);
-		} catch(Exception e) {
-			System.out.println("File trouble for clocklocwindow" );
-			e.printStackTrace();
-		}
-		Yaml yaml = new Yaml();
-		m_backgroundColors = (Map) yaml.load(fis);
-		
 	}
 	// Find the clock loc window at its default place.
 	// Not really a singleton anymore. 
@@ -34,12 +19,6 @@ public class ClockLocWindow extends AWindow {
 		return createInstance();
 	}
 
-	private static void skipLine(FileInputStream fis) throws Exception {
-		while(true) {
-			int c = fis.read();
-			if (c == 0x0a) {break;}
-		}
-	}
 	private static ClockLocWindow createInstance() {
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 
@@ -55,10 +34,10 @@ public class ClockLocWindow extends AWindow {
 	public AFont getFontMap() {
 		return AFont.instance("data/clockloc-font.yaml");
 	}
+
+	// XXX
 	public boolean isInk(Color c, int x, int y) {
-		Integer rgb = new Integer(c.getRGB() & 0xFFFFFF);
-		Object val = m_backgroundColors.get(rgb);
-		return val == null;
+		return false;
 	}
 
 	public boolean doRemoveRules() {

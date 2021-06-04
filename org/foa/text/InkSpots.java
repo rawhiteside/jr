@@ -1,6 +1,7 @@
 package org.foa.text;
 
 import org.foa.robot.ARobot;
+import org.foa.PixelBlock;
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -107,23 +108,14 @@ public class InkSpots {
 	}
 
 	public static InkSpots fromScreen(Rectangle rect, ITextHelper textHelper) {
-		BufferedImage bi = new ARobot().createScreenCapture(rect);
+		PixelBlock pb = new PixelBlock(rect);
 
-		// Debug
-		if (s_debug) {
-			try {
-				File outputfile = new File("saved.png");
-				ImageIO.write(bi, "png", outputfile);
-			} catch (Exception e) {
-				//TODO: handle exception
-			}
-		}
-
+		textHelper.startTextScan(pb);
 		ArrayList newRows = new ArrayList();
 		for(int y = 0; y < rect.height; y++) {
 			StringBuffer row = new StringBuffer();
 			for(int x = 0; x < rect.width; x++) {
-				Color c = new Color(bi.getRGB(x, y));
+				Color c = pb.getColor(x, y);
 				if (textHelper.isInk(c, x, y)) {
 					row.append(INK_STR); 
 				} else {
@@ -136,20 +128,6 @@ public class InkSpots {
 			newRows = RuleRemover.removeRules(newRows, 14);
 		}
 
-		if (s_debug) {
-			try {
-				BufferedWriter writer = new BufferedWriter(new FileWriter("debug.txt"));
-			
-				for (int debugCount = 0; debugCount < newRows.size(); debugCount++)
-					{
-						writer.write(newRows.get(debugCount).toString());
-						writer.newLine();
-					}
-				writer.close();
-			} catch (Exception e) {
-				//TODO: handle exception
-			}
-		}
 		return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]), textHelper);
 	}
 
