@@ -53,7 +53,7 @@ class CaptureCLBackground < Action
   def act
     filename = "images/#{@vals['name']}.png"
     puts filename
-    cl = ClockLocWindow.instance
+    cl = ClockLocWindow.new
     pb = PixelBlock.new(cl.rect)
     pb.save_image(filename)
   end

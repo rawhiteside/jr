@@ -5,29 +5,38 @@ import java.util.Map;
 import java.io.*;
 import org.yaml.snakeyaml.Yaml;
 
+import org.foa.PixelBlock;
 import org.foa.text.TextReader;
 import org.foa.text.AFont;
 import org.foa.robot.ARobot;
 
 public class ClockLocWindow extends AWindow {
-	public ClockLocWindow(Rectangle rect) {
-		super(rect);
+	private static String[] s_bgImageNames = {
+		"ClockLoc-green.png",
+		"ClockLoc-orange.png",
+	};
+	private static PixelBlock[] s_images = new PixelBlock[s_bgImageNames.length];
+	static {
+		for(int i = 0; i < s_bgImageNames.length; i++) {
+			s_images[i] = PixelBlock.loadImage("images/" + s_bgImageNames[i]);
+		}
 	}
-	// Find the clock loc window at its default place.
-	// Not really a singleton anymore. 
-	public static ClockLocWindow instance() {
-		return createInstance();
-	}
-
-	private static ClockLocWindow createInstance() {
+		
+	public ClockLocWindow() {
+		super();
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 
 		//New system is 150 wide and 60 tall and not a rectangle but
 		//  can probably be models as such.  It is immovable and 30
 		//  pixels off the top on my system other milage may vary.
 		Rectangle rect = new Rectangle(screenWidth/2 - 110, 37, 220, 48);
-
-		return new ClockLocWindow(rect);
+		setRect(rect);
+		
+	}
+	// Find the clock loc window at its default place.
+	// Not really a singleton anymore. 
+	public static ClockLocWindow instance() {
+		return new ClockLocWindow();
 	}
 
 	// ITextHelper methods
