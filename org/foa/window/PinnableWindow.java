@@ -26,7 +26,6 @@ public class PinnableWindow extends AWindow {
 
 	// Default here is Legacy windows.
 	public ITextHelper getTextHelper() {
-		System.out.println("pinnable text helper");
 		return new PinnableTextHelper();
 	}
 

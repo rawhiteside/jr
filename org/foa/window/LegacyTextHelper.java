@@ -1,6 +1,7 @@
 package org.foa.window;
 import org.foa.text.*;
 import java.awt.Color;
+import org.foa.PixelBlock;
 
 
 public class LegacyTextHelper implements ITextHelper{
@@ -13,6 +14,8 @@ public class LegacyTextHelper implements ITextHelper{
 	private static int BMIN = 0x81;
 	private int m_spacePixelCount = 4;
 	// ITextHelper methods.
+
+	public void startTextScan(PixelBlock pb) {}
 
 	public AFont getFontMap() {
 		return AFont.instance("data/font.yaml");

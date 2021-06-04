@@ -93,7 +93,7 @@ public class PinnableWindowGeom extends ARobot {
 		System.out.println("Height " + height);
 
 		if (height <= 30 || width <= 50) {
-			if(debug) { System.out.println("LegacyWindowGeom: Rectangle was too small: " + width + ", " + height); }
+			System.out.println("LegacyWindowGeom: Rectangle was too small: " + width + ", " + height);
 			return null;
 		}
 
@@ -113,9 +113,9 @@ public class PinnableWindowGeom extends ARobot {
 
 	private static boolean isBorder(PixelBlock pb, int x, int y) {
 		Color color = pb.getColorFromScreen(x, y);
-		return color.getRed() >= 132 && color.getRed() <= 135 &&
-			color.getGreen() >= 101 && color.getGreen() <= 103 &&
-			color.getBlue() >= 73 && color.getBlue() <= 76;
+		return color.getRed() >= 131 && color.getRed() <= 135 &&
+			color.getGreen() >= 99 && color.getGreen() <= 103 &&
+			color.getBlue() >= 71 && color.getBlue() <= 76;
 			
 	}
 }
