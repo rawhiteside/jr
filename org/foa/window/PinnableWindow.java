@@ -2,6 +2,7 @@ package org.foa.window;
 
 import org.foa.*;
 import org.foa.robot.*;
+import org.foa.text.ITextHelper;
 
 import java.awt.*;
 
@@ -21,6 +22,12 @@ public class PinnableWindow extends AWindow {
 	}
 	public void setStaticSize(boolean value) {
 		m_static = value;
+	}
+
+	// Default here is Legacy windows.
+	public ITextHelper getTextHelper() {
+		System.out.println("pinnable text helper");
+		return new PinnableTextHelper();
 	}
 
 	// Reduce width to exclude the pin. 

@@ -13,7 +13,7 @@ public class AFont {
 	private static Map s_instances = new HashMap();
 	private Map m_map;
 	private String UNKNOWN_GLYPH = "?";
-	private String FONT_FILE = "data/font.yaml";
+	private String m_fontFile = null;
 	//
 	// When dealing with complex glyphs, consider only templates at
 	// least this wide.
@@ -23,6 +23,7 @@ public class AFont {
 	private boolean m_logging = false;
 
 	public AFont(String filename) {
+		m_fontFile = filename;
 
 		FileReader r = null;
 		Yaml yaml = new Yaml();
@@ -49,7 +50,7 @@ public class AFont {
 
 	public void save() {
 		try {
-			FileWriter w = new FileWriter(FONT_FILE);
+			FileWriter w = new FileWriter(m_fontFile);
 			Yaml yaml = new Yaml();
 			try { yaml.dump(m_map, w); }
 			finally { w.close(); }
