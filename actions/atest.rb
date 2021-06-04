@@ -103,38 +103,32 @@ class CaptureBackground < Action
 end
 Action.add_action(CaptureBackground.new)
 
-class FindPatchTest < Action
+class PinnableGeomTest < Action
 
-  def initialize(name = 'Find template best')
+  def initialize(name = 'Test PinnableWindowGeom')
     super(name, 'Test/Dev')
   end
 
   def setup(parent)
     gadgets = [
-      {:type => :text, :label => 'Name of patch (one word)', :name => 'name'},
-      {:type => :number, :label => 'Max dist sq', :name => 'distsq'},
+      {:type => :point, :label => 'Drag to window', :name => 'pt'},
     ]
-    @vals = UserIO.prompt(parent, nil, 'Subimage to find', gadgets)
+    @vals = UserIO.prompt(parent, nil, 'Show me the window', gadgets)
   end
 
 
   def act
-    filename = "images/#{@vals['name']}.png"
-    distsq = @vals['distsq']
-    pb_patch = PixelBlock.load_image(filename)
-    pb_full = full_screen_capture
-    puts "finding"
-    pt = nil
-    if distsq == ''
-      pt = pb_full.find_template_best(pb_patch)
-    else
-      pt = pb_full.find_template_best(pb_patch, distsq.to_i)
-    end
-    p pt.to_s
-    mm(pt)
+    pt = point_from_hash(@vals, 'pt')
+    win = PinnableWindow.fromPoint(pt)
+    puts win
+    puts win.to_s
+    p win
+    puts win.rect
+    puts win.rect.to_s
+    p win.rect
   end
 end
-Action.add_action(FindPatchTest.new)
+Action.add_action(PinnableGeomTest.new)
 
 
 class FindExactTest < Action

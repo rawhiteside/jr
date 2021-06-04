@@ -24,7 +24,7 @@ class AcquireFont < Action
       {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
       
     ]
-    @vals = UserIO.prompt(parent, nil, action_name, gadgets)
+    @vals = UserIO.prompt(parent, name, action_name, gadgets)
   end
   
   def make_text_for_glyph(g)
