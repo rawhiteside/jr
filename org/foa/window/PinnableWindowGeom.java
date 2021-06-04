@@ -12,11 +12,9 @@ public class PinnableWindowGeom extends ARobot {
 	}
 
 	public static Rectangle rectFromPoint(Point p, boolean debug) {
-		System.out.println("rect from point");
 		if (isOffScreen(p)) { return null; }
 		PixelBlock pb = ARobot.sharedInstance().fullScreenCapture();
 		int x = findLeftEdge(pb, p.x, p.y);
-		System.out.println("Left edge at " + x);
 		if (x < 0) {
 			if(debug) { System.out.println("Failed to find left edge"); }
 			return null;
@@ -33,7 +31,6 @@ public class PinnableWindowGeom extends ARobot {
 	// From a point on the left edge.   This point should be a border pixel.
 	// Search up until we find a non-border, of the edge of the screen.
 	private static Point findOrigin(PixelBlock pb, Point pt) {
-		System.out.println("Find orign");
 		int x = pt.x;
 		int y = pt.y;
 		while(isBorder(pb, x, y)) {
@@ -49,7 +46,6 @@ public class PinnableWindowGeom extends ARobot {
 	 * Find and return the width of the window, given the window origin.
 	 */
 	private static int findWidth(PixelBlock pb, Point pt) {
-		System.out.println("find widt");
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 		int xStart = pt.x;
 
@@ -69,7 +65,6 @@ public class PinnableWindowGeom extends ARobot {
 	 * Find the height, given the origin of the window.
 	 */
 	private static int findHeight(PixelBlock pb, int x, int y) {
-		System.out.println("find height");
 		int screenHeight = ARobot.sharedInstance().screenSize().height;
 		int yStart = y;
 
@@ -85,15 +80,12 @@ public class PinnableWindowGeom extends ARobot {
 
 	private static Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
 		Point origin = findOrigin(pb, new Point(x, y));
-		System.out.println("Origin at " + origin);
 		int width = findWidth(pb, origin);
-		System.out.println("WIdth "+ width);
 
 		int height = findHeight(pb, origin.x, origin.y);
-		System.out.println("Height " + height);
 
 		if (height <= 30 || width <= 50) {
-			System.out.println("LegacyWindowGeom: Rectangle was too small: " + width + ", " + height);
+			System.out.println("PinnableWindowGeom: Rectangle was too small: " + width + ", " + height);
 			return null;
 		}
 

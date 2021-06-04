@@ -4,6 +4,9 @@ import java.awt.Color;
 import org.foa.PixelBlock;
 
 public interface ITextHelper {
+	// To crop off part of the window.  May need an actual Inset in
+	// the future, I dunno.
+	public int textInset();
 	// Only used by ClockLocWindow.
 	public void startTextScan(PixelBlock pb);
 	// Returns the font map to use.

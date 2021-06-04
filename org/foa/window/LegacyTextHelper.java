@@ -17,9 +17,8 @@ public class LegacyTextHelper implements ITextHelper{
 
 	public void startTextScan(PixelBlock pb) {}
 
-	public AFont getFontMap() {
-		return AFont.instance("data/font.yaml");
-	}
+	public AFont getFontMap() { return AFont.instance("data/font.yaml"); }
+
 	public boolean isInk(Color c, int x, int y) {
 		if (c.getRed() < RMIN || c.getGreen() < GMIN || c.getBlue() < BMIN) {
 			return true;
@@ -28,16 +27,11 @@ public class LegacyTextHelper implements ITextHelper{
 		}
 	}
 
-	public boolean doRemoveRules() {
-		return true;
-	}
+	public boolean doRemoveRules() { return true; }
 
-	public void setSpacePixelCount(int count) {
-		m_spacePixelCount = count;
-	}
+	public void setSpacePixelCount(int count) { m_spacePixelCount = count; }
 
-	public int spacePixelCount() {
-		return m_spacePixelCount;
-	}
+	public int spacePixelCount() { return m_spacePixelCount; }
 
+	public int textInset() { return 0;}
 }

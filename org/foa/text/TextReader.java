@@ -14,7 +14,12 @@ public class TextReader {
 
 	public TextReader(Rectangle rect, ITextHelper textHelper) {
 		m_textHelper = textHelper;
-		InkSpots bits = InkSpots.fromScreen(rect, textHelper);
+		int inset = textHelper.textInset();
+
+		Rectangle croppedRect =
+			new Rectangle(rect.x + inset, rect.y + inset, rect.width - 2 * inset, rect.height - 2 * inset);
+		InkSpots bits = InkSpots.fromScreen(croppedRect, textHelper);
+
 		InkSpots[] lines =  findLines(bits);
 		glyphs = new InkSpots[lines.length][];
 
