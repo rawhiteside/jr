@@ -40,7 +40,6 @@ class ReadWindow < Action
     if @vals['clock-loc-p'] == 'true'
       cl = ClockLocWindow.instance
       text = cl.read_text
-      puts text
       coords = cl.coords
       text += "\nWorld Coordinates: #{coords[0]}, #{coords[1]}\n"
       # text += "\nDate: #{cl.date}\n"
