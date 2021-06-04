@@ -48,7 +48,7 @@ class AcquireFont < Action
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
     return unless vals
     chars = vals['answer']
-    @window.getFontMap().add(g.rows, chars) unless chars == ''
+    @window.getTextHelper().getFontMap().add(g.rows, chars) unless chars == ''
   end
 
   def get_target_window
