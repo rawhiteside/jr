@@ -146,6 +146,7 @@ class PopupWindow < Window
   def self.find
     dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
+
     PopupWindow.from_point(Point.new(wid/2, height/2))
   end
 
@@ -157,8 +158,9 @@ class PopupWindow < Window
 
   # Click on OK. 
   def dismiss
-    click_word 'OK'
-    return
+    x = rect.x + rect.width/2
+    y = rect.y + rect.height - 20
+    lclick_at(x, y)
   end
   
 end

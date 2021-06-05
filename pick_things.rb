@@ -130,7 +130,7 @@ class PickThings < Action
       point = Point.new(screen_x, screen_y)
 
       # OK.  Try to gather something by clicking on it. 
-      rclick_at(screen_x, screen_y, 0.2)
+      lclick_at(screen_x, screen_y, 0.2)
       sleep 0.2
 
       # If we got a window popup that didn't let us gather something, we're done.

@@ -34,7 +34,7 @@ class ColorPicker < Action
       show_color(pt1, 'loc1', seconds)
       show_color(pt2, 'loc2', seconds)
       show_color(pt3, 'loc3', seconds)
-      rclick_at(747, 450)
+      lclick_at(747, 450)
       sleep 600
       
     end

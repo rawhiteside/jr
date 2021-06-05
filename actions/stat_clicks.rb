@@ -71,7 +71,7 @@ class StatClicks < Action
     loop do
       # PopupWindow.dismiss
       stats.each { |stat| stat_wait(stat)}
-      rclick_at(x, y)
+      lclick_at(x, y)
       sleep @delay
     end
   end

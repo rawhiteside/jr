@@ -236,7 +236,7 @@ public class PinnableWindow extends AWindow {
 				robot.sleepSec(postDismissDelay);
 				robot.mm(pt, delay);
 				postDismissDelay = 0.0;
-				robot.rclickAt(pt, delay);
+				robot.lclickAt(pt, delay);
 				robot.sleepSec(delay);
 				// Now, give it at most a half-second to appear.
 				Rectangle rectangle = null;

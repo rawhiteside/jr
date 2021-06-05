@@ -38,7 +38,7 @@ class Barley < Action
     with_robot_lock {
       mm(*@plant)
       sleep 0.05
-      rclick_at(*@plant)
+      lclick_at(*@plant)
       mm(*pop_coords)
       sleep 0.1
       w = PinnableWindow.from_screen_click(Point.new(pop_coords[0], pop_coords[1]))

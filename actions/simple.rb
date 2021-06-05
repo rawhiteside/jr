@@ -11,7 +11,7 @@ class IntervalTab < Action
                 :vals => ['Tab', 'Provided key']},
                {:type => :text, :label => 'Key', :name => 'key'}
               ]
-    @vals = UserIO.prompt(parent, 'Interval keys', 'Interval keys', gadgets)
+    @vals = UserIO.prompt(parent, name, 'Interval keys', gadgets)
     return nil unless @vals
     @delay = @vals['interval'].to_f
     @key = @vals['key']
@@ -36,3 +36,33 @@ class IntervalTab < Action
 end
 
 Action.add_action(IntervalTab.new)
+
+
+class IntervalClicks < Action
+  def initialize
+    super("Inverval clicks", "Misc")
+  end
+
+  def setup(parent)
+    gadgets = [{:type => :text, :label => 'Secs between clicks', :name => 'interval'},
+               {:type => :point, :label => 'Click location', :name => 'xy'},
+              ]
+    @vals = UserIO.prompt(parent, name, 'Interval keys', gadgets)
+    return nil unless @vals
+    @delay = @vals['interval'].to_f
+    true
+  end
+
+  def act
+    return unless @delay > 0
+
+    pt = point_from_hash(@vals, 'xy')
+    loop do
+      lclick_at(pt)
+      sleep @delay
+    end
+  end
+  
+end
+
+Action.add_action(IntervalClicks.new)

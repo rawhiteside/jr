@@ -232,7 +232,7 @@ class FlaxGrow < Action
   end
 
   def plant(pop_point)
-    rclick_at(@plant_point)
+    lclick_at(@plant_point)
     dlg = nil
     3.times do
       with_robot_lock do

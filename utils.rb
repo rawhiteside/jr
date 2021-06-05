@@ -1,3 +1,4 @@
+require 'stats'
 #
 # It appears this was to provide access to things *not* directly in robot. 
 #

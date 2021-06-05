@@ -66,7 +66,7 @@ public abstract class AWindow extends ARobot  {
 			if (refreshLoc != null) {
 				refresh(refreshLoc);
 			}
-			rclickAt(toScreenCoords(p), delay);
+			lclickAt(toScreenCoords(p), delay);
 		}
 		catch(ThreadKilledException e) { throw e; }
 		catch(Exception e) {
@@ -165,7 +165,7 @@ public abstract class AWindow extends ARobot  {
 
 	public Point clickWord(String word) {
 		Point p = coordsForWord(word);
-		if(p != null) {rclickAt(p);}
+		if(p != null) {lclickAt(p);}
 		return p;
 	}
 
@@ -231,7 +231,7 @@ public abstract class AWindow extends ARobot  {
 					break;
 				}
 				if (i >= path.length - 1) { 
-					rclickAt(pt, 0.05);
+					lclickAt(pt, 0.05);
 				}
 				else {
 					w = PinnableWindow.fromScreenClick(pt);
