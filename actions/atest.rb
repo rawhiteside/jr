@@ -61,32 +61,22 @@ class CaptureCLBackground < Action
 end
 Action.add_action(CaptureCLBackground.new)
 
-class PinnableGeomTest < Action
+class HowMuchTest < Action
 
-  def initialize(name = 'Test PinnableWindowGeom')
+  def initialize(name = 'Test HowMuch')
     super(name, 'Test/Dev')
   end
 
   def setup(parent)
-    gadgets = [
-      {:type => :point, :label => 'Drag to window', :name => 'pt'},
-    ]
-    @vals = UserIO.prompt(parent, nil, 'Show me the window', gadgets)
+    true
   end
-
 
   def act
-    pt = point_from_hash(@vals, 'pt')
-    win = PinnableWindow.fromPoint(pt)
-    puts win
-    puts win.to_s
-    p win
-    puts win.rect
-    puts win.rect.to_s
-    p win.rect
+    check_for_pause
+    HowMuch.amount(2)
   end
 end
-Action.add_action(PinnableGeomTest.new)
+Action.add_action(HowMuchTest.new)
 
 
 class FindExactTest < Action

@@ -53,8 +53,6 @@ end
 # This class is poorly designed.  Slowly improving.
 class HowMuch < Window
 
-  # Answer the "How Much" / "How Many" popup
-  # Arg can either a number, or one of [:max, :ok, :cancel]
   def initialize
     super(Rectangle.new(0,0,0,0))
   end
@@ -88,7 +86,13 @@ class HowMuch < Window
   def self.max
     win = wait_for_win
     return nil unless win
-    win.click_on('Max')
+    robot = ARobot.shared_instance
+    rect = win.rect
+    x = rect.x + 105
+    y = rect.y + 102
+    
+    robot.lclick_at(x, y)
+    
     wait_till_gone
 
     true
@@ -102,40 +106,20 @@ class HowMuch < Window
     return nil unless win
     robot = ARobot.shared_instance
     robot.send_string(amt.to_i.to_s, 0.05)
-    ARobot.shared_instance.sleep(0.1)
-    win.click_on('Ok')
+    robot.sleep(0.1)
+    x = win.rect.x + 168
+    y = win.rect.y + 80
+    robot.lclick_at(x, y)
     wait_till_gone
     
     true
   end
   
-  # Click on the cancel button.
-  private
-  def self.cancel(w)
-    w.click_on('Cancel')
-  end
-
-  
-  # Cancel the dialog if it is found. 
-  public
-  def self.cancel_if_present
-    w = find_win
-    cancel(w) if w
-  end
-
   private
   def self.find_win
     dim = ARobot.sharedInstance.screen_size
     wid, height = dim.width, dim.height
-    win = Window.from_point(Point.new(wid/2, height/2))
-    if win && win.read_text =~ /(much|many)/
-      # Re-get the window because of a race condition when HowMuch is
-      # over another window.
-      return Window.from_point(Point.new(wid/2, height/2))
-    else
-      return nil
-    end
-
+    return Window.from_point(Point.new(wid/2, height/2))
   end
 end
 
