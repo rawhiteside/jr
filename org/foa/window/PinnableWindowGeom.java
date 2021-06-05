@@ -29,17 +29,17 @@ public class PinnableWindowGeom extends ARobot {
 
 
 	// From a point on the left edge.   This point should be a border pixel.
-	// Search up until we find a non-border, of the edge of the screen.
+	// Step inside the window, then search up for another border.
 	private static Point findOrigin(PixelBlock pb, Point pt) {
-		int x = pt.x;
+		int x = pt.x + 1;
 		int y = pt.y;
-		while(isBorder(pb, x, y)) {
+		while(!isBorder(pb, x, y)) {
 			if (y == 0) {
 				return new Point(x, y);
 			}
 			y = y - 1;
 		}
-		return new Point(x, y + 1);
+		return new Point(x-1, y);
 	}
 
 	/**
@@ -49,12 +49,12 @@ public class PinnableWindowGeom extends ARobot {
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 		int xStart = pt.x;
 
-		// Origin is a border pixel.  Search right for another
-		// non-border, or the screen edge.
-		int y = pt.y;
-		int x = pt.x;
+		// Origin is a border pixel.
+		// Step inside the window, and search right for another border.
+		int y = pt.y + 1;
+		int x = pt.x + 1;
 		if (x >= screenWidth) { return 0; }
-		while(isBorder(pb, x, y)) {
+		while(!isBorder(pb, x, y)) {
 			x += 1;
 			if (x == screenWidth) { break; }
 		}
@@ -68,9 +68,11 @@ public class PinnableWindowGeom extends ARobot {
 		int screenHeight = ARobot.sharedInstance().screenSize().height;
 		int yStart = y;
 
+		y = y + 1;
+		x = x + 1;
 		if (y >= screenHeight) { return 0; }
 		// Search down for a non-border, or for the screen edge.
-		while(isBorder(pb, x, y)) {
+		while(!isBorder(pb, x, y)) {
 			y += 1;
 			if (y == screenHeight) { break; }
 		}
@@ -78,6 +80,9 @@ public class PinnableWindowGeom extends ARobot {
 	}
 
 
+	private static void p (String s) {
+		System.out.println(s);
+	}
 	private static Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
 		Point origin = findOrigin(pb, new Point(x, y));
 		int width = findWidth(pb, origin);

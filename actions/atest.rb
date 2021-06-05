@@ -101,31 +101,7 @@ class FindExactTest < Action
     mm(pt) if pt
   end
 end
-
 Action.add_action(FindExactTest.new)
-
-class ReduceTest < Action
-  def initialize(name = 'Reduce Image')
-    super(name, 'Test/Dev')
-  end
-
-  def setup(parent)
-    true
-  end
-
-
-  def act
-    pb = full_screen_capture
-    r2 = ImageUtils.resize(pb.buffered_image, 2)
-    UserIO.show_image(r2, "Factor 2")
-    r3 = ImageUtils.resize(pb.buffered_image, 3)
-    UserIO.show_image(r3, "Factor 3")
-    r4 = ImageUtils.resize(pb.buffered_image, 4)
-    UserIO.show_image(r4, "Factor 4")
-  end  
-end
-
-Action.add_action(ReduceTest.new)
 
 class MouseWheelTest < Action
   def initialize(name = 'Use the mouse wheel')
@@ -173,28 +149,3 @@ end
 
 Action.add_action(TimeTest.new)
 
-class CoordWatcher < Action
-  def initialize
-    super('Watch Coords', 'Test/Dev')
-  end
-  
-  def setup(parent)
-    true
-  end
-
-  def act
-    win = ClockLocWindow.instance
-    loop do
-      coords = win.coords
-      if coords.nil?
-        send_vk VK_ESCAPE
-        beep
-        return
-      else
-        # puts coords.to_a
-      end
-      sleep 0.5
-    end
-  end
-end
-Action.add_action(CoordWatcher.new)

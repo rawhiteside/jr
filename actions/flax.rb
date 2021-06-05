@@ -331,11 +331,20 @@ class FlaxSeeds < Action
       break if w.coords_for_line('The seeds')
       sleep 0.2
     end
-    # try 3 times to rip
-    3.times do
-      break if w.click_on('Util/Rip')
-    end
+    # Unpin, then rip. 
     w.unpin
+    dim = screen_size
+    centerx = dim.width/2
+    centery = dim.height/2
+
+    xoffset = 350
+    yoffset = 150
+
+    delay = 0.1
+    mm centerx + xoffset, centery + yoffset, delay
+    send_string 'r', 0.1
+    mm centerx - xoffset, centery- yoffset, delay
+    send_string 'r', 0.1
   end
 
   def harvest
@@ -351,31 +360,11 @@ class FlaxSeeds < Action
     end
 
     @piler.swap
-    delayed_rip(nil)
-    @windows.each { |w| delayed_rip(w) }
-    delayed_rip(nil)
-    
-  end
-
-  # Last harvest, then rip.  We have to await completion of the
-  # harvest before ripping. So, we harvest, then move the window.
-  # Next one, we harvest, then wait for the *previous* harvest to
-  # complete, rip it, and move the next window over.
-  #
-  # @to_rip is the window waiting to be ripped. 
-  def delayed_rip(w)
-    # Either starting or ending the rip
-    if w.nil?
-      return if @to_rip.nil?
-      rip_out(@to_rip)
-      @to_rip = nil
-    else
+    @windows.each do |w|
       harvest_one(w)
-      rip_out(@to_rip) unless @to_rip.nil?
-      @piler.pile(w)
-      @to_rip = w
+      rip_out(w)
     end
-      
+    
   end
 
   def harvest_one(w)
@@ -426,7 +415,7 @@ class FlaxSeeds < Action
   # the menu
   # Also, uses the @tiler, and appends the window to @windows
   def plant_and_pin(loc)
-    @w_plant.click_on(@flax_type)
+    @w_plant.click_on('Plant')
     w = PinnableWindow.from_screen_click(Point.new(loc[0], loc[1]))
     if w
       w.pin

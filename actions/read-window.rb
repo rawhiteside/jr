@@ -18,7 +18,7 @@ class ReadWindow < Action
       {:type => :point, :label => 'Drag to Pinnable if checked', :name => 'xy'},
       
     ]
-    @vals = UserIO.prompt(parent, nil, action_name, gadgets)
+    @vals = UserIO.prompt(parent, name, action_name, gadgets)
   end
 
   def show_text(text, title)
