@@ -38,7 +38,7 @@ public class PinnableWindow extends AWindow {
 
 	/**
 	 * Basically, any mouse click can now change the window bounds.
-	 * The left center seems to be preserved.
+	 * The left top seems to be preserved.
 	 */
 	private void updateRect() {
 		if (m_static) {return;}
@@ -46,7 +46,7 @@ public class PinnableWindow extends AWindow {
 		sleepSec(0.08);
 		Rectangle r = getRect();
 		int x = r.x + 4;
-		int y = r.y + r.height/2;
+		int y = r.y + 4;
 		Rectangle rnew = PinnableWindowGeom.rectFromPoint(new Point(x, y));
 		if (rnew != null) {
 			setRect(rnew);
@@ -242,7 +242,7 @@ public class PinnableWindow extends AWindow {
 				Rectangle rectangle = null;
 				long startMillis = System.currentTimeMillis();
 				for(int i = 0; i < 50; i++) {
-					Point inside = new Point(pt.x + 4, pt.y);
+					Point inside = new Point(pt.x + 4, pt.y + 4);
 					rectangle = PinnableWindowGeom.rectFromPoint(inside);
 					//
 					// Did we find a window?
@@ -258,7 +258,9 @@ public class PinnableWindow extends AWindow {
 						// If the one we found is different than the
 						// one we clicked on, then we found the new
 						// one.
-						if(!rectTarget.equals(rectangle)) { break; }
+						if(!rectTarget.equals(rectangle)) {
+							break;
+						}
 						// ... otherwise wait for popped window.
 					}
 

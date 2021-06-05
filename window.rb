@@ -89,7 +89,7 @@ class HowMuch < Window
     robot = ARobot.shared_instance
     rect = win.rect
     x = rect.x + 105
-    y = rect.y + 102
+    y = rect.y + rect.height - 47
     
     robot.lclick_at(x, y)
     
@@ -108,7 +108,7 @@ class HowMuch < Window
     robot.send_string(amt.to_i.to_s, 0.05)
     robot.sleep(0.1)
     x = win.rect.x + 168
-    y = win.rect.y + 80
+    y = win.rect.y  + win.rect.height - 47
     robot.lclick_at(x, y)
     wait_till_gone
     
