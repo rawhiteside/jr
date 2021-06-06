@@ -3,8 +3,6 @@ require 'walker'
 require 'user-io'
 
 FLAX_DATA = {
-  'Qwu#212' => {:water => 1},
-  'Orchid#109' => {:water => 1},
   'Constitution Peak' => {},
   "Jacob's Field" => {},
   "Nile Green" => {},
@@ -64,7 +62,7 @@ class FlaxGrow < Action
     stash_win = PinnableWindow.from_point(stash_point)
     plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     @flax_type = @vals['flax-type']
-    @plant_point = plant_win.coords_for_line(@flax_type)
+    @plant_point = plant_win.coords_for_line('Plant')
 
     water_count = FLAX_DATA[@flax_type][:water]
     @plant_wl = WorldLocUtils.parse_world_location(@vals['grow'])
