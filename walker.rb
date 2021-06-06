@@ -51,7 +51,7 @@ class Walker < ARobot
   
   # After we "stop" walking, animation continues for a bit.  This
   # pause will get past that.
-  POST_WALK_PAUSE = 0.5
+  POST_WALK_PAUSE = 0.25
 
   # Time for the key to be down for a good "step"
   KEY_DELAY=0.075
@@ -60,7 +60,7 @@ class Walker < ARobot
   KEY_DELAY_BIG=0.25
 
   # Time necessary for the walk animation to complete.
-  STEP_DELAY = 0.05
+  STEP_DELAY = 0.0
 
 
   def left_big(delay = KEY_DELAY_BIG)

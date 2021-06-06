@@ -176,6 +176,13 @@ public class ARobot {
 		mm(prevPos.x, prevPos.y);
 	}
 
+	public void lclickAtRestore(Point p) {lclickAtRestore(p.x, p.y);}
+	public void lclickAtRestore(int x, int y) {
+		Point prevPos = mousePos();
+		lclickAt(x, y);
+		mm(prevPos.x, prevPos.y);
+	}
+
 	public void rclickAt(Point p) { rclickAt(p.x, p.y, MOUSE_MOVE_DELAY); }
 	public void rclickAt(Point p, double delaySec) { rclickAt(p.x, p.y, delaySec); }
 
@@ -224,7 +231,7 @@ public class ARobot {
 	public void sendVk(int key) {sendVk(key, 0.0);}
 	public void sendVk(int key, double delaySecs) {
 		keyPress(key, delaySecs);
-		keyRelease(key, delaySecs);
+		keyRelease(key, 0.0);
 	}
 
 	public void sendString(String s) {sendString(s, 0.0);}
