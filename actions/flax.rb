@@ -183,8 +183,7 @@ class FlaxGrow < Action
 	  return false
 	end
         return true if water_or_weed(dlg)
-        if dlg.click_on("Harvest seeds")
-          dlg.click_on("Util/Rip")
+        if dlg.click_on("Harvest seeds") || text.include?("seeds")
           dlg.unpin
           return false
         end
@@ -207,9 +206,6 @@ class FlaxGrow < Action
       end
       sleep 1.0
     end
-
-    # Finally, if somethign messed up, and we just harvested seeds up there. rip it out.
-    dlg.click_on('Util/Rip')
 
     # Dialog went away.  
     dlg.unpin
