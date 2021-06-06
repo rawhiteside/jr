@@ -230,6 +230,11 @@ class FlaxGrow < Action
   end
 
   def plant(pop_point)
+    # Rip out any beds that are in the way. 
+    mm pop_point
+    sleep 0.01
+    send_string("R", 0.01)
+
     lclick_at(@plant_point)
     dlg = nil
     3.times do

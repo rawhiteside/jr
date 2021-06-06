@@ -239,7 +239,7 @@ class Piler < ARobot
       w = PinnableWindow.from_point(point)
       break unless w
 
-      w.set_default_refresh_loc('lc')
+      w.set_default_refresh_loc('tl')
       windows << w
       pile(w)
     end
@@ -256,7 +256,7 @@ class Piler < ARobot
   # Add a window to the "current" pile.
   def pile(w)
     w.drag_to(@current)
-    w.set_default_refresh_loc('lc')
+    w.set_default_refresh_loc('tl')
     @current.x += PILE_OFFSET
   end
 end

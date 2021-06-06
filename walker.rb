@@ -60,7 +60,7 @@ class Walker < ARobot
   KEY_DELAY_BIG=0.25
 
   # Time necessary for the walk animation to complete.
-  STEP_DELAY = 0.2
+  STEP_DELAY = 0.05
 
 
   def left_big(delay = KEY_DELAY_BIG)

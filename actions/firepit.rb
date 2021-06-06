@@ -32,7 +32,7 @@ class Firepits < Action
 	HowMuch.max
         w.refresh
       end
-      w.refresh('lc') while w.click_on('Place', 'lc')
+      w.refresh('tl') while w.click_on('Place', 'tl')
 
       w.refresh
       if w.click_on('Take./Limestone')

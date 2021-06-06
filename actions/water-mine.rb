@@ -48,7 +48,7 @@ class WaterMineWorker
     @pitch_list = nil
     @past_pitches = []
     @win = w
-    @win.default_refresh_loc = 'lc'
+    @win.default_refresh_loc = 'tl'
     @last_wind_time = nil
     log_action('Start')
     @scan_interval = scan_interval
@@ -150,7 +150,7 @@ class WaterMineWorker
     
   def wind
     @last_wind_time = Time.new
-    @win.click_on('Wind', 'lc')
+    @win.click_on('Wind', 'tl')
     log_action('Wind')
     # Dead time after winding.
     @wind_delay = POST_WIND_WAIT

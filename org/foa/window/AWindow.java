@@ -19,7 +19,7 @@ import java.awt.event.*;
 public abstract class AWindow extends ARobot  {
 	private Rectangle m_rect;
 	private TextReader m_textReader = null;
-	private String m_defaultRefreshLoc = "lc"; 
+	private String m_defaultRefreshLoc = "tl"; 
 	private String m_notation = null;  // An extra note for use as needed.
 
 	public AWindow() {
