@@ -18,6 +18,8 @@ class Loom < Action
       {:type => :point, :name => 'loom', :label => 'Pinned loom.'},
       {:type => :combo, :name => 'what',:label => "What to do",
        :vals => PRODUCTS_TO_INPUTS.keys},
+      {:type => :number, :name => 'delay', :label => 'Delay seconds.'},
+
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
     @product = @vals['what']
@@ -31,7 +33,8 @@ class Loom < Action
   end    
 
   def restring(loom)
-    if loom.click_on('Re-String')
+    # Font error.  Live with it.
+    if loom.click_on('Re.String') || loom.click_on('Re-String')
       PopupWindow.dismiss
     end
   end
@@ -42,9 +45,13 @@ class Loom < Action
 
   def act
     loom = PinnableWindow.from_point(point_from_hash(@vals, 'loom'))
+    delay = @vals['delay'].to_i
     loop do
-      stat_wait('End')
       loom.refresh
+      restring(loom)
+      sleep(0.5)
+      loom.refresh
+
       loom.click_on(weave_what)
       sleep(0.5)
 
@@ -55,6 +62,7 @@ class Loom < Action
       loom.refresh
       reload loom
       PopupWindow.dismiss
+      sleep delay
     end
   end
 end

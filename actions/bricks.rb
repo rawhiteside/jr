@@ -15,7 +15,7 @@ class Bricks < GridAction
   def act_at(ginfo)
     mm(ginfo['x'], ginfo['y'])
     sleep 0.1
-    send_string(@user_vals['string'], 0.1)
+    send_string(@user_vals['string'], 0.2)
   end
 end
 Action.add_action(Bricks.new)

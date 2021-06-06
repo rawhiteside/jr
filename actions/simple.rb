@@ -58,7 +58,7 @@ class IntervalClicks < Action
 
     pt = point_from_hash(@vals, 'xy')
     loop do
-      lclick_at(pt)
+      lclick_at_restore(pt)
       sleep @delay
     end
   end
