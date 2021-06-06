@@ -57,7 +57,6 @@ class Loom < Action
 
       loom.refresh
       restring loom
-      PopupWindow.dismiss
 
       loom.refresh
       reload loom
