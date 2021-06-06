@@ -229,7 +229,8 @@ class FlaxGrow < Action
     # Rip out any beds that are in the way. 
     mm pop_point
     sleep 0.01
-    send_string("R", 0.01)
+    # It's *possible* there're several overlapping. 
+    send_string("RRR", 0.01)
 
     lclick_at(@plant_point)
     dlg = nil
