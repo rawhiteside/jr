@@ -1,5 +1,7 @@
 require 'action'
 require 'square_with_radius'
+
+import org.foa.window.PinnableWindowGeom
 # 
 # A super class for gathering stuff:  silt, gravel, dig stones...
 # Main entry is "gather_until_done".
@@ -42,6 +44,12 @@ class PickThings < Action
     return total_count
   end
 
+  # For papy, we need to go back the way we got here. That macro
+  # overrides this.
+  def retrace_steps?
+    false
+  end
+
   # Just gather the nearest thing until there's nothing to gather.
   # You may wander off following the things to gather.
   def gather_nearest_until_none(inventory_window)
@@ -49,7 +57,7 @@ class PickThings < Action
     if gather_count > 0
       loop do
         break unless gather_once(inventory_window) > 0
-        update_drag_path
+        update_drag_path if retrace_steps?
         gather_count += 1
       end
     end
@@ -95,7 +103,7 @@ class PickThings < Action
   def check_for_post_click_window(screen_x, screen_y)
     color = getColor(screen_x, screen_y)
     # PinnableWindowGeom
-    if LegacyWindowGeom.isOuterBorder(color)
+    if PinnableWindowGeom.isBorder(color)
       AWindow.dismissAll
       return true
     else
@@ -143,7 +151,7 @@ class PickThings < Action
       # Wait for the inventory to change.  If not, then we clicked on
       # some ground that looked like something to gather.  Let's just
       # move along.
-      5.times do
+      10.times do
         sleep 0.4
         inv_text = inventory_window.read_text
         if inv_text != inv_text_before

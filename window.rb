@@ -180,6 +180,11 @@ class InventoryWindow < AWindow
     super(rect)
   end
 
+  def read_text
+    flushTextReader()
+    super
+  end
+
   def getTextHelper()
     InventoryTextHelper.new
   end

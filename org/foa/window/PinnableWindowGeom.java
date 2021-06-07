@@ -109,7 +109,10 @@ public class PinnableWindowGeom extends ARobot {
 	}
 
 	private static boolean isBorder(PixelBlock pb, int x, int y) {
-		Color color = pb.getColorFromScreen(x, y);
+		return isBorder(pb.getColorFromScreen(x, y));
+	}
+
+	public static boolean isBorder(Color color) {
 		return color.getRed() >= 131 && color.getRed() <= 135 &&
 			color.getGreen() >= 99 && color.getGreen() <= 103 &&
 			color.getBlue() >= 71 && color.getBlue() <= 76;

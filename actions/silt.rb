@@ -44,7 +44,7 @@ class SiltAction < PickThings
   end
   
   def gather_color?(pixel_block, x, y)
-    color = pixel_block.color(x, y)
+    color = pixel_block.get_color(x, y)
     r, g, b = color.red, color.green, color.blue
     return r > g && g > b && r > 200 && (r-b) < 25
   end

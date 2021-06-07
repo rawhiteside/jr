@@ -127,6 +127,10 @@ class PapyrusAction < PickThings
     return total_count
   end
   
+  def retrace_steps?
+    true
+  end
+
   def log_time(label)
     start = Time.now
     count = yield
