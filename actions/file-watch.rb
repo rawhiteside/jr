@@ -4,7 +4,7 @@ require 'robot/keycodes.rb'
 class FileWatch < Action
   BASE = "C:/Program Files (x86)/Desert Nomad Studios/A Tale In The Desert/egyptc/"
   THING_TO_FILE = {
-    "cicadas" => ["ega0e00af7c9c816e63f7b37d0b04061ec6da068498.ega"],
+    "Cicadas" => ["ega0e00af7c9c816e63f7b37d0b04061ec6da068498.ega"],
 
     "Pigs" => [ 
       "ega179815eb10121f14dcb76c39555f9ca10730dc14.ega", 
@@ -16,17 +16,26 @@ class FileWatch < Action
     super('File Watch', 'Misc')
   end
 
+  def setup(parent)
+    gadgets = [
+      {:type => :combo, :label => 'Which window?', :name => 'which',
+       :vals => THING_TO_FILE.keys,
+      },
+    ]
+    @vals = UserIO.prompt(parent, name, action_name, gadgets)
+  end
 
   def act
-    files = THING_TO_FILE['cicadas']
+    key = @vals['which']
+    files = THING_TO_FILE[key]
     loop do
       check_for_pause
       files.each do |f|
         if File.exist?(BASE + f)
           beep
+          send_vk(VK_ESCAPE)
+          UserIO.info 'Found a #{key}'
           send_vk(VK_NUMLOCK)
-          sleep 1
-          UserIO.info 'Found a pig'
           return
         end
       end
