@@ -6,6 +6,7 @@ require 'robot'
 import org.foa.PixelBlock
 
 import org.foa.window.LegacyWindowGeom
+import org.foa.window.InventoryTextHelper
 import org.foa.window.AWindow
 import org.foa.window.PinnableWindow
 import org.foa.window.ClockLocWindow
@@ -167,28 +168,8 @@ class ConfirmationWindow < PopupWindow
 end
 
 
-class DarkWindow < AWindow
-  def initialize(rect)
-    super(rect)
-  end
-  
-  def isInk(color, x, y)
-    !background?(color)
-  end
 
-  def read_text
-    flush_text_reader
-    super
-  end
-
-  def background?(color)
-    color.red < 85 &&
-    color.green < 85  &&
-    color.blue < 85 
-  end
-end
-
-class InventoryWindow < DarkWindow
+class InventoryWindow < AWindow
   def self.find
     dim = ARobot.shared_instance.screen_size
     pt = Point.new(50, dim.height - 100)
@@ -197,6 +178,10 @@ class InventoryWindow < DarkWindow
 
   def initialize(rect)
     super(rect)
+  end
+
+  def getTextHelper()
+    InventoryTextHelper.new
   end
 
   def self.from_point(pt)
