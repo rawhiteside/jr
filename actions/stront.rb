@@ -1,7 +1,6 @@
 require 'action'
 require 'walker'
 require 'user-io'
-require 'actions/stat_clicks'
 
 import org.foa.window.ClockLocWindow
 
