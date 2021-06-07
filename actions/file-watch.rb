@@ -2,8 +2,10 @@ require 'action'
 require 'robot/keycodes.rb'
 
 class FileWatch < Action
-  BASE = "C:/eGenesis/A Tale in the Desert/egyptc/"
+  BASE = "C:/Program Files (x86)/Desert Nomad Studios/A Tale In The Desert/egyptc/"
   THING_TO_FILE = {
+    "cicadas" => ["ega0e00af7c9c816e63f7b37d0b04061ec6da068498.ega"],
+
     "Pigs" => [ 
       "ega179815eb10121f14dcb76c39555f9ca10730dc14.ega", 
       "egab75515f8819f22267d6e66748581ed382500345a.ega",
@@ -16,7 +18,7 @@ class FileWatch < Action
 
 
   def act
-    files = THING_TO_FILE['Pigs']
+    files = THING_TO_FILE['cicadas']
     loop do
       check_for_pause
       files.each do |f|
