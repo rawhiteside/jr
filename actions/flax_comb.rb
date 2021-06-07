@@ -29,6 +29,7 @@ class FlaxComb < Action
         end
         sleep delay
       end
+      sleep 1
     end
   end
 end

@@ -394,7 +394,7 @@ class FlaxSeeds < Action
     loc = [head[0] + pop_offset, head[1]]
     (@row_len-1).times {
       plant_and_pin(loc)
-      first_dir == 'right' ? @walker.right : @walker.left 
+      first_dir == 'right' ? @walker.right_big : @walker.left_big
       sleep(0.1)
     }
 
@@ -407,7 +407,7 @@ class FlaxSeeds < Action
     loc = [head[0] - pop_offset, head[1] + 100]
     @row_len.times {
       plant_and_pin(loc)
-      first_dir == 'left' ? @walker.right : @walker.left 
+      first_dir == 'left' ? @walker.right_big : @walker.left_big 
     }
   end
 

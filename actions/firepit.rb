@@ -216,7 +216,7 @@ class Firepit < ARobot
     white_count = 0
     pixels.height.times do |y|
       pixels.width.times do |x|
-	color = pixels.color(x, y)
+	color = pixels.getColor(x, y)
 	r, g, b = color.red, color.green, color.blue
 	bright_count += 1 if r + g + b >= BRIGHT
 	white_count += 1 if r == 0xFF && g == 0xFF && b == 0xFF

@@ -54,7 +54,7 @@ class Walker < ARobot
   POST_WALK_PAUSE = 0.25
 
   # Time for the key to be down for a good "step"
-  KEY_DELAY=0.075
+  KEY_DELAY=0.15
 
   # Time for the key to be down for a big "step"
   KEY_DELAY_BIG=0.25
@@ -83,7 +83,6 @@ class Walker < ARobot
   alias west left
 
   def right(delay = KEY_DELAY)
-    send_vk(VK_RIGHT, delay); sleep STEP_DELAY
     send_vk(VK_RIGHT, delay); sleep STEP_DELAY
   end
   alias east right
