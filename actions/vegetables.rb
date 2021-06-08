@@ -183,7 +183,7 @@ class Vegetables < Action
     with_robot_lock do 
       before = PixelBlock.new(@head_rect)
       @plant_win.refresh
-      @plant_win.click_on(@vegi_name)
+      @plant_win.click_on('Plant')
       builder = BuildMenu.new
       builder.build(build_recipe)
       plant_time = Time.new
