@@ -35,6 +35,7 @@ class PickThings < Action
       # another.
       @drag_path = [coords]
       count = gather_nearest_until_none(inventory_window)
+      puts "gather_nearest_until_none returned #{count}"
       total_count += count
       return total_count unless count > 0
       # Go back to the starting point and check again for more.
@@ -53,6 +54,7 @@ class PickThings < Action
   # Just gather the nearest thing until there's nothing to gather.
   # You may wander off following the things to gather.
   def gather_nearest_until_none(inventory_window)
+    puts "--gather_nearest_until_none"
     gather_count = gather_once(inventory_window)
     if gather_count > 0
       loop do
@@ -87,6 +89,7 @@ class PickThings < Action
           next
         end
         state = try_gather(pb, pt, inventory_window)
+        puts "try_gather returned #{state}"
         return 1 if state == :yes
         return 0 if state == :done_here
         skip_next = true if state == :no_and_skip
