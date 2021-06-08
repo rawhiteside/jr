@@ -133,7 +133,7 @@ class PickThings < Action
     end
 
     if click_on_this?(pb, pt)
-      inv_weight_before = inventory_window.read_text.split("/n").last.strip
+      inv_weight_before = inventory_window.read_text.split("\n").last.strip
       screen_x, screen_y  = pb.to_screen(pt.x, pt.y)
       point = Point.new(screen_x, screen_y)
 
@@ -153,9 +153,9 @@ class PickThings < Action
       # move along.
       10.times do
         sleep 0.4
-        inv_weight = inventory_window.read_text.split("/n").last.strip
+        inv_weight = inventory_window.read_text.split("\n").last.strip
         if inv_weight != inv_weight_before
-          puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
+          # puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
           sleep @post_gather_wait
           return :yes
         end
