@@ -61,7 +61,7 @@ class PickThings < Action
     if gather_count > 0
       loop do
         c = gather_once(inventory_window)
-        puts "--gather_nearest_until_none:  gather_once returned #{c}}"
+        puts "--gather_nearest_until_none:  gather_once returned #{c}"
         break unless c > 0
         update_drag_path if retrace_steps?
         gather_count += 1
@@ -159,11 +159,11 @@ class PickThings < Action
       # Wait for the inventory to change.  If not, then we clicked on
       # some ground that looked like something to gather.  Let's just
       # move along.
-      10.times do
+      5.times do
         sleep 0.4
         inv_weight = inventory_window.read_text.split("\n").last.strip
         if inv_weight != inv_weight_before
-          # puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
+          puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
           sleep @post_gather_wait
           return :yes
         end
