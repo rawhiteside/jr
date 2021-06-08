@@ -63,6 +63,7 @@ class PickThings < Action
         gather_count += 1
       end
     end
+    puts "--gather_nearest_until_none returned #{gather_count}"
     return gather_count
   end
 
@@ -89,7 +90,6 @@ class PickThings < Action
           next
         end
         state = try_gather(pb, pt, inventory_window)
-        puts "try_gather returned #{state}"
         return 1 if state == :yes
         return 0 if state == :done_here
         skip_next = true if state == :no_and_skip
