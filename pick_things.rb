@@ -162,7 +162,7 @@ class PickThings < Action
       5.times do
         sleep 0.4
         inv_weight = inventory_window.read_text.split("\n").last.strip
-        if inv_weight != inv_weight_before
+        if inventory_changed?(inv_weight,inv_weight_before)
           puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
           sleep @post_gather_wait
           return :yes
@@ -175,5 +175,12 @@ class PickThings < Action
     return :no
   end
 
+  # This is a hack, because I read the inventory window poorly.
+  # Digits seem to be OK, but letters suck.  Instead of fixing the
+  # real problem, I'll hack my way around it.  Just look at the
+  # digits.
+  def inventory_changed?(after, before)
+    after.tr('^0-9', '') != before.tr('^0-9', '')
+  end
 
 end
