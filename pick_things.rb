@@ -29,14 +29,12 @@ class PickThings < Action
   # again.  Repeat *that* until there's nothing at the coords.
   # Returns count of things gathered.
   def gather_until_none(walker, coords, inventory_window)
-    puts "-- gather_until_none, coords:#{coords}"
     total_count = 0
     loop do
       # Gather as many as we find, going from one silt pile to
       # another.
       @drag_path = [coords]
       count = gather_nearest_until_none(inventory_window)
-      puts "gather_nearest_until_none returned #{count}"
       total_count += count
       return total_count unless count > 0
       # Go back to the starting point and check again for more.
@@ -55,20 +53,15 @@ class PickThings < Action
   # Just gather the nearest thing until there's nothing to gather.
   # You may wander off following the things to gather.
   def gather_nearest_until_none(inventory_window)
-    puts "--gather_nearest_until_none"
     gather_count = gather_once(inventory_window)
-    puts "--gather_nearest_until_none:  initial count: #{gather_count}"
     if gather_count > 0
       loop do
         c = gather_once(inventory_window)
-        puts "--gather_nearest_until_none:  gather_once returned #{c}"
         break unless c > 0
         update_drag_path if retrace_steps?
         gather_count += 1
-        puts "--gather_nearest_until_none:  incremented count: #{gather_count}"
       end
     end
-    puts "--gather_nearest_until_none returned #{gather_count}"
     return gather_count
   end
 
@@ -163,12 +156,10 @@ class PickThings < Action
         sleep 0.4
         inv_weight = inventory_window.read_text.split("\n").last.strip
         if inventory_changed?(inv_weight,inv_weight_before)
-          puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
           sleep @post_gather_wait
           return :yes
         end
       end
-      puts "-- Inventory no change:  done here."
       return :done_here
     end
 
