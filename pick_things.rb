@@ -29,6 +29,7 @@ class PickThings < Action
   # again.  Repeat *that* until there's nothing at the coords.
   # Returns count of things gathered.
   def gather_until_none(walker, coords, inventory_window)
+    puts "-- gather_until_none, coords:#{coords}"
     total_count = 0
     loop do
       # Gather as many as we find, going from one silt pile to
