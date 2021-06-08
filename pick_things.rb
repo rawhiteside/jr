@@ -57,12 +57,15 @@ class PickThings < Action
   def gather_nearest_until_none(inventory_window)
     puts "--gather_nearest_until_none"
     gather_count = gather_once(inventory_window)
+    puts "--gather_nearest_until_none:  initial count: #{gather_count}"
     if gather_count > 0
       loop do
         c = gather_once(inventory_window)
+        puts "--gather_nearest_until_none:  gather_once returned #{c}}"
         break unless c > 0
         update_drag_path if retrace_steps?
         gather_count += 1
+        puts "--gather_nearest_until_none:  incremented count: #{gather_count}"
       end
     end
     puts "--gather_nearest_until_none returned #{gather_count}"
@@ -92,7 +95,6 @@ class PickThings < Action
           next
         end
         state = try_gather(pb, pt, inventory_window)
-        puts "try_gather returned #{state}"
         return 1 if state == :yes
         return 0 if state == :done_here
         skip_next = true if state == :no_and_skip
