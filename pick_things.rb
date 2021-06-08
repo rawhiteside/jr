@@ -155,10 +155,12 @@ class PickThings < Action
         sleep 0.4
         inv_weight = inventory_window.read_text.split("/n").last.strip
         if inv_weight != inv_weight_before
+          puts "-- inventory changed.  Before: #{inv_weight_before};  After: #{inv_weight}"
           sleep @post_gather_wait
           return :yes
         end
       end
+      puts "-- Inventory no change:  done here."
       return :done_here
     end
 
