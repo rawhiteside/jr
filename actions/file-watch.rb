@@ -34,8 +34,9 @@ class FileWatch < Action
         if File.exist?(BASE + f)
           beep
           send_vk(VK_ESCAPE)
-          UserIO.info 'Found a #{key}'
-          send_vk(VK_NUMLOCK)
+          UserIO.info "Found a #{key}"
+          #send_vk(VK_NUMLOCK)
+
           return
         end
       end
