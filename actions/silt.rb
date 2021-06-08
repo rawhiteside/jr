@@ -4,7 +4,7 @@ require 'walker'
 class SiltAction < PickThings
   def initialize
     super('Silt', 'Gather')
-    @post_gather_wait = 3
+    @post_gather_wait = 3.5
   end
 
   def setup(parent)
@@ -47,7 +47,6 @@ class SiltAction < PickThings
     color = pixel_block.get_color(x, y)
     r, g, b = color.red, color.green, color.blue
     return (r - g) > 5 && (g - b) > 5 && r > 180 && r < 220 && (r - b) < 25
-    #    return r > g && g > b && r > 180 && (r-b) < 25
   end
 
 end
