@@ -181,31 +181,7 @@ public abstract class AWindow extends ARobot  {
 	}
 
 	public static void dismissAll() {
-		final ARobot robot = new ARobot();
-		// A more or less random point that should be on everyone's screen.
-		final Point p = new Point(230, 600);
-		// Now, search left/up until we find a non-border pixel
-		while(LegacyWindowGeom.isOuterBorder(robot.getColor(p))) {
-			p.x -= 1;
-			p.y -= 1;
-			if (p.x == 0 || p.y == 0) {
-				throw new RuntimeException("Didn't find a non-border pixel");
-			}
-		}
-		robot.withRobotLock(new Runnable() {
-				public void run() {
-					// Force a delay.  We're probably here because things are laggy.
-					robot.mm(p, 0.1);
-					robot.sendVk(KeyEvent.VK_ESCAPE);
-					// Now, look to see if the pixel is now a border
-					// This happens when there wasn't anything to dismiss, so the
-					// self menu appeared.  If so, dismiss that.
-					robot.mm(p, 0.1);
-					if (LegacyWindowGeom.isOuterBorder(robot.getColor(p))) {
-						robot.sendVk(KeyEvent.VK_ESCAPE);
-					}
-				}
-			});
+		ARobot.sharedInstance().sendVk(KeyEvent.VK_ESCAPE);
 	}
 
 	/**
@@ -219,7 +195,7 @@ public abstract class AWindow extends ARobot  {
 		String[] path = menuPath.split("/");
 		claimRobotLock();
 		if(refreshLoc != null) {
-			w.refresh(refreshLoc);
+		w.refresh(refreshLoc);
 		}
 		try {
 			for(int i = 0; i < path.length; i++) {
