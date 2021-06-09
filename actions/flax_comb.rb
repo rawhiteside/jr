@@ -20,7 +20,7 @@ class FlaxComb < Action
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
       loop do
-        w.default_refresh_loc = 'tl'
+        PopupWindow.dismiss
         w.refresh
         w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
         if w.read_text.include?('Repair')
