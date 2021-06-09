@@ -146,8 +146,9 @@ class Vegetables < Action
     xhead = @vals['head.x'].to_i
     yhead = @vals['head.y'].to_i
 
-    # Needs to be down below the build menu.
-    tiler = Tiler.new(0, 190, 0.0)
+    # Needs to be down below the build menu.  Negative overlap, as the
+    # windows get larger at harvest time.
+    tiler = Tiler.new(0, 190, -0.2)
     tiler.y_offset = 20
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
