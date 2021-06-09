@@ -171,6 +171,7 @@ public class ARobot {
 
 	public void rclickAtRestore(Point p) {rclickAtRestore(p.x, p.y);}
 	public void rclickAtRestore(int x, int y) {
+		checkForPause();
 		Point prevPos = mousePos();
 		rclickAt(x, y);
 		mm(prevPos.x, prevPos.y);
@@ -178,6 +179,7 @@ public class ARobot {
 
 	public void lclickAtRestore(Point p) {lclickAtRestore(p.x, p.y);}
 	public void lclickAtRestore(int x, int y) {
+		checkForPause();
 		Point prevPos = mousePos();
 		lclickAt(x, y);
 		mm(prevPos.x, prevPos.y);
