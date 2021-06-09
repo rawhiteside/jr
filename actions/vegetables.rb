@@ -153,8 +153,8 @@ class Vegetables < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_recipe_left = [ [:nw], [:w], [:w, :w], [:nw, :w], [:sw], [:sw, :w], ]
-    build_recipe_right = [ [:ne], [:e], [:e, :e], [:ne, :e], [:se], [:se, :e], ]
+    build_recipe_left = [ [:nw], [:w], [:w, :w],  [:sw], ]
+    build_recipe_right = [ [:ne], [:e], [:e, :e], [:se], ]
     
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
