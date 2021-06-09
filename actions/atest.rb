@@ -111,7 +111,7 @@ class FindExactTest < Action
     gadgets = [
       {:type => :text, :label => 'Name of template (one word)', :name => 'name'}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Template image to find', gadgets)
+    @vals = UserIO.prompt(parent, name, 'Template image to find', gadgets)
   end
 
 
@@ -124,6 +124,18 @@ class FindExactTest < Action
   end
 end
 Action.add_action(FindExactTest.new)
+
+class ConfirmationTest < Action
+
+  def initialize(name = 'Test Confirmation yes/no')
+    super(name, 'Test/Dev')
+  end
+
+  def act
+    ConfirmationWindow.yes
+  end
+end
+Action.add_action(ConfirmationTest.new)
 
 class MouseWheelTest < Action
   def initialize(name = 'Use the mouse wheel')

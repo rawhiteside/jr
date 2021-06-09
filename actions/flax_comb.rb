@@ -20,6 +20,11 @@ class FlaxComb < Action
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
       loop do
+        # In case of "Really clean comb?"
+        # Happens if we fail to read the comb text.
+        # Won't be needed when the text read is perfect. 
+        ConfirmationWindow.no
+        sleep 0.1
         PopupWindow.dismiss
         w.refresh
         w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
