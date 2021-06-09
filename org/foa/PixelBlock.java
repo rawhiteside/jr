@@ -35,6 +35,11 @@ public class PixelBlock extends ARobot {
 		}
 	}
 
+	public static PixelBlock fullScreen() {
+		Dimension dim = s_screenDim;
+		return new PixelBlock(new Rectangle(0, 0, dim.width, dim.height));
+	}
+
 	public static PixelBlock constructBlank(Rectangle rect, int rgb) {
 		BufferedImage bi = new BufferedImage(rect.width, rect.height, BufferedImage.TYPE_INT_RGB);
 		for(int x = 0; x < rect.width; x++) {

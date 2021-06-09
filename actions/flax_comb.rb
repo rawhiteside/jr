@@ -27,6 +27,7 @@ class FlaxComb < Action
         sleep 0.1
         PopupWindow.dismiss
         w.refresh
+        stat_wait :end
         w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
         if w.read_text.include?('Repair')
           w.unpin

@@ -20,21 +20,15 @@ module Utils
     HowMuch.max
   end
 
-  # Is the skill-name present and non-red?
-  def stat_ok?(skill_name)
-    sw = SkillsWindow.new
-    color = sw.text_color(skill_name)
-    if color.nil? || color == :red || color == 'red'
-      return false
-    else
-      return true
-    end
-  end
-
   # Walk from here to the provided (x, y) location.  Path must be
   # clear.
   def walk(x, y)
     Walker.new.walk_to([x, y])
+  end
+
+  # Is the skill-name present and non-red?
+  def stat_ok?(stat)
+    Stats.stat_ok?(stat)
   end
 
   # Wait for a stat to be non-red in the skills window
@@ -55,3 +49,17 @@ module Utils
 
 end
 
+class Stats
+  @@image_files = {
+    :end => "END.png",
+    :foc => "FOC.png",
+    # :per => "PER.png",
+    :spd => "SPD.png",
+  }
+  @@images = {}
+  @@image_files.each { |k, v| @@images[k] = PixelBlock.load_image("images/#{v}")}
+
+  def self.stat_ok?(stat)
+    PixelBlock.full_screen.find_template_exact(@@images[stat]).nil?
+  end
+end
