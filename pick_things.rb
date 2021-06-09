@@ -2,6 +2,7 @@ require 'action'
 require 'square_with_radius'
 
 import org.foa.window.PinnableWindowGeom
+import org.foa.PixelBlock
 # 
 # A super class for gathering stuff:  silt, gravel, dig stones...
 # Main entry is "gather_until_done".
@@ -76,7 +77,7 @@ class PickThings < Action
 
   # Gather the nearest thing. Return number gathered (0/1)
   def gather_once(inventory_window)
-    pb = full_screen_capture
+    pb = PixelBlock.full_screen
     center = Point.new(pb.width/2, pb.height/2)
     max_rad = pb.height/2 - 200
     max_rad.times do |r|

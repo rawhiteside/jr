@@ -8,14 +8,12 @@ class FlaxComb < Action
 
   def setup(parent)
     gadgets = [
-      {:type => :number, :label => 'Delay seconds', :name => 'delay'},
       {:type => :point, :label => 'Drag to comb window. (or a stack of them)', :name => 'w'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
 
   def act
-    delay = @vals['delay'].to_i
     loop do
       w = PinnableWindow.from_point(point_from_hash(@vals, 'w'))
       break unless w
@@ -34,7 +32,7 @@ class FlaxComb < Action
           w.unpin
           break
         end
-        sleep delay
+        sleep 1
       end
       sleep 1
     end
