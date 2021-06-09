@@ -3,20 +3,21 @@ require 'timer'
 require 'window'
 require 'actions/kettles'
 
-class DefinePatchTest < Action
+class StaticPixelsTest < Action
 
-  def initialize(name = 'Define screen patch')
+  def initialize(name = 'Static pixels in patch')
     super(name, 'Test/Dev')
   end
 
   def setup(parent)
     gadgets = [
-      {:type => :label, :label => 'Define a screen rectangle to capture.'},
+      {:type => :label, :label => 'Define a screen rectangle to watch.'},
       {:type => :point, :label => 'Drag Top Left of rect', :name => 'tl'},
       {:type => :point, :label => 'Drag Bottom Right of rect', :name => 'br'},
+      {:type => :number, :label => 'Seconds to watch', :name => 'seconds'},
       {:type => :text, :label => 'Name of image (one word)', :name => 'name', :size => 12}
     ]
-    @vals = UserIO.prompt(parent, nil, 'Define subimage', gadgets)
+    @vals = UserIO.prompt(parent, name, 'Define subimage', gadgets)
 
   end
 
@@ -24,16 +25,37 @@ class DefinePatchTest < Action
   def act
     tl = point_from_hash(@vals, 'tl')
     br = point_from_hash(@vals, 'br')
+    secs = @vals['seconds'].to_i
+    start_time = Time.now
 
     rect = Rectangle.new(tl.x, tl.y, (br.x - tl.x), (br.y - tl.y))
-    pb = PixelBlock.new(rect)
+    pb_first = PixelBlock.new(rect)
+    loop do
+      pb = PixelBlock.new(rect)
+      clear_changed_pixels(pb_first, pb, 0xffffff)
+      sleep 0.05
+      break if (Time.now - start_time) > secs
+    end
+
     filename = "images/#{@vals['name']}.png"
-    pb.save_image(filename)
+    pb_first.save_image(filename)
     pb_new = PixelBlock.load_image(filename)
     UserIO.show_image(pb_new, "Image read back.")
+    UserIO.info("Done!")
+  end
+
+  # Look for pixels that differ between the two pb's.  If they're
+  # different, set the pb_ref pixel to +pixel+.
+  def clear_changed_pixels(pb_ref, pb, pixel)
+    pb.width.times do |x|
+      pb.height.times do |y|
+        pb_ref.set_pixel(x, y, pixel) if pb_ref.get_pixel(x, y) != pb.get_pixel(x, y)
+      end
+    end
   end
 
 end
+Action.add_action(StaticPixelsTest.new)
 
 class CaptureCLBackground < Action
 
