@@ -31,6 +31,7 @@ class FlaxGrow < Action
       {:type => :world_loc, :label => 'Grow starting location', :name => 'grow'},
       {:type => :world_loc, :label => 'Location of water', :name => 'water'},
       {:type => :world_loc, :label => 'Location near stash', :name => 'stash'},
+      {:type => :number, :label => 'Plant delay', :name => 'plant-delay'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -63,6 +64,7 @@ class FlaxGrow < Action
     plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     @flax_type = @vals['flax-type']
     @plant_point = plant_win.coords_for_line('Plant')
+    @plant_delay = @vals['plant-delay'].to_f
 
     water_count = FLAX_DATA[@flax_type][:water]
     @plant_wl = WorldLocUtils.parse_world_location(@vals['grow'])
@@ -131,6 +133,7 @@ class FlaxGrow < Action
     plots.each do |s|
       @walker.steps([s], KEY_DELAY) unless s == :none
       dlg = plant(pop_points[s])
+      sleep @plant_delay
       piler.pile(dlg)
       windows << dlg
     end

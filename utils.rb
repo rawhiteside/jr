@@ -26,6 +26,10 @@ module Utils
     Walker.new.walk_to([x, y])
   end
 
+  def stat_boosted?
+    Stats.stat_boosted?
+  end
+
   # Is the skill-name present and non-red?
   def stat_ok?(stat)
     Stats.stat_ok?(stat)
@@ -50,16 +54,23 @@ module Utils
 end
 
 class Stats
+  @@boosted_image = PixelBlock.load_image("images/boosted-stat.png")
   @@image_files = {
+    :str => "STR.png",
     :end => "END.png",
     :foc => "FOC.png",
-    # :per => "PER.png",
     :spd => "SPD.png",
+    # :per => "PER.png",
+    # :dex => "DEX.png",
   }
   @@images = {}
   @@image_files.each { |k, v| @@images[k] = PixelBlock.load_image("images/#{v}")}
 
   def self.stat_ok?(stat)
     PixelBlock.full_screen.find_template_exact(@@images[stat]).nil?
+  end
+
+  def self.stat_boosted?
+    PixelBlock.full_screen.find_template_exact(@@boosted_image)
   end
 end

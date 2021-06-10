@@ -118,7 +118,7 @@ class FindExactTest < Action
   def act
     filename = "images/#{@vals['name']}.png"
     template = PixelBlock.load_image(filename)
-    pb_full = PixelBLock.full_screen
+    pb_full = PixelBlock.full_screen
     pt = pb_full.find_template_exact(template)
     mm(pt) if pt
   end

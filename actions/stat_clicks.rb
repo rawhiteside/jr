@@ -146,15 +146,14 @@ class Eat < Action
   end
 
   # Eat iff:
-  # - Looking at skills window
-  # - Can see all stats
-  # - None are boosted
+  # - No stats are boosted
   def should_eat?
+    !stat_boosted?
   end
 
   def setup(parent)
     comps = [
-      {:type => :point, :name => 'p', :label => 'Drag to click location'},
+      {:type => :point, :name => 'p', :label => 'Drag to pinned food'},
     ]
     @vals = UserIO.prompt(parent, @name, @name, comps)
   end
@@ -166,26 +165,27 @@ class Eat < Action
     
     loop do
       if should_eat?
-        break if eat(w).nil? 
+        break if eat(w)
+        w.refresh
       end
+      return if w.read_text.strip == ''
       sleep 2
     end
   end
 
+  # Return true if we think we ate.
   def eat(w)
     w.refresh
     text = w.read_text
-    return true if text.include?('This is too far')
+    return false if text.include?('This is too far')
 
-    if text.include?('Kitchen')
-      with_robot_lock do
-        w.click_on 'Enjoy'
-        sleep 5
-        w.refresh
-        return true
-      end
+    # Don't know what a kitchen looks like yet. 
+    if w.click_on 'Consume'
+      sleep 5
+      w.refresh
+      return true
     else
-      return w.click_on 'Eat'
+      return false
     end
   end
 end
