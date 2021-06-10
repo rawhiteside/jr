@@ -164,9 +164,11 @@ class Eat < Action
     w = PinnableWindow.from_point(Point.new(x, y))
     
     loop do
-      eat(w) if should_eat?
-      w.refresh
-      break if w.read_text.strip == ''
+      if should_eat?
+        w.refresh
+        break if w.read_text.strip == ''
+        eat(w) 
+      end
       sleep 2
     end
   end
