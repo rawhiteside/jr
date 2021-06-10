@@ -90,7 +90,7 @@ public class PinnableWindowGeom extends ARobot {
 		int height = findHeight(pb, origin.x, origin.y);
 
 		if (height <= 30 || width <= 50) {
-			System.out.println("PinnableWindowGeom: Rectangle was too small: " + width + ", " + height);
+			if(debug) {System.out.println("PinnableWindowGeom: Rectangle was too small: " + width + ", " + height);}
 			return null;
 		}
 
