@@ -241,7 +241,10 @@ class Vegetables < Action
             w.refresh
           end
         end
-        @vegi_data[:water].times { w.click_on('Water') }
+        @vegi_data[:water].times do
+          w.click_on('Water')
+          w.refresh
+        end
       end
     end
     sleep(harvest_time - (Time.new - plant_time))
