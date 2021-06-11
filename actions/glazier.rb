@@ -9,7 +9,7 @@ class GlazierWindow < PinnableWindow
     super(rect)
     @done = false
     @state = :initializing
-    set_space_pixel_count(5)
+    # set_space_pixel_count(5)
   end
 
   # One of the two main methods.  This one:

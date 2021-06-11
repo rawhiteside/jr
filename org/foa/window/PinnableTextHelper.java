@@ -10,7 +10,7 @@ public class PinnableTextHelper implements ITextHelper{
 	public PinnableTextHelper() { }
 
 	public AFont getFontMap() {
-		return AFont.instance("data/pinnable-font.yaml");
+		return AFont.instance("data/font.yaml");
 	}
 	private static int MAX_BG_BRIGHTNESS = 100;
 	public boolean isInk(Color c, int x, int y) {
