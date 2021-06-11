@@ -4,7 +4,7 @@ require 'user-io'
 
 FLAX_DATA = {
   'Constitution Peak' => {},
-  "Jacob's Field" => {},
+  "Jacob" => {},
   "Nile Green" => {},
   "Old Dog" => {:water => 2},
   "Old Egypt" => {},
