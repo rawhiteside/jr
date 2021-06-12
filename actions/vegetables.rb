@@ -110,7 +110,7 @@ class Vegetables < Action
     walker = Walker.new
     @vegi_choice =  @vals['veggie']
     @vegi_name = @vals['veggie'].split('/')[1].strip
-    puts @vegi_name
+
     @vegi_data = VEGETABLE_DATA[@vals['veggie']]
     @repeat = @vals['repeat'].to_i
     @grow_location = WorldLocUtils.parse_world_location(@vals['grow'])
@@ -126,10 +126,13 @@ class Vegetables < Action
 
     beds = @vals['beds'].to_i
 
+    did_walk = true
     loop do
       walker.walk_to(@grow_location)
-      walker.up
-      walker.down
+      if did_walk
+        walker.up
+        walker.down
+      end
       sleep(1)
       repeat.times do
         @plant_win.refresh
@@ -137,6 +140,7 @@ class Vegetables < Action
       end
       walker.walk_to(@water_location)
       Icons.refill
+      did_walk = @water_location != @grow_location
     end
 
   end
@@ -153,8 +157,8 @@ class Vegetables < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_recipe_left = [ [:nw], [:w], [:w, :w],  [:sw], ]
-    build_recipe_right = [ [:ne], [:e], [:e, :e], [:se], ]
+    build_recipe_left =  [ [:w], [:nw], [:sw], [:w, :w],  ]
+    build_recipe_right = [ [:e], [:ne], [:se], [:e, :e], ]
     
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
@@ -189,6 +193,7 @@ class Vegetables < Action
       plant_time = Time.new
     end
 
+    sleep 0.01
     after = PixelBlock.new(@head_rect)
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
@@ -233,18 +238,16 @@ class Vegetables < Action
       delta = (Time.new - plant_time)
       delay = target_secs - delta
       sleep(delay)
-      with_robot_lock do
-        # At first, maybe have to wait for the menu to initialize itself.
-        if index == 0
-          until w.coords_for_line('Water')
-            sleep 0.5 
-            w.refresh
-          end
-        end
-        @vegi_data[:water].times do
-          w.click_on('Water')
+      # At first, maybe have to wait for the menu to initialize itself.
+      if index == 0
+        until w.coords_for_line('Water')
+          sleep 0.5 
           w.refresh
         end
+      end
+      w.refresh
+      @vegi_data[:water].times do
+        w.click_on('Water')
       end
     end
     sleep(harvest_time - (Time.new - plant_time))
