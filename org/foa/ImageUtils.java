@@ -256,7 +256,9 @@ public class ImageUtils {
 		for(int x = 0; x < bi.getWidth(); x++) {
 			for(int y = 0; y < bi.getHeight(); y++) {
 				Color color = new Color(bi.getRGB(x, y));
-				int pixel = (color.getRed() + color.getGreen() + color.getBlue()) / 3;
+				int pixel = Math.max(color.getRed(), color.getGreen());
+				pixel = Math.max(pixel, color.getBlue());
+
 				biOut.setRGB(x, y, pixel);
 			}
 		}
