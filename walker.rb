@@ -31,8 +31,9 @@ class Walker < ARobot
     :sw => [VK_DOWN, VK_LEFT],
   }
 
-  def initialize()
+  def initialize(stuck_watch = nil)
     super()
+    @stuck_watch = (!stuck_watch.nil?)
     
     # Directions to try going if we get stuck. 
     # We try one, then rotate the array. 
@@ -259,6 +260,7 @@ class Walker < ARobot
   # Give it the current coords each time we read them during walk_to.
   # Give nil to reset it (at the start of walk_to).
   def check_for_stuck(coords)
+    return unless @stuck_watch
     # 
     # Reset the stuck-checker
     if coords.nil?
