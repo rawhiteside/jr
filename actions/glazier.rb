@@ -1,4 +1,5 @@
 require 'action'
+require 'tempfile'
 import org.foa.text.TextReader
 
 class GlazierWindow < PinnableWindow
@@ -92,6 +93,24 @@ class GlazierWindow < PinnableWindow
     end
   end
 
+  # XXX for debuging font stuff
+  def check_text(text)
+    return unless text.include?("?")
+    puts "Saving image for this text:"
+    puts text
+    r = rect
+    r.x =- 5
+    r.y -= 5
+    r.width += 10
+    r.height += 10
+    image = PixelBlock.new(r)
+    Tempfile.create('glazier', './screen-shots') do |f|
+      file = f.path + '.png'
+      puts file
+      image.save_image(file)
+    end
+  end
+
 
   def data_vals
     flush_text_reader
@@ -99,6 +118,7 @@ class GlazierWindow < PinnableWindow
     with_robot_lock do
       refresh
       text = read_text
+      check_text text
     end
     vals = {}
     # Temp
@@ -230,7 +250,7 @@ class Glazier < Action
       'Make a Glass Jar',
       'Make a Glass Rod',
       'Make a Glass Pipe',
-      'Make a Glass Blade',
+      'Make a Glass Scythe Blade',
       'Make a Sheet', 
       'Make a batch of 12 Wine Bottles',
       'Make a Decorative Torch', 
