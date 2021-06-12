@@ -269,20 +269,12 @@ public class ImageUtils {
 	 * Computes an output image that has removed every pixel that has
 	 * a zero-value neighbor pixel. Looks at all eight.
 	 *
-	 * Just uses pixel valies directly, and looks for zero, where zero
-	 * is defined by threshold.  Pass this a brightness image.
+	 * Just uses pixel valies directly, and looks for zero.
 	 */
-	public static PixelBlock shrink(PixelBlock pb, int threshold) {
-		return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold, 0));
+	public static PixelBlock shrink(PixelBlock pb) {
+		return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), 0));
 	}
-	public static PixelBlock shrink(PixelBlock pb, int threshold, int count) {
-		return new PixelBlock(pb.origin(), shrink(pb.bufferedImage(), threshold, count));
-	}
-	public static BufferedImage shrink(BufferedImage bi, int threshold) {
-		return shrink(bi, threshold, 0);
-	}
-
-	public static BufferedImage shrink(BufferedImage bi, int threshold, int count) {
+	public static BufferedImage shrink(BufferedImage bi, int count) {
 		BufferedImage biOut =
 			new BufferedImage(bi.getWidth(), bi.getHeight(), BufferedImage.TYPE_INT_RGB);
 		WritableRaster raster = biOut.getRaster();
@@ -302,7 +294,7 @@ public class ImageUtils {
 		boolean flag = false;
 		for(int x = 1; x < bi.getWidth()-1; x++) {
 			for(int y = 1; y < bi.getHeight()-1; y++) {
-				int n = countZeroNeighbors(bi, x, y, threshold);
+				int n = countZeroNeighbors(bi, x, y);
 				if (n <= count) {
 					Color c = new Color(bi.getRGB(x, y));
 					int[] cvec = {c.getRed(), c.getGreen(), c.getBlue()};
@@ -316,17 +308,17 @@ public class ImageUtils {
 		return biOut;
 	}
 
-	private static int countZeroNeighbors(BufferedImage bi, int x, int y, int threshold) {
+	private static int countZeroNeighbors(BufferedImage bi, int x, int y) {
 		int count = 0;
-		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x-0, y-1) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x+1, y-1) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x-1, y-0) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x-0, y-0) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x+1, y-0) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x-1, y+1) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x-0, y+1) & 0xFFFFFF) < threshold) {count++;}
-		if ((bi.getRGB(x+1, y+1) & 0xFFFFFF) < threshold) {count++;}
+		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x-0, y-1) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x+1, y-1) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x-1, y-0) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x-0, y-0) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x+1, y-0) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x-1, y+1) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x-0, y+1) & 0xFFFFFF) == 0) {count++;}
+		if ((bi.getRGB(x+1, y+1) & 0xFFFFFF) == 0) {count++;}
 		return count;
 	}
 

@@ -202,7 +202,7 @@ class Vegetables < Action
     point_count = 0
     while true
       # Remove all edge pixels. 
-      xnew = ImageUtils.shrink(x, 1)
+      xnew = ImageUtils.shrink(x)
       point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
       break if point_new.nil?
       x = xnew
