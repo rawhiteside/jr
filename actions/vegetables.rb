@@ -196,6 +196,20 @@ class Vegetables < Action
     sleep 0.01
     after = PixelBlock.new(@head_rect)
 
+    point = find_click_point(before, after, search_dir)
+
+    return nil, nil unless point
+    
+    spoint = before.to_screen(point)
+
+    w = PinnableWindow.from_screen_click(spoint)
+    w.pin if w
+
+    return w, plant_time
+  end
+
+  def find_click_point(before, after, search_dir)
+
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
 
     # Shrink until there's no largest.
@@ -209,15 +223,8 @@ class Vegetables < Action
       point_count += 1
       point = point_new
     end
-    return nil, nil unless point
-    
-    spoint = x.to_screen(point)
-
-    w = PinnableWindow.from_screen_click(spoint)
-    w.pin if w
-
-    return w, plant_time
-  end
+    return point
+  end    
   
   def tend(w, plant_time)
     # Times in sec (relative to plant time) at which to water.
