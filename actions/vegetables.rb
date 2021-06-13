@@ -83,11 +83,11 @@ class Vegetables < Action
 
   # Size of a side of the square we look at to detect plants. Square
   # will be centered on your head.
-  SQUARE_SIZE = 300
+  SQUARE_SIZE = 500
 
   # The distance out that Jaby's arm reaches from the center of her
   # head.  Actually, picking up is larger.  Using this value for now. 
-  REACH_RADIUS = 30
+  REACH_RADIUS = 40
 
   def setup(parent)
     gadgets = [
@@ -209,6 +209,13 @@ class Vegetables < Action
   end
 
   def find_click_point(before, after, search_dir)
+    return find_click_point_f7(before, after, search_dir) if @vals['veggie'].include? 'Onion'
+    return find_click_point_f8(before, after, search_dir)
+  end
+
+  # When looking from face-on (onions)
+  def find_click_point_f7(before, after, search_dir)
+    puts "in f7"
 
     x = ImageUtils.brightness(ImageUtils.xor(before, after))
 
@@ -217,6 +224,27 @@ class Vegetables < Action
     while true
       # Remove all edge pixels. 
       xnew = ImageUtils.shrink(x)
+      # XXX This find_largest is silly, since this is an xor image.  What was I thinking?  
+      point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
+      break if point_new.nil?
+      x = xnew
+      point_count += 1
+      point = point_new
+    end
+    return point
+  end    
+  
+  # When looking from above. 
+  def find_click_point_f8(before, after, search_dir)
+
+    x = ImageUtils.brightness(ImageUtils.xor(before, after))
+
+    # Shrink until there's no largest.
+    point_count = 0
+    while true
+      # Remove all edge pixels. 
+      xnew = ImageUtils.shrink(x)
+      # XXX This find_largest is silly, since this is an xor image.  What was I thinking?  
       point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
       break if point_new.nil?
       x = xnew
