@@ -70,6 +70,19 @@ public class AFont {
 		save();
 	}
 
+	public void remove(String[] rows) {
+		ArrayList l = new ArrayList(Arrays.asList(rows));
+		String s = (String) m_map.remove(l);
+		if(s == null) {
+			System.out.println("AFont.Remove returned null");
+			System.out.println(String.join("\n", rows));
+		} else {
+			System.out.println("AFont.Remove returned: " + s);
+		}
+			
+		save();
+	}
+
 	private void p(String output) {
 		if (!m_logging) {return;}
 		System.out.println(output);

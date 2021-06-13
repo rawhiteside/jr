@@ -5,6 +5,108 @@ require 'actions/kettles'
 import org.foa.text.AFont
 import org.foa.text.InkSpots
 
+class SplitLongGlyphs < Action
+  def initialize
+    super('Split long glyphs', 'Test/Dev')
+  end
+
+  def setup(parent)
+    true
+  end
+
+  def act
+    afont = AFont.instance("data/font.yaml")
+    font_map = afont.font_map
+    font_map.keys.each do |key|
+      v = font_map[key]
+      break unless ask_about_glyph(afont, key, v) if v.length > 1
+    end
+  end
+
+  def ask_about_glyph(afont, glyph, chars)
+
+    comps = [
+      {:type => :text, :name => 'widths', :label => 'Give the width of each letter, comma separated'},
+      {:type => :text, :name => 'abort', :label => 'Put something here to abort.'},
+      {:type => :label, :label => "Text is: #{chars}"},
+      {:type => :big_text, :editable => false, :label => 'Glyph',
+	:name => 'glyph', :value => glyph.join("\n"), :rows => 20, :cols => 100},
+    ]
+    vals = UserIO.prompt(nil, nil, 'Split this?', comps)
+    return true unless vals
+    return false if vals['abort'].length > 0
+
+    answer = vals['widths']
+    return true unless answer
+    return true if answer.delete(' ').length == 0
+    widths  = []
+    answer.delete(' ').split(',').each {|a| widths << a.to_i}
+    if widths.length != chars.length
+      UserIO.error("Got #{widths.length} widths for #{chars.length} characters.")
+      return
+    end
+    total_width = 0
+    widths.each {|w| total_width += w}
+    if total_width != glyph[0].length
+      UserIO.error("Total width #{total_width}, bus glyph width #{glyph[0].length}")
+      return true
+    end
+    
+    add_split_glyphs(afont, glyph, widths, chars)
+
+    return true
+  end
+
+  def add_split_glyphs(afont, glyph, widths, str)
+
+    save_glyph = glyph.to_a
+
+    all_OK = true
+    widths.length.times do |i|
+      front = []
+      back = []
+      glyph.each do |line|
+        front << line[0, widths[i]]
+        back << line[widths[i], line.length - widths[i]]
+      end
+      glyph = back
+      trim_height(front)
+      all_OK &&= add_it(afont, front, str[i])
+
+    end
+    if all_OK
+      puts "Removing"
+      afont.remove(save_glyph)
+    end
+  end
+
+  def trim_height(lines)
+    # Trim the top
+    lines.shift while lines[0].strip.length == 0
+    # and the bottom
+    lines.pop while lines[-1].strip.length == 0
+  end
+
+  # Returns where it seemed to work.
+  def add_it(afont, glyph, letter)
+    if afont.text_for(glyph) != '?'
+      puts "#{letter} --Already presnt. "
+    else
+      afont.add(glyph, letter)
+      puts " #{letter} -- Letter added."
+    end
+
+    if afont.text_for(glyph) != '?'
+      return true
+    else
+      return false
+    end
+
+  end
+
+end
+Action.add_action(SplitLongGlyphs.new)
+
 class AcquireFont < Action
   def initialize
     super('Acquire font', 'Test/Dev')
