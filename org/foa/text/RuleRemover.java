@@ -6,16 +6,16 @@ public class RuleRemover {
 
 	// Elements of the array list are strings of 0/1.  0 (black) is
 	// ink.
-	public static ArrayList removeRules(ArrayList<String> rows, int max) {
+	public static ArrayList removeRules(ArrayList<String> rows, int maxV, int maxH) {
 		byte[][] bytes = toByteArray(rows);
 		//dump(bytes, "Start");
 		// Remove the vertical rules first, to transpose first. 
 
 		bytes = transpose(bytes);
-		removeHRules(bytes, max);
+		removeHRules(bytes, maxV);
 
 		bytes = transpose(bytes);
-		removeHRules(bytes, max);
+		removeHRules(bytes, maxH);
 
 		ArrayList<String> out = new ArrayList<String>();
 		for(int i = 0; i < bytes.length; i++) {

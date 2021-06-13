@@ -125,7 +125,7 @@ public class InkSpots {
 			newRows.add(row.toString());
 		}
 		if(textHelper.doRemoveRules()) {
-			newRows = RuleRemover.removeRules(newRows, 14);
+			newRows = RuleRemover.removeRules(newRows, 14, 30);
 		}
 
 		return new InkSpots(rect.x, rect.y, (String[]) newRows.toArray(new String[0]), textHelper);
