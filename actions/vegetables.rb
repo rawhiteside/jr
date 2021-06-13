@@ -101,6 +101,8 @@ class Vegetables < Action
       {:type => :number, :label => 'Second water (~15-30).', :name => 'second'},
       {:type => :number, :label => 'Third water (~30-45).', :name => 'third'},
       {:type => :number, :label => 'Fourth water (~30-45).', :name => 'fourth'},
+      {:type => :checkbox, :label => 'Overhead camera.', :name => 'f8-cam'},
+      
     ]
     @vals =  UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
@@ -109,6 +111,8 @@ class Vegetables < Action
     walker = Walker.new
     @vegi_choice =  @vals['veggie']
     @vegi_name = @vals['veggie'].split('/')[1].strip
+
+    @is_f8 = (@vals['f8-cam'] == 'true')
 
     @vegi_data = VEGETABLE_DATA[@vals['veggie']]
     @repeat = @vals['repeat'].to_i
@@ -120,7 +124,7 @@ class Vegetables < Action
                                SQUARE_SIZE, SQUARE_SIZE)
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
     if @plant_win.nil?
-      puts "Didn't find plant menu."
+      UserIO.error "Didn't find plant menu."
       return
     end
 
@@ -129,7 +133,7 @@ class Vegetables < Action
     did_walk = true
     loop do
       walker.walk_to(@grow_location)
-      if did_walk
+      if did_walk && @is_f8
         walker.up
         walker.down
       end
@@ -190,7 +194,7 @@ class Vegetables < Action
       plant_time = Time.new
     end
 
-    sleep 0.01
+    sleep 0.8
     after = PixelBlock.new(@head_rect)
 
     point = find_click_point(before, after, search_dir)
@@ -208,8 +212,8 @@ class Vegetables < Action
   end
 
   def find_click_point(before, after, search_dir)
-    return find_click_point_f7(before, after, search_dir) if @vals['veggie'].include? 'Onion'
-    return find_click_point_f8(before, after, search_dir)
+    return find_click_point_f8(before, after, search_dir) if @is_f8
+    return find_click_point_f7(before, after, search_dir)
   end
 
   def make_search_image(before, after)
