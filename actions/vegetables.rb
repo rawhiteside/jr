@@ -157,8 +157,8 @@ class Vegetables < Action
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
     
-    build_recipe_left =  [ [:w], [:nw], [:sw], [:w, :w],  ]
-    build_recipe_right = [ [:e], [:ne], [:se], [:e, :e], ]
+    build_recipe_left =  [ [:nw], [:w], [:w, :w], [:sw],  ]
+    build_recipe_right = [ [:ne], [:e], [:e, :e], [:se], ]
     
     plant_side(max_plants/2, tiler, build_recipe_left, 'left')
     plant_side(max_plants - (max_plants/2), tiler, build_recipe_right, 'right')
@@ -204,6 +204,7 @@ class Vegetables < Action
 
     w = PinnableWindow.from_screen_click(spoint)
     w.pin if w
+    UserIO.show_image(ImageUtils.xor(before, after)) if w.nil? 
 
     return w, plant_time
   end
@@ -215,23 +216,29 @@ class Vegetables < Action
 
   # When looking from face-on (onions)
   def find_click_point_f7(before, after, search_dir)
-    puts "in f7"
 
-    x = ImageUtils.brightness(ImageUtils.xor(before, after))
+    xor = ImageUtils.brightness(ImageUtils.xor(before, after))
 
-    # Shrink until there's no largest.
-    point_count = 0
-    while true
-      # Remove all edge pixels. 
-      xnew = ImageUtils.shrink(x)
-      # XXX This find_largest is silly, since this is an xor image.  What was I thinking?  
-      point_new = ImageUtils.find_largest(xnew, search_dir, REACH_RADIUS)
-      break if point_new.nil?
-      x = xnew
-      point_count += 1
-      point = point_new
+    # Shrink thrice
+    xor = ImageUtils.shrink(ImageUtils.shrink(ImageUtils.shrink(xor)));
+
+    # Clobber the center column (where Jaby is standing)
+    xstart = xor.width / 2 - REACH_RADIUS
+    xor.rect.height.times do |y|
+      xstart.upto(xstart + 2 * REACH_RADIUS) do |x|
+        xor.set_pixel(x, y, 0)
+      end
     end
-    return point
+
+    # Now, search up from the bottom and find a non-zero pixel.
+    (xor.rect.height - 1).downto(0) do |y|
+      xor.rect.width.times do |x|
+        return Point.new(x, y) if xor.get_pixel(x, y) != 0
+      end
+    end
+
+
+    return nil
   end    
   
   # When looking from above. 
