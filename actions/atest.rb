@@ -83,9 +83,9 @@ class CaptureCLBackground < Action
 end
 Action.add_action(CaptureCLBackground.new)
 
-class HowMuchTest < Action
+class BunnyWatch < Action
 
-  def initialize(name = 'Test HowMuch')
+  def initialize(name = 'Watch for bunnies')
     super(name, 'Test/Dev')
   end
 
@@ -93,12 +93,41 @@ class HowMuchTest < Action
     true
   end
 
+  THRESH = 100
   def act
-    check_for_pause
-    HowMuch.amount(2)
+    pb = PixelBlock.full_screen
+    loop do
+      sleep 1
+      pbNew = PixelBlock.full_screen
+      xor = ImageUtils.brightness(ImageUtils.xor(pb, pbNew))
+      ImageUtils.applyThreshold(xor, 15);
+      
+      xor = ImageUtils.shrink(xor)
+      if count_pixels(xor) > THRESH
+        UserIO.show_image xor
+        UserIO.show_image ImageUtils.shrink(xor)
+        UserIO.show_image ImageUtils.xor(pb, pbNew)
+        
+        beep
+        break
+      end
+      pb = pbNew
+      
+    end
+  end
+
+  def count_pixels(pb)
+    count = 0
+    pb.rect.width.times do |x|
+      pb.rect.height.times do |y|
+        count += 1 if pb.get_pixel(x, y) != 0
+      end
+    end
+    puts "count was #{count}"
+    return count
   end
 end
-Action.add_action(HowMuchTest.new)
+Action.add_action(BunnyWatch.new)
 
 
 class FindExactTest < Action

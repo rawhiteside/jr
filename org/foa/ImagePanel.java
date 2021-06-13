@@ -35,7 +35,7 @@ public class ImagePanel extends JPanel implements ActionListener {
 	private static final String SAT = "Sat";
 	private static final String LUM = "Lum";
 	private static final String EDGES = "Edges";
-	private static final String SHARPEN = "Sharpen";
+	private static final String BW = "BW";
 
 	private void addButtons() {
 		Box box = Box.createVerticalBox();
@@ -49,6 +49,7 @@ public class ImagePanel extends JPanel implements ActionListener {
 		box.add(makeButton(HUE));
 		box.add(makeButton(SAT));
 		box.add(makeButton(LUM));
+		box.add(makeButton(BW));
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -101,6 +102,12 @@ public class ImagePanel extends JPanel implements ActionListener {
 			hsb = Color.RGBtoHSB(c.getRed(), c.getGreen(), c.getBlue(), null);
 			c = new Color(hsb[2], hsb[2], hsb[2]);
 			break;
+		case BW:
+			if((pixel & 0xFFFFFF) == 0) {
+				return 0;
+			} else {
+				return 0xFFFFFF;
+			}
 		}
 		return c.getRGB();
 	}

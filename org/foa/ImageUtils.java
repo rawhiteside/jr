@@ -158,6 +158,18 @@ public class ImageUtils {
 		}
 	}
 
+	public static void applyThreshold(PixelBlock pb, int threshold) {
+		BufferedImage bi = pb.bufferedImage();
+		for(int x = 0; x < bi.getWidth(); x++) {
+			for(int y = 0; y < bi.getHeight(); y++) {
+				int pixel = bi.getRGB(x, y) & 0xFFFFFF;
+				if (pixel < threshold) {
+					bi.setRGB(x, y, 0);
+				}
+			}
+		}
+	}
+
 	/**
 	 * AND the two pixelblocks. 
 	 */
@@ -294,32 +306,32 @@ public class ImageUtils {
 		boolean flag = false;
 		for(int x = 1; x < bi.getWidth()-1; x++) {
 			for(int y = 1; y < bi.getHeight()-1; y++) {
-				int n = countZeroNeighbors(bi, x, y);
-				if (n <= count) {
+				if (hasBlackNeighbors(bi, x, y)) {
+					raster.setPixel(x, y, zeros);
+				}
+				else {
 					Color c = new Color(bi.getRGB(x, y));
 					int[] cvec = {c.getRed(), c.getGreen(), c.getBlue()};
 					raster.setPixel(x, y, cvec); 
-				}
-				else {
-					raster.setPixel(x, y, zeros);
 				}
 			}
 		}
 		return biOut;
 	}
 
-	private static int countZeroNeighbors(BufferedImage bi, int x, int y) {
+	private static boolean hasBlackNeighbors(BufferedImage bi, int x, int y) {
 		int count = 0;
-		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x-0, y-1) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x+1, y-1) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x-1, y-0) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x-0, y-0) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x+1, y-0) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x-1, y+1) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x-0, y+1) & 0xFFFFFF) == 0) {count++;}
-		if ((bi.getRGB(x+1, y+1) & 0xFFFFFF) == 0) {count++;}
-		return count;
+		if ((bi.getRGB(x-1, y-1) & 0xFFFFFF) == 0) {return true;}
+		if ((bi.getRGB(x-0, y-1) & 0xFFFFFF) == 0) {return true;}
+		if ((bi.getRGB(x+1, y-1) & 0xFFFFFF) == 0) {return true;}
+
+		if ((bi.getRGB(x-1, y-0) & 0xFFFFFF) == 0) {return true;}
+		if ((bi.getRGB(x+1, y-0) & 0xFFFFFF) == 0) {return true;}
+
+		if ((bi.getRGB(x-1, y+1) & 0xFFFFFF) == 0) {return true;}
+		if ((bi.getRGB(x-0, y+1) & 0xFFFFFF) == 0) {return true;}
+		if ((bi.getRGB(x+1, y+1) & 0xFFFFFF) == 0) {return true;}
+		return false;
 	}
 
 	/**

@@ -95,7 +95,6 @@ class Vegetables < Action
        :vals => VEGETABLE_DATA.keys.sort},
       {:type => :world_loc, :label => 'Growing spot', :name => 'grow'},
       {:type => :world_loc, :label => 'Location of water', :name => 'water'},
-      {:type => :point, :label => 'Drag onto your head', :name => 'head'},
       {:type => :point, :label => 'Drag onto plant button', :name => 'plant'},
       {:type => :number, :label => 'Rounds until water needed', :name => 'repeat'},
       {:type => :number, :label => 'Number of beds.', :name => 'beds'},
@@ -115,8 +114,9 @@ class Vegetables < Action
     @repeat = @vals['repeat'].to_i
     @grow_location = WorldLocUtils.parse_world_location(@vals['grow'])
     @water_location = WorldLocUtils.parse_world_location(@vals['water'])
-    @head_rect = Rectangle.new(@vals['head.x'].to_i - SQUARE_SIZE/2,
-                               @vals['head.y'].to_i - SQUARE_SIZE/2, 
+    dim = screen_size
+    @head_rect = Rectangle.new(dim.width/2 - SQUARE_SIZE/2,
+                               dim.height/2 - SQUARE_SIZE/2, 
                                SQUARE_SIZE, SQUARE_SIZE)
     @plant_win = PinnableWindow.from_point(Point.new(@vals['plant.x'].to_i, @vals['plant.y'].to_i))
     if @plant_win.nil?
@@ -146,9 +146,6 @@ class Vegetables < Action
   end
 
   def one_pass(max_plants)
-
-    xhead = @vals['head.x'].to_i
-    yhead = @vals['head.y'].to_i
 
     # Needs to be down below the build menu.  Negative overlap, as the
     # windows get larger at harvest time.
@@ -205,6 +202,7 @@ class Vegetables < Action
     w = PinnableWindow.from_screen_click(spoint)
     w.pin if w
     UserIO.show_image(ImageUtils.xor(before, after)) if w.nil? 
+    UserIO.show_image(make_search_image(before, after)) if w.nil?
 
     return w, plant_time
   end
@@ -214,13 +212,17 @@ class Vegetables < Action
     return find_click_point_f8(before, after, search_dir)
   end
 
-  # When looking from face-on (onions)
-  def find_click_point_f7(before, after, search_dir)
-
+  def make_search_image(before, after)
     xor = ImageUtils.brightness(ImageUtils.xor(before, after))
+    ImageUtils.applyThreshold(xor, 15)
 
     # Shrink thrice
     xor = ImageUtils.shrink(ImageUtils.shrink(ImageUtils.shrink(xor)));
+    return xor
+  end
+  # When looking from face-on (onions)
+  def find_click_point_f7(before, after, search_dir)
+    xor = make_search_image(before, after)
 
     # Clobber the center column (where Jaby is standing)
     xstart = xor.width / 2 - REACH_RADIUS
