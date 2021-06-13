@@ -231,7 +231,7 @@ public class PinnableWindow extends AWindow {
 			double postDismissDelay = 0.0;
 			double delay = 0.05;
 			// May need to try several times.
-			for(int kk = 0; kk < 5; kk++) {
+			for(int kk = 0; kk < 2; kk++) {
 				robot.mm(new Point(pt.x, pt.y - 1), delay);
 				robot.sleepSec(postDismissDelay);
 				robot.mm(pt, delay);

@@ -18,7 +18,7 @@ public class PinnableTextHelper implements ITextHelper{
 		return bright > MAX_BG_BRIGHTNESS;
 	}
 
-	public boolean doRemoveRules() { return false; }
+	public boolean doRemoveRules() { return true; }
 
 	public void startTextScan(PixelBlock pb) {}
 
