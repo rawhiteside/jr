@@ -43,6 +43,7 @@ public class TextReader {
 	public String readText() {
 		return readText(true);
 	}
+	// splitGlyphs(false) used by acquire-font
 	public String readText(boolean splitGlyphs) {
 		StringBuilder sb = new StringBuilder();
 		for (InkSpots[] line : glyphs) {

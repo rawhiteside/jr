@@ -75,7 +75,6 @@ class SplitLongGlyphs < Action
 
     end
     if all_OK
-      puts "Removing"
       afont.remove(save_glyph)
     end
   end
@@ -89,7 +88,9 @@ class SplitLongGlyphs < Action
 
   # Returns where it seemed to work.
   def add_it(afont, glyph, letter)
-    if afont.text_for(glyph) != '?'
+    puts "Adding this: "
+    puts glyph.join("\n")
+    if !afont.text_for(glyph).include?('?')
       puts "#{letter} --Already presnt. "
     else
       afont.add(glyph, letter)

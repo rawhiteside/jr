@@ -33,6 +33,10 @@ public class ClockLocWindow extends AWindow {
 		return new ClockLocTextHelper();
 	}
 
+	public boolean shouldLogReadTextErrors() {
+		return false;
+	}
+
 	public TextReader textReader() {
 		flushTextReader();
 		return super.textReader();

@@ -15,9 +15,6 @@ public class AFont {
 	private String UNKNOWN_GLYPH = "?";
 	private String m_fontFile = null;
 	//
-	// When dealing with complex glyphs, consider only templates at
-	// least this wide.
-	private int MIN_COMPLEX_HEAD_WIDTH = 2;
 
 	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
 	private boolean m_logging = false;
@@ -93,10 +90,6 @@ public class AFont {
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
 		if (rows.length == 0) { return " ";}
-		// Ignore single, isolated pixels.
-		if(rows.length == 1 && rows[0].length() == 1) {
-			return "";
-		}
 		
 		String val = (String) m_map.get(l);
 		if (val != null) {
@@ -129,6 +122,7 @@ public class AFont {
 	 *
 	 */
 	private String textForComplexGlyph(String[] complexGlyph) {
+
 		// Elements in keys are themselves arraylists of Strings.
 		int bestCount = 0;
 		String[] bestGlyph = null;
@@ -139,9 +133,6 @@ public class AFont {
 			String val = (String) m_map.get(key);
 			if (key.size() == 0) {continue;}
 			String[] template = key.toArray(new String[0]);
-
-			// Ignore very narrow templates for this.
-			if (template[0].length() < MIN_COMPLEX_HEAD_WIDTH) {continue;}
 
 			// If template is wider than complex, no joy
 			if(template[0].length() >= complexGlyph[0].length()) {continue;}

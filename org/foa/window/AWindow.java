@@ -4,6 +4,7 @@ import org.foa.robot.*;
 import org.foa.text.*;
 import org.foa.*;
 
+import java.io.File;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -115,11 +116,30 @@ public abstract class AWindow extends ARobot  {
 		sleepSec(0.05);
 	}
 
-	public String readText() 
-	{ 
-		return textReader().readText(); 
+	public boolean shouldLogReadTextErrors() {
+		return true;
 	}
 
+	public String readText() {
+		String text = textReader().readText(); 
+		if (shouldLogReadTextErrors()) { checkText(text); }
+		return text;
+	}
+
+	private void checkText(String text) {
+		try {
+			if (!text.contains("?")) { return; }
+			PixelBlock pb = new PixelBlock(getRect());
+			File f = File.createTempFile("txt-err", ".png", new File("./screen-shots"));
+			pb.saveImage(f.getPath());
+			beep();
+		} catch(Exception e) {
+			System.out.println("Exception in checkText.");
+			e.printStackTrace();
+		}
+	}
+
+	
 	// Default here is Legacy windows.
 	public ITextHelper getTextHelper() {
 		return new LegacyTextHelper();
