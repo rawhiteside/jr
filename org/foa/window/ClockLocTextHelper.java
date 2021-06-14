@@ -10,6 +10,7 @@ public class ClockLocTextHelper implements ITextHelper{
 		"ClockLoc-green.png",
 		"ClockLoc-orange.png",
 		"ClockLoc-yellow.png",
+		"ClockLoc-teal.png",
 	};
 	private static PixelBlock[] s_images = new PixelBlock[s_bgImageNames.length];
 	static {
