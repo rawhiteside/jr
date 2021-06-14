@@ -8,6 +8,22 @@ class Vegetables < Action
   end
 
   VEGETABLE_DATA = {
+    "Eggplant/Qetesh's Soil/(2) sand" => {
+      :water => 2,
+      :min_width => 240,
+    },
+    "Eggplant/Stranger's Solana/(2) sand" => {
+      :water => 2,
+      :min_width => 240,
+    },
+    "Eggplant/Isis' Bounty/(4) sand" => {
+      :water => 3,
+      :min_width => 240,
+    },
+    "Eggplant/Isis Seed/(1) sand" => {
+      :water => 1,
+      :min_width => 240,
+    },
     "Cucumbers/Wadjet's Garden/(2) grass" => {
       :water => 2,
       :min_width => 240,
@@ -56,7 +72,7 @@ class Vegetables < Action
     },
 
 
-    "Leeks/Horus' Grain/(3 waters!)" => {
+    "Leeks/Horus' Grain/(2) sand" => {
       :water => 3,
       :min_width => 211,
     },
@@ -70,13 +86,21 @@ class Vegetables < Action
       :water => 1,
       :min_width => 228,
     },
-    'Onions/Tears of Sinai/(2)' => {
+    "Onions/Tears of Sinai/(2)" => {
       :water => 2,
       :min_width => 228,
     },
 
-    'Watermelons/Geb\'s Produce/(1)' => {
+    "Watermelons/Geb's Produce/(1) grass" => {
       :water => 1,
+      :min_width => 272,
+    },
+    "Watermelons/Isis' Bounty/(4) grass, sand" => {
+      :water => 3,
+      :min_width => 272,
+    },
+    "Watermelons/Set's Vintage/(2) grass" => {
+      :water => 2,
       :min_width => 272,
     },
   }
