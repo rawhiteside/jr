@@ -93,25 +93,6 @@ class GlazierWindow < PinnableWindow
     end
   end
 
-  # XXX for debuging font stuff
-  def check_text(text)
-    return unless text.include?("?")
-    puts "Saving image for this text:"
-    puts text
-    r = rect
-    r.x =- 5
-    r.y -= 5
-    r.width += 10
-    r.height += 10
-    image = PixelBlock.new(r)
-    Tempfile.create('glazier', './screen-shots') do |f|
-      file = f.path + '.png'
-      puts file
-      image.save_image(file)
-    end
-  end
-
-
   def data_vals
     flush_text_reader
     text = nil
