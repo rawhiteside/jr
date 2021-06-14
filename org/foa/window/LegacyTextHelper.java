@@ -29,5 +29,4 @@ public class LegacyTextHelper implements ITextHelper{
 
 	public int spacePixelCount() { return m_spacePixelCount; }
 
-	public int textInset() { return 0;}
 }
