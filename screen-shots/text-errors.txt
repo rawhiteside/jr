@@ -1,0 +1,1 @@
+This will get screenshots of text read failures.
