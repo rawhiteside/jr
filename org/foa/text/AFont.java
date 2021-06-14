@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.util.Arrays;
 
 import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.DumperOptions;
 
 
 public class AFont {
@@ -48,7 +49,11 @@ public class AFont {
 	public void save() {
 		try {
 			FileWriter w = new FileWriter(m_fontFile);
-			Yaml yaml = new Yaml();
+			DumperOptions options = new DumperOptions();
+			options.setIndent(2);
+			options.setPrettyFlow(true);
+			options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);			
+			Yaml yaml = new Yaml(options);
 			try { yaml.dump(m_map, w); }
 			finally { w.close(); }
 		} catch (Exception e) {
@@ -84,6 +89,7 @@ public class AFont {
 		if (!m_logging) {return;}
 		System.out.println(output);
 	}
+
 
 	public String textFor(String[] rows) {
 		dumpGlyph(rows, "textFor this");
@@ -130,8 +136,9 @@ public class AFont {
 		Iterator itr = m_map.keySet().iterator();
 		while (itr.hasNext()) {
 			ArrayList<String> key = (ArrayList<String>) itr.next();
-			String val = (String) m_map.get(key);
 			if (key.size() == 0) {continue;}
+
+			String val = (String) m_map.get(key);
 			String[] template = key.toArray(new String[0]);
 
 			// If template is wider than complex, no joy
