@@ -128,7 +128,7 @@ public abstract class AWindow extends ARobot  {
 
 	private void checkText(String text) {
 		try {
-			if (!text.contains("?")) { return; }
+			if (!text.contains(AFont.UNKNOWN_GLYPH)) { return; }
 			PixelBlock pb = new PixelBlock(getRect());
 			File f = File.createTempFile("txt-err", ".png", new File("./screen-shots"));
 			pb.saveImage(f.getPath());

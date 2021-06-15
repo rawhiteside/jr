@@ -13,7 +13,8 @@ public class AFont {
 	
 	private static Map s_instances = new HashMap();
 	private Map m_map;
-	private String UNKNOWN_GLYPH = "?";
+	private static char[] m_bytes = { 0xbf };
+	public static String UNKNOWN_GLYPH = new String(m_bytes);
 	private String m_fontFile = null;
 	//
 
@@ -96,6 +97,8 @@ public class AFont {
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
 		if (rows.length == 0) { return " ";}
+		// If it's just a horizontal line that made it through the rule remove, then just make it a space.
+		if (rows.length == 1 && rows[0].length() > 4) { return " ";}
 		
 		String val = (String) m_map.get(l);
 		if (val != null) {

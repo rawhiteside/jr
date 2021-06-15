@@ -90,14 +90,14 @@ class SplitLongGlyphs < Action
   def add_it(afont, glyph, letter)
     puts "Adding this: "
     puts glyph.join("\n")
-    if !afont.text_for(glyph).include?('?')
+    if !afont.text_for(glyph).include?(AFont.UNKNOWN_GLYPH)
       puts "#{letter} --Already presnt. "
     else
       afont.add(glyph, letter)
       puts " #{letter} -- Letter added."
     end
 
-    if afont.text_for(glyph) != '?'
+    if afont.text_for(glyph) != AFont.UNKNOWN_GLYPH
       return true
     else
       return false
@@ -173,7 +173,7 @@ class AcquireFont < Action
 
   def process_line(glyph_line, glyphs)
     glyphs.each do |g|
-      if g.to_s.include?('?')
+      if g.to_s.include?(AFont.UNKNOWN_GLYPH)
 	line = ''
 	glyphs.each {|gl| line << gl.to_s}
 	handle_glyph(line, g)
