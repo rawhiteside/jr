@@ -61,7 +61,6 @@ class SplitLongGlyphs < Action
 
     save_glyph = glyph.to_a
 
-    all_OK = true
     widths.length.times do |i|
       front = []
       back = []
@@ -71,12 +70,10 @@ class SplitLongGlyphs < Action
       end
       glyph = back
       trim_height(front)
-      all_OK &&= add_it(afont, front, str[i])
+      add_it(afont, front, str[i])
 
     end
-    if all_OK
-      afont.remove(save_glyph)
-    end
+    afont.remove(save_glyph)
   end
 
   def trim_height(lines)
@@ -86,23 +83,10 @@ class SplitLongGlyphs < Action
     lines.pop while lines[-1].strip.length == 0
   end
 
-  # Returns where it seemed to work.
   def add_it(afont, glyph, letter)
     puts "Adding this: "
     puts glyph.join("\n")
-    if !afont.text_for(glyph).include?(AFont.UNKNOWN_GLYPH)
-      puts "#{letter} --Already presnt. "
-    else
-      afont.add(glyph, letter)
-      puts " #{letter} -- Letter added."
-    end
-
-    if afont.text_for(glyph) != AFont.UNKNOWN_GLYPH
-      return true
-    else
-      return false
-    end
-
+    afont.add(glyph, letter)
   end
 
 end
@@ -146,7 +130,7 @@ class AcquireFont < Action
       {:type => :text, :name => 'answer', :label => 'What is that?'},
       {:type => :label, :label => line},
       {:type => :big_text, :editable => false, :label => 'Glyph',
-	:name => 'glyph', :value => glyph_text, :rows => 20, :cols => 50},
+       :name => 'glyph', :value => glyph_text, :rows => 20, :cols => 50},
     ]
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
     return unless vals
@@ -173,7 +157,7 @@ class AcquireFont < Action
 
   def process_line(glyph_line, glyphs)
     glyphs.each do |g|
-      if g.to_s.include?(AFont.UNKNOWN_GLYPH)
+      if g.to_s.include?(AFont.unknown_glyph)
 	line = ''
 	glyphs.each {|gl| line << gl.to_s}
 	handle_glyph(line, g)

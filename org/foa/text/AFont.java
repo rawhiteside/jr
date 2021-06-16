@@ -3,7 +3,7 @@ package org.foa.text;
 import java.util.*;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.util.Arrays;
+import java.util.*;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.DumperOptions;
@@ -14,14 +14,14 @@ public class AFont {
 	private static Map s_instances = new HashMap();
 	private Map m_map;
 	private static char[] m_bytes = { 0xbf };
-	public static String UNKNOWN_GLYPH = new String(m_bytes);
+	private static String UNKNOWN_GLYPH = new String(m_bytes);
 	private String m_fontFile = null;
 	//
 
 	// Debug flag. Yeah.  I know about log files. Real Soon Now. 
 	private boolean m_logging = false;
 
-	public AFont(String filename) {
+	private AFont(String filename) {
 		m_fontFile = filename;
 
 		FileReader r = null;
@@ -64,9 +64,12 @@ public class AFont {
 
 	public Map getFontMap() { return m_map;}
 	
+	public static String getUnknownGlyph() { return UNKNOWN_GLYPH;}
+
 	public void add(String[] rows, String str) {
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 		if (isDuplicate(l, str)) {
+			p("AFont: Duplicate add for string: " + str);
 			return;
 		}
 		m_map.put(l, str);
@@ -92,20 +95,30 @@ public class AFont {
 	}
 
 
+
 	public String textFor(String[] rows) {
+		return textFor(rows, 0);
+	}
+
+	// This is called recursively while stripping off glyphs part of a
+	// jammed-together gcomplex glyph.
+	private String textFor(String[] rows, int prevGlyphWidth) {
 		dumpGlyph(rows, "textFor this");
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
 		if (rows.length == 0) { return " ";}
-		// If it's just a horizontal line that made it through the rule remove, then just make it a space.
+		
+		// If it's just a horizontal line that made it through the
+		// rule remove, then just make it a space.
 		if (rows.length == 1 && rows[0].length() > 4) { return " ";}
 		
 		String val = (String) m_map.get(l);
 		if (val != null) {
+			p ("Retuning: " + val);
 			return val;
 		} else {
 			dumpGlyph(rows, "This is complex");
-			String text =  textForComplexGlyph(rows);
+			String text =  textForComplexGlyph(rows, prevGlyphWidth);
 			if (text == null) {
 				dumpGlyph(rows, "This was unknown");
 				return UNKNOWN_GLYPH;
@@ -129,40 +142,68 @@ public class AFont {
 	 * This task is complicated by design choices I made early on
 	 * (i.e., glyphs as an array of Strings.)
 	 *
+	 * +prevGlyphWidth+ is 0 if there was no previous glyph stripped
+	 * off.
+	 *
 	 */
-	private String textForComplexGlyph(String[] complexGlyph) {
+	private static int NARROW = 2;
+	private String textForComplexGlyph(String[] complexGlyph, int prevGlyphWidth) {
+
 
 		// Elements in keys are themselves arraylists of Strings.
-		int bestCount = 0;
-		String[] bestGlyph = null;
-		String bestText = null;
-		Iterator itr = m_map.keySet().iterator();
+		ArrayList<List<String>> keyList = new ArrayList<List<String>>();
+		Set<List<String>> keySet = (Set<List<String>>) m_map.keySet();
+		keyList.addAll(keySet);
+		//p("keySet size: " + keySet.size());
+		//		p("keyListet size: " + keyList.size());
+		keyList.sort(new java.util.Comparator<List<String>>() {
+				@Override
+					public int compare(List<String> a, List<String> b) {
+					return b.get(0).length() - a.get(0).length();
+				}
+			});
+
+
+		Iterator itr = keyList.iterator();
 		while (itr.hasNext()) {
+			String[] glyph = null;
+			String text = null;
+
 			ArrayList<String> key = (ArrayList<String>) itr.next();
 			if (key.size() == 0) {continue;}
 
 			String val = (String) m_map.get(key);
+			p("complex:  Checking for glyph " + val);
 			String[] template = key.toArray(new String[0]);
+
+			// Don't allow 2 consecutive narrow glyphs.
+			// 0 means "no prev glyph."
+			if (prevGlyphWidth > 0) {
+				if(prevGlyphWidth <= NARROW && template[0].length() <= NARROW) {
+					continue;
+				}
+			}
 
 			// If template is wider than complex, no joy
 			if(template[0].length() >= complexGlyph[0].length()) {continue;}
 
 			int matchCount = countWidthOfMatchingTemplate(template, complexGlyph);
-			if (matchCount > bestCount) {
-				bestCount = matchCount;
-				bestGlyph = template;
-				bestText = (String) m_map.get(key);
+			if (matchCount > 0) {
+				glyph = template;
+				text = (String) m_map.get(key);
+				String[] newRows = stripMatchedRows(complexGlyph, matchCount);
+				if (newRows[0].length() == 0) {
+					return text;
+				} else {
+					p ("Complex found " + text + " and looking for more");
+					String remainderText = textFor(newRows, glyph[0].length());
+					if(!remainderText.contains(UNKNOWN_GLYPH)) {
+						p("Found more!  Returning:  " + text + remainderText);
+						return text + remainderText;
+					}
+				}
 			}
-		}
-		// Did we find a match?
-		if (bestCount > 0) {
-			String[] newRows = stripMatchedRows(complexGlyph, bestCount);
-			if (newRows[0].length() == 0) {
-				return bestText;
-			} else {
-				p ("Complex found " + bestText + " and looking for more");
-				return bestText + textFor(newRows);
-			}
+
 		}
 		return null;
 	}
