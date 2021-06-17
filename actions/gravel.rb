@@ -52,7 +52,7 @@ class GravelAction < PickThings
   end
 
   def check_for_post_click_window(screen_x, screen_y)
-    if (w = PinnableWindow.from_point(screen_x + 4, screen_y))
+    if (w = PinnableWindow.from_point(screen_x + 2, screen_y + 2))
       if w.read_text.include?('too far')
         AWindow.dismiss_all
         return :true

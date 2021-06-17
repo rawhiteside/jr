@@ -41,12 +41,23 @@ class PickStones < PickThings
     end
   end
 
+  def check_for_post_click_window(x, y)
+    w = PinnableWindow.from_point(x+2, y+2)
+    return unless w
+    if w.click_on("Pick")
+      return false
+    else
+      AWindow.dismissAll 
+      return true
+    end
+  end
+
 
   # This will cause the searcher to find a hit on a *mixture* of stone
   # and gypsum/bauxite colors.  I think that case rare, and an extra
   # click isn't a big deal, anyway.
   def gather_color?(pb, x, y)
-    color = pb.color(x, y)
+    color = pb.getColor(x, y)
     r, g, b = color.red, color.green, color.blue
     # Stone.
     if r > 150 && (r - g).abs < 15 && (r - b).abs < 15
