@@ -218,7 +218,7 @@ class Walker < ARobot
     # Count pases though the loc-walker loop.  We refresh the keys
     # every refresh_count passes.  Thus, in case of a wild r-click,
     # it'll start back going.
-    refresh_count = 5
+    refresh_count = 20
     count = 0
 
     # Loop that watches the loc window, and adjusts direction
@@ -243,7 +243,7 @@ class Walker < ARobot
 	curr_direction = direction
       end
       check_for_stuck(curr)
-      sleep 0.4
+      sleep 0.1
     end
   end
 
