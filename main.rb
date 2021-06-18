@@ -14,6 +14,7 @@ import java.awt.event.ActionListener
 import java.awt.event.ItemListener
 import java.awt.event.ItemEvent
 import java.awt.Color
+import java.awt.FlowLayout
 import java.awt.Component
 import java.awt.BorderLayout
 import java.awt.Insets
@@ -45,22 +46,34 @@ class TopFrame < JFrame
   
   def make_top_stuff
     box = Box.create_horizontal_box()
-    box.add(make_show_hide_button)
-    box.add(make_global_setup_button)
+
+    panel = JPanel.new(FlowLayout.new(FlowLayout::LEFT))
+    panel.add(make_show_hide_button)
+    panel.add(make_global_setup_button)
+    panel.add(make_text_log_button)
+    box.add(panel)
+
     box.add(Box.create_horizontal_glue)
     box.add(make_run_indicator)
 
     return box
   end
 
+  def make_text_log_button
+    check = JCheckBox.new('Log text-read failures.', AWindow.getAllowTextReaderLog())
+    
+    check.add_item_listener do |event|
+      AWindow.setAllowTextReaderLog(event.get_state_change == ItemEvent::SELECTED)
+    end
+    return check
+  end
+
   SHOW_ALL = 'Show all'
   HIDE_SOME = 'Favorites'
   SHOW_RECENTS = 'Recently used'
   def make_show_hide_button
-    box = Box.create_horizontal_box()
     combo = JComboBox.new([SHOW_ALL, HIDE_SOME, SHOW_RECENTS].to_java)
     combo.selected_item = HIDE_SOME
-    box.add(combo)
     combo.add_action_listener do |event|
       if combo.selected_item == SHOW_ALL
         ActionButton.show_all
@@ -71,7 +84,7 @@ class TopFrame < JFrame
       end
       pack
     end
-    return box
+    return combo
   end
 
   def make_global_setup_button
@@ -87,7 +100,6 @@ class TopFrame < JFrame
   def make_run_indicator
     box = Box.create_horizontal_box()
 
-    # XX Testing gadget
     checkbox = JCheckBox.new("test")
     checkbox.tool_tip_text = 'Click or press NUMLOCK to toggle'
     margin = 6

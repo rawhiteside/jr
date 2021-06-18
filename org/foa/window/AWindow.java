@@ -18,6 +18,7 @@ import java.awt.event.*;
  */
 
 public abstract class AWindow extends ARobot  {
+	private static boolean ALLOW_TEXT_READER_LOG = true;
 	private Rectangle m_rect;
 	private TextReader m_textReader = null;
 	private String m_defaultRefreshLoc = "tl"; 
@@ -122,9 +123,16 @@ public abstract class AWindow extends ARobot  {
 
 	public String readText() {
 		String text = textReader().readText(); 
-		if (shouldLogReadTextErrors()) { checkText(text); }
+		if (shouldLogReadTextErrors() && ALLOW_TEXT_READER_LOG) { checkText(text); }
 		return text;
 	}
+
+	// For access from Ruby.  I probably misunderstand something, but
+	// I can't get to public static variables.
+	public static void setAllowTextReaderLog(boolean allow) {
+		ALLOW_TEXT_READER_LOG = allow;
+	}
+	public static boolean getAllowTextReaderLog() { return ALLOW_TEXT_READER_LOG;}
 
 	private void checkText(String text) {
 		try {
