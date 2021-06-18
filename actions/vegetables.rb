@@ -218,7 +218,7 @@ class Vegetables < Action
       plant_time = Time.new
     end
 
-    sleep 0.8
+    sleep 0.6
     after = PixelBlock.new(@head_rect)
 
     point = find_click_point(before, after, search_dir)
