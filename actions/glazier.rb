@@ -99,7 +99,6 @@ class GlazierWindow < PinnableWindow
     with_robot_lock do
       refresh
       text = read_text
-      check_text text
     end
     vals = {}
     # Temp
@@ -251,7 +250,7 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 115)
+    tiler = Tiler.new(0, 115, -0.05)
     tiler.min_height = 400
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
