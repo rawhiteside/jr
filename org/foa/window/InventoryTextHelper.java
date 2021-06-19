@@ -7,7 +7,6 @@ public class InventoryTextHelper implements ITextHelper{
 
 	public InventoryTextHelper() { }
 
-	private int m_spacePixelCount = 4;
 
 	public void startTextScan(PixelBlock pb) {}
 
@@ -19,8 +18,9 @@ public class InventoryTextHelper implements ITextHelper{
 
 	public boolean doRemoveRules() { return true; }
 
+	private int m_spacePixelCount = 4;
 	public void setSpacePixelCount(int count) { m_spacePixelCount = count; }
-
 	public int spacePixelCount() { return m_spacePixelCount; }
 
+	public String imagePrefix() { return "legacy"; }
 }

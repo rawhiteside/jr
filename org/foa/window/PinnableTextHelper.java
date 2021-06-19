@@ -26,4 +26,5 @@ public class PinnableTextHelper implements ITextHelper{
 
 	public int spacePixelCount() { return m_spacePixelCount; }
 
+	public String imagePrefix() { return "pinnable"; }
 }

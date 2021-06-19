@@ -47,4 +47,8 @@ public class ClockLocTextHelper implements ITextHelper{
 
 	public int spacePixelCount() { return m_spacePixelCount; }
 
+	public String imagePrefix() { return "clockloc"; }
+
+
+
 }

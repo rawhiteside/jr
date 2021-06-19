@@ -138,7 +138,8 @@ public abstract class AWindow extends ARobot  {
 		try {
 			if (!text.contains(AFont.getUnknownGlyph())) { return; }
 			PixelBlock pb = new PixelBlock(getRect());
-			File f = File.createTempFile("txt-err", ".png", new File("./screen-shots"));
+			String prefix = getTextHelper().imagePrefix();
+			File f = File.createTempFile(prefix, ".png", new File("./screen-shots"));
 			pb.saveImage(f.getPath());
 			beep();
 		} catch(Exception e) {
@@ -156,7 +157,7 @@ public abstract class AWindow extends ARobot  {
 	public TextReader textReader() {
 		if (m_textReader == null) {
 			Rectangle r = textRectangle();
-			m_textReader = new TextReader(r, getTextHelper());
+			m_textReader = new TextReader(new PixelBlock(r), getTextHelper());
 		}
 		return m_textReader;
 	}

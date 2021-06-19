@@ -14,10 +14,9 @@ public class TextReader {
 	private ITextHelper m_textHelper;
 	private PixelBlock m_pb;
 
-	public TextReader(Rectangle rect, ITextHelper textHelper) {
+	public TextReader(PixelBlock pb, ITextHelper textHelper) {
 		m_textHelper = textHelper;
-
-		m_pb = new PixelBlock(rect);
+		m_pb = pb;
 
 		InkSpots bits = InkSpots.fromPixelBlock(m_pb, textHelper);
 

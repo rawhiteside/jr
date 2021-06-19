@@ -29,4 +29,7 @@ public class LegacyTextHelper implements ITextHelper{
 
 	public int spacePixelCount() { return m_spacePixelCount; }
 
+	public String imagePrefix() { return "legacy"; }
+
+
 }

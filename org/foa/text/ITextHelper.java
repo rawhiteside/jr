@@ -5,6 +5,9 @@ import org.foa.PixelBlock;
 
 public interface ITextHelper {
 
+	// A leading string for a filename when saving the image.
+	public String imagePrefix();
+
 	// Only used by ClockLocWindow.
 	public void startTextScan(PixelBlock pb);
 
