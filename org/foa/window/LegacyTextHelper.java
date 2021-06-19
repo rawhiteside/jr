@@ -31,5 +31,4 @@ public class LegacyTextHelper implements ITextHelper{
 
 	public String imagePrefix() { return "legacy"; }
 
-
 }

@@ -4,6 +4,9 @@ require 'actions/kettles'
 
 import org.foa.text.AFont
 import org.foa.text.InkSpots
+import org.foa.window.LegacyTextHelper
+import org.foa.window.PinnableTextHelper
+import org.foa.window.InventoryTextHelper
 
 class SplitLongGlyphs < Action
   def initialize
@@ -102,11 +105,12 @@ class AcquireFont < Action
   SKILLS = 'Skills Window'
   INVENTORY = 'Inventory Window'
   PINNABLE = 'Pinnable Window'
+  ERR_LOG = 'Err log directory'
   DUMP_GLYPHS = 'Dump glyphs to stdout'
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'Which window?', :name => 'which',
-       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, DUMP_GLYPHS],
+       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, DUMP_GLYPHS, ERR_LOG],
       },
       {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
       
@@ -124,7 +128,7 @@ class AcquireFont < Action
     text
   end
 
-  def handle_glyph(line, g)
+  def handle_glyph(line, g, font_map)
     glyph_text = make_text_for_glyph(g)
     comps = [
       {:type => :text, :name => 'answer', :label => 'What is that?'},
@@ -135,7 +139,7 @@ class AcquireFont < Action
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
     return unless vals
     chars = vals['answer']
-    @window.getTextHelper().getFontMap().add(g.rows, chars) unless chars == ''
+    font_map.add(g.rows, chars) unless chars == ''
   end
 
   def get_target_window
@@ -155,12 +159,12 @@ class AcquireFont < Action
     end
   end
 
-  def process_line(glyph_line, glyphs)
+  def process_line(glyph_line, glyphs, font_map)
     glyphs.each do |g|
       if g.to_s.include?(AFont.unknown_glyph)
 	line = ''
 	glyphs.each {|gl| line << gl.to_s}
-	handle_glyph(line, g)
+	handle_glyph(line, g, font_map)
       end
     end
   end
@@ -168,7 +172,7 @@ class AcquireFont < Action
   def process_text_reader(tr)
     text_lines = tr.read_text(false).split("\n")
     text_lines.size.times do |i|
-      process_line(text_lines[i], tr.glyphs[i])
+      process_line(text_lines[i], tr.glyphs[i], tr.text_helper.font_map)
     end
     puts tr.read_text
   end
@@ -185,15 +189,45 @@ class AcquireFont < Action
     end
   end
   
+  def text_helper_for(img_name)
+    if img_name.include?('pinnable')
+      return PinnableTextHelper.new
+    elsif img_name.include?('legacy')
+      return LegacyTextHelper.new
+    elsif img_name.include?('inventory')
+      return InventoryTextHelper.new
+    else
+      puts "unknown type of screenshot image"
+    end
+    nil
+  end
 
+  def process_image(img_name)
+    puts "---File name: #{img_name}"
+    pb = PixelBlock.load_image(img_name)
+    helper = text_helper_for(img_name)
+    tr = TextReader.new(pb, helper)
+    text = tr.read_text
+    return unless text.include?(AFont.unknown_glyph)
+    puts "---- Problem image text:"
+    puts text
+    UserIO.show_image(pb, img_name)
+    process_text_reader(tr)
+  end
+
+  def process_dir
+    png_files = File.join('screen-shots', '*.png')
+    Dir.glob(png_files).each { |img| process_image(img) }
+  end
 
   def act
     if @vals['which'] == DUMP_GLYPHS
       dump_font(AFont.instance.getFontMap)
       return
+    elsif @vals['which'] == ERR_LOG
+      process_dir
     else
-      @window = get_target_window
-      process_text_reader(@window.text_reader)
+      process_text_reader(get_target_window.text_reader)
     end
   end
 end

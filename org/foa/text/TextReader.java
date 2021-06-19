@@ -37,6 +37,10 @@ public class TextReader {
 		}
 	}
 
+	public ITextHelper getTextHelper() {
+		return m_textHelper;
+	}
+
 	public PixelBlock getPixelBlock() {
 		return m_pb;
 	}

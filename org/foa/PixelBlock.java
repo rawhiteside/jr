@@ -69,45 +69,6 @@ public class PixelBlock extends ARobot {
 		return ImageUtils.findTemplateExact(m_bufferedImage, template.bufferedImage());
 	}
 	   
-	/** 
-	 * Search within self for the best mach for the subimage template.
-	 */
-	public Point findTemplateBest(PixelBlock template) {
-		return findTemplateBest(template, Integer.MAX_VALUE);
-	}
-	public Point findTemplateBest(PixelBlock template, int bestDistSq) {
-		PixelBlock brightTemplate = ImageUtils.brightness(template);
-		PixelBlock brightImage = ImageUtils.brightness(this);
-		Point bestPoint = null;
-
-
-		int maxX = getWidth() - brightTemplate.getWidth();
-		int maxY = getHeight() - brightTemplate.getHeight();
-		for(int y = 0; y < maxY; y++) {
-			for(int x = 0; x < maxX; x++) {
-				int distSq = computeDist(brightImage, brightTemplate, x, y, bestDistSq);
-				if (distSq < bestDistSq) {
-					bestPoint = new Point(x, y);
-					bestDistSq = distSq;
-				}
-			}
-		}
-		System.out.println("Best distsq: " + bestDistSq);
-		return bestPoint;
-	}
-
-	private int computeDist(PixelBlock image, PixelBlock template, int xoff, int yoff, int bestSoFar) {
-		BufferedImage biImage = image.bufferedImage();
-		BufferedImage biTemplate = template.bufferedImage();
-		int dist = 0;
-		for(int y = 0; y < biTemplate.getHeight(); y++) {
-			for(int x = 0; x < biTemplate.getWidth(); x++) {
-				dist += Math.pow(biTemplate.getRGB(x, y) - biImage.getRGB(x + xoff, y + yoff), 2);
-				if (dist > bestSoFar) {return dist;}
-			}
-		}
-		return dist;
-	}
 
 	/**
 	 * Coordinates are image coords, not screen coords.

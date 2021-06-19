@@ -122,8 +122,9 @@ public abstract class AWindow extends ARobot  {
 	}
 
 	public String readText() {
-		String text = textReader().readText(); 
-		if (shouldLogReadTextErrors() && ALLOW_TEXT_READER_LOG) { checkText(text); }
+		TextReader tr = textReader();
+		String text = tr.readText(); 
+		if (shouldLogReadTextErrors() && ALLOW_TEXT_READER_LOG) { checkText(text, tr); }
 		return text;
 	}
 
@@ -134,10 +135,10 @@ public abstract class AWindow extends ARobot  {
 	}
 	public static boolean getAllowTextReaderLog() { return ALLOW_TEXT_READER_LOG;}
 
-	private void checkText(String text) {
+	private void checkText(String text, TextReader tr) {
 		try {
 			if (!text.contains(AFont.getUnknownGlyph())) { return; }
-			PixelBlock pb = new PixelBlock(getRect());
+			PixelBlock pb = tr.getPixelBlock();
 			String prefix = getTextHelper().imagePrefix();
 			File f = File.createTempFile(prefix, ".png", new File("./screen-shots"));
 			pb.saveImage(f.getPath());

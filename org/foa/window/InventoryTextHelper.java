@@ -22,5 +22,5 @@ public class InventoryTextHelper implements ITextHelper{
 	public void setSpacePixelCount(int count) { m_spacePixelCount = count; }
 	public int spacePixelCount() { return m_spacePixelCount; }
 
-	public String imagePrefix() { return "legacy"; }
+	public String imagePrefix() { return "inventory"; }
 }
