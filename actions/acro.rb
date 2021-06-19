@@ -15,13 +15,18 @@ class AcroAction < Action
   end
 
   def act
+    # Find teh acro window
+    w = AcroWindow.find
+    puts "Found it at #{w.rect}" if w
+    w.drag_to(50, 50) unless w.rect.x == 50
+    
     move_count = @vals['move-count'].to_i
     skip_these = @vals['skip-these']
     skip = []
     skip_these.split(',').each {|s| skip << s.strip.to_i}
     
-    x = 225
-    y_base = 97
+    x = 275
+    y_base = 120
     y_off = 20
     loop do
       move_count.times do |i|
@@ -35,4 +40,34 @@ class AcroAction < Action
 
 end
 
+class AcroWindow < AWindow
+  # Look at the center, then over on the left. 
+  def self.find
+    dim = ARobot.shared_instance.screen_size
+    pt = Point.new(dim.width/2, 50)
+    w =  AcroWindow.from_point(pt)
+    return w if w 
+
+    pt = Point.new(75, 75)
+    return AcroWindow.from_point(pt)
+  end
+
+  def initialize(rect)
+    super(rect)
+  end
+
+  def getTextHelper()
+    InventoryTextHelper.new
+  end
+
+  def self.from_point(pt)
+    rect = LegacyWindowGeom.new.rect_from_point(pt)
+    if rect
+      return AcroWindow.new(rect)
+    else
+      return nil
+    end
+  end
+  
+end
 Action.add_action(AcroAction.new)
