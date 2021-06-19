@@ -104,8 +104,9 @@ public class InkSpots {
 		return "unknown";
 	}
 
-	public static InkSpots fromScreen(Rectangle rect, ITextHelper textHelper) {
-		PixelBlock pb = new PixelBlock(rect);
+	public static InkSpots fromPixelBlock(PixelBlock pb, ITextHelper textHelper) {
+
+		Rectangle rect = pb.rect();
 
 		textHelper.startTextScan(pb);
 		ArrayList newRows = new ArrayList();

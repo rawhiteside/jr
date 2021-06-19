@@ -6,16 +6,20 @@ import java.util.*;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.foa.PixelBlock;
 
 public class TextReader {
 	public InkSpots[][] glyphs;
 	public String[] lineText;
 	private ITextHelper m_textHelper;
+	private PixelBlock m_pb;
 
 	public TextReader(Rectangle rect, ITextHelper textHelper) {
 		m_textHelper = textHelper;
 
-		InkSpots bits = InkSpots.fromScreen(rect, textHelper);
+		m_pb = new PixelBlock(rect);
+
+		InkSpots bits = InkSpots.fromPixelBlock(m_pb, textHelper);
 
 		InkSpots[] lines =  findLines(bits);
 		glyphs = new InkSpots[lines.length][];
@@ -33,6 +37,11 @@ public class TextReader {
 			lineText[i] = readLine(glyphs[i]);
 		}
 	}
+
+	public PixelBlock getPixelBlock() {
+		return m_pb;
+	}
+		
 
 	/**
 	 * Returns the window text as one big string.
