@@ -1,4 +1,3 @@
-require 'stats'
 #
 # It appears this was to provide access to things *not* directly in robot. 
 #
@@ -56,6 +55,7 @@ end
 class Stats
   @@boosted_image = PixelBlock.load_image("images/boosted-stat.png")
   @@image_files = {
+    :acro => "acro.png",
     :str => "STR.png",
     :end => "END.png",
     :foc => "FOC.png",
