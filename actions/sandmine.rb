@@ -81,7 +81,7 @@ class SandMine < AbstractMine
     if win = PopupWindow.find
       log_result 'Dismissed a window'
       win.dialog_click(Point.new(win.rect.width/2, win.rect.height - 20))
-      sleep 0.01
+      sleep 0.1
       return true
     end
     return false
