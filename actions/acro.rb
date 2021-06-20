@@ -27,7 +27,9 @@ class AcroAction < Action
     x = 275
     y_base = 138
     y_off = 20
-    move_count = count_moves(w)
+    move_count = w.count_moves
+    puts "Move count: #{move_count}"
+    return if move_count == 0
     loop do
       move_count.times do |i|
         next if skip.include?(i)
@@ -38,19 +40,6 @@ class AcroAction < Action
     end
   end
 
-  def count_moves(w)
-    rect = w.rect
-    dim = screen_size
-    border_color = Color.new(137, 83, 18).getRGB & 0xffffff
-    pb = PixelBlock.full_screen
-    x = 275
-    y = 75
-    border_count = 0
-    y.upto(rect.y + rect.height - 1) do |y|
-      border_count += 1 if pb.getPixel(x, y) == border_color
-    end
-    return border_count/2
-  end
 end
 
 class AcroWindow < AWindow
@@ -67,6 +56,33 @@ class AcroWindow < AWindow
 
   def initialize(rect)
     super(rect)
+  end
+
+  def count_moves
+    pb = PixelBlock.new(rect)
+    x = rect.width/2
+
+    # The double-line separator below the moves to offer. 
+    ymax = find_separator(pb, x)
+    return 0 if ymax == -1
+    
+    
+    border_color = Color.new(137, 83, 18).getRGB & 0xffffff
+    border_count = 0
+    5.upto(ymax) do |y|
+      border_count += 1 if border_color == pb.get_pixel(x, y)
+    end
+    return border_count / 2
+  end
+
+  # Below the moves I have to offer is a double-line separator of a
+  # constant color.  Find the first.
+  def find_separator(pb, x)
+    sep_color = Color.new(113, 76, 47).getRGB & 0xffffff
+    0.upto(pb.rect.height - 1) do |y|
+      return y if sep_color == pb.get_pixel(x, y)
+    end
+    return -1
   end
 
   def textRectangle
