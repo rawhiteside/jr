@@ -100,6 +100,7 @@ class AcquireFont < Action
     super('Acquire font', 'Test/Dev')
   end
 
+  ACRO_WINDOW = 'Acro Window'
   CHAT_WINDOW = 'Chat Window'
   CLOCK_LOC = 'ClockLoc Window'
   INVENTORY = 'Inventory Window'
@@ -109,7 +110,7 @@ class AcquireFont < Action
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'Which window?', :name => 'which',
-       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, INVENTORY, DUMP_GLYPHS, ERR_LOG],
+       :vals => [ACRO_WINDOW, PINNABLE, CHAT_WINDOW, CLOCK_LOC, INVENTORY, DUMP_GLYPHS, ERR_LOG],
       },
       {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
       
@@ -127,22 +128,27 @@ class AcquireFont < Action
     text
   end
 
+  # returns whether to abort the action.
   def handle_glyph(line, g, font_map)
     glyph_text = make_text_for_glyph(g)
     comps = [
       {:type => :text, :name => 'answer', :label => 'What is that?'},
+      {:type => :text, :name => 'abort', :label => 'Type anything here to abort'},
       {:type => :label, :label => line},
       {:type => :big_text, :editable => false, :label => 'Glyph',
        :name => 'glyph', :value => glyph_text, :rows => 20, :cols => 50},
     ]
     vals = UserIO.prompt(nil, nil, 'What is this glyph?', comps)
-    return unless vals
+    return false unless vals
+    return true if vals['abort'] != ''
     chars = vals['answer']
     font_map.add(g.rows, chars) unless chars == ''
   end
 
   def get_target_window
     case @vals['which']
+    when ACRO_WINDOW
+      AcroWindow.find
     when CHAT_WINDOW
       ChatWindow.find
     when CLOCK_LOC
@@ -158,22 +164,27 @@ class AcquireFont < Action
     end
   end
 
+  # returns whether to abort the action
   def process_line(glyph_line, glyphs, font_map)
     glyphs.each do |g|
       if g.to_s.include?(AFont.unknown_glyph)
 	line = ''
 	glyphs.each {|gl| line << gl.to_s}
-	handle_glyph(line, g, font_map)
+	abort = handle_glyph(line, g, font_map)
+        return abort if abort
       end
     end
+    return false
   end
 
   def process_text_reader(tr)
     text_lines = tr.read_text(false).split("\n")
     text_lines.size.times do |i|
-      process_line(text_lines[i], tr.glyphs[i], tr.text_helper.font_map)
+      abort = process_line(text_lines[i], tr.glyphs[i], tr.text_helper.font_map)
+      return abort if abort
     end
     puts tr.read_text
+    return false
   end
 
   def dump_font(map)
