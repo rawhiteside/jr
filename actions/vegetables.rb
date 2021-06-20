@@ -24,8 +24,9 @@ class Vegetables < Action
       :water => 1,
       :min_width => 240,
     },
-    "Cucumbers/Wadjet's Garden/(2) grass" => {
-      :water => 2,
+    "Cucumbers/Isis' Bounty/(4) grass, dirt, sand" => {
+      :water => 3,
+      :tendings => 4,
       :min_width => 240,
     },
     "Peppers/Isis/(3/4) dirt/sand" => {
