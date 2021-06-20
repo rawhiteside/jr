@@ -21,9 +21,13 @@ class Window < AWindow
     super(rect)
   end
 
+  def getWindowGeom()
+    LegacyWindowGeom.new
+  end
+
   # Return a Window from a point in the dialog
   def self.from_point(pt)
-    rect = LegacyWindowGeom.rect_from_point(pt)
+    rect = LegacyWindowGeom.new.rect_from_point(pt)
     return nil unless rect
     self.new(rect)
   end
@@ -193,12 +197,16 @@ class InventoryWindow < AWindow
     super
   end
 
+  def getWindowGeom()
+    LegacyWindowGeom.new
+  end
+
   def getTextHelper()
     InventoryTextHelper.new
   end
 
   def self.from_point(pt)
-    rect = LegacyWindowGeom.rect_from_point(pt)
+    rect = LegacyWindowGeom.new.rect_from_point(pt)
     return InventoryWindow.new(rect)
   end
 end

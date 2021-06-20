@@ -24,6 +24,10 @@ public class PinnableWindow extends AWindow {
 		m_static = value;
 	}
 
+	private WindowGeom m_windowGeom = new PinnableWindowGeom();
+	public WindowGeom getWindowGeom() {
+		return m_windowGeom;
+	}
 	// Default here is Legacy windows.
 	public ITextHelper getTextHelper() {
 		return new PinnableTextHelper();
@@ -47,7 +51,7 @@ public class PinnableWindow extends AWindow {
 		Rectangle r = getRect();
 		int x = r.x + 4;
 		int y = r.y + 4;
-		Rectangle rnew = PinnableWindowGeom.rectFromPoint(new Point(x, y));
+		Rectangle rnew = getWindowGeom().rectFromPoint(new Point(x, y));
 		if (rnew != null) {
 			setRect(rnew);
 		}
@@ -134,7 +138,7 @@ public class PinnableWindow extends AWindow {
 	 */
 	private boolean isDialogAt(Point p) {
 		Point inner = new Point(p.x + 4, p.y);
-		Rectangle rect = PinnableWindowGeom.rectFromPoint(inner);
+		Rectangle rect = getWindowGeom().rectFromPoint(inner);
 		if(rect == null) { 
 			System.out.println("IsDialogPresent: No window at destination.");
 			return false; 
@@ -157,7 +161,7 @@ public class PinnableWindow extends AWindow {
 	}
 
 	public static PinnableWindow fromPoint(Point p) {
-		Rectangle rect = PinnableWindowGeom.rectFromPoint(p);
+		Rectangle rect = new PinnableWindowGeom().rectFromPoint(p);
 		if (rect == null) {
 			return null;
 		} else {
@@ -224,7 +228,8 @@ public class PinnableWindow extends AWindow {
 		// the undeerlying window rect, so we can tell when a *new*
 		// window pops.  We might, instead, click, then just detect
 		// the original one, thinking it's new.  Maybe this is null.
-		Rectangle rectTarget = PinnableWindowGeom.rectFromPoint(pt);
+		WindowGeom windowGeom = new PinnableWindowGeom();
+		Rectangle rectTarget = windowGeom.rectFromPoint(pt);
 
 		robot.claimRobotLock();
 		try {
@@ -243,7 +248,7 @@ public class PinnableWindow extends AWindow {
 				long startMillis = System.currentTimeMillis();
 				for(int i = 0; i < 50; i++) {
 					Point inside = new Point(pt.x + 4, pt.y + 4);
-					rectangle = PinnableWindowGeom.rectFromPoint(inside);
+					rectangle = windowGeom.rectFromPoint(inside);
 					//
 					// Did we find a window?
 					if (rectangle != null) {

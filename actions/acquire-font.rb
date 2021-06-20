@@ -102,7 +102,6 @@ class AcquireFont < Action
 
   CHAT_WINDOW = 'Chat Window'
   CLOCK_LOC = 'ClockLoc Window'
-  SKILLS = 'Skills Window'
   INVENTORY = 'Inventory Window'
   PINNABLE = 'Pinnable Window'
   ERR_LOG = 'Err log directory'
@@ -110,7 +109,7 @@ class AcquireFont < Action
   def setup(parent)
     gadgets = [
       {:type => :combo, :label => 'Which window?', :name => 'which',
-       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, SKILLS, INVENTORY, DUMP_GLYPHS, ERR_LOG],
+       :vals => [PINNABLE, CHAT_WINDOW, CLOCK_LOC, INVENTORY, DUMP_GLYPHS, ERR_LOG],
       },
       {:type => :point, :label => 'Drag to Pinnable if selected', :name => 'xy'},
       

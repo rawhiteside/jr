@@ -12,7 +12,6 @@ class ReadWindow < Action
     gadgets = [
       {:type => :checkbox, :label => 'Chat Window', :name => 'chat-history-p' },
       {:type => :checkbox, :label => 'ClockLoc', :name => 'clock-loc-p' },
-      {:type => :checkbox, :label => 'Skills', :name => 'skills-p' },
       {:type => :checkbox, :label => 'Inventory', :name => 'inventory-p' },
       {:type => :checkbox, :label => 'Pinnable window', :name => 'pinnable-p' },
       {:type => :point, :label => 'Drag to Pinnable if checked', :name => 'xy'},

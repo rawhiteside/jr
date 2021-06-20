@@ -102,10 +102,10 @@ class PickThings < Action
   # "Handle" might mean clicking on a "Pick" menu item, for example.
   # Returns true if it's a mistery window, or if it's "Too far away."
   # In either case, this method should make the window go away. 
+  @wg = PinnableWindowGeom.new
   def check_for_post_click_window(screen_x, screen_y)
     color = getColor(screen_x, screen_y)
-    # PinnableWindowGeom
-    if PinnableWindowGeom.isBorder(color)
+    if @wg.isBorder(color)
       AWindow.dismissAll
       return true
     else

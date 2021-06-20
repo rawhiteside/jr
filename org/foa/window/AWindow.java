@@ -40,6 +40,11 @@ public abstract class AWindow extends ARobot  {
 		return m_notation;
 	}
 
+	private WindowGeom m_windowGeom = new LegacyWindowGeom();
+	public WindowGeom getWindowGeom() {
+		return m_windowGeom;
+	}
+
 	public void setRect(Rectangle rect) { 
 		m_rect = rect; 
 		if (rect == null) {
