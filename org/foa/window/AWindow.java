@@ -268,4 +268,73 @@ public abstract class AWindow extends ARobot  {
 	public void displayToUser(String title) {
 		ImagePanel.displayImage(createScreenCapture(textRectangle()), title);
 	}
+
+	private boolean attemptDrag(Point p, double requested_delay) {
+		double delay = Math.max(requested_delay,0.075);
+		claimRobotLock();
+		try {
+			/**
+			 * Dialog can change shape on move.  The left center of
+			 * the dialog is preserved.  Let's grab that now, then
+			 * confirm there's a dialog at the destination.
+			 */
+			Rectangle rect = getRect();
+			Point lcOrig = new Point(rect.x, rect.y + rect.height/2);
+			Point lcDest = new Point(lcOrig);
+			lcDest.translate(p.x - rect.x, p.y - rect.y);
+
+			mm(rect.x, rect.y, delay);
+			rbd();
+			mm(p, delay);
+			rbu();
+			sleepSec(delay);
+			return isDialogAt(lcDest);
+		}
+		catch(ThreadKilledException e) { throw e; }
+		catch(Exception e) {
+			System.out.println("Exception: in attemptDrag" + e.toString());
+			e.printStackTrace();
+			throw e;
+		}
+		finally {releaseRobotLock();}
+	}
+
+	public AWindow dragTo(int x, int y) {
+		return dragTo(new Point(x, y), 0.0);
+	}
+
+	public AWindow dragTo(Point p) {
+		return dragTo(p, 0.0);
+	}
+
+	public AWindow dragTo(Point p, double delay) {
+		for(int i = 0; i < 5; i++) {
+			if(attemptDrag(p, delay)) {break;}
+		}
+
+		return this;
+	}
+	/**
+	 * See if there's a dialog at the point (after dragging)
+	 */
+	private boolean isDialogAt(Point p) {
+		Point inner = new Point(p.x + 4, p.y);
+		Rectangle rect = getWindowGeom().rectFromPoint(inner);
+		if(rect == null) { 
+			System.out.println("IsDialogPresent: No window at destination.");
+			return false; 
+		}
+
+		// Make sure the edge is where expected.
+		// If looks good, update rectangle
+		if (p.x == rect.x) {
+			setRect(rect);
+			return true;
+		} else {
+			System.out.println("IsDialogPresent: Wrong window at destination.");
+			return false;
+		}
+	
+	}
+
 }
