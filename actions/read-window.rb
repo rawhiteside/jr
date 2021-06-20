@@ -10,6 +10,7 @@ class ReadWindow < Action
 
   def setup(parent)
     gadgets = [
+      {:type => :checkbox, :label => 'Acro Window', :name => 'acro-p' },
       {:type => :checkbox, :label => 'Chat Window', :name => 'chat-history-p' },
       {:type => :checkbox, :label => 'ClockLoc', :name => 'clock-loc-p' },
       {:type => :checkbox, :label => 'Inventory', :name => 'inventory-p' },
@@ -47,9 +48,9 @@ class ReadWindow < Action
       show_text(text, 'ClockLoc')
     end
     
-    if @vals['skills-p'] == 'true'
-      skills = SkillsWindow.new
-      show_text(skills.read_text, 'Skills')
+    if @vals['acro-p'] == 'true'
+      skills = AcroWindow.find
+      show_text(skills.read_text, 'Acro')
     end
       
 

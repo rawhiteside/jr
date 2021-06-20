@@ -16,6 +16,8 @@ class AcroAction < Action
   def act
     # Find teh acro window
     w = AcroWindow.find
+    # Read text, just to get the screenshot on failure.
+    w.read_text
     w.drag_to(50, 50) unless w.rect.x == 50
     
     skip_these = @vals['skip-these']
@@ -65,6 +67,12 @@ class AcroWindow < AWindow
 
   def initialize(rect)
     super(rect)
+  end
+
+  def textRectangle
+    r = rect
+    r.width -= 23
+    return r
   end
 
   def getTextHelper()
