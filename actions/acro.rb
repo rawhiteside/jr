@@ -8,7 +8,6 @@ class AcroAction < Action
   
   def setup(parent)
     gadgets = [
-      {:type => :number, :label => 'How many moves?', :name => 'move-count'},
       {:type => :text, :label => 'Which moves to skip? (zero-based)', :name => 'skip-these'},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
@@ -17,17 +16,16 @@ class AcroAction < Action
   def act
     # Find teh acro window
     w = AcroWindow.find
-    puts "Found it at #{w.rect}" if w
     w.drag_to(50, 50) unless w.rect.x == 50
     
-    move_count = @vals['move-count'].to_i
     skip_these = @vals['skip-these']
     skip = []
     skip_these.split(',').each {|s| skip << s.strip.to_i}
     
     x = 275
-    y_base = 120
+    y_base = 138
     y_off = 20
+    move_count = count_moves(w)
     loop do
       move_count.times do |i|
         next if skip.include?(i)
@@ -38,6 +36,19 @@ class AcroAction < Action
     end
   end
 
+  def count_moves(w)
+    rect = w.rect
+    dim = screen_size
+    border_color = Color.new(137, 83, 18).getRGB & 0xffffff
+    pb = PixelBlock.full_screen
+    x = 275
+    y = 75
+    border_count = 0
+    y.upto(rect.y + rect.height - 1) do |y|
+      border_count += 1 if pb.getPixel(x, y) == border_color
+    end
+    return border_count/2
+  end
 end
 
 class AcroWindow < AWindow
