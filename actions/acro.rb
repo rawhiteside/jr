@@ -28,8 +28,8 @@ class AcroAction < Action
     y_base = 138
     y_off = 20
     move_count = w.count_moves
-    puts "Move count: #{move_count}"
     return if move_count == 0
+
     loop do
       move_count.times do |i|
         next if skip.include?(i)
@@ -56,6 +56,11 @@ class AcroWindow < AWindow
 
   def initialize(rect)
     super(rect)
+  end
+
+  def getTextHelper()
+    puts 'acro helper'
+    return AcroTextHelper.new
   end
 
   def count_moves
@@ -92,7 +97,7 @@ class AcroWindow < AWindow
   end
 
   def getTextHelper()
-    InventoryTextHelper.new
+    AcroTextHelper.new
   end
 
   def self.from_point(pt)
@@ -105,4 +110,12 @@ class AcroWindow < AWindow
   end
   
 end
+
+class AcroTextHelper < InventoryTextHelper
+  def imagePrefix
+    puts "returning acro prefix"
+    return 'acro'
+  end
+end
+
 Action.add_action(AcroAction.new)
