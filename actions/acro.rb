@@ -44,7 +44,7 @@ class AcroWindow < AWindow
   # Look at the center, then over on the left. 
   def self.find
     dim = ARobot.shared_instance.screen_size
-    pt = Point.new(dim.width/2, 50)
+    pt = Point.new(dim.width/2, 220)
     w =  AcroWindow.from_point(pt)
     return w if w 
 
