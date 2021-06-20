@@ -105,7 +105,7 @@ class PickThings < Action
   def check_for_post_click_window(screen_x, screen_y)
     color = getColor(screen_x, screen_y)
     # PinnableWindowGeom
-    if PinnableWindowGeom.new.isBorder(color)
+    if PinnableWindowGeom.isBorder(color)
       AWindow.dismissAll
       return true
     else

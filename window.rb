@@ -23,7 +23,7 @@ class Window < AWindow
 
   # Return a Window from a point in the dialog
   def self.from_point(pt)
-    rect = LegacyWindowGeom.new.rect_from_point(pt)
+    rect = LegacyWindowGeom.rect_from_point(pt)
     return nil unless rect
     self.new(rect)
   end
@@ -198,7 +198,7 @@ class InventoryWindow < AWindow
   end
 
   def self.from_point(pt)
-    rect = LegacyWindowGeom.new.rect_from_point(pt)
+    rect = LegacyWindowGeom.rect_from_point(pt)
     return InventoryWindow.new(rect)
   end
 end

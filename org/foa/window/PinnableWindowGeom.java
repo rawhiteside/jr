@@ -5,15 +5,13 @@ import org.foa.PixelBlock;
 
 import java.awt.*;
 
-public class PinnableWindowGeom extends WindowGeom {
+public class PinnableWindowGeom extends ARobot {
 
-	public PinnableWindowGeom() { }
-
-	public Rectangle rectFromPoint(Point p) {
+	public static Rectangle rectFromPoint(Point p) {
 		return rectFromPoint(p, false);
 	}
 
-	public Rectangle rectFromPoint(Point p, boolean debug) {
+	public static Rectangle rectFromPoint(Point p, boolean debug) {
 		if (isOffScreen(p)) { return null; }
 		PixelBlock pb = ARobot.sharedInstance().fullScreenCapture();
 		int x = findLeftEdge(pb, p.x, p.y);
@@ -32,7 +30,7 @@ public class PinnableWindowGeom extends WindowGeom {
 
 	// From a point on the left edge.   This point should be a border pixel.
 	// Step inside the window, then search up for another border.
-	private Point findOrigin(PixelBlock pb, Point pt) {
+	private static Point findOrigin(PixelBlock pb, Point pt) {
 		int x = pt.x + 1;
 		int y = pt.y;
 		while(!isBorder(pb, x, y)) {
@@ -47,7 +45,7 @@ public class PinnableWindowGeom extends WindowGeom {
 	/**
 	 * Find and return the width of the window, given the window origin.
 	 */
-	private int findWidth(PixelBlock pb, Point pt) {
+	private static int findWidth(PixelBlock pb, Point pt) {
 		int screenWidth = ARobot.sharedInstance().screenSize().width;
 		int xStart = pt.x;
 
@@ -66,7 +64,7 @@ public class PinnableWindowGeom extends WindowGeom {
 	/**
 	 * Find the height, given the origin of the window.
 	 */
-	private int findHeight(PixelBlock pb, int x, int y) {
+	private static int findHeight(PixelBlock pb, int x, int y) {
 		int screenHeight = ARobot.sharedInstance().screenSize().height;
 		int yStart = y;
 
@@ -82,10 +80,10 @@ public class PinnableWindowGeom extends WindowGeom {
 	}
 
 
-	private void p (String s) {
+	private static void p (String s) {
 		System.out.println(s);
 	}
-	private Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
+	private static Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
 		Point origin = findOrigin(pb, new Point(x, y));
 		int width = findWidth(pb, origin);
 
@@ -102,7 +100,7 @@ public class PinnableWindowGeom extends WindowGeom {
 	/**
 	 * Find the left edge. The pixel is a border.  Not background.
 	 */
-	private int findLeftEdge(PixelBlock pb, int x, int y) {
+	private static int findLeftEdge(PixelBlock pb, int x, int y) {
 		while (x >= 0) {
 			if (isBorder(pb, x, y)) { return x; }
 			x -= 1;
@@ -110,11 +108,11 @@ public class PinnableWindowGeom extends WindowGeom {
 		return x;
 	}
 
-	private boolean isBorder(PixelBlock pb, int x, int y) {
+	private static boolean isBorder(PixelBlock pb, int x, int y) {
 		return isBorder(pb.getColorFromScreen(x, y));
 	}
 
-	public boolean isBorder(Color color) {
+	public static boolean isBorder(Color color) {
 		return color.getRed() >= 131 && color.getRed() <= 135 &&
 			color.getGreen() >= 99 && color.getGreen() <= 103 &&
 			color.getBlue() >= 71 && color.getBlue() <= 76;
