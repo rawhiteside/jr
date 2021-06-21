@@ -24,12 +24,15 @@ class AcroAction < Action
     skip = []
     skip_these.split(',').each {|s| skip << s.strip.to_i}
     
+    move_count = w.count_moves
+    if move_count == 0
+      puts "Acro: No moves to offer."
+      return
+    end
+
     x = 275
     y_base = 138
     y_off = 20
-    move_count = w.count_moves
-    return if move_count == 0
-
     loop do
       move_count.times do |i|
         next if skip.include?(i)
@@ -59,7 +62,6 @@ class AcroWindow < AWindow
   end
 
   def getTextHelper()
-    puts 'acro helper'
     return AcroTextHelper.new
   end
 
@@ -87,6 +89,7 @@ class AcroWindow < AWindow
     0.upto(pb.rect.height - 1) do |y|
       return y if sep_color == pb.get_pixel(x, y)
     end
+    puts "Acro: No separator found."
     return -1
   end
 
@@ -113,8 +116,7 @@ end
 
 class AcroTextHelper < InventoryTextHelper
   def imagePrefix
-    puts "returning acro prefix"
-    return 'acro'
+    'acro'
   end
 end
 
