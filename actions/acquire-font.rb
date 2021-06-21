@@ -21,7 +21,17 @@ class SplitLongGlyphs < Action
     afont = AFont.instance("data/font.yaml")
     font_map = afont.font_map
     font_map.keys.each do |key|
+      text = afont.text_for(key.to_a)
       v = font_map[key]
+      if v.length > 1
+        puts "Long text: #{v}"
+        puts "text_for is #{text}"
+        if v.length > 1 && !text.include?(AFont.unknown_glyph)
+          puts "Would skip this"
+          # afont.remove(save_glyph)
+        end
+      end
+
       break unless ask_about_glyph(afont, key, v) if v.length > 1
     end
   end
@@ -94,6 +104,7 @@ class SplitLongGlyphs < Action
 
 end
 Action.add_action(SplitLongGlyphs.new)
+
 
 class AcquireFont < Action
   def initialize
@@ -204,6 +215,8 @@ class AcquireFont < Action
       return PinnableTextHelper.new
     elsif img_name.include?('legacy')
       return LegacyTextHelper.new
+    elsif img_name.include?('acro')
+      return InventoryTextHelper.new
     elsif img_name.include?('inventory')
       return InventoryTextHelper.new
     else
@@ -227,7 +240,10 @@ class AcquireFont < Action
 
   def process_dir
     png_files = File.join('screen-shots', '*.png')
-    Dir.glob(png_files).each { |img| process_image(img) }
+    Dir.glob(png_files).each do |img|
+      abort = process_image(img)
+      break if abort
+    end
   end
 
   def act
