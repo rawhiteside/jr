@@ -116,14 +116,14 @@ public class PinnableWindow extends AWindow {
 
 	public PinnableWindow pin() {
 		Rectangle r = getRect();
-		dialogClick(new Point(r.width - 20, 20), null, 0.05);
+		dialogClick(new Point(r.width - 20, 20), null, 0.01);
 		m_pinned = true;
 		return this;
 	}
 
 	public void unpin() {
 		updateRect();
-		dialogClick(new Point(getRect().width - 20, 20), null, 0.05, true);
+		dialogClick(new Point(getRect().width - 20, 20), null, 0.01, true);
 		m_pinned = false;
 	}
 
