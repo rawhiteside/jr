@@ -1,0 +1,2 @@
+clobber.bat egaa55625e6a50e2e14b84697308879119dd13395bd.ega  # pearl dive animaion
+clobber.bat ega56c339a5047f277c8284651874d3854854c8b8ae.ega # pickup animation.

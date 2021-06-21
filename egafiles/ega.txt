@@ -1,0 +1,27 @@
+Diamond:
+-- Base
+ega7669ab3efe7d5fa106b494c219a851ed3138dc4e.ega  2.3M
+-- Stones
+egaf104c2d2cc65c57cad1bced1341fca259ea439a2.ega  2.3 M
+
+Opal:
+-- Stone
+ega646965f6d468ca5b4fcafb53982b53f31249c128.ega
+-- Base
+ega64f7ad9f469f64592b3f2f8d4bae45effb691945.ega
+-- Gems
+egae60f3a405a668ab4a61da9b75851793ccb6686db.ega
+
+Topaz
+-- Base
+egac07a0671c5c23dcd5ab488970e4b525f742d54a1.ega
+-- Stones
+egaad40db46860cd7f1c87f0d65eb00b035c50655fb.ega
+
+Sapphire
+-- Base
+egae00b6cebbac734624481d6d3a151b7394581da51.ega
+
+Quartz (Al's)
+-- Base
+ega57d34528925729e023055d3acddb4f997dbfb960.ega

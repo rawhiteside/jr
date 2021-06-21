@@ -1,0 +1,30 @@
+At a mine in desert:
+ - Delete everything < 5kb.
+   -- No updates about mine.
+ - Delete < 10kb
+   -- No mine updates.
+ - Delete 10, 11, 12kb
+   -- no mine updates
+ - Delete < 17kb
+   -- no mine updates.
+ - 18, 19, 20, 21
+   -- no updates
+ - 22
+   -- -- nope
+ - 23, 24, 25
+   -- Nope
+ - 26, 27, 28
+   -- nope
+ - 29, 30, 31, 32
+   -- nope
+ - 33, 34
+   -- Something around.  Not mine stones, etc.
+ - 35, 36, 37, 38
+   -- nope
+ - 39 .. 44
+   -- nope
+ - < 51K
+
+ - 200 .. 300K -- nope
+ - 2M .. 3M 
+ 
