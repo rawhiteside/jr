@@ -52,11 +52,9 @@ class Loom < Action
       sleep(0.5)
       loom.refresh
 
+      stat_wait :end
       loom.click_on(weave_what)
       sleep(0.5)
-
-      loom.refresh
-      restring loom
 
       loom.refresh
       reload loom

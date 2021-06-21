@@ -132,8 +132,8 @@ class FlaxGrow < Action
     plots = step_patterns(@rows, @cols)
     plots.each do |s|
       @walker.steps([s], KEY_DELAY) unless s == :none
-      dlg = plant(pop_points[s])
       sleep @plant_delay
+      dlg = plant(pop_points[s])
       piler.pile(dlg)
       windows << dlg
     end
