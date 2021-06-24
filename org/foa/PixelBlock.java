@@ -63,6 +63,15 @@ public class PixelBlock extends ARobot {
 	}
 
 	/**
+	 * Find the bext fuzzy match for a template image in this larger image. 
+	 * @param threshold - A max per-pixel color difference.  The
+	 * *distance* here is defined as the max(delta(r), delta(g),
+	 * delta(b)).
+	 */
+	public Point findTemplateBest(PixelBlock template, int threshold) {
+		return ImageUtils.findTemplateBest(m_bufferedImage, template.bufferedImage(), threshold);
+	}
+	/**
 	 * Find and exact match for a template image in this larger image.
 	 */
 	public Point findTemplateExact(PixelBlock template) {

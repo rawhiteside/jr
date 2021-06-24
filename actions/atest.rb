@@ -71,7 +71,6 @@ class CaptureCLBackground < Action
 
   end
 
-
   def act
     filename = "images/#{@vals['name']}.png"
     puts filename
@@ -108,17 +107,32 @@ class FindExactTest < Action
 end
 Action.add_action(FindExactTest.new)
 
-class ConfirmationTest < Action
 
-  def initialize(name = 'Test Confirmation yes/no')
+class FindBest < Action
+
+  def initialize(name = 'Find best Template')
     super(name, 'Test/Dev')
   end
 
+  def setup(parent)
+    gadgets = [
+      {:type => :text, :label => 'Name of template (one word)', :name => 'name'},
+      {:type => :number, :label => 'threshold', :name => 'thresh'},
+    ]
+    @vals = UserIO.prompt(parent, name, 'Template image to find', gadgets)
+  end
+
+
   def act
-    ConfirmationWindow.yes
+    filename = "images/#{@vals['name']}.png"
+    threshold = @vals['thresh'].to_i
+    template = PixelBlock.load_image(filename)
+    pb_full = PixelBlock.full_screen
+    pt = pb_full.find_template_best(template, threshold)
+    mm(pt) if pt
   end
 end
-Action.add_action(ConfirmationTest.new)
+Action.add_action(FindBest.new)
 
 class MouseWheelTest < Action
   def initialize(name = 'Use the mouse wheel')

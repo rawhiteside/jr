@@ -45,6 +45,53 @@ public class ImageUtils {
 		return true;
 	}
 
+	/**
+	 * Search image for the best subimage match, using the provided
+	 * threishold.  Threshold is a per-pixel maximum color difference
+	 * allowed.  And "distance" is defined here as max(delta-r, delta-g delta-b).
+	 */
+	public static Point findTemplateBest(BufferedImage image, BufferedImage template, int thresh) {
+		Point bestPoint = null;
+		int bestDiff = Integer.MAX_VALUE;
+		for(int y = 0; y < (image.getHeight() - template.getHeight()); y++) {
+			for(int x = 0; x < (image.getWidth() - template.getWidth()); x++) {
+				int diff = diffHere(image, template, x, y, thresh);
+				if (diff < bestDiff) {
+					bestDiff = diff;
+					bestPoint = new Point(x, y);
+				}
+			}
+		}
+		return bestPoint;
+	}
+	
+
+	private static int diffHere(BufferedImage image, BufferedImage template, int x, int y, int thresh) {
+		int height = template.getHeight();
+		int width =  template.getWidth();
+		int maxDiff = 0;
+		for(int iy = 0; iy < height; iy++) {
+			for(int ix = 0; ix < width; ix++) {
+				
+				Color cTemplate = new Color(template.getRGB(ix, iy));
+				Color cImage = new Color(image.getRGB(x + ix, y + iy));
+
+				int diff = colorDiff(cImage, cTemplate);
+				if (diff > thresh) { return Integer.MAX_VALUE; }
+				if (diff > maxDiff) {maxDiff = diff; }
+			}
+		}
+		return maxDiff;
+	}
+	private static int colorDiff(Color c1, Color c2) {
+		int deltaR = Math.abs(c1.getRed() - c2.getRed());
+		int deltaG = Math.abs(c1.getGreen() - c2.getGreen());
+		int deltaB = Math.abs(c1.getBlue() - c2.getBlue());
+		return Math.max(deltaR, Math.max(deltaG, deltaB));
+		
+	}
+
+
 	public static BufferedImage resize(BufferedImage inputImage, float factor) {
  
 		int outputWidth = (int) (inputImage.getWidth() / factor);
