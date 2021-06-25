@@ -10,19 +10,6 @@ import org.foa.PixelBlock;
 
 
 public class LegacyTextHelper implements ITextHelper{
-	private static Map s_bgMap = null;
-	static {
-		try {
-			FileReader r = new FileReader("data/chat-bg.yaml");
-			Yaml yaml = new Yaml();
-			s_bgMap = (Map) yaml.load(r);
-			r.close();
-		} catch(Exception e) {
-			System.out.println("Exception: in LegacyTextHelpere" + e.toString());
-			e.printStackTrace();
-		}
-	}
-
 
 	public LegacyTextHelper() {
 	}
@@ -38,7 +25,6 @@ public class LegacyTextHelper implements ITextHelper{
 	public AFont getFontMap() { return AFont.instance("data/font.yaml"); }
 
 	public boolean isInk(Color c, int x, int y) {
-		//return s_bgMap.get(c.getRGB() & 0xFFFFFF) == null;
 		return c.getRed() < RMIN || c.getGreen() < GMIN || c.getBlue() < BMIN;
 	}
 
