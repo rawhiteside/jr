@@ -3,7 +3,6 @@ package org.foa.window;
 import java.awt.*;
 import java.util.Map;
 import java.io.*;
-import org.yaml.snakeyaml.Yaml;
 
 import org.foa.PixelBlock;
 import org.foa.text.TextReader;

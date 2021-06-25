@@ -27,8 +27,7 @@ class SplitLongGlyphs < Action
         puts "Long text: #{v}"
         puts "text_for is #{text}"
         if v.length > 1 && !text.include?(AFont.unknown_glyph)
-          puts "Would skip this"
-          # afont.remove(save_glyph)
+          afont.remove(key.to_a)
         end
       end
 
@@ -220,7 +219,7 @@ class AcquireFont < Action
     elsif img_name.include?('inventory')
       return InventoryTextHelper.new
     else
-      puts "unknown type of screenshot image"
+      puts "unknown type of screenshot image: #{img_name}"
     end
     nil
   end
