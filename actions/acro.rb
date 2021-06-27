@@ -86,7 +86,7 @@ class AcroWindow < AWindow
   # constant color.  Find the first.
   def find_separator(pb, x)
     sep_color = Color.new(113, 76, 47)
-    125.upto(pb.rect.height - 1) do |y|
+    (125 - pb.rect.y).upto(pb.rect.height - 1) do |y|
       return y if ImageUtils.color_diff(sep_color, pb.get_color(x, y)) < 2
       # return y if sep_color == pb.get_pixel(x, y)
     end
