@@ -14,6 +14,11 @@ module Utils
     AWindow.dismiss_all
   end
 
+  def find_template_best(template, threshold)
+    pb_full = PixelBlock.full_screen
+    return pb_full.find_template_best(template, threshold)
+  end
+
   def fill_jugs
     send_string('7')
     HowMuch.max
@@ -35,7 +40,6 @@ module Utils
   end
 
   # Wait for a stat to be non-red in the skills window
-  # 'Can't-find-stat' means the same as :red
   def stat_wait(arr)
 
     arr = [arr] unless arr.kind_of?(Array)
