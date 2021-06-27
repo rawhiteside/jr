@@ -163,8 +163,6 @@ class AcquireFont < Action
       ChatWindow.find
     when CLOCK_LOC
       ClockLocWindow.instance
-    when SKILLS
-      SkillsWindow.new
     when INVENTORY
       InventoryWindow.find
     when PINNABLE
