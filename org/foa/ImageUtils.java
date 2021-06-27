@@ -83,7 +83,8 @@ public class ImageUtils {
 		}
 		return maxDiff;
 	}
-	private static int colorDiff(Color c1, Color c2) {
+
+	public static int colorDiff(Color c1, Color c2) {
 		int deltaR = Math.abs(c1.getRed() - c2.getRed());
 		int deltaG = Math.abs(c1.getGreen() - c2.getGreen());
 		int deltaB = Math.abs(c1.getBlue() - c2.getBlue());

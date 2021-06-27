@@ -71,13 +71,13 @@ class AcroWindow < AWindow
 
     # The double-line separator below the moves to offer. 
     ymax = find_separator(pb, x)
+    puts "no separator" if ymax == -1
     return 0 if ymax == -1
-    
-    
-    border_color = Color.new(137, 83, 18).getRGB & 0xffffff
+
+    border_color = Color.new(137, 83, 18)
     border_count = 0
     5.upto(ymax) do |y|
-      border_count += 1 if border_color == pb.get_pixel(x, y)
+      border_count += 1 if ImageUtils.color_diff(border_color,pb.get_color(x, y)) < 2
     end
     return border_count / 2
   end
@@ -85,9 +85,10 @@ class AcroWindow < AWindow
   # Below the moves I have to offer is a double-line separator of a
   # constant color.  Find the first.
   def find_separator(pb, x)
-    sep_color = Color.new(113, 76, 47).getRGB & 0xffffff
-    0.upto(pb.rect.height - 1) do |y|
-      return y if sep_color == pb.get_pixel(x, y)
+    sep_color = Color.new(113, 76, 47)
+    125.upto(pb.rect.height - 1) do |y|
+      return y if ImageUtils.color_diff(sep_color, pb.get_color(x, y)) < 2
+      # return y if sep_color == pb.get_pixel(x, y)
     end
     puts "Acro: No separator found."
     return -1
