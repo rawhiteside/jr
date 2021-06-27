@@ -159,9 +159,9 @@ class BarleyWindow < PinnableWindow
 	done = false
       else
 	mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
-	dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
+	dialog_click(Point.new(*@locs['Water']), delay_sec)
 #	mm(to_screen_coords(Point.new(*@locs['Fert'])),delay_sec)
-#	dialog_click(Point.new(*@locs['Fert']), 'tc', delay_sec)
+#	dialog_click(Point.new(*@locs['Fert']), delay_sec)
 	done = true
       end
     end
@@ -173,8 +173,8 @@ class BarleyWindow < PinnableWindow
       # Sometimes misses.
       delay_sec = 0.01
       mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
-      dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
-      dialog_click(Point.new(*@locs['Water']), 'tc', delay_sec)
+      dialog_click(Point.new(*@locs['Water']), delay_sec)
+      dialog_click(Point.new(*@locs['Water']), delay_sec)
 #      # Sometimes misses.
 #      mm(to_screen_coords(Point.new(*@locs['Fert'])), delay_sec)
 #      dialog_click(Point.new(*@locs['Fert']), delay_sec)

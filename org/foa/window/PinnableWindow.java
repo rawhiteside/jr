@@ -59,14 +59,14 @@ public class PinnableWindow extends AWindow {
 
 	private static double MIN_DELAY = 0.05;
 
-	public void dialogClick(Point p, String refreshLoc, double delay) {
-		dialogClick(p, refreshLoc, delay, false);
+	public void dialogClick(Point p, double delay) {
+		dialogClick(p, delay, false);
 	}
 
-	public void dialogClick(Point p, String refreshLoc, double delay, boolean unpin) {
+	public void dialogClick(Point p, double delay, boolean unpin) {
 		claimRobotLock();
 		try {
-			super.dialogClick(p, refreshLoc, delay);
+			super.dialogClick(p, delay);
 			if (!unpin) {updateRect();}
 		}
 		catch(ThreadKilledException e) { throw e; }
@@ -116,20 +116,20 @@ public class PinnableWindow extends AWindow {
 
 	public PinnableWindow pin() {
 		Rectangle r = getRect();
-		dialogClick(new Point(r.width - 20, 20), null, 0.01);
+		dialogClick(new Point(r.width - 20, 20), 0.01);
 		m_pinned = true;
 		return this;
 	}
 
 	public void unpin() {
 		updateRect();
-		dialogClick(new Point(getRect().width - 20, 20), null, 0.01, true);
+		dialogClick(new Point(getRect().width - 20, 20), 0.01, true);
 		m_pinned = false;
 	}
 
 	public void unpin(double delay) {
 		updateRect();
-		dialogClick(new Point(getRect().width - 20, 20), null, delay, true);
+		dialogClick(new Point(getRect().width - 20, 20), delay, true);
 		m_pinned = false;
 	}
 

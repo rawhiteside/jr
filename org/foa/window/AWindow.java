@@ -65,14 +65,10 @@ public abstract class AWindow extends ARobot  {
 	}
 
 
-	public void dialogClick(Point p) { dialogClick(p, null); }
-	public void dialogClick(Point p, String refreshLoc) { dialogClick(p, refreshLoc, 0.01); }
-	public void dialogClick(Point p, String refreshLoc, double delay) {
+	public void dialogClick(Point p) { dialogClick(p, 0.01); }
+	public void dialogClick(Point p, double delay) {
 		claimRobotLock();
 		try {
-			if (refreshLoc != null) {
-				refresh(refreshLoc);
-			}
 			lclickAt(toScreenCoords(p), delay);
 		}
 		catch(ThreadKilledException e) { throw e; }
