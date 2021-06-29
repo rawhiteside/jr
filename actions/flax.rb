@@ -118,7 +118,7 @@ class FlaxGrow < Action
 
   
   # Time to hold down the key to take a good step.
-  KEY_DELAY = 0.01
+  KEY_DELAY = 0.25
   
   def grow_one_batch(pop_points)
     @walker.walk_to(@plant_wl)
