@@ -98,6 +98,7 @@ class Vegetables < Action
     },
     "Watermelons/Isis' Bounty/(4) grass, sand" => {
       :water => 3,
+      :tendings => 4,
       :min_width => 272,
     },
     "Watermelons/Set's Vintage/(2) grass" => {
@@ -178,7 +179,7 @@ class Vegetables < Action
 
     # Needs to be down below the build menu.  Negative overlap, as the
     # windows get larger at harvest time.
-    tiler = Tiler.new(0, 190, -0.2)
+    tiler = Tiler.new(0, 190, -0.15)
     tiler.y_offset = 20
     tiler.min_width = @vegi_data[:min_width]
     plant_count = 0
