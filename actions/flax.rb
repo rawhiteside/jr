@@ -45,9 +45,6 @@ class FlaxGrow < Action
       :right => Point.new(center[0] + offset, center[1] + offset),
       :left => Point.new(center[0] - offset, center[1] + offset),
       :down => Point.new(center[0], center[1] + offset),
-      :right_big => Point.new(center[0] + offset, center[1] + offset),
-      :left_big => Point.new(center[0] - offset, center[1] + offset),
-      :down_big => Point.new(center[0], center[1] + offset),
     }
   end
 
@@ -108,11 +105,11 @@ class FlaxGrow < Action
     steps = [:none]
     rows.times do |irow|
       if (irow % 2 == 0)
-        steps << [:right_big] * (cols-1)
+        steps << [:right] * (cols-1)
       else
-        steps << [:left_big] * (cols-1)
+        steps << [:left] * (cols-1)
       end
-      steps << [:down_big] unless irow == rows - 1
+      steps << [:down] unless irow == rows - 1
     end
     
     return steps.flatten
@@ -397,7 +394,7 @@ class FlaxSeeds < Action
     loc = [head[0] + pop_offset, head[1]]
     (@row_len-1).times {
       plant_and_pin(loc)
-      first_dir == 'right' ? @walker.right_big : @walker.left_big
+      first_dir == 'right' ? @walker.right : @walker.left
       sleep(0.1)
     }
 
@@ -410,7 +407,7 @@ class FlaxSeeds < Action
     loc = [head[0] - pop_offset, head[1] + 100]
     @row_len.times {
       plant_and_pin(loc)
-      first_dir == 'left' ? @walker.right_big : @walker.left_big 
+      first_dir == 'left' ? @walker.right : @walker.left 
     }
   end
 
