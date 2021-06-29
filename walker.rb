@@ -106,7 +106,7 @@ class Walker < ARobot
   end
 
   def step(dir, delay = KEY_DELAY)
-    self.send dir
+    self.send dir delay
   end
 
 
