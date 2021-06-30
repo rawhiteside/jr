@@ -159,11 +159,16 @@ class SandMine < AbstractMine
 
   def run_one_workload(recipe, stones_by_name, delay)
     first_stone = nil
+    bare_stone_count = 0
     recipe.each_index do |i|
       
       name = recipe[i]
       stone = stones_by_name[name]
-      first_stone = stone if i == 0
+      if i == 0
+        first_stone = stone
+        bare_stone_count = count_highlight_pixels(first_stone)
+      end
+
 
       is_last_stone = (i == ((recipe.size - 1))) 
       key = 'A'
@@ -172,11 +177,11 @@ class SandMine < AbstractMine
       send_string_at(stone.x, stone.y, key, delay)
     end
 
-    wait_for_highlight_gone(first_stone)
+    wait_for_highlight_gone(first_stone,bare_stone_count)
     dismiss_strange_windows    
   end
 
-  def wait_for_highlight_gone(stone, timeout_secs = 6)
+  def wait_for_highlight_gone(stone, bare_stone_count, timeout_secs = 6)
     start = Time.new
     
     sleep 0.2
@@ -191,6 +196,8 @@ class SandMine < AbstractMine
       end
       if (Time.new - start) > timeout_secs
         log_result "highlight wait time-out (6 seconds)"
+        puts "Highlight count was: #{highlight_count}"
+        UserIO.show_image @last_big_stone_pic
         return nil
       end
     end
@@ -202,7 +209,8 @@ class SandMine < AbstractMine
     hsb = Color.RGBtoHSB(color.red, color.green, color.blue, nil)
     hue = hsb[0] * 360  # Angle
     sat = hsb[1] * 255
-    return (186..196).cover?(hue) && (80..97).cover?(sat)
+    val = hsb[2] * 255
+    return (186..196).cover?(hue) && (80..97).cover?(sat)&& (190..220).cover?(val)
   end
 
   def count_highlight_pixels(stone)
@@ -217,11 +225,13 @@ class SandMine < AbstractMine
   end
   
   
-  # A pb larger than the stone, which will include the highlight rung. 
+  # A pb larger than the stone, which will include the highlight ring. 
+  @last_big_stone_pic = nil
   def big_stone_pic(stone)
     rect = stone.rectangle
     r = Rectangle.new(rect.x - 100, rect.y - 100, rect.width + 200, rect.height + 200)
     pb = PixelBlock.new(r)
+    @last_big_stone_pic = pb
     return pb
   end
   
