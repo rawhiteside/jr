@@ -13,9 +13,9 @@ Parameter set 1:
   custom_text_1: ''
   custom_text_2: ''
 Apiaries:
-  code.code: "# a comment\ndef apiary\n  pb_subimage = PixelBlock.load_image('images/apiary2.png')\n\
+  code.code: "# a comment\ndef apiary\n  pb_subimage = PixelBlock.load_image('images/apiary3.png')\n\
     \  sleep 0.3  # Wait for running to stop. \n\n  pt = find_template_best pb_subimage,\
-    \ 20\n  stat_wait :spd\n  mm pt\n  sleep 0.01\n  send_string 't', 0.2\n  send_string\
+    \ 25\n  stat_wait :spd\n  mm pt\n  sleep 0.01\n  send_string 't', 0.2\n  send_string\
     \ 'c'\n\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef stash\n  return\
     \    # XXX Turn stashing off.\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n\
     \  if win\n    HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max if win.click_on\
