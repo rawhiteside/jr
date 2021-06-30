@@ -22,6 +22,7 @@ class PickThings < Action
     # before it disapears from the scene.  This is the delay required
     # so that we dont' click on it again.  Set it from your subclass. 
     @post_gather_wait = 0.5
+    @window_geom = PinnableWindowGeom.new
   end
 
 
@@ -102,10 +103,9 @@ class PickThings < Action
   # "Handle" might mean clicking on a "Pick" menu item, for example.
   # Returns true if it's a mistery window, or if it's "Too far away."
   # In either case, this method should make the window go away. 
-  @wg = PinnableWindowGeom.new
   def check_for_post_click_window(screen_x, screen_y)
     color = getColor(screen_x, screen_y)
-    if @wg.isBorder(color)
+    if @window_geom.isBorder(color)
       AWindow.dismissAll
       return true
     else
