@@ -197,6 +197,7 @@ public abstract class AWindow extends ARobot  {
 	public Point clickWord(String word) {
 		Point p = coordsForWord(word);
 		if(p != null) {lclickAt(p);}
+		flushTextReader();
 		return p;
 	}
 
@@ -280,9 +281,9 @@ public abstract class AWindow extends ARobot  {
 			lcDest.translate(p.x - rect.x, p.y - rect.y);
 
 			mm(rect.x, rect.y, delay);
-			rbd();
+			lbd();
 			mm(p, delay);
-			rbu();
+			lbu();
 			sleepSec(delay);
 			return isDialogAt(lcDest);
 		}

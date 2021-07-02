@@ -36,7 +36,7 @@ public class PinnableWindow extends AWindow {
 	// Reduce width to exclude the pin. 
 	public Rectangle textRectangle() {
 		Rectangle rect = getRect();
-		rect.width -= 30;
+		rect.width -= 25;
 		return rect;
 	}
 
