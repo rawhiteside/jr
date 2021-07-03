@@ -52,7 +52,7 @@ class GlazierWindow < PinnableWindow
 	  got_it = click_on(what)
         end
       end
-      sleep 60 if got_it
+      sleep 20 if got_it
       break if data_vals[:glass_amount].to_s == '19'
 
       # Wait for menu to appear again, indicating that the last thing
