@@ -320,7 +320,7 @@ class FlaxSeeds < Action
     end
   end
 
-  def rip_out(w)
+  def wait_till_gone(w)
     # Wait for "Harvest" to complete
     loop do
       w.refresh
@@ -331,20 +331,6 @@ class FlaxSeeds < Action
       break if w.coords_for_line('The seeds')
       sleep 0.2
     end
-    # Unpin, then rip. 
-    w.unpin
-    dim = screen_size
-    centerx = dim.width/2
-    centery = dim.height/2
-
-    xoffset = 350
-    yoffset = 150
-
-    delay = 0.1
-    mm centerx + xoffset, centery + yoffset, delay
-    send_string 'r', 0.1
-    mm centerx - xoffset, centery- yoffset, delay
-    send_string 'r', 0.1
   end
 
   def harvest
@@ -360,11 +346,15 @@ class FlaxSeeds < Action
     end
 
     @piler.swap
+    last_win = nil
     @windows.each do |w|
+      last_win.unpin if last_win
+      last_win = w
       harvest_one(w)
-      rip_out(w)
+      @piler.pile(w)
     end
-    
+    wait_till_gone(last_win)
+    last_win.unpin
   end
 
   def harvest_one(w)
@@ -415,8 +405,15 @@ class FlaxSeeds < Action
   # the menu
   # Also, uses the @tiler, and appends the window to @windows
   def plant_and_pin(loc)
+    # Rip anything that's there. 
+    pt = Point.new(loc[0], loc[1])
+    with_robot_lock do
+      mm pt
+      send_string 'RR', 0.05
+    end
+
     @w_plant.click_on('Plant')
-    w = PinnableWindow.from_screen_click(Point.new(loc[0], loc[1]))
+    w = PinnableWindow.from_screen_click(pt)
     if w
       w.pin
       @piler.pile(w)
