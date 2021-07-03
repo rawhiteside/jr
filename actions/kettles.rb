@@ -131,11 +131,7 @@ class Potash < KettleAction
   # vals[:water] and vals[:wood]
   def kettle_data(w)
     vals = {}
-    #puts "Window text"
-    #puts w.read_text
     text = w.read_text
-    #puts "Data text"
-    #puts text
     match = Regexp.new('Wood: ([0-9]+)').match(text)
     vals[:wood] = match[1].to_i if match
     match = Regexp.new('Water: ([0-9]+)').match(text)
@@ -251,11 +247,11 @@ Action.add_action(Potash.new)
 # XXX Refactor this more cleanly. 
 class Acid < Potash
   def initialize
-    super('acid')
+    super('Acid')
   end
   
   def make_this
-    'acid'
+    'Acid'
   end
 end
 Action.add_action(Acid.new)
