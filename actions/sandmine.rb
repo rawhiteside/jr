@@ -158,15 +158,15 @@ class SandMine < AbstractMine
   end
 
   def run_one_workload(recipe, stones_by_name, delay)
-    first_stone = nil
+    last_stone = nil
     bare_stone_count = 0
     recipe.each_index do |i|
       
       name = recipe[i]
       stone = stones_by_name[name]
       if i == 0
-        first_stone = stone
-        bare_stone_count = count_highlight_pixels(first_stone)
+        last_stone = stone
+        bare_stone_count = count_highlight_pixels(last_stone)
       end
 
 
@@ -177,7 +177,7 @@ class SandMine < AbstractMine
       send_string_at(stone.x, stone.y, key, delay)
     end
 
-    wait_for_highlight_gone(first_stone,bare_stone_count)
+    wait_for_highlight_gone(last_stone,bare_stone_count)
     dismiss_strange_windows    
   end
 
@@ -191,6 +191,7 @@ class SandMine < AbstractMine
       sleep 0.1
       return if dismiss_strange_windows
       highlight_count = count_highlight_pixels(stone)
+      # puts "wait-for-highlight-gone: bare-count= #{bare_stone_count} curr-count = #{highlight_count}"
       if highlight_count < 20  # Magic number
         return
       end
@@ -210,7 +211,7 @@ class SandMine < AbstractMine
     hue = hsb[0] * 360  # Angle
     sat = hsb[1] * 255
     val = hsb[2] * 255
-    return (186..196).cover?(hue) && (80..97).cover?(sat)&& (190..220).cover?(val)
+    return (186..196).cover?(hue) && (80..97).cover?(sat) && val > 100
   end
 
   def count_highlight_pixels(stone)
