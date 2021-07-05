@@ -33,7 +33,6 @@ end
 class RunAndDo < Action
   def initialize
     super('Run and do', 'Misc')
-    @context = RunAndDoContext.new
   end
 
   def persistence_name
@@ -59,6 +58,7 @@ class RunAndDo < Action
   end
 
   def init_stuff
+
     path_text = @vals['path']
 
     if path_text.include?('Stash')
@@ -66,6 +66,8 @@ class RunAndDo < Action
     end
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
     code = @vals['code.code']
+
+    @context = RunAndDoContext.new
     @context.instance_eval(code)
     true
   end
