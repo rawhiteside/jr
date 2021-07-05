@@ -246,6 +246,7 @@ class Piler < ARobot
       break unless w
 
       w.set_default_refresh_loc('tl')
+      w.refresh
       windows << w
       pile(w)
     end
