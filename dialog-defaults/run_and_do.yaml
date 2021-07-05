@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Sheba Dowsing rods
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -49,18 +49,19 @@ Apiaries:
     -919, -6709\napiary\n-919, -6712\napiary\n-919, -6715\napiary\n-919, -6718\napiary\n\
     -919, -6721\napiary\n-919, -6724\napiary\n-919, -6727\napiary\n-919, -6730\napiary\n\
     -919, -6733\napiary\n-919, -6736\napiary\n-919, -6739\napiary\n-919, -6742\napiary\n\
-    -919, -6745\napiary\n-919, -6748\n\n# Science desert line\n-912, -6744\napiary\n\
-    -912, -6747\napiary\n-912, -6750\napiary\n-913, -6753\napiary\n-913, -6756\napiary\n\
-    -913, -6759\napiary\n-913, -6762\napiary\n-913, -6765\napiary\n-913, -6768\napiary\n\
-    -912, -6771\napiary\n-912, -6774\napiary\n-912, -6777\napiary\n-912, -6780\napiary\n\
-    -912, -6783\napiary\n-912, -6786\napiary\n-912, -6789\napiary\n-912, -6792\napiary\n\
-    -912, -6795\napiary\n-912, -6798\napiary\n-912, -6801\napiary\n-910, -6801\napiary\n\
-    -907, -6801\napiary\n-904, -6801\napiary\n-901, -6801\napiary\n-898, -6801\napiary\n\
-    -895, -6801\napiary\n-892, -6801\napiary\n-889, -6801\napiary\n-886, -6801\napiary\n\
-    -883, -6801\napiary\n-880, -6801\napiary\n-877, -6801\napiary\n-874, -6801\napiary\n\
-    -871, -6801\napiary\n-868, -6801\napiary\n-865, -6801\napiary\n-862, -6801\napiary\n\
-    -859, -6800\napiary\n-857, -6797\napiary\n-854, -6797\napiary\n# Back to stash\n\
-    -865, -6794\n-880, -6789\n-894, -6784\n-957, -6775\n"
+    -919, -6745\napiary\n-919, -6748\napiary\n\n# Science desert line\n-912, -6744\n\
+    apiary\n-912, -6747\napiary\n-912, -6750\napiary\n-913, -6753\napiary\n-913, -6756\n\
+    apiary\n-913, -6759\napiary\n-913, -6762\napiary\n-913, -6765\napiary\n-913, -6768\n\
+    apiary\n-912, -6771\napiary\n-912, -6774\napiary\n-912, -6777\napiary\n-912, -6780\n\
+    apiary\n-912, -6783\napiary\n-912, -6786\napiary\n-912, -6789\napiary\n-912, -6792\n\
+    apiary\n-912, -6795\napiary\n-912, -6798\napiary\n-912, -6801\napiary\n-910, -6801\n\
+    apiary\n-907, -6801\napiary\n-904, -6801\napiary\n-901, -6801\napiary\n-898, -6801\n\
+    apiary\n-895, -6801\napiary\n-892, -6801\napiary\n-889, -6801\napiary\n-886, -6801\n\
+    apiary\n-883, -6801\napiary\n-880, -6801\napiary\n-877, -6801\napiary\n-874, -6801\n\
+    apiary\n-871, -6801\napiary\n-868, -6801\napiary\n-865, -6801\napiary\n-862, -6801\n\
+    apiary\n-859, -6799\n-859, -6800\napiary\n-857, -6796\n-857, -6797\napiary\n-854,\
+    \ -6797\napiary\n# Back to stash\n-865, -6794\n-880, -6789\n-894, -6784\n-957,\
+    \ -6775\n"
   path.custom_text_0: apiary
   path.custom_text_1: ''
 Tree run:
@@ -226,3 +227,66 @@ Test:
     stash
   custom_text_0: ''
   custom_text_1: ''
+Sheba Dowsing rods:
+  code.code: "# Setup:\n# - Standing near the crafting bench\n# - The pinned cactus\
+    \ menus in a stack bottom left. \n# - Atop that stack\n# - - The Novice carving\
+    \ menu (sharpened stick)\n# - - The Bench/Assembly menu (Dowsing rod)\n\n\ndef\
+    \ start_pass\n  if @stack_done.nil?\n    swidth = screen_size.width\n    sheight\
+    \ = screen_size.height\n    y_stack = sheight - 10\n    x_stack = 10\n\n    #\
+    \ Move the bench/assembly menu\n    @dowse_win = PinnableWindow.from_point(x_stack,\
+    \ y_stack)\n    tgt = Point.new((swidth * 0.6).to_i, (sheight * 0.3).to_i)\n \
+    \   @dowse_win.drag_to(tgt)\n    \n    # Move the carving menu\n    @carve_win\
+    \ = PinnableWindow.from_point(x_stack, y_stack)\n    tgt = Point.new((swidth *\
+    \ 0.6).to_i, (sheight * 0.5).to_i)\n    @carve_win.drag_to(tgt)\n    \n    @piler\
+    \ = Piler.new\n    @done_windows = @piler.pile_stack(x_stack, y_stack)\n    @done_windows.reverse!\n\
+    \n    @stack_done = true\n\n  end\n  @windows = @done_windows\n  @done_windows\
+    \ = []\n  @piler.swap\nend\n\ndef carve\n  stat_wait :foc\n  @carve_win.click_on('Carve\
+    \ a Sharpened')\nend\n\ndef assemble\n  stat_wait :foc\n  @dowse_win.click_on('Make\
+    \ a Wooden')\nend\n\ndef collect\n  w = @windows.shift\n  @done_windows << w\n\
+    \  w.refresh\n  @piler.pile w\n  loop do\n    break if w.read_text.include? 'Collect'\n\
+    \    sleep 0.2\n    w.refresh\n  end\n  while w.click_on 'Collect'\n    w.refresh\n\
+    \    sleep 0.2\n  end\nend\n"
+  repeat: Repeat
+  path: |2+
+
+    start_pass
+
+    3721, -5427
+    3701, -5454
+    3702, -5466
+    collect
+    collect
+    carve
+
+    3702, -5469
+    collect
+    collect
+    3703, -5473
+    collect
+    collect
+    3703, -5477
+    collect
+    collect
+    3703, -5481
+    carve
+    collect
+    collect
+    3703, -5485
+    collect
+    collect
+    3703, -5490
+    collect
+    collect
+    3703, -5493
+    collect
+    collect
+
+
+    # Return to bench
+    3702, -5453
+    3721, -5428
+    assemble
+
+
+  path.custom_text_0: collect
+  path.custom_text_1: ''
