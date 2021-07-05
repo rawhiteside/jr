@@ -115,10 +115,16 @@ class PickThings < Action
 
   def click_on_this?(pb, pt)
     gather_color?(pb, pt.x, pt.y) &&
-      gather_color?(pb, pt.x + 1, pt.y) &&
+
       gather_color?(pb, pt.x - 1, pt.y) &&
+      gather_color?(pb, pt.x + 1, pt.y) &&
+
       gather_color?(pb, pt.x, pt.y + 1) &&
-      gather_color?(pb, pt.x, pt.y - 1)
+      gather_color?(pb, pt.x, pt.y - 1) &&
+
+      gather_color?(pb, pt.x + 1, pt.y + 1) &&
+      gather_color?(pb, pt.x + 1, pt.y - 1)
+
   end
 
   # Returns:

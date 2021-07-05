@@ -68,10 +68,15 @@ class PickStones < PickThings
     hsb = Color.RGBtoHSB(r, g, b, nil)
     hsb[0] = (360 * hsb[0]).to_i
     hsb[1] = (256 * hsb[1]).to_i
+    hsb[2] = (256 * hsb[2]).to_i
 
     # Gypsum
     if @vals['baux-gyp'] == 'Gypsum'
-      return (31..36).cover?(hsb[0]) && (85..100).cover?(hsb[1])
+      g_hue = 36
+      g_sat = 73
+      g_val = 219
+      return (hsb[0] - g_hue).abs < 6 && (hsb[1] - g_sat).abs < 6 && (hsb[2] - g_val).abs < 10
+      # return (31..36).cover?(hsb[0]) && (85..100).cover?(hsb[1])
     end
     
     # Bauxite
