@@ -169,11 +169,11 @@ public class ARobot {
 	public void mbd() {mousePress(InputEvent.BUTTON2_DOWN_MASK);}
 	public void mbu() {mouseRelease(InputEvent.BUTTON2_DOWN_MASK);}
 
-	public void rclickAtRestore(Point p) {rclickAtRestore(p.x, p.y);}
-	public void rclickAtRestore(int x, int y) {
+	public void xrclickAtRestore(Point p) {xrclickAtRestore(p.x, p.y);}
+	public void xrclickAtRestore(int x, int y) {
 		checkForPause();
 		Point prevPos = mousePos();
-		rclickAt(x, y);
+		xrclickAt(x, y);
 		mm(prevPos.x, prevPos.y);
 	}
 
@@ -185,11 +185,11 @@ public class ARobot {
 		mm(prevPos.x, prevPos.y);
 	}
 
-	public void rclickAt(Point p) { rclickAt(p.x, p.y, MOUSE_MOVE_DELAY); }
-	public void rclickAt(Point p, double delaySec) { rclickAt(p.x, p.y, delaySec); }
+	public void xrclickAt(Point p) { xrclickAt(p.x, p.y, MOUSE_MOVE_DELAY); }
+	public void xrclickAt(Point p, double delaySec) { xrclickAt(p.x, p.y, delaySec); }
 
-	public void rclickAt(int x, int y) { rclickAt(x, y, MOUSE_MOVE_DELAY); }
-	public void rclickAt(int x, int y, double delaySec) {
+	public void xrclickAt(int x, int y) { xrclickAt(x, y, MOUSE_MOVE_DELAY); }
+	public void xrclickAt(int x, int y, double delaySec) {
 		claimRobotLock();
 		try {
 			mm(x, y, delaySec);
