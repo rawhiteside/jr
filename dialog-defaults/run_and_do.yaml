@@ -1,5 +1,5 @@
 ---
-2: Sheba Dowsing rods
+2: Apiaries
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -37,31 +37,30 @@ Apiaries:
     apiary\t\n-929, -6625\napiary\t\n-929, -6622\napiary\t\n-929, -6619\napiary\t\n\
     -929, -6616\napiary\t\n-929, -6613\napiary\t\n-929, -6610\napiary\t\n-929, -6607\n\
     apiary\t\n-929, -6604\napiary\t\n-929, -6601\napiary\t\n\n\n# East desert line\n\
-    -919, -6601\napiary\n-919, -6604\napiary\n-919, -6607\napiary\n-919, -6610\napiary\n\
-    -919, -6613\napiary\n-919, -6616\napiary\n-919, -6619\napiary\n-919, -6622\napiary\n\
-    -919, -6625\napiary\n-919, -6628\napiary\n-919, -6631\napiary\n-919, -6634\napiary\n\
-    -919, -6637\napiary\n-919, -6640\napiary\n-919, -6643\napiary\n-919, -6646\napiary\n\
-    -919, -6649\napiary\n-919, -6652\napiary\n-919, -6655\napiary\n-919, -6658\napiary\n\
-    -919, -6661\napiary\n-919, -6664\napiary\n-919, -6667\napiary\n-919, -6670\napiary\n\
-    -919, -6673\napiary\n-919, -6676\napiary\n-919, -6679\napiary\n-919, -6682\napiary\n\
-    -919, -6685\napiary\n-919, -6688\napiary\n-919, -6691\napiary\n-919, -6694\napiary\n\
-    -919, -6697\napiary\n-919, -6700\napiary\n-919, -6703\napiary\n-919, -6706\napiary\n\
-    -919, -6709\napiary\n-919, -6712\napiary\n-919, -6715\napiary\n-919, -6718\napiary\n\
-    -919, -6721\napiary\n-919, -6724\napiary\n-919, -6727\napiary\n-919, -6730\napiary\n\
-    -919, -6733\napiary\n-919, -6736\napiary\n-919, -6739\napiary\n-919, -6742\napiary\n\
-    -919, -6745\napiary\n-919, -6748\napiary\n\n# Science desert line\n-912, -6744\n\
-    apiary\n-912, -6747\napiary\n-912, -6750\napiary\n-913, -6753\napiary\n-913, -6756\n\
-    apiary\n-913, -6759\napiary\n-913, -6762\napiary\n-913, -6765\napiary\n-913, -6768\n\
-    apiary\n-912, -6771\napiary\n-912, -6774\napiary\n-912, -6777\napiary\n-912, -6780\n\
-    apiary\n-912, -6783\napiary\n-912, -6786\napiary\n-912, -6789\napiary\n-912, -6792\n\
-    apiary\n-912, -6795\napiary\n-912, -6798\napiary\n-912, -6801\napiary\n-910, -6801\n\
-    apiary\n-907, -6801\napiary\n-904, -6801\napiary\n-901, -6801\napiary\n-898, -6801\n\
-    apiary\n-895, -6801\napiary\n-892, -6801\napiary\n-889, -6801\napiary\n-886, -6801\n\
-    apiary\n-883, -6801\napiary\n-880, -6801\napiary\n-877, -6801\napiary\n-874, -6801\n\
-    apiary\n-871, -6801\napiary\n-868, -6801\napiary\n-865, -6801\napiary\n-862, -6801\n\
-    apiary\n-859, -6799\n-859, -6800\napiary\n-857, -6796\n-857, -6797\napiary\n-854,\
-    \ -6797\napiary\n# Back to stash\n-865, -6794\n-880, -6789\n-894, -6784\n-957,\
-    \ -6775\n"
+    -919,-6602\napiary\n-919,-6605\napiary\n-919,-6608\napiary\n-919,-6611\napiary\n\
+    -919,-6614\napiary\n-919,-6617\napiary\n-919,-6620\napiary\n-919,-6623\napiary\n\
+    -919,-6626\napiary\n-919,-6629\napiary\n-919,-6632\napiary\n-919,-6635\napiary\n\
+    -919,-6638\napiary\n-919,-6641\napiary\n-919,-6644\napiary\n-919,-6647\napiary\n\
+    -919,-6650\napiary\n-919,-6653\napiary\n-919,-6656\napiary\n-919,-6659\napiary\n\
+    -919,-6662\napiary\n-919,-6665\napiary\n-919,-6668\napiary\n-919,-6671\napiary\n\
+    -919,-6674\napiary\n-919,-6677\napiary\n-919,-6680\napiary\n-919,-6683\napiary\n\
+    -919,-6686\napiary\n-919,-6689\napiary\n-919,-6692\napiary\n-919,-6695\napiary\n\
+    -919,-6698\napiary\n-919,-6701\napiary\n-919,-6704\napiary\n-919,-6707\napiary\n\
+    -919,-6710\napiary\n-919,-6713\napiary\n-919,-6716\napiary\n-919,-6719\napiary\n\
+    -919,-6722\napiary\n-919,-6725\napiary\n-919,-6728\napiary\n-919,-6731\napiary\n\
+    -919,-6734\napiary\n-919,-6737\napiary\n-919,-6740\napiary\n-919,-6743\napiary\n\
+    -919,-6746\napiary\n-919,-6749\napiary\n\n# Science desert line\n-912,-6745\n\
+    apiary\n-912,-6748\napiary\n-912,-6751\napiary\n-913,-6754\napiary\n-913,-6757\n\
+    apiary\n-913,-6760\napiary\n-913,-6763\napiary\n-913,-6766\napiary\n-913,-6769\n\
+    apiary\n-912,-6772\napiary\n-912,-6775\napiary\n-912,-6778\napiary\n-912,-6781\n\
+    apiary\n-912,-6784\napiary\n-912,-6787\napiary\n-912,-6790\napiary\n-912,-6793\n\
+    apiary\n-912,-6796\napiary\n-912,-6799\napiary\n-912,-6802\napiary\n-910,-6802\n\
+    apiary\n-907,-6802\napiary\n-904,-6802\napiary\n-901,-6802\napiary\n-898,-6802\n\
+    apiary\n-895,-6802\napiary\n-892,-6802\napiary\n-889,-6802\napiary\n-886,-6802\n\
+    apiary\n-883,-6802\napiary\n-880,-6802\napiary\n-877,-6802\napiary\n-874,-6802\n\
+    apiary\n-871,-6802\napiary\n-868,-6802\napiary\n-865,-6802\napiary\n-862,-6802\n\
+    apiary\n-859,-6800\n-859,-6801\napiary\n-857,-6797\n-857,-6798\napiary\n-854,-6798\n\
+    apiary\n# Back to stash\n-865, -6794\n-880, -6789\n-894, -6784\n-957, -6775\n"
   path.custom_text_0: apiary
   path.custom_text_1: ''
 Tree run:
