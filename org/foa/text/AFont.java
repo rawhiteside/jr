@@ -111,6 +111,10 @@ public class AFont {
 		// If it's just a horizontal line that made it through the
 		// rule remove, then just make it a space.
 		if (rows.length == 1 && rows[0].length() > 4) { return " ";}
+
+		// If it's just a single pixel of ink, ignore it.
+		if (rows.length == 1 && rows[0].length() == 1) { return "";}
+		
 		
 		String val = (String) m_map.get(l);
 		if (val != null) {
