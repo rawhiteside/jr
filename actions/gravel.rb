@@ -34,7 +34,7 @@ class GravelAction < PickThings
   end
 
   def gather_color?(pb, x, y)
-    color = pb.color(x, y)
+    color = pb.get_color(x, y)
     r, g, b = color.red, color.green, color.blue
     return r > 150 && (r - g).abs < 15 && (r - b).abs < 15
   end
