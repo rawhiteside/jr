@@ -198,7 +198,7 @@ class SandMine < AbstractMine
       if (Time.new - start) > timeout_secs
         log_result "highlight wait time-out (6 seconds)"
         puts "Highlight count was: #{highlight_count}"
-        UserIO.show_image @last_big_stone_pic
+        # UserIO.show_image @last_big_stone_pic
         return nil
       end
     end

@@ -55,29 +55,37 @@ class GlazierWindow < PinnableWindow
       sleep 20 if got_it
       break if data_vals[:glass_amount].to_s == '19'
 
-      # Wait for menu to appear again, indicating that the last thing
-      # we made is done.
+      # XXX Don't this it does this anymore.  
+      #      # Wait for menu to appear again, indicating that the last thing
+      #      # we made is done.
+      #      #
+      #      # When you add cc, this item can appear (bogusly).  Let's make
+      #      # sure we see it two consecutive times before declaring things
+      #      # all done.
+      #      count = 0
+      #      loop_done = false
+      #      until loop_done do
+      #        sleep 3
+      #        text = nil
+      #        with_robot_lock do
+      #          refresh
+      #          text = read_text
+      #        end
       #
-      # When you add cc, this item can appear (bogusly).  Let's make
-      # sure we see it two consecutive times before declaring things
-      # all done.
-      count = 0
-      loop_done = false
-      until loop_done do
-        sleep 3
-        text = nil
-        with_robot_lock do
-          refresh
-          text = read_text
-        end
-
-        if text.index(what)
-          count += 1
-        else
-          count = 0
-        end
-        loop_done = (count >= 2)
-      end
+      #        if text.index(what)
+      #          count += 1
+      #        else
+      #          count = 0
+      #        end
+      #        loop_done = (count >= 2)
+      #      end
+    end
+    # Wait for the final item to complete.  We'll know this when the
+    # menu item reappears.
+    loop do
+      flush_text_reader
+      break if read_text.include?(what)
+      sleep 3
     end
     @done = true
   end
