@@ -83,9 +83,9 @@ class GlazierWindow < PinnableWindow
     # Wait for the final item to complete.  We'll know this when the
     # menu item reappears.
     loop do
-      flush_text_reader
+      refresh
       break if read_text.include?(what)
-      sleep 3
+      sleep 5
     end
     @done = true
   end
@@ -258,7 +258,7 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 115, -0.05)
+    tiler = Tiler.new(0, 115, 0.4)
     tiler.min_height = 400
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
