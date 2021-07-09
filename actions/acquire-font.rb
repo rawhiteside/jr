@@ -18,20 +18,14 @@ class SplitLongGlyphs < Action
   end
 
   def act
+    # afont = AFont.instance("data/clockloc-font.yaml")
     afont = AFont.instance("data/font.yaml")
     font_map = afont.font_map
     font_map.keys.each do |key|
-      text = afont.text_for(key.to_a)
       v = font_map[key]
       if v.length > 1
-        puts "Long text: #{v}"
-        puts "text_for is #{text}"
-        if v.length > 1 && !text.include?(AFont.unknown_glyph)
-          afont.remove(key.to_a)
-        end
+        break unless ask_about_glyph(afont, key, v)
       end
-
-      break unless ask_about_glyph(afont, key, v) if v.length > 1
     end
   end
 
