@@ -106,6 +106,8 @@ public class AFont {
 		dumpGlyph(rows, "textFor this");
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
+		// Something of a hack.  The InkSpots class put an empty glyph
+		// to mark a chunk of whitespace.
 		if (rows.length == 0) { return " ";}
 		
 		// If it's just a horizontal line that made it through the

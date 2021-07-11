@@ -51,10 +51,15 @@ public class ImageUtils {
 	 * allowed.  And "distance" is defined here as max(delta-r, delta-g delta-b).
 	 */
 	public static Point findTemplateBest(BufferedImage image, BufferedImage template, int thresh) {
+		Rectangle rect = new Rectangle(0, 0, image.getWidth(), image.getHeight());
+		return findTemplateBest(image, template, thresh, rect);
+	}
+	public static Point findTemplateBest(BufferedImage image, BufferedImage template, int thresh,
+										 Rectangle rect) {
 		Point bestPoint = null;
 		int bestDiff = Integer.MAX_VALUE;
-		for(int y = 0; y < (image.getHeight() - template.getHeight()); y++) {
-			for(int x = 0; x < (image.getWidth() - template.getWidth()); x++) {
+		for(int y = rect.y; y < (rect.y + rect.height - template.getHeight()); y++) {
+			for(int x = rect.x; x < (rect.x + rect.width - template.getWidth()); x++) {
 				int diff = diffHere(image, template, x, y, thresh);
 				if (diff < bestDiff) {
 					bestDiff = diff;

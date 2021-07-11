@@ -50,13 +50,12 @@ public class PixelBlock extends ARobot {
 		return new PixelBlock(new Point(rect.x, rect.y), bi);
 	}
 
-	public Rectangle rect() {
-		return new Rectangle(m_rect);
-	}
+	// Why did I do this?  
+	public Rectangle rect() { return getRect();}
+	public Rectangle getRect() { return new Rectangle(m_rect); }
 
-	public Point origin() {
-		return new Point(m_origin);
-	}
+	public Point getOrigin() { return new Point(m_origin);}
+	public Point origin() { return getOrigin();}
 
 	public BufferedImage bufferedImage() {
 		return m_bufferedImage;
@@ -69,7 +68,11 @@ public class PixelBlock extends ARobot {
 	 * delta(b)).
 	 */
 	public Point findTemplateBest(PixelBlock template, int threshold) {
-		return ImageUtils.findTemplateBest(m_bufferedImage, template.bufferedImage(), threshold);
+		return findTemplateBest(template, threshold, getRect());
+	}
+
+	public Point findTemplateBest(PixelBlock template, int threshold, Rectangle rect) {
+		return ImageUtils.findTemplateBest(m_bufferedImage, template.bufferedImage(), threshold, rect);
 	}
 	/**
 	 * Find and exact match for a template image in this larger image.

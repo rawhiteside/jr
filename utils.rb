@@ -14,9 +14,12 @@ module Utils
     AWindow.dismiss_all
   end
 
-  def find_template_best(template, threshold)
+  def find_template_best(template, threshold, search_rect = nil)
     pb_full = PixelBlock.full_screen
-    return pb_full.find_template_best(template, threshold)
+    if search_rect.nil?
+      search_rect = template.rect
+    end
+    return pb_full.find_template_best(template, threshold, search_rect)
   end
 
   def fill_jugs
