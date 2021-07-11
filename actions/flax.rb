@@ -205,7 +205,7 @@ class FlaxGrow < Action
   KEY_DELAY = 0.25
   
   def grow_one_batch(pop_points)
-    ptmp = [@plant_w1[0] - 1, @plant_w1[1]]
+    ptmp = [@plant_wl[0] - 1, @plant_wl[1]]
     @walker.walk_to(ptmp)
     @walker.walk_to(@plant_wl)
     windows = []
