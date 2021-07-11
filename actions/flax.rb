@@ -12,6 +12,90 @@ FLAX_DATA = {
   "Symphony Ridge Gold" => {:water => 0},
 }
 
+
+class FlaxData < Action
+  def initialize
+    super('Collect flax data', 'Plants')
+  end
+
+  def setup(parent)
+    # Coords are relative to your head in cart view.
+    gadgets = [
+      {:type => :combo, :label => 'What type of flax?', :name => 'flax-type', 
+       :vals => FLAX_DATA.keys.sort},
+      {:type => :point, :label => 'Drag onto the pinned plant.', :name => 'plant'},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+  
+  def act
+
+    dim = screen_size
+    center = [dim.width/2, dim.height/2]
+    offset = 150
+
+    @plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
+    @flax_type = @vals['flax-type']
+    water_count = FLAX_DATA[@flax_type][:water]
+    
+    pop_point = Point.new(center[0] + offset, center[1] + offset)
+    loop do
+      grow_one_flax(pop_point)
+
+      # Refill with water.
+      refill if water_count > 0
+    end
+  end
+
+  def grow_one_flax(pop_point)
+    @plant_win.click_on('Plant')
+    times = [Time.now]
+    sleep 0.5
+    win = PinnableWindow.from_screen_click(pop_point).pin
+    loop do
+      sleep 0.5
+      win.refresh
+      if win.click_on('Weed') || win.click_on('Water')
+        times << Time.now
+        sleep 5
+      end
+      break if win.click_on('Harvest')
+    end
+    times << Time.now
+
+    # Wait until the harvest happens.
+    while win.read_text.include?('Harvest')
+      sleep 1
+      win.refresh
+    end
+
+    win.unpin
+    
+    plant_time = times[0]
+    offsets = times.collect {|t| t - plant_time}
+
+    str = ''
+    offsets.each {|d| str << '%.1f' % d << ', ' }
+
+    (offsets.size - 1).times do |i|
+      delta = offsets[i+1] - offsets[i]
+      str << '%.1f' % delta << ', ' 
+    end
+    puts str
+      
+    sleep 1
+    
+  end
+
+  def refill
+    with_robot_lock do
+      Icons.refill
+    end
+  end
+
+end
+Action.add_action FlaxData.new
+
 class FlaxGrow < Action
   def initialize
     super('Grow flax', 'Plants')
@@ -121,6 +205,8 @@ class FlaxGrow < Action
   KEY_DELAY = 0.25
   
   def grow_one_batch(pop_points)
+    ptmp = [@plant_w1[0] - 1, @plant_w1[1]]
+    @walker.walk_to(ptmp)
     @walker.walk_to(@plant_wl)
     windows = []
 
