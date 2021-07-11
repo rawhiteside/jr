@@ -33,7 +33,7 @@ public class ClockLocWindow extends AWindow {
 	}
 
 	public boolean shouldLogReadTextErrors() {
-		return false;
+		return true;
 	}
 
 	public TextReader textReader() {
