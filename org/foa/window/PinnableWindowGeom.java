@@ -33,12 +33,16 @@ public class PinnableWindowGeom extends WindowGeom {
 	private Point findOrigin(PixelBlock pb, Point pt) {
 		int x = pt.x + 1;
 		int y = pt.y;
-		while(!isBorder(pb, x, y)) {
+		while(!isBorder(pb, x, y) && isBorder(pb, x-1, y)) {
 			if (y == 0) {
-				return new Point(x, y);
+				return null;
 			}
 			y = y - 1;
 		}
+
+		// Make sure we're really at a corner point
+		if (!isBorder(pb, x-1, y) || !isBorder(pb, x-1, y+1)) { return null; }
+
 		return new Point(x-1, y);
 	}
 
@@ -85,6 +89,7 @@ public class PinnableWindowGeom extends WindowGeom {
 	}
 	private Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
 		Point origin = findOrigin(pb, new Point(x, y));
+		if (origin == null) { return null; }
 		int width = findWidth(pb, origin);
 
 		int height = findHeight(pb, origin.x, origin.y);

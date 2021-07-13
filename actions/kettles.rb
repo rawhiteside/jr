@@ -103,8 +103,24 @@ class KettleWindow < PinnableWindow
     return KettleWindow.new(pw.rect)
   end
 
+  # The useful numbers in the data area.
+  # vals[:water] and vals[:wood]
+  def kettle_data
+    vals = {}
+    text = read_text
+    match = Regexp.new('Wood: ([0-9]+)').match(text)
+    vals[:wood] = match[1].to_i if match
+    match = Regexp.new('Water: ([0-9]+)').match(text)
+    vals[:water] = match[1].to_i if match
+    vals[:done] = (text =~ /The recipe is complete/)
+    
+    vals
+  end
+
+  # XXX What in the world is this about?!?
   def click_word(word)
-    5.times do
+    5.times do |i|
+      puts "XXX retry needed index #{i}" if i != 0
       p = super
       if p.nil?
         sleep 0.1
@@ -125,20 +141,6 @@ class Potash < KettleAction
     super << {:type => :combo, :label => 'Do what?', :name => 'action' ,
               :vals => ['Start and tend', 'Tend', 'Ignite and tend']
     }
-  end
-
-  # The useful numbers in the data area.
-  # vals[:water] and vals[:wood]
-  def kettle_data(w)
-    vals = {}
-    text = w.read_text
-    match = Regexp.new('Wood: ([0-9]+)').match(text)
-    vals[:wood] = match[1].to_i if match
-    match = Regexp.new('Water: ([0-9]+)').match(text)
-    vals[:water] = match[1].to_i if match
-    vals[:done] = (text =~ /The recipe is complete/)
-    
-    vals
   end
 
   def kettle_window(p)
@@ -212,7 +214,7 @@ class Potash < KettleAction
     w = kettle_window(p)
     v = {}
     5.times do
-      v = kettle_data(w)
+      v = w.kettle_data
       break if (v[:wood] && v[:water]) || v[:done]
       sleep (0.1)
     end
@@ -221,7 +223,7 @@ class Potash < KettleAction
       puts "Didn't read kettle: "
       puts w.read_text
       puts v
-      puts kettle_data(w)
+      puts w.kettle_data
       puts "----"
       return true
     end
