@@ -94,10 +94,12 @@ public abstract class AWindow extends ARobot  {
 	public void setDefaultRefreshLoc(String loc) { m_defaultRefreshLoc = loc; }
 
 
-	public void refresh(){
-		refresh(getDefaultRefreshLoc()); 
-	}
-	public void refresh(String where) {
+	private static double REFRESH_DELAY = 0.05;
+	public void refresh(){ refresh(getDefaultRefreshLoc(), REFRESH_DELAY); }
+	public void refresh(double delay){ refresh(getDefaultRefreshLoc(), delay); }
+	public void refresh(String where) { refresh(where, REFRESH_DELAY); }
+
+	public void refresh(String where, double delay) {
 		Rectangle rect = getRect();
 		if (where.equals("tc")) {
 			dialogClick(new Point(rect.width / 2, 4));
@@ -115,7 +117,7 @@ public abstract class AWindow extends ARobot  {
 		flushTextReader();
 		// Needs at least a little time to redisplay.  Thread.yield was not enough.
 		// This may be longer than necessary?
-		sleepSec(0.05);
+		sleepSec(delay);
 	}
 
 	public boolean shouldLogReadTextErrors() {

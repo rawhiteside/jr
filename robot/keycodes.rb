@@ -1,7 +1,8 @@
+# Where did I get this?!?
 VK_BACK  = 0x08
 VK_TAB  = 0x09
+VK_ENTER  = 0x0A
 VK_CLEAR  = 0x0C
-VK_RETURN  = 0x0D
 VK_SHIFT  = 0x10
 VK_CONTROL  = 0x11
 VK_MENU  = 0x12

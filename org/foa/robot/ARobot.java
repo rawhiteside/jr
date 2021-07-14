@@ -249,7 +249,7 @@ public class ARobot {
 					keyRelease(KeyEvent.VK_SHIFT, delaySeconds);
 				}
 			} else {
-				// XXX deal with other characters.
+				sendVk(c, delaySeconds);
 			}
 		}
 	}
