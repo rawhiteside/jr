@@ -53,6 +53,34 @@ class ChatWindow < Window
   def initialize(rect = Rectangle.new(0, 0, 0, 0))
     super(rect)
   end
+
+  def shouldLogReadTextErrors
+    false
+  end
+
+  def read_text
+    flush_text_reader
+    super
+  end
+
+  def say(text)
+    delay = 0.05
+    puts "saying #{text}"
+    send_string('/', delay)
+    send_vk(VK_BACK, delay)
+    send_string(text, delay)
+    send_vk(VK_ENTER, delay)
+  end
+
+  def strip_timestamp(text)
+    stripped_lines = []
+    text.split("\n").each do |line|
+      index = line.index ']'
+      index = 0 unless index
+      stripped_lines << line.slice((index+1)..-1)
+    end
+    return stripped_lines.join("\n")
+  end
 end
 
 # This class is poorly designed.  Slowly improving.

@@ -10,6 +10,11 @@ module Utils
     Travel.new.travel_to(dest)
   end
 
+  # Walk directly to provided coords: [x, y]. 
+  def goto(coords)
+    Walker.new.walk_to(coords)
+  end
+
   def dismiss_all
     AWindow.dismiss_all
   end

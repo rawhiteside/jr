@@ -208,7 +208,7 @@ class Firepit < ARobot
     delta = Time.now - start
 
     if delta > @max_ss_time
-      puts "New ss max for (#{@ix}, #{@iy}): #{delta}"
+      # puts "New ss max for (#{@ix}, #{@iy}): #{delta}"
       @max_ss_time = delta
     end
 

@@ -247,8 +247,7 @@ class FlaxGrow < Action
     if last_w
       loop do
         last_w.refresh
-        text = last_w.read_text.strip
-        break if text == '<pin>' || text == ''
+        break if last_w.read_text.strip == ''
         sleep 1
       end
       last_w.unpin
@@ -262,7 +261,7 @@ class FlaxGrow < Action
     if dlg.notation != 'Harvested'
       loop do
         # Make sure the dialog is still there.
-        dlg.refresh
+        dlg.refresh(0.1)
         text = dlg.read_text
 	if text.strip == '' 
 	  dlg.unpin
