@@ -4,6 +4,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.util.regex.Pattern;
 import java.util.Arrays;
 
@@ -230,27 +232,39 @@ public class ARobot {
 		sleepSec(delaySecs);
 	}
 
-	public void sendVk(int key) {sendVk(key, 0.0);}
+	public void sendVk(int key) {sendVk(key, 0.01);}
 	public void sendVk(int key, double delaySecs) {
 		keyPress(key, delaySecs);
-		keyRelease(key, 0.0);
+		keyRelease(key);
 	}
 
-	public void sendString(String s) {sendString(s, 0.0);}
-	public void sendString(String s, double delaySeconds) {
+	public void sendString(String text) {
+		sendString(text, 0.01);
+	} 
+	public void sendString(String text, double delaySecs) {
+		if(fastSendString(text, delaySecs)) { return; }
+		StringSelection stringSelection = new StringSelection(text);
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipboard.setContents(stringSelection, stringSelection);
+		sleepSec(0.01);
+		keyPress(KeyEvent.VK_CONTROL);
+		keyPress(KeyEvent.VK_V);
+		keyRelease(KeyEvent.VK_V);
+		keyRelease(KeyEvent.VK_CONTROL);
+	}
+	public boolean fastSendString(String s, double delaySeconds) {
 		char[] b = s.toCharArray();
+		for (char c : b) { if(!Character.isLetterOrDigit(c)){ return false; } }
+
 		for (char c : b) {
-			if(Character.isLetterOrDigit(c)){
-				if(Character.isLowerCase(c) || Character.isDigit(c)) {
-					sendVk(Character.toUpperCase(c), delaySeconds);
-				} else {
-					keyPress(KeyEvent.VK_SHIFT, delaySeconds);
-					sendVk(Character.toUpperCase(c), delaySeconds);
-					keyRelease(KeyEvent.VK_SHIFT, delaySeconds);
-				}
+			if(Character.isLowerCase(c) || Character.isDigit(c)) {
+				sendVk(Character.toUpperCase(c), delaySeconds);
 			} else {
-				sendVk(c, delaySeconds);
+				keyPress(KeyEvent.VK_SHIFT, delaySeconds);
+				sendVk(Character.toUpperCase(c), delaySeconds);
+				keyRelease(KeyEvent.VK_SHIFT, delaySeconds);
 			}
 		}
+		return true;
 	}
 }

@@ -31,26 +31,37 @@ class MarbleDowse < Action
 
   # Partner just listens for commands. 
   # Expected commands:
-  # CMD: walk_to [x, y]
+  # CMD: goto [x, y] # Walk to provided location. 
+  # CMD: say_coords # Tell current coords.  ACK: [100, -200]
   def partner
-    chat_win = ChatWindow.find
+    @chat_win = ChatWindow.find
     lclick_at(@partner_tab)
     sleep 1
     loop do
-      last_line = chat_win.read_text.split("\n")[-1]
+      last_line = @chat_win.read_text.split("\n")[-1]
       cmd = get_cmd(last_line)
       if cmd
         eval cmd
-        chat_win.say 'ACK'
+        @chat_win.say 'ACK: ' if cmd.include?('goto')
       end
       sleep 1
     end
   end
 
+  def saycoords
+    @chat_win.say("ACK: #{ClockLocWindow.instance.coords.to_a}")
+  end
 
+  # Parse the cmd/ack lines. 
+  def get_ack(line)
+    get_info(line, 'ACK: ')
+  end
   def get_cmd(line)
-    index = line.index('CMD: ')
-    return line.slice((index + 5)..-1) if index
+    get_info(line, 'CMD: ')
+  end
+  def get_info(line, prefix)
+    index = line.index(prefix)
+    return line.slice(index + prefix.size..-1) if index
 
     nil
   end

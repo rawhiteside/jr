@@ -64,12 +64,16 @@ class ChatWindow < Window
   end
 
   def say(text)
-    delay = 0.05
+    delay = 0.01
     puts "saying #{text}"
-    send_string('/', delay)
-    send_vk(VK_BACK, delay)
-    send_string(text, delay)
-    send_vk(VK_ENTER, delay)
+    send_string('/')
+    sleep delay
+    send_vk(VK_BACK)
+    sleep delay
+    send_string(text)
+    sleep delay
+    send_vk(VK_ENTER)
+    sleep delay
   end
 
   def strip_timestamp(text)
