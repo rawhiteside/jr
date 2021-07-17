@@ -4,6 +4,17 @@ import org.foa.text.TextReader
 
 class GlazierWindow < PinnableWindow
   
+  GLASS_ITEMS = {
+    'Make a Glass Jar' => 90,
+    'Make a Glass Rod' => 60,
+    'Make a Glass Pipe' => 90,
+    'Make a Glass Scythe Blade' => 30,
+    'Make a Sheet' => 120, 
+    'Make a batch of 12 Wine Bottles' => 90,
+    'Make a Decorative Torch' => 180, 
+    'Make a Fine Glass Rod' => 90, 
+    'Make a Fine Glass Pipe' => 90, 
+  }
   attr_accessor :done, :state
   
   # The rectangle, and the point info.  GridHelper point info used for logging. 
@@ -59,7 +70,7 @@ class GlazierWindow < PinnableWindow
 	  got_it = click_on(what)
         end
       end
-      sleep 20 if got_it
+      sleep(GLASS_ITEMS[what] - 10) if got_it
       break if data_vals[:glass_amount].to_s == '19'
     end
 
@@ -75,12 +86,12 @@ class GlazierWindow < PinnableWindow
 
   def wait_to_start_making
     # Wait for melting to get done
-    sleep 4 while @state != :drop
+    sleep 10 while @state != :drop
     # Wait for temp range
     loop do
       temp = data_vals[:temperature]
       break if temp > 1600 && temp < 2400
-      sleep 5
+      sleep 8
     end
   end
 
@@ -130,11 +141,10 @@ class GlazierWindow < PinnableWindow
 
   # Returns stats about the tick.
   def wait_for_tick
-    start = Time.now
     orig = temperature
+    sleep 5
 
     loop do
-      sleep 4
       current = temperature
       log "wait_for_tick: Tick check curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
       if orig != current
@@ -142,17 +152,18 @@ class GlazierWindow < PinnableWindow
 	  'Prev' => orig,
 	  'Temperature' => current,
 	  'Delta' => current - orig,
-	  'Time' => Time.now - start,
         }
         @last_delta = current - orig
         log "wait_for_tick: Temperature Changed! curr=#{current}, prev=#{orig}, last_delta=#{@last_delta}"
         return status
+      else 
+        sleep 5
       end
     end
   end
 
   def each_tick
-    loop {yield(wait_for_tick)}
+    loop { yield(wait_for_tick) }
   end
 
   def melt
@@ -246,17 +257,7 @@ class Glazier < Action
   end
 
   def get_ui_vals(parent)
-    choices = [
-      'Make a Glass Jar',
-      'Make a Glass Rod',
-      'Make a Glass Pipe',
-      'Make a Glass Scythe Blade',
-      'Make a Sheet', 
-      'Make a batch of 12 Wine Bottles',
-      'Make a Decorative Torch', 
-      'Make a Fine Glass Rod', 
-      'Make a Fine Glass Pipe', 
-    ]
+    choices = GlazierWindow::GLASS_ITEMS.keys
     comps = [
       {:type => :grid, :name => 'g'},
       {:type => :combo, :name => 'what', :vals => choices,
