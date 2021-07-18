@@ -1,3 +1,5 @@
+rabbits: ega7ffaaf593d01c577ec3ef0d0cc659f7502f056ce and egadb9ad6a13f2d3aa82cc9bc1c1c55acc4b3e30b6e
+
 Diamond:
 -- Base
 ega7669ab3efe7d5fa106b494c219a851ed3138dc4e.ega  2.3M
