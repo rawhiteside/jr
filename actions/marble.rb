@@ -24,11 +24,11 @@ class MarbleDowse < Action
     
   def act
     stash_point = point_from_hash(@vals, 'stash')
-    @main_tab = point_from_hash(@vals, 'main-tab')
     @partner_tab = point_from_hash(@vals, 'partner-tab')
-    @slate_win = PinnableWindow.new(point_from_hash(@vals, 'slate'))
 
     if @vals['dowser-or-partner'] == 'Dowser'
+      @slate_win = PinnableWindow.from_point(point_from_hash(@vals, 'slate')) 
+      @main_tab = point_from_hash(@vals, 'main-tab')
       dowser
     else
       partner
@@ -62,7 +62,7 @@ class MarbleDowse < Action
 
   def stage0
     dirs = dirs_for_stage(0)
-    dist = dist(0)
+    dist = distance_for_stage(0)
     myloc = get_my_coords
     dirs.each do |dir|
       pcoords = [myloc[0] + dir[0] * dist, myloc[1] + dir[1] * dist ]
@@ -88,13 +88,15 @@ class MarbleDowse < Action
   end
 
   def say_in_main(text)
+    puts "saying in main: #{text}"
     lclick_at(@main_tab)
     @chat_win.say(text)
   end
 
   def send_cmd(cmd)
+    puts "sending #{CMD}#{cmd}"
     lclick_at(@partner_tab)
-    send_text "#{CMD}#{cmd}"
+    @chat_win.say "#{CMD}#{cmd}"
   end
 
   # Partner just listens for commands. 

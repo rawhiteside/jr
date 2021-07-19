@@ -1,4 +1,6 @@
 # Where did I get this?!?
+# I got the slash at the end from:
+# https://stackoverflow.com/questions/15313469/java-keyboard-keycodes-list
 VK_BACK  = 0x08
 VK_TAB  = 0x09
 VK_ENTER  = 0x0A
