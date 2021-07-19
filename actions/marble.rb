@@ -54,23 +54,76 @@ class MarbleDowse < Action
   end
 
   def dowser
+    @partner = {}
     @chat_win = ChatWindow.find
     lclick_at(@partner_tab)
-    stage0
+    if stage0
+      log 'Success at stage 0.  Proceeding.'
+    else
+      log 'Failure at stage 0'
+      return
+    end
+
+    1.upto(11) {|index| stage(index) }
+      
     
   end
 
   def stage0
+    log "Start stage0"
     dirs = dirs_for_stage(0)
     dist = distance_for_stage(0)
+    @partner[:dist] = dist
     myloc = get_my_coords
+    dirs.each do |dir|
+      @partner[:loc] = [myloc[0] + dir[0] * dist, myloc[1] + dir[1] * dist ]
+      send_cmd("goto #{@partner[:loc]}")
+      @partner[:dir] = dir
+      wait_for_ack
+      return true if prospect
+    end
+    
+  end
+
+  # Start of a stage.  Move halfway to partner.  Unless current
+  # distance is 30, then we move till we're 16 away (x and/or y).
+  def move_me
+    new_loc = nil
+    ploc = @partner[:loc]
+    dir = @partner[:dir]
+    dist = @partner[:dist]
+    if dist == 30
+      new_dist = 16
+    else
+      new_dist = dist / 2
+    end
+    log "Moving me.  Partner data: #{@partner}"
+    new_loc = [ploc[0] - dir[0] * new_dist, ploc[1] - dir[1] * new_dist]
+    log "Move me to #{new_loc}"
+    
+    goto new_loc
+    return new_loc
+  end
+
+  def stage(stage_num)
+    log "Start stage #{stage_num}"
+    dirs = dirs_for_stage(stage_num)
+    dist = distance_for_stage(stage_num)
+    myloc = move_me
     dirs.each do |dir|
       pcoords = [myloc[0] + dir[0] * dist, myloc[1] + dir[1] * dist ]
       send_cmd("goto #{pcoords}")
       wait_for_ack
-      return true if prospect
+      if prospect
+        @partner[:loc] = pcoords
+        @partner[:dist] = dist
+        @partner[:dirc] = dir
+        return true
+      end
     end
   end
+
+  
 
   def get_my_coords
     ClockLocWindow.instance.coords.to_a
@@ -83,18 +136,18 @@ class MarbleDowse < Action
     say_in_main SEPARATOR
     @slate_win.click_on('Prospect')
     sleep 1 until (line = last_chat_line).include? 'slate'
-    return line.include 'Two slate '
+    return line.include? 'Two slate '
 
   end
 
   def say_in_main(text)
-    puts "saying in main: #{text}"
+    log "saying in main: #{text}"
     lclick_at(@main_tab)
     @chat_win.say(text)
   end
 
   def send_cmd(cmd)
-    puts "sending #{CMD}#{cmd}"
+    log "sending #{CMD}#{cmd}"
     lclick_at(@partner_tab)
     @chat_win.say "#{CMD}#{cmd}"
   end
@@ -128,10 +181,9 @@ class MarbleDowse < Action
   # Wait for the last line in chat window to start with "ACK:" or
   # "CMD:"
   def wait_for_cmd_or_ack(cmd_or_ack)
-    puts "Waiting for #{cmd_or_ack}"
+    log "Waiting for #{cmd_or_ack}"
     loop do
       last_line = last_chat_line
-      puts "waiting for #{cmd_or_ack}: #{last_line}"
       return get_info(last_line, cmd_or_ack) if last_line.include?(cmd_or_ack)
       sleep 1
     end
@@ -154,6 +206,11 @@ class MarbleDowse < Action
 
     nil
   end
+
+  def log(text)
+    puts text
+  end
+
 end
 
 Action.add_action(MarbleDowse.new)
