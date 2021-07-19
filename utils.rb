@@ -13,6 +13,7 @@ module Utils
   # Walk directly to provided coords: [x, y]. 
   def goto(coords)
     Walker.new.walk_to(coords)
+    nil
   end
 
   def dismiss_all

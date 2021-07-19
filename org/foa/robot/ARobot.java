@@ -238,11 +238,13 @@ public class ARobot {
 		keyRelease(key);
 	}
 
-	public void sendString(String text) {
-		sendString(text, 0.01);
-	} 
-	public void sendString(String text, double delaySecs) {
-		if(fastSendString(text, delaySecs)) { return; }
+
+	// Should clean this up: This method sends via the clipboard.  It
+	// can handle any character, but seems to append a newline.  Dunno why.
+	//
+	// sendString below can send only letters and digits. Maybe some
+	// others, but not all.
+	public void sendLine(String text) {
 		StringSelection stringSelection = new StringSelection(text);
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		clipboard.setContents(stringSelection, stringSelection);
@@ -252,9 +254,12 @@ public class ARobot {
 		keyRelease(KeyEvent.VK_V);
 		keyRelease(KeyEvent.VK_CONTROL);
 	}
-	public boolean fastSendString(String s, double delaySeconds) {
+
+	public void sendString(String text) {
+		sendString(text, 0.01);
+	} 
+	public boolean sendString(String s, double delaySeconds) {
 		char[] b = s.toCharArray();
-		for (char c : b) { if(!Character.isLetterOrDigit(c)){ return false; } }
 
 		for (char c : b) {
 			if(Character.isLowerCase(c) || Character.isDigit(c)) {
