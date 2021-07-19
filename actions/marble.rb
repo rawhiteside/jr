@@ -2,8 +2,8 @@ require 'action'
 require 'walker'
 
 class MarbleDowse < Action
-  CMD = 'CMD: '
-  ACK = 'ACK: '
+  CMD = 'CMD:'
+  ACK = 'ACK:'
   SEPARATOR = 'Break, baby!'
 
   def initialize
@@ -128,8 +128,10 @@ class MarbleDowse < Action
   # Wait for the last line in chat window to start with "ACK:" or
   # "CMD:"
   def wait_for_cmd_or_ack(cmd_or_ack)
+    puts "Waiting for #{cmd_or_ack}"
     loop do
       last_line = last_chat_line
+      puts "waiting for #{cmd_or_ack}: #{last_line}"
       return get_info(last_line, cmd_or_ack) if last_line.include?(cmd_or_ack)
       sleep 1
     end
