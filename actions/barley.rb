@@ -5,28 +5,72 @@ require 'image_utils'
 require 'icons'
 
 class Barley < Action
-  # 
-  # World coordinates at which you shoudl plant the first bed
-  START_PLANT_LOC = [-415, -6738]
-  # 
-  # World coordinates that get you access to water, and
-  # within reach of the warehouse.
-  WH_LOC = [-406, -6738]
 
   def initialize
     super('Barley', 'Plants')
-    @plant = [25, 45]
     @pop = [670, 485]
     @dialogs = []
     @walker = Walker.new
   end
 
+
+  def setup(parent)
+    comps = [
+      {:type => :point, :label => 'Drag onto pinned plant menu', :name => 'plant-win'},
+      {:type => :point, :label => 'Drag onto pinned warehouse', :name => 'wh-win'},
+      {:type => :number, :label => 'How many passes?', :name => 'count'},
+      {:type => :world_loc, :label => 'Grow starting location', :name => 'grow-loc'},
+      {:type => :world_loc, :label => 'Location of water', :name => 'water-loc'},
+      {:type => :world_loc, :label => 'Location near warehouse', :name => 'wh-loc'},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
+  end
+
+  def act
+    dim = screen_size
+    @center_x = dim.width/2 
+    @center_y = dim.height/2
+    @pop_for_step = pop_locations
+    count = @vals['count'].to_i
+    warehouse_window = PinnableWindow.from_point(point_from_hash(@vals, 'wh-win'))
+    @plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant-win'))
+
+    wh_loc = WorldLocUtils.parse_world_location(@vals['wh-loc'])
+    @grow_loc = WorldLocUtils.parse_world_location(@vals['grow-loc'])
+    water_loc = WorldLocUtils.parse_world_location(@vals['water-loc'])
+
+    loop do
+      count.times { grow_one_field }
+
+      # Now, refill everything for another round
+
+      # Refill the jugs.
+      @walker.walk_to(water_loc)
+      Icons.refill
+      # Stash the barley
+      @walker.walk_to(wh_loc)
+      warehouse_window.click_on('Stash/Barley')
+      HowMuch.max
+      # take enough back to plant (plus a buffer)
+      if warehouse_window.click_on('Take/Barley')
+	HowMuch.amount(15 * count + 5)
+      end
+      sleep 0.1
+      # Take 270 grain fert
+      #if warehouse_window.click_on('Take/Grain')
+      #HowMuch.amount(90 * count)
+      #end
+
+    end
+  end
+
+
   def pop_locations
     {
-      [:right] => [@head_x + 50, @head_y + 50],
-      [:down] => [@head_x + 50, @head_y + 50],
-      [:left] => [@head_x - 50, @head_y + 30],
-      [:up] => [@head_x - 50, @head_y + 30],
+      [:right] => [@center_x + 50, @center_y + 50],
+      [:down] => [@center_x + 50, @center_y + 50],
+      [:left] => [@center_x - 50, @center_y + 30],
+      [:up] => [@center_x - 50, @center_y + 30],
     }
   end
 
@@ -36,10 +80,7 @@ class Barley < Action
     # other veggies...  Give an extra delay.
     w = nil
     with_robot_lock {
-      mm(*@plant)
-      sleep 0.05
-      lclick_at(*@plant)
-      mm(*pop_coords)
+      puts "----------Plant failed" unless @plant_win.click_on("Plant")
       sleep 0.1
       w = PinnableWindow.from_screen_click(Point.new(pop_coords[0], pop_coords[1]))
       w = BarleyWindow.new(w.get_rect)
@@ -59,56 +100,12 @@ class Barley < Action
     ]
   end
 
-  def setup(parent)
-    comps = [
-      {:type => :point, :label => 'Drag onto your head', :name => 'head'},
-      {:type => :point, :label => 'Drag onto pinned warehouse', :name => 'wh'},
-      {:type => :label, :label => 'Each pass takes 90 water/fert'},
-      {:type => :number, :label => 'How many passes?', :name => 'count'}
-    ]
-    @vals = UserIO.prompt(parent, persistence_name, action_name, comps)
-  end
-
-  def act
-    @head_x = @vals['head.x'].to_i
-    @head_y = @vals['head.y'].to_i
-    @pop_for_step = pop_locations
-    count = @vals['count'].to_i
-    wh_point = point_from_hash(@vals, 'wh')
-    warehouse_window = PinnableWindow.from_point(wh_point)
-    raise(Exception.new("No Warehouse at #{wh_point}!!")) unless warehouse_window
-
-    loop do
-      count.times { grow_one_field }
-
-      # Now, refill everything for another round
-      @walker.walk_to(WH_LOC)
-
-      # Refill the jugs.
-      Icons.refill
-      # Stash the barley
-      warehouse_window.click_on('Stash/Barley')
-      HowMuch.max
-      # take enough back to plant (plus a buffer)
-      if warehouse_window.click_on('Take/Barley')
-	HowMuch.amount(15 * count + 5)
-      end
-      sleep 0.1
-      # Take 270 grain fert
-      if warehouse_window.click_on('Take/Grain')
-	HowMuch.amount(90 * count)
-      end
-
-    end
-  end
-
-
   def grow_one_field
     #
     check_for_pause
-    @walker.walk_to(START_PLANT_LOC)
-    @tiler = Tiler.new(0, 77)
-    @tiler.y_offset = 330
+    @walker.walk_to(@grow_loc)
+    @tiler = Tiler.new(0, 98)
+    #@tiler.y_offset = 330
     start_lock = JMonitor.new
     prev_patt = [:right]
     # Keep tending from starting while we plant
@@ -123,7 +120,7 @@ class Barley < Action
       end
     end
     wait_for_worker_threads
-    @walker.walk_to(START_PLANT_LOC)
+    @walker.walk_to(@grow_loc)
   end
 end
 
@@ -133,13 +130,19 @@ class BarleyWindow < PinnableWindow
     super(g)
     yoff = 26
     @locs = {
-      'Water' => [192, 161],
-      'Fert' => [192, 180],
-      'Probe water' => [170, 161],
-      'Probe fert' => [172, 180],
-      'Harvest' => [105, 224],
+      'Water' => [240, 125],
+      'Fert' => [240, 144],
+      'Probe water' => [218, 125],
+      'Probe fert' => [218, 145],
+      'Harvest' => [130, 191],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
+  end
+
+  def needs_water
+      color = dialog_color(Point.new(*@locs['Probe water']))
+      r, g, b = color.red, color.green, color.blue
+      retunr b <= 200
   end
 
   def try_to_water
@@ -172,7 +175,6 @@ class BarleyWindow < PinnableWindow
     with_robot_lock do
       # Sometimes misses.
       delay_sec = 0.01
-      mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
       dialog_click(Point.new(*@locs['Water']), delay_sec)
       dialog_click(Point.new(*@locs['Water']), delay_sec)
 #      # Sometimes misses.
@@ -184,7 +186,7 @@ class BarleyWindow < PinnableWindow
     # Just pass through the lock before starting.
     start_lock.synchronize {}
 
-    4.times do
+    2.times do
       loop do
 	break if try_to_water
 	sleep 5
