@@ -65,7 +65,6 @@ class ChatWindow < Window
 
   def say(text)
     delay = 0.1
-    puts "saying #{text}"
     send_vk(VK_SLASH)
     sleep delay
     send_vk(VK_BACK)

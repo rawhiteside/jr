@@ -64,7 +64,7 @@ class MarbleDowse < Action
       return
     end
 
-    1.upto(11) {|index| stage(index) }
+    1.upto(10) {|index| stage(index) }
       
     
   end
@@ -117,7 +117,7 @@ class MarbleDowse < Action
       if prospect
         @partner[:loc] = pcoords
         @partner[:dist] = dist
-        @partner[:dirc] = dir
+        @partner[:dir] = dir
         return true
       end
     end
@@ -136,7 +136,13 @@ class MarbleDowse < Action
     say_in_main SEPARATOR
     @slate_win.click_on('Prospect')
     sleep 1 until (line = last_chat_line).include? 'slate'
-    return line.include? 'Two slate '
+    if line.include? 'Two slate '
+      log "Prospect:  two slate!"
+      return true
+    else
+      log "Prospect:  nothing"
+      return false
+    end
 
   end
 
