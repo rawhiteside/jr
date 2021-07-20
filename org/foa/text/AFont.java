@@ -152,7 +152,7 @@ public class AFont {
 	 * off.
 	 *
 	 */
-	private static int NARROW = 4;
+	private static int NARROW = 3;
 	private String textForComplexGlyph(String[] complexGlyph, int prevGlyphWidth) {
 
 
