@@ -19,6 +19,8 @@ class Barley < Action
       {:type => :point, :label => 'Drag onto pinned plant menu', :name => 'plant-win'},
       {:type => :point, :label => 'Drag onto pinned warehouse', :name => 'wh-win'},
       {:type => :number, :label => 'How many passes?', :name => 'count'},
+      {:type => :number, :label => 'Rows in the field?', :name => 'rows'},
+      {:type => :number, :label => 'Cols in teh field?', :name => 'cols'},
       {:type => :world_loc, :label => 'Grow starting location', :name => 'grow-loc'},
       {:type => :world_loc, :label => 'Location of water', :name => 'water-loc'},
       {:type => :world_loc, :label => 'Location near warehouse', :name => 'wh-loc'},
@@ -32,6 +34,8 @@ class Barley < Action
     @center_y = dim.height/2
     @pop_for_step = pop_locations
     count = @vals['count'].to_i
+    rows = @vals['rows'].to_i
+    cols = @vals['cols'].to_i
     warehouse_window = PinnableWindow.from_point(point_from_hash(@vals, 'wh-win'))
     @plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant-win'))
 
@@ -40,7 +44,7 @@ class Barley < Action
     water_loc = WorldLocUtils.parse_world_location(@vals['water-loc'])
 
     loop do
-      count.times { grow_one_field }
+      count.times { grow_one_field(rows, cols) }
 
       # Now, refill everything for another round
 
@@ -80,7 +84,7 @@ class Barley < Action
     # other veggies...  Give an extra delay.
     w = nil
     with_robot_lock {
-      puts "----------Plant failed" unless @plant_win.click_on("Plant")
+      puts "plant failed" unless @plant_win.click_on("Plant")
       sleep 0.1
       w = PinnableWindow.from_screen_click(Point.new(pop_coords[0], pop_coords[1]))
       w = BarleyWindow.new(w.get_rect)
@@ -89,33 +93,47 @@ class Barley < Action
     @tiler.tile(w)
   end
 
-  def step_patterns
-    [
-      [:right], [:right], [:right], 
-      [:down],
-      [:left], [:left], [:left], 
-      [:down],
-      [:right], [:right], [:right], 
-      [],
-    ]
+  def step_patterns(rows, cols)
+    ncols = cols - 1
+    nrows = rows - 1
+    steps = [:right] * nrows
+    puts cols * rows
+    loop do
+      break if nrows == 0
+      steps << [:down] * nrows
+      break if ncols == 0
+      steps << [:left] * ncols
+      ncols -= 1
+      nrows -= 1
+      break if nrows == 0
+      steps << [:up] * nrows
+      break if ncols == 0
+      steps << [:right] * ncols
+      ncols -= 1
+      nrows -= 1
+    end
+
+    steps = steps.flatten.collect{|s| [s]}
+    steps << []
+    return steps
   end
 
-  def grow_one_field
+  def grow_one_field(rows, cols)
     #
     check_for_pause
     @walker.walk_to(@grow_loc)
-    @tiler = Tiler.new(0, 98)
+    @tiler = Tiler.new(0, 98, 0.48)
     #@tiler.y_offset = 330
     start_lock = JMonitor.new
     prev_patt = [:right]
     # Keep tending from starting while we plant
     start_lock.synchronize do
-      step_patterns.each do |patt|
+      step_patterns(rows, cols).each do |patt|
         w = plant_and_tile(pop = @pop_for_step[prev_patt])
         start_worker_thread do
 	  w.tend(start_lock)
         end
-        with_robot_lock { @walker.steps(patt) }
+        with_robot_lock { @walker.steps(patt, 0.2) }
         prev_patt = patt
       end
     end
