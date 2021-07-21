@@ -78,7 +78,7 @@ class Barley < Action
     }
   end
 
-  def plant_and_tile(pop_coords)
+  def plant_and_pin(pop_coords)
 
     # Dunno why, but sometimes the plant fails.  Doesn't happen with
     # other veggies...  Give an extra delay.
@@ -90,14 +90,13 @@ class Barley < Action
       w = BarleyWindow.new(w.get_rect)
     }
     w.pin
-    @tiler.tile(w)
+    return w
   end
 
   def step_patterns(rows, cols)
     ncols = cols - 1
     nrows = rows - 1
     steps = [:right] * nrows
-    puts cols * rows
     loop do
       break if nrows == 0
       steps << [:down] * nrows
@@ -122,20 +121,21 @@ class Barley < Action
     #
     check_for_pause
     @walker.walk_to(@grow_loc)
-    @tiler = Tiler.new(0, 98, 0.48)
-    #@tiler.y_offset = 330
+    @cascader = Cascader.new
     start_lock = JMonitor.new
     prev_patt = [:right]
     # Keep tending from starting while we plant
     start_lock.synchronize do
       step_patterns(rows, cols).each do |patt|
-        w = plant_and_tile(pop = @pop_for_step[prev_patt])
+        w = plant_and_pin(pop = @pop_for_step[prev_patt])
+        @cascader.stage(w)
         start_worker_thread do
 	  w.tend(start_lock)
         end
         with_robot_lock { @walker.steps(patt, 0.2) }
         prev_patt = patt
       end
+      @cascader.cascade
     end
     wait_for_worker_threads
     @walker.walk_to(@grow_loc)
@@ -160,7 +160,7 @@ class BarleyWindow < PinnableWindow
   def needs_water
       color = dialog_color(Point.new(*@locs['Probe water']))
       r, g, b = color.red, color.green, color.blue
-      retunr b <= 200
+      return b <= 200
   end
 
   def try_to_water
@@ -169,21 +169,17 @@ class BarleyWindow < PinnableWindow
     # Does this help?
     delay_sec = 0.01
 
-    # XXX Can't erturn a value from inside this block.
-    # Figure out how to accomplish that.  Hack the Runnable, I think. 
     with_robot_lock do
       refresh
-      color = dialog_color(Point.new(*@locs['Probe water']))
-      r, g, b = color.red, color.green, color.blue
-
-      if b > 200
-	done = false
-      else
-	mm(to_screen_coords(Point.new(*@locs['Water'])), delay_sec)
-	dialog_click(Point.new(*@locs['Water']), delay_sec)
-#	mm(to_screen_coords(Point.new(*@locs['Fert'])),delay_sec)
-#	dialog_click(Point.new(*@locs['Fert']), delay_sec)
+      if needs_water
+        while needs_water
+	  dialog_click(Point.new(*@locs['Water']), delay_sec)
+          sleep delay_sec
+        end
+        #	dialog_click(Point.new(*@locs['Fert']), delay_sec)
 	done = true
+      else
+	done = false
       end
     end
     return done 
@@ -207,7 +203,7 @@ class BarleyWindow < PinnableWindow
     2.times do
       loop do
 	break if try_to_water
-	sleep 5
+	sleep 10
       end
     end
     # Wait a final time.
@@ -215,26 +211,16 @@ class BarleyWindow < PinnableWindow
       done = false
       with_robot_lock do
 	refresh
-	b = dialog_color(Point.new(*@locs['Probe water'])).blue
-	if b < 200
-	  done = true
-	end
+        if needs_water
+          done = true
+          dialog_click(Point.new(*@locs['Harvest']))
+          unpin
+        end
       end
       break if done
-      sleep 3
+      sleep 5
     end
 
-    with_robot_lock do
-      dialog_click(Point.new(*@locs['Harvest']))
-
-      # OK, so barley windows are weird.  After harvest, they get
-      # smaller both vertically and horizontally.
-      # we have to re-acquire a window to un pin it.
-      sleep 0.2
-      rectangle = get_rect
-      point = Point.new(rect.x, rect.y + rect.height/2)
-      PinnableWindow.from_point(point).unpin
-    end
     return nil
   end
 end
