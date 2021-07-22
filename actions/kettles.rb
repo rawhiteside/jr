@@ -18,11 +18,11 @@ class Fert < KettleAction
   
   def act_at(ginfo)
     delay = 0.01
+    w = KettleWindow.from_screen_click(ginfo['x'], ginfo['y'])
     unless @first_pass
       w.click_word('Take')
       sleep delay
     end
-    w = KettleWindow.from_screen_click(ginfo['x'], ginfo['y'])
     w.click_word('Grain Fert' )
     sleep delay
     w.click_word('Begin')
@@ -117,10 +117,9 @@ class KettleWindow < PinnableWindow
     vals
   end
 
-  # XXX What in the world is this about?!?
+  # Waiting for the window to update itself.
   def click_word(word)
     5.times do |i|
-      puts "XXX retry needed index #{i}" if i != 0
       p = super
       if p.nil?
         sleep 0.1

@@ -208,6 +208,10 @@ public class ARobot {
 	public void lclickAt(int x, int y, double delaySec) {
 		claimRobotLock();
 		try {
+			// Something Eldrad said made things work faster/better:
+			// release both mouse buttons first.
+			rbu(); lbu();
+			
 			mm(x, y, delaySec);
 			lbd();
 			lbu();

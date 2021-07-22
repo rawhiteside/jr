@@ -104,11 +104,16 @@ public class AFont {
 	// jammed-together gcomplex glyph.
 	private String textFor(String[] rows, int prevGlyphWidth) {
 		dumpGlyph(rows, "textFor this");
+		p("textFor: prev width: " + prevGlyphWidth );
 		ArrayList l = new ArrayList(Arrays.asList(rows));
 
 		// Something of a hack.  The InkSpots class put an empty glyph
 		// to mark a chunk of whitespace.
 		if (rows.length == 0) { return " ";}
+
+		if(prevGlyphWidth > 0 && prevGlyphWidth <= NARROW && rows[0].length() <= NARROW) {
+			return UNKNOWN_GLYPH;
+		}
 		
 		// If it's just a horizontal line that made it through the
 		// rule remove, then just make it a space.
@@ -152,7 +157,7 @@ public class AFont {
 	 * off.
 	 *
 	 */
-	private static int NARROW = 3;
+	private static int NARROW = 2;
 	private String textForComplexGlyph(String[] complexGlyph, int prevGlyphWidth) {
 
 
@@ -169,6 +174,7 @@ public class AFont {
 				}
 			});
 
+		p("textForComplexGlyph: prev width: " + prevGlyphWidth );
 
 		Iterator itr = keyList.iterator();
 		while (itr.hasNext()) {
@@ -179,7 +185,6 @@ public class AFont {
 			if (key.size() == 0) {continue;}
 
 			String val = (String) m_map.get(key);
-			p("complex:  Checking for glyph " + val);
 			String[] template = key.toArray(new String[0]);
 
 			// Don't allow 2 consecutive narrow glyphs.
@@ -195,14 +200,13 @@ public class AFont {
 
 			int matchCount = countWidthOfMatchingTemplate(template, complexGlyph);
 			if (matchCount > 0) {
-				glyph = template;
 				text = (String) m_map.get(key);
 				String[] newRows = stripMatchedRows(complexGlyph, matchCount);
 				if (newRows[0].length() == 0) {
 					return text;
 				} else {
 					p ("Complex found " + text + " and looking for more");
-					String remainderText = textFor(newRows, glyph[0].length());
+					String remainderText = textFor(newRows, matchCount);
 					if(!remainderText.contains(UNKNOWN_GLYPH)) {
 						p("Found more!  Returning:  " + text + remainderText);
 						return text + remainderText;
