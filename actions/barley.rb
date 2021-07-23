@@ -295,7 +295,7 @@ class BarleyWindow < PinnableWindow
           dialog_click(Point.new(*@locs['Harvest']))
           unpin
           log "done final tick"
-          puts "Water count: #{@water_count}, Fert count: #{@fert_count}"
+          # puts "Water count: #{@water_count}, Fert count: #{@fert_count}"
           return 
         end
       end
