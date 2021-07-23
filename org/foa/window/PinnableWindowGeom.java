@@ -58,7 +58,7 @@ public class PinnableWindowGeom extends WindowGeom {
 		int y = pt.y + 1;
 		int x = pt.x + 1;
 		if (x >= screenWidth) { return 0; }
-		while(!isBorder(pb, x, y)) {
+		while(isBorder(pb, x, y-1) && !isBorder(pb, x, y)) {
 			x += 1;
 			if (x == screenWidth) { break; }
 		}
@@ -76,7 +76,7 @@ public class PinnableWindowGeom extends WindowGeom {
 		x = x + 1;
 		if (y >= screenHeight) { return 0; }
 		// Search down for a non-border, or for the screen edge.
-		while(!isBorder(pb, x, y)) {
+		while(isBorder(pb, x-1, y) && !isBorder(pb, x, y)) {
 			y += 1;
 			if (y == screenHeight) { break; }
 		}
@@ -87,6 +87,34 @@ public class PinnableWindowGeom extends WindowGeom {
 	private void p (String s) {
 		System.out.println(s);
 	}
+
+	private boolean isRightEdgeOk(PixelBlock pb, Point origin, int width, int height) {
+		int screenHeight = ARobot.sharedInstance().screenSize().height;
+		int x_right = origin.x + width - 1;
+		// Confirm the corners are borders. 
+		if (!isBorder(pb, x_right, origin.y)) { return false; }
+		if (!isBorder(pb, x_right, origin.y + height - 1)) { return false; }
+		for(int y = origin.y + 1; y < origin.y + height - 2; y++) {
+			if (y >= screenHeight) { return false; }
+			if (!isBorder(pb, x_right, y)) {return false;}
+		}
+		
+		return true;
+	}
+
+	private boolean isBottomEdgeOk(PixelBlock pb, Point origin, int width, int height) {
+		int screenWidth = ARobot.sharedInstance().screenSize().width;
+		int y_bot = origin.y + height - 1;
+		// Confirm the corner is a  border. 
+		if (!isBorder(pb, origin.x, y_bot)) { return false; }
+		for(int x = origin.x + 1; x < origin.x + width - 2; x++) {
+			if (x >= screenWidth) { return false; }
+			if (!isBorder(pb, x, y_bot)) {return false;}
+		}
+		
+		return true;
+	}
+
 	private Rectangle rectFromLeftEdge(PixelBlock pb, int x, int y, boolean debug) {
 		Point origin = findOrigin(pb, new Point(x, y));
 		if (origin == null) { return null; }
@@ -98,6 +126,10 @@ public class PinnableWindowGeom extends WindowGeom {
 			if(debug) {System.out.println("PinnableWindowGeom: Rectangle was too small: " + width + ", " + height);}
 			return null;
 		}
+
+		// Make sure we have a complete, unobstructed window. 
+		if (!isRightEdgeOk(pb, origin, width, height)) {return null;}
+		if (!isBottomEdgeOk(pb, origin, width, height)) {return null;}
 
 		return new Rectangle(origin.x, origin.y, width, height);
 	}
