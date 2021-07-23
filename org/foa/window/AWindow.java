@@ -93,24 +93,27 @@ public abstract class AWindow extends ARobot  {
 	public String getDefaultRefreshLoc() { return m_defaultRefreshLoc; }
 	public void setDefaultRefreshLoc(String loc) { m_defaultRefreshLoc = loc; }
 
+	private double m_defaultRefreshDelay = 0.05;
+	public double getDefaultRefreshDelay() { return m_defaultRefreshDelay; }
+	public void setDefaultRefreshDelay(double delay) { m_defaultRefreshDelay = delay; }
 
-	private static double REFRESH_DELAY = 0.05;
-	public void refresh(){ refresh(getDefaultRefreshLoc(), REFRESH_DELAY); }
+
+	public void refresh(){ refresh(getDefaultRefreshLoc(), getDefaultRefreshDelay()); }
 	public void refresh(double delay){ refresh(getDefaultRefreshLoc(), delay); }
-	public void refresh(String where) { refresh(where, REFRESH_DELAY); }
+	public void refresh(String where) { refresh(where, getDefaultRefreshDelay()); }
 
 	public void refresh(String where, double delay) {
 		Rectangle rect = getRect();
 		if (where.equals("tc")) {
-			dialogClick(new Point(rect.width / 2, 4));
+			dialogClick(new Point(rect.width / 2, 4), delay);
 		} else if (where.equals("tl")) {
-			dialogClick(new Point(4, 4));
+			dialogClick(new Point(4, 4), delay);
 		} else if (where.equals("tr")) {
-			dialogClick(new Point(rect.width - 4, 4));
+			dialogClick(new Point(rect.width - 4, 4), delay);
 		} else if (where.equals("lc")) {
-			dialogClick(new Point(4, rect.height / 2));
+			dialogClick(new Point(4, rect.height / 2), delay);
 		} else if (where.equals("rc")) {
-			dialogClick(new Point(rect.width - 4, rect.height / 2));
+			dialogClick(new Point(rect.width - 4, rect.height / 2), delay);
 		} else {
 			throw new RuntimeException("Bad refresh arg: " + where);
 		}

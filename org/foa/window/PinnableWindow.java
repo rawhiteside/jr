@@ -57,8 +57,6 @@ public class PinnableWindow extends AWindow {
 		}
 	}
 
-	private static double MIN_DELAY = 0.05;
-
 	public void dialogClick(Point p, double delay) {
 		dialogClick(p, delay, false);
 	}
@@ -123,7 +121,9 @@ public class PinnableWindow extends AWindow {
 
 	public void unpin() {
 		updateRect();
-		dialogClick(new Point(getRect().width - 20, 20), 0.01, true);
+		// Changed the default unpin delay from 0.01 to 0.02.  Rare
+		// failures to unpin. Maybe this fixes?  I dunno.
+		dialogClick(new Point(getRect().width - 20, 20), 0.02, true);
 		m_pinned = false;
 	}
 

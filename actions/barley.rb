@@ -50,8 +50,8 @@ class Barley < Action
     @grow_loc = WorldLocUtils.parse_world_location(@vals['grow-loc'])
     water_loc = WorldLocUtils.parse_world_location(@vals['water-loc'])
 
-    stash_take_fert(rows * cols * count * (ticks + 3), wh_loc, wh_win) if fert_p
-    stash_take_barley(rows * cols * count + 5, wh_loc, wh_win)
+    stash_take_fert(rows * cols * count * (ticks + 5), wh_loc, wh_win) if fert_p
+    stash_take_barley(rows * cols + 5, wh_loc, wh_win)
 
     loop do
       count.times { grow_one_field(rows, cols, ticks, fert_p) }
@@ -78,7 +78,9 @@ class Barley < Action
   def stash_take_barley(amt, wh_loc, wh_win)
     @walker.walk_to(wh_loc)
     HowMuch.max if wh_win.click_on('Stash./Grain./All')
-    HowMuch.amount(amt) if wh_win.click_on('Take/Grain/Barley (Raw)')
+    if wh_win.click_on('Take/Grain/Barley (Raw)')
+      HowMuch.amount(amt)
+    end
   end
 
   def pop_locations
@@ -161,7 +163,7 @@ end
 
 
 class BarleyWindow < PinnableWindow
-  WINDOW_UPDATE_DELAY = 0.005
+  WINDOW_UPDATE_DELAY = 0.04
   def initialize(g, index)
     @logging = false
     @index = index
@@ -175,6 +177,10 @@ class BarleyWindow < PinnableWindow
       'Harvest' => [130, 191],
     }
     @locs.each_key {|k| @locs[k][1] -= yoff }
+    set_static_size(true)
+    set_default_refresh_delay 0.1
+    @water_count = 0
+    @fert_count = 0
   end
 
   def read_text
@@ -190,9 +196,11 @@ class BarleyWindow < PinnableWindow
   end
 
   def add_water
+    @water_count += 1
     dialog_click(Point.new(*@locs['Water']))
   end
   def add_fert
+    @fert_count += 1
     dialog_click(Point.new(*@locs['Fert']))
   end
 
@@ -201,6 +209,7 @@ class BarleyWindow < PinnableWindow
   def crop_done
     text = read_text
     if text.include?('Ready to') || text.include?('Danger')
+      set_static_size false
       dialog_click(Point.new(*@locs['Harvest']))
       unpin
       log "crop was done"
@@ -224,13 +233,19 @@ class BarleyWindow < PinnableWindow
     # Max of four fert adds.
     4.times do
       add_fert
+      
       # Let window update? 
       sleep WINDOW_UPDATE_DELAY
       break unless needs_fert
     end
   end
 
+
   def tend(start_lock, ticks, fert_p)
+    do_tend(start_lock, ticks, fert_p)
+  end
+
+  def do_tend(start_lock, ticks, fert_p)
     with_robot_lock do
       delay_sec = 0.001
       2.times {dialog_click(Point.new(*@locs['Water']), delay_sec)}
@@ -276,9 +291,11 @@ class BarleyWindow < PinnableWindow
       with_robot_lock do
 	refresh
         if needs_water
+          set_static_size false
           dialog_click(Point.new(*@locs['Harvest']))
           unpin
           log "done final tick"
+          puts "Water count: #{@water_count}, Fert count: #{@fert_count}"
           return 
         end
       end
