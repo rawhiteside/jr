@@ -135,7 +135,7 @@ class ThistleGardens < GridAction
       cascader.stage(w)
       windows << w
     end
-    cascader.cascade
+    cascader.cascade_from_stage
     return windows
   end    
 

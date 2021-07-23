@@ -314,7 +314,14 @@ class Cascader < ARobot
     w.drag_to(Point.new(@x, @y))
   end
 
-  def cascade
+  def cascade(w)
+    index = @windows.size
+    w.default_refresh_loc = 'tr'
+    w.drag_to(Point.new(@x + index * @off, @y + index * @off))
+    @windows << w
+  end
+
+  def cascade_from_stage
     first = @windows.shift
     index = @windows.size
     @windows.reverse.each do |w|

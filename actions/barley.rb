@@ -154,7 +154,7 @@ class Barley < Action
         with_robot_lock { @walker.steps(patt, 0.2) }
         prev_patt = patt
       end
-      @cascader.cascade
+      @cascader.cascade_from_stage
     end
     wait_for_worker_threads
     @walker.walk_to(@grow_loc)
@@ -242,15 +242,10 @@ class BarleyWindow < PinnableWindow
 
 
   def tend(start_lock, ticks, fert_p)
-    do_tend(start_lock, ticks, fert_p)
-  end
-
-  def do_tend(start_lock, ticks, fert_p)
     with_robot_lock do
-      delay_sec = 0.001
-      2.times {dialog_click(Point.new(*@locs['Water']), delay_sec)}
+      2.times {add_water}
       if fert_p
-        2.times {dialog_click(Point.new(*@locs['Fert']), delay_sec)}
+        2.times {add_fert}
       end
     end
 
