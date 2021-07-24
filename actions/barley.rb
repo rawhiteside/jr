@@ -16,6 +16,10 @@ class Barley < Action
 
   def setup(parent)
     comps = [
+      {:type => :label, :label => '----------'},
+      {:type => :label, :label => 'Settings > One-click > Plant where you stand.'},
+      {:type => :label, :label => '----------'},
+
       {:type => :point, :label => 'Drag onto pinned plant menu', :name => 'plant-win'},
       {:type => :point, :label => 'Drag onto pinned warehouse', :name => 'wh-win'},
 
