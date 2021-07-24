@@ -1,0 +1,16 @@
+---
+2: Parameter set 1
+1: false
+Parameter set 1:
+  plant-win.x: '353'
+  plant-win.y: '935'
+  wh-win.x: '1643'
+  wh-win.y: '470'
+  fert?: 'true'
+  ticks: '4'
+  count: '4'
+  rows: '5'
+  cols: '5'
+  grow-loc: -1019, -6776
+  water-loc: -1013, -6783
+  wh-loc: -1020, -6773
