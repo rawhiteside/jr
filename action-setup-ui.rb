@@ -38,7 +38,7 @@ import org.foa.ImagePanel
 import org.foa.window.ClockLocWindow
 
 
-require 'hook'
+# require 'hook'
 require 'yaml'
 require 'user-io'
 
