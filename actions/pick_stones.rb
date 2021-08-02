@@ -60,7 +60,7 @@ class PickStones < PickThings
     color = pb.getColor(x, y)
     r, g, b = color.red, color.green, color.blue
     # Stone.
-    if r > 150 && (r - g).abs < 15 && (r - b).abs < 15
+    if r > 125 && (r - g).abs < 15 && (r - b).abs < 15 && r < 200
       return true
     end
 
