@@ -151,14 +151,16 @@ class Barley < Action
       step_patterns(rows, cols).each do |patt|
         w = plant_and_pin(pop = @pop_for_step[prev_patt], index)
         index += 1
-        @cascader.stage(w)
+        @cascader.cascade(w)
+        #@cascader.stage(w)
         start_worker_thread do
 	  w.tend(start_lock, ticks, fert_p)
         end
         with_robot_lock { @walker.steps(patt, 0.2) }
         prev_patt = patt
       end
-      @cascader.cascade_from_stage
+      #@cascader.cascade_from_stage
+      sleep 0.1
     end
     wait_for_worker_threads
     @walker.walk_to(@grow_loc)
