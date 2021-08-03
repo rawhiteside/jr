@@ -15,16 +15,17 @@ Parameter set 1:
 Apiaries:
   code.code: "# Setup:\n# - Camera F7\n# - Face North as closely as you can.\n# -\
     \ Zoom all the way in, then back out 4 clicks.\n# Good luck!\n\ndef apiary\n \
-    \ pb_subimage = PixelBlock.load_image('images/apiary3.png')\n  sleep 0.8  # Wait\
-    \ for running to stop.\n  height = screen_size.height\n  half = height / 2\n\n\
-    \  width = screen_size.width\n  quarter_width = width / 4\n  search_rect = Rectangle.new(quarter_width,\
-    \ half, quarter_width * 2, height - half)\n  pt = find_template_best pb_subimage,\
-    \ 25, search_rect\n  \n  stat_wait :spd\n  if pt\n    mm pt\n    sleep 0.01\n\
-    \    send_string 't', 0.2\n    send_string 'c'\n  end\n  pw = PopupWindow.find\n\
-    \  pw.dismiss if pw\nend\n\ndef stash\n  return    # XXX Turn stashing off.\n\
-    \  sleep 0.3\n  win = find_and_pin 'Warehouse'\n  if win\n    HowMuch.max if win.click_on\
-    \ 'Stash/Honey'\n    HowMuch.max if win.click_on 'Stash/Beeswax'\n    win.unpin\n\
-    \  else\n    puts \"Didn't find warehouse.\"\n  end\nend\n\n"
+    \ pb_subimage = PixelBlock.load_image('images/apiary-f8-zoom4.png')\n  sleep 0.8\
+    \  # Wait for running to stop.\n  height = screen_size.height\n  half = height\
+    \ / 2\n\n  width = screen_size.width\n  quarter_width = width / 4\n  search_rect\
+    \ = Rectangle.new(quarter_width, half, quarter_width * 2, height - half)\n  pt\
+    \ = find_template_best pb_subimage, 25, search_rect\n  \n  stat_wait :spd\n  if\
+    \ pt\n    mm pt\n    sleep 0.01\n    send_string 't', 0.2\n    send_string 'c'\n\
+    \  end\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef stash\n  return\
+    \    # XXX Turn stashing off.\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n\
+    \  if win\n    HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max if win.click_on\
+    \ 'Stash/Beeswax'\n    win.unpin\n  else\n    puts \"Didn't find warehouse.\"\n\
+    \  end\nend\n\n"
   repeat: One time
   path: "\n\n# West desert line\n-929, -6748\napiary\t\n-929, -6745\napiary\t\n-929,\
     \ -6742\napiary\t\n-929, -6739\napiary\t\n-929, -6736\napiary\t\n-929, -6733\n\
