@@ -33,6 +33,7 @@ class Fert < KettleAction
 end
 Action.add_action(Fert.new)
 
+
 class FlowerFert < KettleAction
   def initialize
     super('Flower Fertilizer')
@@ -84,7 +85,7 @@ Action.add_action(Salt.new)
 
 class TakeFromKettles < KettleAction
   def initialize
-    super('Take from kettles')
+    super('Kettles take')
   end
 
   def act_at(g)
@@ -131,15 +132,24 @@ class KettleWindow < PinnableWindow
   end
 end
 
-class Potash < KettleAction
-  def initialize(n = 'Potash')
+class KettleStoke < KettleAction
+  def initialize(n = 'Kettles stoke')
     super(n)
   end
 
   def get_gadgets
-    super << {:type => :combo, :label => 'Do what?', :name => 'action' ,
-              :vals => ['Start and tend', 'Tend', 'Ignite and tend']
+    gadgets = super
+    gadgets << 
+    {
+      :type => :combo, :label => 'Make what?', :name => 'what' ,
+      :vals => ['Sulfur', 'Potash', 'Acid']
     }
+    gadgets <<
+      {
+      :type => :combo, :label => 'Do what?', :name => 'action' ,
+      :vals => ['Start and tend', 'Tend', 'Ignite and tend']
+      }
+    gadgets
   end
 
   def kettle_window(p)
@@ -153,7 +163,7 @@ class Potash < KettleAction
   end
 
   def make_this
-    'Potash'
+    @user_vals['what']
   end
 
   def start_potash(p, ignite)
@@ -202,7 +212,7 @@ class Potash < KettleAction
       break unless task =~ /Start/
 
       # fill jugs
-      Icons.refill
+      Icons.refill if make_this == 'Potash'
     end
   end
 
@@ -243,16 +253,4 @@ class Potash < KettleAction
   
 
 end
-Action.add_action(Potash.new)
-
-# XXX Refactor this more cleanly. 
-class Acid < Potash
-  def initialize
-    super('Acid')
-  end
-  
-  def make_this
-    'Acid'
-  end
-end
-Action.add_action(Acid.new)
+Action.add_action(KettleStoke.new)
