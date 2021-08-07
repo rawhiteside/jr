@@ -170,6 +170,13 @@ class PopupWindow < Window
     PopupWindow.from_point(Point.new(wid/2, height/2))
   end
 
+  # Strip off pin and possible scroll bar
+  def textRectangle
+    orect = getRect();
+    orect.width -= 25;
+    return rect;
+  end
+
   # Dismiss one if it's there. 
   def self.dismiss
     w = self.find
