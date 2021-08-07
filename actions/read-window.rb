@@ -11,6 +11,7 @@ class ReadWindow < Action
   def setup(parent)
     gadgets = [
       {:type => :checkbox, :label => 'Acro Window', :name => 'acro-p' },
+      {:type => :checkbox, :label => 'Popup Window', :name => 'popup-p' },
       {:type => :checkbox, :label => 'Chat Window', :name => 'chat-history-p' },
       {:type => :checkbox, :label => 'ClockLoc', :name => 'clock-loc-p' },
       {:type => :checkbox, :label => 'Inventory', :name => 'inventory-p' },
@@ -51,6 +52,11 @@ class ReadWindow < Action
     if @vals['acro-p'] == 'true'
       skills = AcroWindow.find
       show_text(skills.read_text, 'Acro')
+    end
+      
+    if @vals['popup-p'] == 'true'
+      skills = PopupWindow.find
+      show_text(skills.read_text, 'Popup')
     end
       
 
