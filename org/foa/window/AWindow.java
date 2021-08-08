@@ -232,12 +232,13 @@ public abstract class AWindow extends ARobot  {
 		String[] path = menuPath.split("/");
 		claimRobotLock();
 		if(refreshLoc != null) {
-		w.refresh(refreshLoc);
+			w.refresh(refreshLoc);
 		}
 		try {
 			for(int i = 0; i < path.length; i++) {
 				if(w == null) { break; }
 				String menu = path[i];
+				// System.out.println(w.readText() + "\n---\n" + menu + "\n--\n");
 				Point pt = w.coordsForLine(menu);
 				if (pt == null) {
 					w = null;

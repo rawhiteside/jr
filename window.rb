@@ -75,6 +75,10 @@ class ChatWindow < Window
     sleep delay
   end
 
+  def read_text_no_timestamp
+    strip_timestamp(read_text)
+  end
+
   def strip_timestamp(text)
     stripped_lines = []
     text.split("\n").each do |line|
