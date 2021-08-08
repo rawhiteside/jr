@@ -8,13 +8,14 @@ class Fishing < Action
 
   def setup(parent)
     gadgets = [
-      # {:type => :text, :label => 'Lure name (otherwise cycle)', :name => 'lure'}
+      {:type => :text, :label => 'Lure name (otherwise cycle)', :name => 'lure'},
       {:type => :point, :label => 'Drag to pinned lure window', :name => 'lure-win'},
     ]
     @uvals = UserIO.prompt(parent, name, action_name, gadgets)
   end
 
   def act
+    @specified_lure = @uvals['lure']
     lure_win = PinnableWindow.from_point(point_from_hash(@uvals, 'lure-win'))
     chat_win = ChatWindow.find
     
@@ -26,18 +27,25 @@ class Fishing < Action
     end
   end
 
+  FISHING_DELAY = 17
   def wait_for_fishing_done(chat_win)
     orig = chat_win.read_text_no_timestamp
-    loop do
+    # If more than 17 seconds, but proceed anyway. 
+    FISHING_DELAY.times do
       sleep 1
+      check_for_pause
       current = chat_win.read_text_no_timestamp
       last_line = current.split("\n")[-1]
-      if last_line.include?('already fishing!')
-        sleep 17
-        next
+      if last_line && last_line.include?('already fishing!')
+        sleep FISHING_DELAY
+        return
       end
-      if last_line.include?("The Fishing Lure")
+      if last_line && last_line.include?("The Fishing Lure")
         orig = current
+      end
+      if last_line.match(/Caught ?a ?[0-9]/)
+        puts last_line
+        puts @current_lure
       end
       return if orig != current
     end
@@ -45,11 +53,30 @@ class Fishing < Action
 
   def select_lure(lure_win, lures)
     lure_win.refresh
+    return if select_specified_lure(lure_win, lures)
+    select_cycled_lure(lure_win, lures)
+  end
+
+  def select_specified_lure(lure_win, lures)
+    return false if @specified_lure.nil? || @specified_lure.strip == ''
+    lure_win.click_on(@specified_lure + '/Desel')     
+    if lure_win.click_on(@specified_lure + '/Sel')
+      @current_lure = @specified_lure
+      return true
+    else
+      return nil
+    end
+  end
+  
+  def select_cycled_lure(lure_win, lures)
     lures.size.times do |i|
-      # XXX Font error here.  FIx it later, Bob.
-      clicked = lure_win.click_on(lures[0] + '/Select') || lure_win.click_on(lures[0] + '/SeleCt')
+      l = lures[0]
+      clicked = lure_win.click_on(l + '/Select')
       lures.rotate!
-      return if clicked
+      if clicked
+        @current_lure = l
+        return
+      end
       sleep 1
     end
   end
