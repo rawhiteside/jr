@@ -16,9 +16,9 @@ class Fert < KettleAction
     @first_pass = (index == 0)
   end
   
-  def act_at(ginfo)
+  def act_at(g)
     delay = 0.01
-    w = KettleWindow.from_screen_click(ginfo['x'], ginfo['y'])
+    w = KettleWindow.from_screen_click(g['x'], g['y'])
     unless @first_pass
       w.click_word('Take')
       sleep delay
@@ -34,11 +34,21 @@ end
 Action.add_action(Fert.new)
 
 
-class FlowerFert < KettleAction
+class KettleNoStoke < KettleAction
   def initialize
-    super('Flower Fertilizer')
+    super('Kettle no-stoke')
   end
 
+  def get_gadgets
+    gadgets = super
+    gadgets << 
+    {
+      :type => :combo, :label => 'Make what?', :name => 'what' ,
+      :vals => ['Salt', 'Grain Fert', 'Flower Fert']
+    }
+
+    gadgets
+  end
   def start_pass(index)
     @first_pass = (index == 0)
   end
@@ -54,7 +64,7 @@ class FlowerFert < KettleAction
       w.click_word('Take')
       sleep delay
     end
-    w.click_word('Flower Fert')
+    w.click_word(@user_vals['what'])
     sleep delay
     w.click_word('Begin')
     sleep delay
@@ -62,25 +72,8 @@ class FlowerFert < KettleAction
     sleep delay
   end
 end
-Action.add_action(FlowerFert.new)
+Action.add_action(KettleNoStoke.new)
 
-class Salt < KettleAction
-  def initialize
-    super('Salt')
-  end
-
-  def act_at(g)
-    w = KettleWindow.from_screen_click(g['x'], g['y'])
-    w.click_word('Take')
-    sleep 0.1
-    w.click_word('Salt')
-    sleep 0.1
-    w.click_word('Begin')
-    sleep 0.1
-    AWindow.dismiss_all
-  end
-end
-Action.add_action(Salt.new)
 
 
 class TakeFromKettles < KettleAction
