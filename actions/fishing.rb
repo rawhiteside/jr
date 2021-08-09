@@ -43,11 +43,13 @@ class Fishing < Action
       if last_line && last_line.include?("The Fishing Lure")
         orig = current
       end
-      if last_line.match(/Caught ?a ?[0-9]/)
-        puts last_line
-        puts @current_lure
+      if orig != current
+        if last_line.match(/Caught ?a ?[0-9]/)
+          puts last_line
+          puts @current_lure
+        end
+        return
       end
-      return if orig != current
     end
   end
 
