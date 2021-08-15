@@ -42,7 +42,7 @@ class LoadTravelPathTest <  Test::Unit::TestCase
   def test_load
     canon = CanonicalLineSegList.new
     count = 0
-    @defaults.keys.each do |key|
+    @travel_paths.keys.each do |key|
       next unless key.kind_of?(String)
       locs = key.to_s.split(/ to /)
       next unless locs.size == 2
@@ -56,38 +56,6 @@ class LoadTravelPathTest <  Test::Unit::TestCase
   end
 end
 
-class SegsForNameTest  < Test::Unit::TestCase
-  def test_add_get
-    sfn = SegsForName.new
-
-    assert_equal([], sfn.get('missing'))
-    seg0011 = NamedLineSeg.new(P00, P11)
-    sfn.add(seg0011)
-    assert_equal([seg0011], sfn.get(P00))
-
-    seg0022 = NamedLineSeg.new(P00, P22)
-    sfn.add(seg0022)
-    assert_equal([seg0011, seg0022], sfn.get(P00))
-    
-  end
-end
-
-class NamesLineSegTest < Test::Unit::TestCase
-  def test_ctor
-    seg = NamedLineSeg.new(P00, P11)
-    assert_equal(P00, seg.name1)
-    assert_equal(P11, seg.name2)
-
-    seg = NamedLineSeg.new(P00, P11, 'a name')
-    assert_equal('a name', seg.name1)
-    assert_equal(P11, seg.name2)
-    
-    seg = NamedLineSeg.new(P00, P11, nil, 'a name')
-    assert_equal('a name', seg.name2)
-    assert_equal(P00, seg.name1)
-    
-  end
-end
 
 class CanonicalLineSegListTest < Test::Unit::TestCase
   def p(x, y)

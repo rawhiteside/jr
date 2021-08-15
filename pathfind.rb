@@ -1,12 +1,6 @@
 require 'java'
 import java.awt.Point
 
-class PathFinder
-  # Returns a sequence of points 
-  def find_path_to(destination)
-    
-  end
-end
 
 class CanonicalLineSegList
 
@@ -227,12 +221,39 @@ class SegsForName
   end
 end
 
-# LineSeg with names for the two ponts.
-class NamedLineSeg < LineSeg
-  attr_reader :name1, :name2
-  def initialize(pt1, pt2, name1 = nil, name2 = nil)
-    super(pt1, pt2)
-    @name1 = (name1.nil?) ? pt1 : name1
-    @name2 = (name2.nil?) ? pt2 : name2
+
+class PathSeg < LineSeg
+  # When part of a path, this is the total lentgh of the path through
+  # this segment.
+  attr_reader :path_length, :seg_length
+  def initialize(pt1, pt2)
+    super
+    @seg_length = pt1.distance(pt2)
+    @path_length = nil
+  end
+end
+
+class Path
+  attr_reader :segs
+  # Start path with Path.new [new_seg].  
+  def initialize(prev_path, new_seg)
+    new_seg = PathSeg.new(new_seg.p1, new_seg.p2)
+    if prev_path.nil?
+      new_seg.path_length = new_seg.seg_length
+      @segs = [new_seg]
+    else
+      new_seg.path_length = new_seg.seg_length + prev_path.segs[-1].seg_length
+      @segs = Array.new(prev_path).push(new_seg)
+    end
+  end
+end
+
+
+class PathFinder
+  # Returns a sequence of points starting at current location and
+  # ending at the point +dest+.
+  def find_path_to(dest)
+    
+    
   end
 end
