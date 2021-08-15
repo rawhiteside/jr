@@ -86,8 +86,9 @@ public class TextReader {
 	}
 
 	private InkSpots[] findMatchingLine(String start) {
+		start = start.replace(" ", "");
 		for(int i = 0; i < lineText.length; i++) {
-			if(lineText[i].startsWith(start)) {
+			if(lineText[i].replace(" ", "").startsWith(start)) {
 				return glyphs[i];
 			}
 		}
