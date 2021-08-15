@@ -45,14 +45,14 @@ class DeepWellWindow < PinnableWindow
     refresh
     text = read_text
     return :broken if text =~ /Repair/
-    match = Regexp.new('Spring Tension is +([0-9]+)').match(text)
-    tension = match[1].to_i
+    match = Regexp.new('Spring Tension is +([0-9 ]+)').match(text)
+    tension = match[1].tr(' ','').to_i
     return :max_tension if tension >= 100
-    if !stat_ok? 'End'
+    if !stat_ok? :end
       return :no_wait unless wait_for_end
     end
 
-    stat_wait 'End'
+    stat_wait :end
     return :ok if click_on('Wind')
     puts "DeepWellWindow: this should not happen."
     return :ok

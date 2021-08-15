@@ -50,10 +50,11 @@ class WaterMineWorker
     @win = w
     @win.default_refresh_loc = 'tl'
     @last_wind_time = nil
+    set_pitch_list
+    @angle = angle
     log_action('Start')
     @scan_interval = scan_interval
     @scan_gems = 0
-    @angle = "unknown"
     @wind_delay = 0
   end
 
@@ -69,8 +70,8 @@ class WaterMineWorker
   def set_pitch_list
     text = @win.read_text
     return unless text
-    label = text.split(/\n/)[3]
-    if label=~ /-+/
+    label = text.split(/\n/)[1]
+    if label=~ /Pitch/
       label = "Unlabeled"
     end
     words = label.split(',')
@@ -93,6 +94,12 @@ class WaterMineWorker
       @pitch_list = []
       @mine_tag = tag
       10.upto(30) {|i| @pitch_list << i}
+      # Try to start with the current pitch on the mine.
+      ang = angle
+      10.upto(30) {
+        break if ang == @pitch_list[0]
+        @pitch_list.rotate!
+      }
     end
 
     advance_angle
@@ -137,9 +144,9 @@ class WaterMineWorker
   def angle
     @win.refresh
     text = @win.read_text
-    match = Regexp.new('Pitch Angle is ([0-9]+)').match(text)
+    match = Regexp.new('Pitch Angle is ([0-9 ]+)').match(text)
     if match 
-      return match[1].to_i
+      return match[1].tr(' ','').to_i
     else
       puts "Failed to find angle in: #{text}"
       # Return some number.

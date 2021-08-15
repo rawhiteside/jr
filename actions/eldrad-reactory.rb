@@ -57,7 +57,7 @@ class EldradReactory < Action
     loop do
       win.refresh
       text = win.read_text
-
+      puts text
       if text =~ /Make/
         start = Time.now
         # Starting a batch.
@@ -66,10 +66,11 @@ class EldradReactory < Action
         end
         win.refresh
         sleep post_heat_wait
-      elsif match_data = text.match(/strength ([0-9]+)%/)
+      elsif match_data = text.match(/strength ([0-9 ]+)%/)
         start = Time.now
         # Got a batch. Is it good?
-        percent = match_data[1].to_i
+        percent = match_data[1].delete(' ').to_i
+        puts "Percent: #{percent}"
         if percent < @thresh
           win.click_on 'Reheat'
           sleep post_heat_wait
