@@ -1,5 +1,5 @@
 ---
-2: Apiaries
+2: Water mines
 1: true
 Parameter set 1:
   code.code: '# Type Ruby code here.'
@@ -153,62 +153,46 @@ Fetch salt water:
   custom_text_2: ''
 Water mines:
   code.code: "# Pin the menus lower left, \n# pile atip each other.  \n# In this order:\n\
-    # 1. Deep well itself\n# 2. Well watermine.\n# 3. Kitchen at bricks  CP\n# 4.\
-    \ Rocksaws watermine.\n# 5. Forges watermine.\n# --------------------------------------------\n\
-    @tile_done = nil\n@mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  @workers[num].tend\n\
-    end\n\ndef kitchen\n  unless SkillsWindow.new.stat_boosted?\n    @kitchen.clean_pot\n\
-    \    @kitchen.cook_sink_eat\n    sleep 2\n    @kitchen.refresh\n  end\nend\n\n\
-    def deep_well\n  @well.tend_once(false)\nend\n\ndef dig\n  if stat_ok? 'End'\n\
-    \    send_string '5'\n  end\nend\n\ndef tile_pinned_windows\n  return if @tile_done\n\
-    \  @tile_done = true\n  dim = screen_size\n  tiler = Tiler.new(2, 120)\n  tiler.min_width\
-    \ = 270\n  x = 20\n  y = dim.height - 20\n  5.times do |i|\nputs 222\n    win\
-    \ = PinnableWindow.from_point(x, y)\n    tiler.tile(win)\n    if i == 4\n    \
-    \  @well = DeepWellWindow.new(win)\n    elsif i == 2\n      @kitchen = Kitchen.new(win)\n\
-    \    else\n      @workers << WaterMineWorker.new(win, 1200)\n    end\n  end\n\
-    \  @workers.reverse!\nend\ntravel 'CP Bricks'\n"
+    \n# - Deep well (if @wind_deepwell is true)\n# - South watermine (near fishing\
+    \ stuff)\n# - Mid-lake watermine (near chem lab)\n# - North East lake watermine\
+    \ (near rocks) \n# Start at the rocksaw water mine. \n\n@wind_deepwell = true\n\
+    @deepwell_scan_seconds = 600\n@dig_dirt = true\n\n\n# --------------------------------------------\n\
+    @tile_done = nil\n@mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  tile_pinned_water_mine(num)\n\
+    \  @workers[num].tend\nend\n\n\ndef deep_well\n  return unless @wind_deepwell\n\
+    \  unless @well\n    @well = DeepWellWindow.new(pinnable_from_pile)\n    @tiler.tile(@well)\n\
+    \  end\n\n  @well.tend_once(false)\nend\n\ndef dig\n  if stat_ok? 'End'\n    send_string\
+    \ '5'\n  end\nend\n\ndef init_tiler\n  return if @tiler\n  @tiler = Tiler.new(2,\
+    \ 160)\n  @tiler.min_width = 270\n  @tile_done = []\nend\n\ndef pinnable_from_pile\n\
+    \  x = 40\n  y = screen_size.height - 40\n\n  PinnableWindow.from_point(x, y)\n\
+    end\n\ndef tile_pinned_water_mine(n)\n\n  return if @tile_done[n]\n  @tile_done[n]\
+    \ = true\n\n  win = pinnable_from_pile\n  @tiler.tile(win)\n  @workers << WaterMineWorker.new(win,\
+    \ @deepwell_scan_seconds)\n\nend\n\n"
   repeat: Repeat
-  path: |+
+  path: |
     # start of run.
-    -1019, -6794
+    init_tiler
 
-    tile_pinned_windows
-    deep_well
+    -996, -6770
+    -996, -6771
     water_mine 0
-    dig
-    -1015, -6798
-    # kitchen
-
-    -1018, -6800
-    spam 'h', 5, 2
-    -1016, -6800
-    spam 'h', 5, 3
-    -1014, -6800
-    spam 'h', 5, 3
-
-    -1012, -6792
-    dig
-    -1007, -6791
-    -1004, -6786
-    dig
-    -997, -6777
-    dig
-    -995, -6774
-
-
-    # Rocksaws
+    -996, -6769
+    -1003, -6769
+    -1022, -6784
     water_mine 1
-    -994, -6774
-    -967, -6774
-    -967, -6782
 
-    # Forges
+    -1041, -6790
+    -1052, -6802
+    -1052, -6809
+    -1048, -6809
     water_mine 2
 
-    -970, -6779
-    -983, -6779
-    -998, -6794
-    -1018, -6794
+    -1042, -6809
+    -1009, -6791
+    deep_well
 
+    -1003, -6788
+    -994, -6775
+    -996, -6771
   path.custom_text_0: ''
   path.custom_text_1: ''
 Test:
