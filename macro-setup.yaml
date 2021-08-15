@@ -72,12 +72,9 @@ Flimsy Bricks: "Uses a 5x5 array, but can't reach the corners, so those unused. 
 Color Picker: "Forget why I wrote this.\n\nPick a point, then start the macro. \n\
   It watches that point, and pops a dialog, which updates itself with the color values\
   \ of that point. \n\nProbably seemed like a good idea at the time. "
-Global setup: "Global setup/preferences.\n\nSkills window.\nOK, this is a hack. Leave\
-  \ both the Friends and the Skills window up.  Stretch the Friends list *down* so\
-  \ that there's a big dark space.  Place the skills windows near the bottom left\
-  \ atop that dark empty space.  Now, the skills window has a border!! \n\n- Turn\
-  \ *off* any R-click pin/unpin magic. \n- Shadows don't *generally* cause problems,\
-  \ but sometimes they do. \n- What else?"
+Global setup: "Global setup/preferences.\n\n\n- Turn *off* any R-click pin/unpin magic.\
+  \ \n- Shadows don't *generally* cause problems, but sometimes they do. \n- What\
+  \ else?"
 Travel paths: "This defines safe walking routes between waypoints.  These routes should\
   \ have names of the form \"<A> to <B>\", as in \"Guildhall to Expedition Site\"\n\
   \nThese routes are used by the \"Travel\" macro to travel.  If you want to go from\
