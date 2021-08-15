@@ -1,2 +1,8 @@
 **/*.class
 **/*~
+dialog-defaults/Dig_Stones.yaml
+dialog-defaults/Papy_Tanks.yaml
+dialog-defaults/Pick_Stones.yaml
+dialog-defaults/Read_Window.yaml
+dialog-defaults/Water_mine.yaml
+recents.yaml
