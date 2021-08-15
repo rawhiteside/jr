@@ -17,7 +17,7 @@ class SporePapers < Action
     pt = point_from_hash(@vals, 'inspect')
     win = PinnableWindow.from_point(pt)
     loop do
-      stat_wait 'Foc'
+      stat_wait :foc
       with_robot_lock do
         win.click_on('Inspect')
         sleep 0.5

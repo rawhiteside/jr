@@ -25,7 +25,7 @@ class WoodPlane < Action
   
   def plane(w)
     is_woodplane = (@vals['type'] == 'Wood plane')
-    stat_wait('End')
+    stat_wait :end
     w.refresh
     if is_woodplane
       w.refresh if (w.click_on('Repair') || w.click_on('Install'))

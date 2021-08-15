@@ -49,7 +49,7 @@ class Quarry < Action
     lines = w.read_text.split("\n")
     work_lines = lines.delete_if {|l| !(l =~ /Work/)}.sort
 
-    stat_wait('End')
+    stat_wait :end
 
     w.click_on(work_lines[index]) if work_lines[index]
     return work_lines[index]

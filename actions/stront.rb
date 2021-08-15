@@ -31,7 +31,7 @@ class StrontDowse < Action
   end
 
   def dowse
-    stat_wait('Focus')
+    stat_wait :foc
     # If the food is gone, stop dowsing.
     return :stop if @eat.should_eat?
     lclick_at(88, 79)

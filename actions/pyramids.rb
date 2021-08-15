@@ -28,7 +28,7 @@ class PyramidPushStack < Action
       win.refresh
       text = win.read_text
       if text && text.include?(direction)
-        stat_wait('End')
+        stat_wait :end
         win.click_on("Push this block #{direction}")
         sleep 1.0
       else
@@ -66,7 +66,7 @@ class PyramidDigStack < Action
       win.refresh
       text = win.read_text
       if text
-        stat_wait('End')
+        stat_wait :end
         win.refresh
         if win.click_on("Dig")
           win.refresh
