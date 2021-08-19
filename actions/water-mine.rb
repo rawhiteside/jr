@@ -79,7 +79,7 @@ class WaterMineWorker
     tag = words.shift
     all_nums = words.size > 0
     words.each do |word|
-      num = word.strip.to_i
+      num = word.tr(' ', '').to_i
       if num == 0
         all_nums = false
         break
@@ -94,14 +94,13 @@ class WaterMineWorker
       @pitch_list = []
       @mine_tag = tag
       10.upto(30) {|i| @pitch_list << i}
-      # Try to start with the current pitch on the mine.
-      ang = angle
-      10.upto(30) {
-        break if ang == @pitch_list[0]
-        @pitch_list.rotate!
-      }
     end
-
+    # Try to start with the current pitch on the mine.
+    ang = angle
+    10.upto(30) {
+      break if ang == @pitch_list[0]
+      @pitch_list.rotate!
+    }
     advance_angle
   end
 
@@ -125,6 +124,7 @@ class WaterMineWorker
   end
 
   def advance_angle
+
     if @pitch_list.size > 0
       ang = @pitch_list.shift
       @past_pitches << ang
@@ -135,6 +135,7 @@ class WaterMineWorker
     end
     ang = 10 if ang > 30
     ang = 30 if ang < 10
+
     @win.refresh
     @win.click_on("Set/Angle of #{ang}") if ang != angle
     @win.refresh
