@@ -10,6 +10,7 @@ FLAX_DATA = {
   "Old Egypt" => {},
   "Sunset Pond" => {},
   "Symphony Ridge Gold" => {:water => 0},
+  "Djoser#152" => {:water => 0},
 }
 
 
