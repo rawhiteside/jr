@@ -155,14 +155,14 @@ Water mines:
   code.code: "# Pin the menus lower left, \n# pile atip each other.  \n# In this order:\n\
     \n# - Deep well (if @wind_deepwell is true)\n# - South watermine (near fishing\
     \ stuff)\n# - Mid-lake watermine (near chem lab)\n# - North East lake watermine\
-    \ (near rocks) \n# Start at the rocksaw water mine. \n\n@wind_deepwell = true\n\
-    @deepwell_scan_seconds = 600\n@dig_dirt = true\n\n\n# --------------------------------------------\n\
+    \ (near rocks) \n# Start at the rocksaw water mine. \n\n@wind_deepwell = nil\n\
+    @deepwell_scan_seconds = 1200\n@dig_dirt = true\n\n\n# --------------------------------------------\n\
     @tile_done = nil\n@mine_hash = {}\n@workers = []\n\ndef water_mine(num)\n  tile_pinned_water_mine(num)\n\
     \  @workers[num].tend\nend\n\n\ndef deep_well\n  return unless @wind_deepwell\n\
     \  unless @well\n    @well = DeepWellWindow.new(pinnable_from_pile)\n    @tiler.tile(@well)\n\
     \  end\n\n  @well.tend_once(false)\nend\n\ndef dig\n  if stat_ok? 'End'\n    send_string\
     \ '5'\n  end\nend\n\ndef init_tiler\n  return if @tiler\n  @tiler = Tiler.new(2,\
-    \ 160)\n  @tiler.min_width = 270\n  @tile_done = []\nend\n\ndef pinnable_from_pile\n\
+    \ 160)\n  @tiler.min_width = 400\n  @tile_done = []\nend\n\ndef pinnable_from_pile\n\
     \  x = 40\n  y = screen_size.height - 40\n\n  PinnableWindow.from_point(x, y)\n\
     end\n\ndef tile_pinned_water_mine(n)\n\n  return if @tile_done[n]\n  @tile_done[n]\
     \ = true\n\n  win = pinnable_from_pile\n  @tiler.tile(win)\n  @workers << WaterMineWorker.new(win,\
