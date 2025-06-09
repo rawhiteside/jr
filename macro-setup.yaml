@@ -73,8 +73,8 @@ Color Picker: "Forget why I wrote this.\n\nPick a point, then start the macro. \
   It watches that point, and pops a dialog, which updates itself with the color values\
   \ of that point. \n\nProbably seemed like a good idea at the time. "
 Global setup: "Global setup/preferences.\n\n\n- Turn *off* any R-click pin/unpin magic.\
-  \ \n- Shadows don't *generally* cause problems, but sometimes they do. \n- What\
-  \ else?"
+  \ \n- Tab works like mouse.\n- Plant crops where stand.\n- Shadows don't *generally*\
+  \ cause problems, but sometimes they do. \n- What else?"
 Travel paths: "This defines safe walking routes between waypoints.  These routes should\
   \ have names of the form \"<A> to <B>\", as in \"Guildhall to Expedition Site\"\n\
   \nThese routes are used by the \"Travel\" macro to travel.  If you want to go from\

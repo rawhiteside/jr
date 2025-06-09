@@ -1,6 +1,6 @@
 ---
 Constitution click: 1
-Endurance click: 1
+Endurance click: 0
 Acquire font: 1
 Cutstones: 1
 Firepits: 1
@@ -14,8 +14,8 @@ Dig Stones: 1
 Grass: 1
 Casual Grass: 0
 Slate: 1
-Eat: 1
-Focus click: 1
+Eat: 0
+Focus click: 0
 Inverval tabs: 1
 Strength click: 1
 Grow onions: 1
@@ -66,3 +66,4 @@ Blast Furnaces: 1
 Color watcher: 1
 Pick Stones: 1
 Bricks: 1
+Inverval clicks: 1
