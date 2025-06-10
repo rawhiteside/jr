@@ -24,7 +24,7 @@ P21 = Point.new(2, 1)
 
 class LoadTravelPathTest <  Test::Unit::TestCase
   def setup
-     @travel_paths = DialogDefaults.get_defaults('Travel paths')
+    
   end
 
   def segs_from_coords(coords)
@@ -39,21 +39,23 @@ class LoadTravelPathTest <  Test::Unit::TestCase
     segs
   end
 
-  def test_load
-    canon = CanonicalLineSegList.new
-    count = 0
-    @travel_paths.keys.each do |key|
-      next unless key.kind_of?(String)
-      locs = key.to_s.split(/ to /)
-      next unless locs.size == 2
-      coords = WorldLocUtils.parse_world_path(@travel_paths[key]['path']).keep_if{|elt| elt.kind_of?(Array)}
-      #puts "#{locs[0]}: #{coords[0]}}"
-      #puts "#{locs[1]}: #{coords[-1]}}"
-      segs = segs_from_coords(coords)
-      segs.each { |seg| canon.add(seg) ; count += 1 }
-    end
-    #puts "Count added: #{count}, count canonical: #{canon.line_segs.size}"
+  def test_load_save
+    m1 = [[[0,0], [5,0]], [[0,1], [5,1]], [[0,2], [5,2]]]
+    file = "test-path.yaml"
+    File.open(file, 'w') {|f| YAML.dump(m1, f)}
+
+    # Now load,
+    canon = CanonicalLineSegList.load(file)
+    m2 = canon.to_a
+    assert_equal(m1, m2)
+
+    # and save it and reload.
+    canon.save("test-path.yaml")
+    m3 = CanonicalLineSegList.load(file).to_a
+    assert_equal(m1, m3)
+
   end
+
 end
 
 
@@ -209,6 +211,45 @@ class CanonicalLineSegListTest < Test::Unit::TestCase
     canon.add(LineSeg.new(p(0,0), p(1,1)))
     assert_equal( 2, canon.line_segs.size)
     expect(canon, [ls0011, ls0010])
+  end
+
+  def test_misses()
+    canon = CanonicalLineSegList.new
+
+    # Two segs with overlapping bounds.
+    # - long diagonal, then a non-intersecting hoizontal/vertical.
+    canon.add(ls0055 = LineSeg.new(p(0,0), p(5,5)))
+    canon.add(ls3236 = LineSeg.new(p(3,2), p(6,2)))
+    assert_equal(2, canon.line_segs.size)
+    canon.add(ls2326 = LineSeg.new(p(2,3), p(2,6)))
+    assert_equal(3, canon.line_segs.size)
+    expect(canon, [ls0055, ls3236, ls2326])
+
+    # Segs sharing node.
+    canon = CanonicalLineSegList.new
+    canon.add(ls0001 = LineSeg.new(p(0,0), p(0,1)))
+    assert_equal(1, canon.line_segs.size)
+    canon.add(ls0010 = LineSeg.new(p(0,0), p(1,0)))
+    assert_equal(2, canon.line_segs.size)
+    canon.add(ls1100 = LineSeg.new(p(1,1), p(0,0)))
+    assert_equal(3, canon.line_segs.size)
+    expect(canon, [ls0001, ls0010, ls1100])
+  end
+
+  def test_dup
+    canon = CanonicalLineSegList.new
+    canon.add(ls0001 = LineSeg.new(p(0,0), p(0,1)))
+    assert_equal(1, canon.line_segs.size)
+
+    # straight dup.
+    canon.add(ls0001 = LineSeg.new(p(0,0), p(0,1)))
+    assert_equal(1, canon.line_segs.size)
+
+    # Dup w nodes reversed.
+    canon.add(LineSeg.new(p(0,1), p(0,0)))
+    assert_equal(1, canon.line_segs.size)
+
+
   end
 
   def expect(canon, segs)

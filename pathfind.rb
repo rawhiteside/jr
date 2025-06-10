@@ -1,4 +1,5 @@
 require 'java'
+require 'yaml'
 import java.awt.Point
 
 
@@ -6,8 +7,36 @@ class CanonicalLineSegList
 
   def initialize
     @segs = []
+    @file = "travel-mesh.yaml"
   end
 
+  # segs used by this pkg are persisted as [[x,y],[x,y]].
+  def self.load(file = @file)
+    clsl = CanonicalLineSegList.new
+    segs = clsl.line_segs
+    mesh = []
+    mesh = YAML.load_file(file) if File.exist?(file)
+    mesh.each do |xy|
+      segs << LineSeg.new(Point.new(xy[0][0], xy[0][1]), Point.new(xy[1][0], xy[1][1]))
+    end
+
+    clsl
+  end
+
+  # segs used by this pkg are persisted as [[x,y],[x,y]].
+  def save(file = @file)
+    mesh = self.to_a
+    File.open(file, 'w') {|f| YAML.dump(mesh, f)}
+  end
+
+  def to_a
+    mesh = []
+    @segs.each do |ls|
+      mesh << [[ls.pt1.x, ls.pt1.y], [ls.pt2.x, ls.pt2.y]]
+    end
+    mesh
+  end
+    
   def to_s
     str = '['
     @segs.each {|seg| str << " [ #{seg.pt1.to_s}, #{seg.pt2.to_s} ], "}
@@ -15,7 +44,7 @@ class CanonicalLineSegList
   end
 
   # Add the new segement.  This can result in +new_seg+ being split
-  # into possibly many segements.  Onw of these will be processed and
+  # into possibly many segements.  One of these will be processed and
   # added to +@segs+.  The remaing split-out segements will be
   # returned, so you can call this method again with those.
   def process_and_add(new_seg)
@@ -173,7 +202,8 @@ class LineSeg
   end
   
   def ==(other)
-    self.pt1 == other.pt1 && self.pt2 == other.pt2
+    (self.pt1 == other.pt1 && self.pt2 == other.pt2) ||
+      (self.pt1 == other.pt2 && self.pt2 == other.pt1)
   end
 
   def rect_overlaps?(other)

@@ -1,0 +1,3 @@
+#!/bin/sh
+# C-x RET f unix
+CLASSPATH=".;foa.jar" jruby save_clockloc_bg.rb
