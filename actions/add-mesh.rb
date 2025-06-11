@@ -60,7 +60,7 @@ class AddMeshDest < Action
     dest_coords = WorldLocUtils.parse_world_location(@vals['loc'])
     file = "mesh-destinations.yaml"
     name_map = {}
-    name_map = YAML.load(file) if File.exist?(file)
+    name_map = YAML.load_file(file) if File.exist?(file)
     name_map[dest_name] = dest_coords
     File.open(file, 'w') {|f| YAML.dump(name_map, f)}
   end
