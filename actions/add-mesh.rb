@@ -38,3 +38,31 @@ class AddMeshPaths < Action
 end
 
 Action.add_action(AddMeshPaths.new)
+
+class AddMeshDest < Action
+  def initialize
+    super('Add Mesh Destination', 'Misc')
+  end
+  def persistence_name
+    'add_mesh_dest'
+  end
+
+  def setup(parent)
+    gadgets = [
+      {:type => :text, :label => "Destination", :name => "name", :size => 20},
+      {:type => :world_loc, :label => "Coordinates", :name => 'loc'}
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+
+  def act
+    dest_name = @vals['name']
+    dest_coords = WorldLocUtils.parse_world_location(@vals['loc'])
+    file = "mesh-destinations.yaml"
+    name_map = {}
+    name_map = YAML.load(file) if File.exist?(file)
+    name_map[dest_name] = dest_coords
+    File.open(file, 'w') {|f| YAML.dump(name_map, f)}
+  end
+end
+Action.add_action(AddMeshDest.new)
