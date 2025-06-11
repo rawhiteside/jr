@@ -23,7 +23,17 @@ class AddMeshPaths < Action
     path_text = @vals['path']
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
     p @coords
-
+    clsl = CanonicalLineSegList.load()
+    prev_xy = nil
+    @coords.each do |xy|
+      if prev_xy.nil?
+        prev_xy = xy
+      else
+        clsl.add_xy([prev_xy, xy])
+        prev_xy = xy
+      end
+    end
+    clsl.save
   end
 end
 

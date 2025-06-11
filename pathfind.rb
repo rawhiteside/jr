@@ -5,13 +5,14 @@ import java.awt.Point
 
 class CanonicalLineSegList
 
+  FILE = "travel-mesh.yaml"
   def initialize
     @segs = []
     @file = "travel-mesh.yaml"
   end
 
   # segs used by this pkg are persisted as [[x,y],[x,y]].
-  def self.load(file = @file)
+  def self.load(file = FILE)
     clsl = CanonicalLineSegList.new
     segs = clsl.line_segs
     mesh = []
@@ -24,7 +25,7 @@ class CanonicalLineSegList
   end
 
   # segs used by this pkg are persisted as [[x,y],[x,y]].
-  def save(file = @file)
+  def save(file = FILE)
     mesh = self.to_a
     File.open(file, 'w') {|f| YAML.dump(mesh, f)}
   end
@@ -135,6 +136,13 @@ class CanonicalLineSegList
 
     return [LineSeg.new(new_seg.pt1, pt_intersect), LineSeg.new(pt_intersect, new_seg.pt2)]
 
+  end
+
+  # [ [x,y], [x,y] ]
+  def add_xy(xy)
+    pt1 = Point.new(xy[0][0], xy[0][1])
+    pt2 = Point.new(xy[1][0], xy[1][1])
+    add(LineSeg.new(pt1, pt2))
   end
 
   def add(add_me)
