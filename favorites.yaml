@@ -1,9 +1,9 @@
 ---
-Constitution click: 1
+Constitution click: 0
 Endurance click: 0
 Acquire font: 1
-Cutstones: 1
-Firepits: 1
+Cutstones: 0
+Firepits: 0
 Flax Comb: 1
 Flimsy Bricks: 1
 Wood planes: 1
@@ -17,7 +17,7 @@ Slate: 1
 Eat: 0
 Focus click: 0
 Inverval tabs: 1
-Strength click: 1
+Strength click: 0
 Grow onions: 1
 Flax Seeds: 1
 Read Window: 1
@@ -32,13 +32,13 @@ Dowse Strontium: 0
 Mine sand: 0
 Take from kettles: 1
 Plant Papyrus: 0
-Pottery Wheels: 1
+Pottery Wheels: 0
 Pyramid push: 0
 Silt: 1
 Cactus run: 0
-Water mine: 1
+Water mine: 0
 Kilns: 1
-Stir: 1
+Stir: 0
 Raeli: 0
 Color Picker: 1
 Casual Clay: 0
@@ -55,17 +55,18 @@ Walkto: 1
 Walk: 1
 Bullets: 0
 Barley: 1
-Run and do: 1
+Run and do: 0
 serialize patch: 1
 Travel paths: 1
 Travel: 1
 Define patch: 1
 Find patch: 1
-Forge: 1
-Blast Furnaces: 1
+Forge: 0
+Blast Furnaces: 0
 Color watcher: 1
 Pick Stones: 1
 Bricks: 1
-Inverval clicks: 1
+Inverval clicks: 0
 Add Mesh Path: 1
 Add Mesh Destination: 1
+Travel mesh: 1

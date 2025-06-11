@@ -36,8 +36,8 @@ class AddMeshPaths < Action
     clsl.save
   end
 end
-
 Action.add_action(AddMeshPaths.new)
+
 
 class AddMeshDest < Action
   def initialize
@@ -66,3 +66,28 @@ class AddMeshDest < Action
   end
 end
 Action.add_action(AddMeshDest.new)
+
+
+class MeshTravel < Action
+  def initialize
+    super('Travel mesh', 'Misc')
+  end
+  def persistence_name
+    'travel_mesh'
+  end
+
+  def setup(parent)
+    file = "mesh-destinations.yaml"
+    @dest_map = YAML.load_file(file)
+    gadgets = [
+      {:type => :combo, :label => "Destination", :name => "dest", :vals => @dest_map.keys},
+    ]
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+  end
+
+  def act
+    dest = @vals['dest']
+    puts dest
+  end
+end
+Action.add_action(MeshTravel.new)
