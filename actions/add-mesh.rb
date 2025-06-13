@@ -86,6 +86,23 @@ class MeshTravel < Action
   end
 
   def act
+    # - Build AdjGraph
+    # - Find closest node to dest
+
+    # - !!! Find closest lineseg
+    # - - Find all verts that connect to dest.
+    # - - Find all the edges that have those vertices.
+    # - - Find the edge closest to current location.
+    # - - If a vert is closest to current location
+    # - - - just use that vert for dijk.
+    # - - - run 2 node, run through mesh, run to dest.
+
+    # - - else
+    # - - - find closest point along the edge.
+    # - - - figure which of the two nodes is closest to dest.
+    # - - - run to intercept, run to node, run throuth mesh, run to dest.
+    # - - -
+    
     dest = @vals['dest']
     puts dest
   end
