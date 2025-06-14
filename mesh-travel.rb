@@ -53,18 +53,15 @@ class MeshGraph
       dist1 = weight_for_path(closest_edge[1], dest_node) +
               dist(edge_walk_xy, closest_edge[1])
 
-      start_node = (dist0 < dist1) ? dist0 : dist1
+      start_node = (dist0 < dist1) ? closest_edge[0] : closest_edge[1]
     end
 
     full_path = []
-    full_path << edge_walk_xy unless edge_walk_xy.nil?
-    p full_path
-    full_path << start_node
-    p full_path
-    full_path << @graph.dijkstra_shortest_path(@weights, start_node, dest_node)
-    p full_path
-    full_path << dest_xy unless dest_xy == dest_node
-    p full_path
+    full_path.concat([edge_walk_xy]) unless edge_walk_xy.nil?
+    full_path.concat(@graph.dijkstra_shortest_path(@weights, start_node, dest_node))
+    full_path.concat([dest_xy]) unless dest_xy == dest_node
+
+    full_path
   end
 
   def weight_for_path(v1, v2)
