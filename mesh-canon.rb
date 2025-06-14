@@ -286,12 +286,3 @@ class Path
   end
 end
 
-
-class PathFinder
-  # Returns a sequence of points starting at current location and
-  # ending at the point +dest+.
-  def find_path_to(dest)
-    
-    
-  end
-end

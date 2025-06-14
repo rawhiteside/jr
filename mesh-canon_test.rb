@@ -1,5 +1,5 @@
 require 'test/unit'
-require './pathfind.rb'
+require './mesh-canon.rb'
 require './action-setup-ui.rb'
 
 import java.awt.Point
