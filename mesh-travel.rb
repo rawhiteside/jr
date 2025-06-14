@@ -29,22 +29,17 @@ class MeshGraph
     start_node = nil
     
     
-    puts "dest_xy = #{dest_xy}"
     # Find node closest to dest.  We'll walk to there, then to dest.
     dest_node = find_closest_node(dest_xy)
-    puts "Destination node: #{dest_node}"
 
     # OK, Find the point along the mesh that we should run to from the
     # current location. Not trivial.
     #****************************************************************
     # What's the closest edge to curr?
-    puts "curr_xy = #{curr_xy}"
     closest_edge = find_closest_edge(curr_xy)
-    puts "Closest edge: #{closest_edge}"
     #
     # OK. got the edge.  Is the closest edge point a vertex?
     pt = closest_point_on_lineseg(closest_edge[0], closest_edge[1], curr_xy)
-    puts "closest edge pt: #{pt}"
     if pt == closest_edge[0]
       start_node = closest_edge[0]
     elsif pt == closest_edge[1]
@@ -60,7 +55,6 @@ class MeshGraph
 
       start_node = (dist0 < dist1) ? dist0 : dist1
     end
-    puts "Start node: #{start_node}"
 
     full_path = []
     full_path << edge_walk_xy unless edge_walk_xy.nil?
@@ -84,7 +78,6 @@ class MeshGraph
         weight = weight + @weights[[prev, v]]
       end
     end
-    puts "weight_for_path : #{weight} : #{path}"
 
     weight
   end
