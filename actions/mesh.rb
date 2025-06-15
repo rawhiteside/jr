@@ -1,6 +1,6 @@
 require 'action'
 require 'mesh-canon.rb'
-#require 'mesh-travel'
+require 'mesh-travel'
 require 'pairing_heap'
 
 # Add points to the global mesh.
@@ -90,7 +90,7 @@ class MeshTravel < Action
   def act
     puts "acting"
     mesh = CanonicalLineSegList.load
-    mg = MeshGraph.new(mesh)
+    mg = MeshGraph.new(mesh.to_a)
     dest_name = @vals[:name]
     dest_xy = @dest_map[dest_name]
     puts dest_name
