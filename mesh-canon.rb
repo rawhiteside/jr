@@ -1,6 +1,6 @@
 require 'java'
 require 'yaml'
-import java.awt.Point
+java_import java.awt.Point
 
 
 class CanonicalLineSegList

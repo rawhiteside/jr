@@ -1,6 +1,6 @@
 require 'action'
 require 'walker'
-import java.awt.geom.Point2D
+java_import java.awt.geom.Point2D
 
 class TravelPaths < Action
   def initialize

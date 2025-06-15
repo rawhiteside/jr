@@ -1,8 +1,8 @@
 require 'action'
 require 'square_with_radius'
 
-import org.foa.window.PinnableWindowGeom
-import org.foa.PixelBlock
+java_import org.foa.window.PinnableWindowGeom
+java_import org.foa.PixelBlock
 # 
 # A super class for gathering stuff:  silt, gravel, dig stones...
 # Main entry is "gather_until_done".

@@ -1,9 +1,9 @@
 require 'action'
-import javax.swing.JDialog
-import javax.swing.JLabel
-import javax.swing.JTextField
-import javax.swing.Box
-import javax.swing.SwingUtilities
+java_import javax.swing.JDialog
+java_import javax.swing.JLabel
+java_import javax.swing.JTextField
+java_import javax.swing.Box
+java_import javax.swing.SwingUtilities
 
 class ColorPicker < Action
 

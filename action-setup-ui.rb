@@ -1,41 +1,41 @@
 require 'java'
 
-import javax.swing.JFrame
-import java.awt.event.WindowListener
-import javax.swing.WindowConstants
-import javax.swing.SwingUtilities
-import java.awt.GraphicsEnvironment
-import java.awt.GraphicsDevice
-import java.awt.Cursor
-import java.awt.Font
-import javax.swing.JDialog
-import javax.swing.JFrame
-import javax.swing.JOptionPane
-import javax.swing.JLabel
-import javax.swing.JCheckBox
-import javax.swing.JComboBox
-import javax.swing.DefaultComboBoxModel
-import javax.swing.JTextArea
-import javax.swing.JScrollPane
-import javax.swing.JSeparator
-import javax.swing.JButton
-import javax.swing.SwingUtilities
-import javax.swing.JTextField
-import javax.swing.border.LineBorder
-import javax.swing.border.TitledBorder
-import javax.swing.border.EmptyBorder
-import javax.swing.BoxLayout
-import javax.swing.JPanel
-import javax.swing.Box
+java_import javax.swing.JFrame
+java_import java.awt.event.WindowListener
+java_import javax.swing.WindowConstants
+java_import javax.swing.SwingUtilities
+java_import java.awt.GraphicsEnvironment
+java_import java.awt.GraphicsDevice
+java_import java.awt.Cursor
+java_import java.awt.Font
+java_import javax.swing.JDialog
+java_import javax.swing.JFrame
+java_import javax.swing.JOptionPane
+java_import javax.swing.JLabel
+java_import javax.swing.JCheckBox
+java_import javax.swing.JComboBox
+java_import javax.swing.DefaultComboBoxModel
+java_import javax.swing.JTextArea
+java_import javax.swing.JScrollPane
+java_import javax.swing.JSeparator
+java_import javax.swing.JButton
+java_import javax.swing.SwingUtilities
+java_import javax.swing.JTextField
+java_import javax.swing.border.LineBorder
+java_import javax.swing.border.TitledBorder
+java_import javax.swing.border.EmptyBorder
+java_import javax.swing.BoxLayout
+java_import javax.swing.JPanel
+java_import javax.swing.Box
 
-import java.awt.Cursor
-import java.awt.BorderLayout
-import java.awt.event.ActionListener
-import java.awt.event.MouseMotionListener
-import java.awt.event.MouseListener
+java_import java.awt.Cursor
+java_import java.awt.BorderLayout
+java_import java.awt.event.ActionListener
+java_import java.awt.event.MouseMotionListener
+java_import java.awt.event.MouseListener
 
-import org.foa.ImagePanel
-import org.foa.window.ClockLocWindow
+java_import org.foa.ImagePanel
+java_import org.foa.window.ClockLocWindow
 
 
 # require 'hook'

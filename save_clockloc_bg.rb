@@ -1,7 +1,7 @@
 require 'java'
-import javax.imageio.ImageIO
-import org.foa.window.ClockLocWindow
-import org.foa.PixelBlock
+java_import javax.imageio.ImageIO
+java_import org.foa.window.ClockLocWindow
+java_import org.foa.PixelBlock
 
 w = ClockLocWindow.new
 pb = PixelBlock.new(w.textRectangle())

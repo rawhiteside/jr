@@ -1,5 +1,5 @@
 require 'action'
-import javax.imageio.ImageIO
+java_import javax.imageio.ImageIO
 
 class Raeli < Action
   def initialize

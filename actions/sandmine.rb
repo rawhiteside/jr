@@ -2,9 +2,9 @@ require 'action'
 require 'actions/abstract_mine'
 require 'set'
 
-import org.foa.Globifier
-import org.foa.ImageUtils
-import org.foa.PixelBlock
+java_import org.foa.Globifier
+java_import org.foa.ImageUtils
+java_import org.foa.PixelBlock
 
 class SandMine < AbstractMine
   def initialize

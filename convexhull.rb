@@ -1,6 +1,6 @@
 require 'java'
-import java.awt.Point
-import java.awt.Polygon
+java_import java.awt.Point
+java_import java.awt.Polygon
 
 class ConvexHull < Polygon
   # Points for which the convex hull is to be computed. 

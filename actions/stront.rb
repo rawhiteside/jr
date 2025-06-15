@@ -2,7 +2,7 @@ require 'action'
 require 'walker'
 require 'user-io'
 
-import org.foa.window.ClockLocWindow
+java_import org.foa.window.ClockLocWindow
 
 class StrontDowse < Action
 

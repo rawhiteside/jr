@@ -1,24 +1,24 @@
 require 'java'
 require 'action'
 
-import javax.swing.JFrame
-import javax.swing.JCheckBox
-import javax.swing.JButton
-import javax.swing.JComboBox
-import javax.swing.JPanel
-import javax.swing.ToolTipManager
-import javax.swing.border.TitledBorder
-import javax.swing.border.LineBorder
-import javax.swing.border.CompoundBorder
-import java.awt.event.ActionListener
-import java.awt.event.ItemListener
-import java.awt.event.ItemEvent
-import java.awt.Color
-import java.awt.FlowLayout
-import java.awt.Component
-import java.awt.BorderLayout
-import java.awt.Insets
-import javax.swing.BoxLayout
+java_import javax.swing.JFrame
+java_import javax.swing.JCheckBox
+java_import javax.swing.JButton
+java_import javax.swing.JComboBox
+java_import javax.swing.JPanel
+java_import javax.swing.ToolTipManager
+java_import javax.swing.border.TitledBorder
+java_import javax.swing.border.LineBorder
+java_import javax.swing.border.CompoundBorder
+java_import java.awt.event.ActionListener
+java_import java.awt.event.ItemListener
+java_import java.awt.event.ItemEvent
+java_import java.awt.Color
+java_import java.awt.FlowLayout
+java_import java.awt.Component
+java_import java.awt.BorderLayout
+java_import java.awt.Insets
+java_import javax.swing.BoxLayout
 
 STDOUT.sync = true
 

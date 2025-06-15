@@ -2,8 +2,8 @@ require 'test/unit'
 require './mesh-canon.rb'
 require './action-setup-ui.rb'
 
-import java.awt.Point
-import java.awt.Rectangle
+java_import java.awt.Point
+java_import java.awt.Rectangle
 
 P00 = Point.new(0,0)
 

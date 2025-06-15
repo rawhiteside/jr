@@ -2,11 +2,11 @@ require 'action'
 require 'window'
 require 'actions/kettles'
 
-import org.foa.text.AFont
-import org.foa.text.InkSpots
-import org.foa.window.LegacyTextHelper
-import org.foa.window.PinnableTextHelper
-import org.foa.window.InventoryTextHelper
+java_import org.foa.text.AFont
+java_import org.foa.text.InkSpots
+java_import org.foa.window.LegacyTextHelper
+java_import org.foa.window.PinnableTextHelper
+java_import org.foa.window.InventoryTextHelper
 
 class SplitLongGlyphs < Action
   def initialize

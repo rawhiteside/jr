@@ -1,6 +1,6 @@
 require 'action'
 require 'tempfile'
-import org.foa.text.TextReader
+java_import org.foa.text.TextReader
 
 class GlazierWindow < PinnableWindow
   

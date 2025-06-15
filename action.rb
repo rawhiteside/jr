@@ -6,8 +6,8 @@ require 'controllable_thread'
 require 'utils'
 
 
-import java.awt.Point
-import java.awt.Rectangle
+java_import java.awt.Point
+java_import java.awt.Rectangle
 
 
 class Action  < ARobot

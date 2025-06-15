@@ -3,17 +3,17 @@ require 'buildmenu'
 require 'action'
 require 'robot'
 
-import org.foa.PixelBlock
+java_import org.foa.PixelBlock
 
-import org.foa.window.LegacyWindowGeom
-import org.foa.window.InventoryTextHelper
-import org.foa.window.AWindow
-import org.foa.window.PinnableWindow
-import org.foa.window.ClockLocWindow
+java_import org.foa.window.LegacyWindowGeom
+java_import org.foa.window.InventoryTextHelper
+java_import org.foa.window.AWindow
+java_import org.foa.window.PinnableWindow
+java_import org.foa.window.ClockLocWindow
 
-import java.awt.Point
-import java.awt.Rectangle
-import java.awt.Insets
+java_import java.awt.Point
+java_import java.awt.Rectangle
+java_import java.awt.Insets
 
 # Adds a factory method that's useful in Ruby.
 class Window < AWindow

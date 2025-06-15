@@ -1,5 +1,5 @@
 require 'java'
-import org.foa.ThreadKilledException
+java_import org.foa.ThreadKilledException
 require 'thread'
 
 class JRunnable

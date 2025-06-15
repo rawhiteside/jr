@@ -1,4 +1,4 @@
-import java.util.concurrent.locks.ReentrantLock
+java_import java.util.concurrent.locks.ReentrantLock
 
 class JMonitor < ReentrantLock
   def synchronize

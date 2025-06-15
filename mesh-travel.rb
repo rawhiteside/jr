@@ -2,7 +2,7 @@ require 'rgl/adjacency'
 require 'rgl/dijkstra'
 require 'java'
 
-import java.awt.Point
+java_import java.awt.Point
 
 
 class MeshGraph

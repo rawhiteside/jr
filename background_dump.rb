@@ -1,7 +1,7 @@
 require 'java'
-import org.foa.robot.ARobot
-import java.awt.Rectangle
-import java.awt.Color
+java_import org.foa.robot.ARobot
+java_import java.awt.Rectangle
+java_import java.awt.Color
 
 def dump_rect(rect) 
   img = ARobot.sharedInstance.create_screen_capture(rect)
