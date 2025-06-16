@@ -7,7 +7,7 @@ FLAX_DATA = {
   "Jacob" => {},
   "Nile Green" => {},
   "Old Dog" => {:water => 2},
-  "Old Egypt" => {},
+  "Old Egypt" => {:water => 0},
   "Sunset Pond" => {},
   "Symphony Ridge Gold" => {:water => 0},
   "Djoser#152" => {:water => 0},

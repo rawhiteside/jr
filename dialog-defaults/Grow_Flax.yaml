@@ -2,16 +2,15 @@
 2: Parameter set 1
 1: false
 Parameter set 1:
-  flax-type: Old Dog
-  plant.x: '271'
-  plant.y: '781'
-  head.x: '964'
-  head.y: '563'
+  flax-type: Old Egypt
+  plant.x: '728'
+  plant.y: '154'
   stash.x: '495'
   stash.y: '957'
-  count: '10'
+  count: '2'
   rows: '4'
   cols: '4'
-  grow: -1080, -6891
-  water: -1064, -6892
-  stash: -1064, -6892
+  grow: "-135, -7129"
+  water: "-135, -7129"
+  stash: "-135, -7129"
+  plant-delay: ''
