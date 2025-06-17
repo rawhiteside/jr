@@ -1,0 +1,7 @@
+9.4.13(top version) : Some bug, I forget
+
+9.3.15 : Pauser fails.
+
+9.2.21 : SEEMS TO WORK?!
+
+1.7.21: Syntax failures in rgl/

@@ -1,7 +1,7 @@
 require 'rake/clean'
 CLEAN.include('**/*.class')
 
-EJARS='.;platform.jar;jna.jar;snakeyaml-1.32.jar;'
+EJARS='.;jna.jar;snakeyaml-1.32.jar;'
 
 rule '.class' => '.java' do |t|
   system "javac -classpath #{EJARS} #{t.source}"

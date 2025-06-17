@@ -85,14 +85,14 @@ class RobotPauser
       if !@running
 	# Claim the lock, so others will block
 	with_pause_lock do
-	  puts 'Pause...'
+          puts "Robot pause..."
           notify_listeners
 	  wait_until_running
 	end
-	puts 'Resume...'
+	puts 'Robot resume...'
         notify_listeners
       end
-      ControllableThread.sleep POLL_INTERVAL
+      ControllableThread.sleep_sec POLL_INTERVAL
     end
   end
 
@@ -100,7 +100,7 @@ class RobotPauser
   # toggled on.
   def wait_until_running
     until @running
-      ControllableThread.sleep POLL_INTERVAL
+      ControllableThread.sleep_sec POLL_INTERVAL
       check_key
     end
   end    
