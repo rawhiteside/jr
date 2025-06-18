@@ -202,7 +202,7 @@ class FlaxGrow < Action
 
   def still_present?(w)
     rect = w.rect
-    w = PinnableWindow.from_point(rect.x + 3, rect.y - 3)
+    w = PinnableWindow.from_point(rect.x + 3, rect.y + 3)
     return !w.nil?
   end
   
@@ -234,17 +234,22 @@ class FlaxGrow < Action
       active_windows = []
       piler.swap
       last_w = nil
-      windows.each do |w|
+      0.upto(windows.size - 1) do |i|
+        w = windows[i]
         if tend(w)
           if w.notation != 'Harvested'
             active_windows << w
             piler.pile(w)
           else
-            # Want to wait for the last harvested window.
-            # Unpin any others.  Just keep track of the last.
-            last_w.unpin unless last_w.nil?
-            last_w = w
-            piler.pile(w)
+            # Just unpin the harvested ones.
+            # Leave the final one, though.
+            if i == (windows.size - 1)
+              last_w = w
+              last_w.refresh
+            else
+              # Pile it and forget it. 
+              piler.pile(w)
+            end
           end
         end
       end
