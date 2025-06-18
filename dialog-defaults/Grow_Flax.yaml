@@ -3,14 +3,14 @@
 1: false
 Parameter set 1:
   flax-type: Old Egypt
-  plant.x: '728'
-  plant.y: '154'
-  stash.x: '495'
-  stash.y: '957'
+  plant.x: '871'
+  plant.y: '204'
+  stash.x: '155'
+  stash.y: '270'
   count: '2'
   rows: '4'
-  cols: '4'
-  grow: "-135, -7129"
-  water: "-135, -7129"
-  stash: "-135, -7129"
+  cols: '3'
+  grow: "-136, -7129"
+  water: "-136, -7129"
+  stash: "-136, -7129"
   plant-delay: ''

@@ -157,7 +157,6 @@ class FlaxGrow < Action
 
     loop do
       count.times {grow_one_batch(pop_points)}
-
       stash_and_get(stash_win, count * @rows * @cols) if stash_win
 
       # Refill with water.
@@ -201,6 +200,11 @@ class FlaxGrow < Action
   end
 
 
+  def still_present?(w)
+    rect = w.rect
+    w = PinnableWindow.from_point(rect.x + 3, rect.y - 3)
+    return !w.nil?
+  end
   
   # Time to hold down the key to take a good step.
   KEY_DELAY = 0.25
@@ -221,6 +225,8 @@ class FlaxGrow < Action
       piler.pile(dlg)
       windows << dlg
     end
+
+    @walker.walk_to(@plant_wl)
 
     # Tend the beds in sequence.
     last_w = nil
@@ -247,11 +253,9 @@ class FlaxGrow < Action
     # Wait for last harvested to be empty.
     if last_w
       loop do
-        last_w.refresh
-        break if last_w.read_text.strip == ''
+        break unless still_present?(last_w)
         sleep 1
       end
-      last_w.unpin
     end
   end
 
