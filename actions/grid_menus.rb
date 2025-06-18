@@ -54,7 +54,7 @@ class GridHotkeys < GridAction
           with_robot_lock do
             mm(g['x'],g['y'])
             sleep key_delay
-	    send_string(c)
+	    send_string(c, key_delay)
             sleep key_delay
           end
         end

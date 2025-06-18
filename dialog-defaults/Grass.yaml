@@ -2,10 +2,10 @@
 2: Parameter set 1
 1: false
 Parameter set 1:
-  chest.x: '318'
-  chest.y: '627'
-  chest-coords: -1017, -6796
-  count: '20'
+  chest.x: '131'
+  chest.y: '508'
+  chest-coords: "-154, -7115"
+  count: '30'
   path: |
-    -1017, -6796
-    -1017, -6798
+    -153, -7115
+    -153, -7112
