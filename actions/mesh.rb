@@ -15,10 +15,10 @@ class AddMeshPaths < Action
   end
   def setup(parent)
     gadgets = [
-      {:type => :world_path, :label => 'Path to walk.', :name => 'path',
+      {:type => :world_path, :label => 'Add mesh path', :name => 'path',
        :rows => 11,}
     ]
-    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
+    @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets, nil)
   end
 
   def act

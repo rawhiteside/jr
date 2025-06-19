@@ -56,12 +56,16 @@ class SetupDialog
   # The allowed types:
   #    :text, :number, :frame, :point, :grid, :big_text, :label, :combo,
   #    :world_loc, :world_path, :checkbox
-  def initialize(parent_win, name, title, gadgets)
+  def initialize(parent_win, name, title, gadgets, use_defaults = true)
     @parent_win = parent_win
     @name = name
     @title = title
     @gadgets = gadgets
-    @defaults = (name ? DialogDefaults.get_defaults(name) : {} )
+    if use_defaults 
+      @defaults = (name ? DialogDefaults.get_defaults(name) : {} )
+    else
+      @defaults = {}
+    end
   end
 
   # Display the dialog (modally).  Returns a hash of values from the

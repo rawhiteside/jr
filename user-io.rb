@@ -31,8 +31,8 @@ class UserIO
 
   # Display a dialog asking stuff from the user.
   # +name+ = persistence tag.  nil for no persistence.
-  def self.prompt(parent, name, title, arr)
-    SetupDialog.new(parent, name, title, arr).execute
+  def self.prompt(parent, name, title, arr, use_defaults = true)
+    SetupDialog.new(parent, name, title, arr, use_defaults).execute
   end
 
   def self.show_help(topic, center_here)
