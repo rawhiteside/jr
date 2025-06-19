@@ -9,10 +9,10 @@ Flimsy Bricks: 1
 Wood planes: 1
 Weave Linen: 1
 Weave Canvas: 1
-Casual Slate: 0
-Dig Stones: 1
+Casual Slate: 1
+Dig Stones: 0
 Grass: 1
-Casual Grass: 0
+Casual Grass: 1
 Slate: 1
 Eat: 0
 Focus click: 0
@@ -64,7 +64,7 @@ Find patch: 1
 Forge: 0
 Blast Furnaces: 0
 Color watcher: 1
-Pick Stones: 1
+Pick Stones: 0
 Bricks: 1
 Inverval clicks: 0
 Add Mesh Path: 1

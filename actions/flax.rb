@@ -145,7 +145,10 @@ class FlaxGrow < Action
     stash_win = PinnableWindow.from_point(stash_point)
     plant_win = PinnableWindow.from_point(point_from_hash(@vals, 'plant'))
     @flax_type = @vals['flax-type']
+    plant_win.refresh
     @plant_point = plant_win.coords_for_line('Plant')
+    raise Exception.new("No plant menu item found") unless @plant_point
+    puts @plant_point
     @plant_delay = @vals['plant-delay'].to_f
 
     water_count = FLAX_DATA[@flax_type][:water]
@@ -218,6 +221,7 @@ class FlaxGrow < Action
     piler = Piler.new
 
     plots = step_patterns(@rows, @cols)
+
     plots.each do |s|
       @walker.steps([s], KEY_DELAY) unless s == :none
       sleep @plant_delay

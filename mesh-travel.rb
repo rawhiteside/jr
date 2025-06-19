@@ -136,16 +136,3 @@ class MeshGraph
   end
 
 end
-
-
-mesh = [
-  [[0,0], [0,2]],
-  [[0,2], [2,2]],
-  [[0,0], [2,2]],  
-]
-
-g = MeshGraph.new(mesh)
-
-cur = [0, -1]
-dest = [2,0]
-g.get_path(cur, dest)

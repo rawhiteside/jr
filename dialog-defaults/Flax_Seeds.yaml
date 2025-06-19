@@ -2,15 +2,15 @@
 2: Parameter set 1
 1: false
 Parameter set 1:
-  flax-type: Nile Green
-  stash.x: '171'
-  stash.y: '314'
-  plant.x: '951'
-  plant.y: '225'
+  flax-type: Old Egypt
+  stash.x: '514'
+  stash.y: '370'
+  plant.x: '879'
+  plant.y: '328'
   repeat: '1'
   max_wait_secs: '20'
   harvest_reps: '4'
   row_len: '20'
-  start_location: "-136, -7130"
+  start_location: "-1491, -4618"
   stash_location: "-136, -7130"
   first_dir: right
