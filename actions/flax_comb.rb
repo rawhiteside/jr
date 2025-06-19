@@ -29,8 +29,19 @@ class FlaxComb < Action
         w.refresh
         w.click_on('Continue') || w.click_on('Separate') || w.click_on('Clean')
         if w.read_text.include?('Repair')
-          w.unpin
-          break
+          w.click_on('Repair/Load')
+          sleep 0.2
+          coords = [[690, 453], [690, 470], [690, 485]]
+          dim = ARobot.sharedInstance.screen_size
+          coords.each do |xy|
+            checkForPause
+            sleep 1
+            lclick_at(xy[0], xy[1]) if PinnableWindow.from_point(dim.width/2, dim.height/2)
+            sleep 1
+            HowMuch.max
+            sleep 1
+          end
+          lclick_at(1240, 410)
         end
         sleep 1
       end
