@@ -13,7 +13,7 @@ class MeshGraph
     mesh.each do |xyxy|
       @graph.add_edge(xyxy[0], xyxy[1])
       d = dist(xyxy[0], xyxy[1])
-      @weights[xyxy] = d
+      @weights[[xyxy[0], xyxy[1]]] = d
       @weights[[xyxy[1], xyxy[0]]] = d
     end
   end
@@ -69,11 +69,10 @@ class MeshGraph
     prev = nil
     weight = 0
     path.each do |v|
-      if prev.nil?
-        prev = v
-      else
+      unless prev.nil?
         weight = weight + @weights[[prev, v]]
       end
+      prev = v
     end
 
     weight
