@@ -35,13 +35,12 @@ class FlaxComb < Action
           dim = ARobot.sharedInstance.screen_size
           coords.each do |xy|
             checkForPause
-            sleep 1
-            lclick_at(xy[0], xy[1]) if PinnableWindow.from_point(dim.width/2, dim.height/2)
-            sleep 1
+            sleep 0.3
+            lclick_at(xy[0], xy[1]) if PopupWindow.find
+            sleep 0.3
             HowMuch.max
-            sleep 1
+            sleep 0.3
           end
-          lclick_at(1240, 410)
         end
         sleep 1
       end
