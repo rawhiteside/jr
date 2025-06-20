@@ -24,7 +24,6 @@ class AddMeshPaths < Action
   def act
     path_text = @vals['path']
     @coords = WorldLocUtils.parse_world_path(@vals['path'])
-    p @coords
     clsl = CanonicalLineSegList.load()
     prev_xy = nil
     @coords.each do |xy|
@@ -88,16 +87,13 @@ class MeshTravel < Action
   end
 
   def act
-    puts "acting"
     mesh = CanonicalLineSegList.load
     mg = MeshGraph.new(mesh.to_a)
-    dest_name = @vals[:name]
+    dest_name = @vals['dest']
     dest_xy = @dest_map[dest_name]
-    puts dest_name
-    puts dest_xy
     curr_xy = ClockLocWindow.instance.coords.to_a
-    puts "Starty: #{curr_xy}"
     path = mg.get_path(curr_xy, dest_xy)
+    Walker.new.walk_path(path)
   end
 end
 Action.add_action(MeshTravel.new)
