@@ -6,8 +6,7 @@ module Win32
   class API < Module
     CONVENTION = FFI::Platform.windows? ? :stdcall : :default
 
-    puts RUBY_VERSION
-    if RUBY_VERSION =~ /1\.9/
+    if RUBY_VERSION >= "1.9"
       SUFFIXES = Encoding.default_internal == Encoding::UTF_8 ? [ '', 'W', 'A' ] : [ '', 'A', 'W' ]
     else
       SUFFIXES = $KCODE == 'UTF8' ? [ '', 'W', 'A' ] : [ '', 'A', 'W' ]
