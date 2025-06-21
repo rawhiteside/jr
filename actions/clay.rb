@@ -107,6 +107,7 @@ class Clay < Action
   end
 
   def stash_it(stash_window, what)
+    return unless stash_window
     if stash_window.click_on(what)
       HowMuch.max
     end
