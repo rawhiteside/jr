@@ -81,7 +81,7 @@ class MeshTravel < Action
     file = "mesh-destinations.yaml"
     @dest_map = YAML.load_file(file)
     gadgets = [
-      {:type => :combo, :label => "Destination", :name => "dest", :vals => @dest_map.keys},
+      {:type => :combo, :label => "Destination", :name => "dest", :vals => @dest_map.keys.sort},
     ]
     @vals = UserIO.prompt(parent, persistence_name, action_name, gadgets)
   end
