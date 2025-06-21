@@ -45,9 +45,9 @@ class MeshGraph
     elsif pt == closest_edge[1]
       start_node = closest_edge[1]
     else
+      edge_walk_xy = pt
       # OK.  Closest pt is along an edge, not a vertex.
       # Which of the two nodes should we walk to?
-      edge_walk_xy = pt
       dist0 = weight_for_path(closest_edge[0], dest_node) +
               dist(edge_walk_xy, closest_edge[0])
       dist1 = weight_for_path(closest_edge[1], dest_node) +
@@ -58,7 +58,18 @@ class MeshGraph
 
     full_path = []
     full_path.concat([edge_walk_xy]) unless edge_walk_xy.nil?
-    full_path.concat(@graph.dijkstra_shortest_path(@weights, start_node, dest_node))
+
+    if (start_node == dest_node)
+      full_path.concat([start_node])
+    else
+      pth = @graph.dijkstra_shortest_path(@weights, start_node, dest_node)
+      if pth
+        full_path.concat(pth)
+      else
+        UserIO.error("No path to destinattion.")
+        return nil
+      end
+    end
     full_path.concat([dest_xy]) unless dest_xy == dest_node
 
     full_path
