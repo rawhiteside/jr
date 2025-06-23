@@ -5,7 +5,50 @@ require 'java'
 java_import java.awt.Point
 
 
-class MeshGraph
+class MeshGraphUtils
+  def find_closest_edge(xy, edges)
+    best_dist = 99000
+    best_edge = nil
+    edges.each do |e|
+      pxy = closest_point_on_lineseg(e[0], e[1], xy)
+      d = dist(pxy, xy)
+      if d < best_dist
+        best_dist = d
+        best_edge = e
+      end
+    end
+    return best_edge
+  end
+  # Lifted from stackoverflow.
+  # Point on line segment AB that's closest to P.
+  def closest_point_on_lineseg(a, b, p)
+
+    return a if a == b
+
+    a_to_p = [p[0] - a[0], p[1] - a[1]]
+    a_to_b = [b[0] - a[0], b[1] - a[1]]
+
+    atb2 = a_to_b[0]**2 + a_to_b[1]**2
+
+    atp_dot_atb = a_to_p[0]*a_to_b[0] + a_to_p[1]*a_to_b[1]
+
+    t = atp_dot_atb.to_f / atb2.to_f
+
+    t = 0.0 if t < 0.0
+    t = 1.0 if t > 1.0
+
+    return [(a[0] + a_to_b[0]*t).to_i, (a[1] + a_to_b[1]*t).to_i]
+
+  end
+
+  def dist(xy1, xy2)
+    dx = xy1[0] - xy2[0]
+    dy = xy1[1] - xy2[1]
+    return Math.sqrt(dx * dx + dy * dy)
+  end
+end
+
+class MeshGraph < MeshGraphUtils
   attr_reader :graph, :weights
   def initialize(mesh)
     @graph = RGL::AdjacencyGraph.new
@@ -94,20 +137,6 @@ class MeshGraph
   end
   
 
-  def find_closest_edge(xy, edges)
-    best_dist = 99000
-    best_edge = nil
-    edges.each do |e|
-      pxy = closest_point_on_lineseg(e[0], e[1], xy)
-      d = dist(pxy, xy)
-      if d < best_dist
-        best_dist = d
-        best_edge = e
-      end
-    end
-    return best_edge
-  end
-
   def find_closest_node(xy)
     best_dist = 99000
     best_node = nil
@@ -121,32 +150,5 @@ class MeshGraph
     return best_node
   end
 
-  # Lifted from stackoverflow.
-  # Point on line segment AB that's closest to P.
-  def closest_point_on_lineseg(a, b, p)
-
-    return a if a == b
-
-    a_to_p = [p[0] - a[0], p[1] - a[1]]
-    a_to_b = [b[0] - a[0], b[1] - a[1]]
-
-    atb2 = a_to_b[0]**2 + a_to_b[1]**2
-
-    atp_dot_atb = a_to_p[0]*a_to_b[0] + a_to_p[1]*a_to_b[1]
-
-    t = atp_dot_atb.to_f / atb2.to_f
-
-    t = 0.0 if t < 0.0
-    t = 1.0 if t > 1.0
-
-    return [(a[0] + a_to_b[0]*t).to_i, (a[1] + a_to_b[1]*t).to_i]
-
-  end
-
-  def dist(xy1, xy2)
-    dx = xy1[0] - xy2[0]
-    dy = xy1[1] - xy2[1]
-    return Math.sqrt(dx * dx + dy * dy)
-  end
 
 end

@@ -51,7 +51,7 @@ class MeshGraphTest <  Test::Unit::TestCase
   end
 
   def test_find_closest_edge
-    e = @mg.find_closest_edge([2,0])
+    e = @mg.find_closest_edge([2,0], @mg.graph_edges)
     assert_equal([[0,0], [2,2]], [e[0], e[1]])
   end
 
