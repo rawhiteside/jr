@@ -115,6 +115,22 @@ class CanonicalLineSegListTest < Test::Unit::TestCase
               
   end
 
+  # The two segments intersect at a non-terminus point.
+  def test_add_xy_intersection
+    # Intersection at (10,10)
+    canon = CanonicalLineSegList.new
+    xy = [ [[0,0],[20,20]], [[0,20],[20,0]] ]
+    canon.add_xy(xy)
+    assert_equal(4, canon.line_segs.size)
+    expect(canon, 
+      [
+        LineSeg.new(p(0,0), p(10,10)), LineSeg.new(p(10,10), p(20,20)),
+        LineSeg.new(p(0,20), p(10,10)), LineSeg.new(p(10,10), p(20,0))
+      ]
+    )
+              
+  end
+
 
   # One seg terminates along the line of the other.  This should
   # result in one segment being split into two.

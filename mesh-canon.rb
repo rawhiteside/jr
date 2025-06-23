@@ -30,19 +30,17 @@ class CanonicalLineSegList
     File.open(file, 'w') {|f| YAML.dump(mesh, f)}
   end
 
-  def to_a
-    mesh = []
-    @segs.each do |ls|
-      mesh << [[ls.pt1.x, ls.pt1.y], [ls.pt2.x, ls.pt2.y]]
+  # [ [[x,y], [x,y]], ...]
+  def add_xy(xysegs)
+    # Convert xy line segs into LineSeg, then add.
+    # The add deals with all of the possible intersections.
+    xysegs.each do |xy|
+      pt1 = Point.new(xy[0][0], xy[0][1])
+      pt2 = Point.new(xy[1][0], xy[1][1])
+      add(LineSeg.new(pt1, pt2))
     end
-    mesh
   end
-    
-  def to_s
-    str = '['
-    @segs.each {|seg| str << " [ #{seg.pt1.to_s}, #{seg.pt2.to_s} ], "}
-    str << ']'
-  end
+
 
   # Add the new segement.  This can result in +new_seg+ being split
   # into possibly many segements.  One of these will be processed and
@@ -138,13 +136,9 @@ class CanonicalLineSegList
 
   end
 
-  # [ [x,y], [x,y] ]
-  def add_xy(xy)
-    pt1 = Point.new(xy[0][0], xy[0][1])
-    pt2 = Point.new(xy[1][0], xy[1][1])
-    add(LineSeg.new(pt1, pt2))
-  end
 
+  # Add one line segemnt to the canonical list.
+  # Deals with intersectons of segments. 
   def add(add_me)
     if @segs.size == 0
       @segs << add_me
@@ -177,6 +171,21 @@ class CanonicalLineSegList
   def line_segs
     @segs
   end
+
+  def to_a
+    mesh = []
+    @segs.each do |ls|
+      mesh << [[ls.pt1.x, ls.pt1.y], [ls.pt2.x, ls.pt2.y]]
+    end
+    mesh
+  end
+    
+  def to_s
+    str = '['
+    @segs.each {|seg| str << " [ #{seg.pt1.to_s}, #{seg.pt2.to_s} ], "}
+    str << ']'
+  end
+
 end
 
 

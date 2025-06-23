@@ -78,6 +78,6 @@ class MeshGraphTest <  Test::Unit::TestCase
     m = make_mesh_fixture
     m << [[10,10],[11,11]]
     mg = MeshGraph.new(m)
-    assert_nil(mg.get_path([10, 10], [0,0]))
+    assert_raise_message("No path to destination.") {mg.get_path([10, 10], [0,0])}
   end
 end

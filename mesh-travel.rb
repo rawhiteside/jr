@@ -66,7 +66,7 @@ class MeshGraph
       if pth
         full_path.concat(pth)
       else
-        UserIO.error("No path to destinattion.")
+        raise Exception.new("No path to destination.")
         return nil
       end
     end
