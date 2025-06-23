@@ -18,6 +18,10 @@ class MeshGraph
     end
   end
 
+  def graph_edges
+    @graph.edges
+  end
+
   # Construct the path to walk.
   def get_path(curr_xy, dest_xy)
     # path composed of:
@@ -36,7 +40,7 @@ class MeshGraph
     # current location. Not trivial.
     #****************************************************************
     # What's the closest edge to curr?
-    closest_edge = find_closest_edge(curr_xy)
+    closest_edge = find_closest_edge(curr_xy, graph_edges)
     #
     # OK. got the edge.  Is the closest edge point a vertex?
     pt = closest_point_on_lineseg(closest_edge[0], closest_edge[1], curr_xy)
@@ -90,10 +94,10 @@ class MeshGraph
   end
   
 
-  def find_closest_edge(xy)
+  def find_closest_edge(xy, edges)
     best_dist = 99000
     best_edge = nil
-    @graph.edges.each do |e|
+    edges.each do |e|
       pxy = closest_point_on_lineseg(e[0], e[1], xy)
       d = dist(pxy, xy)
       if d < best_dist
