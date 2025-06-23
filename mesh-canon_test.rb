@@ -64,10 +64,23 @@ class CanonicalLineSegListTest < Test::Unit::TestCase
     Point.new(x, y)
   end
 
+  #  |
+  #  |
+  #
+  #  _______
+  def test_connect_nearby_nodes
+    seg_h = [[0,0],[5,0]]
+    seg_v = [[0,1],[0,5]]
+    segs = [ seg_h, seg_v, ]
+    canon = CanonicalLineSegList.new
+    canon.add_xy(segs)
+    expected = [seg_h, seg_v, [[0,0],[0,1]]]
+    assert_equal(expected, canon.to_a)
+  end
+
   #    | |
   #  --------
   #    | |
-  
   def test_crosses
     seg_h = LineSeg.new(p(0,10),p(30,10))
     seg_v1 = LineSeg.new(p(10,0), p(10,20))

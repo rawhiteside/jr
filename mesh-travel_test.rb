@@ -51,12 +51,13 @@ class MeshGraphTest <  Test::Unit::TestCase
   end
 
   def test_find_closest_edge
-    e = @mg.find_closest_edge([1,1])
+    e = @mg.find_closest_edge([2,0])
     assert_equal([[0,0], [2,2]], [e[0], e[1]])
   end
 
   def test_closest_point_on_lineseg
     assert_equal([0,0], @mg.closest_point_on_lineseg([0,0], [2,2], [0,-1]))
+    assert_equal([1,1], @mg.closest_point_on_lineseg([0,0], [2,2], [2,0]))
   end
 
   # When we just need to walk straight to dest.

@@ -39,8 +39,25 @@ class CanonicalLineSegList
       pt2 = Point.new(xy[1][0], xy[1][1])
       add(LineSeg.new(pt1, pt2))
     end
+    # Now, connect nearby segments.
+    connect_nearby_segments
   end
 
+  def connect_nearby_segments
+    # Put the segs into a Set.
+    all_segs_xy = to_a
+    seg_set = Set.new
+    all_segs_xy.each do |xy|
+      seg_set << xy
+      seg_set << xy.rotate(1)
+    end
+    node_set = Set.new
+    all_segs_xy.each do |xy|
+      node_set << xy[1] << xy[0]
+    end
+    
+    # If two nearby nodes are not connected, connect them.
+  end
 
   # Add the new segement.  This can result in +new_seg+ being split
   # into possibly many segements.  One of these will be processed and
