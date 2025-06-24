@@ -72,12 +72,34 @@ class CanonicalLineSegListTest < Test::Unit::TestCase
     seg_h = [[0,0],[5,0]]
     seg_v = [[0,1],[0,5]]
     segs = [ seg_h, seg_v, ]
-    canon = CanonicalLineSegList.new
-    canon.add_xy(segs)
-    expected = [seg_h, seg_v, [[0,0],[0,1]]]
-    assert_equal(expected, canon.to_a)
+
+    expected = [seg_h.sort, seg_v.sort, [[0,0],[0,1]]]
+    check_this_cnn([ seg_h, seg_v, ], expected)
+    check_this_cnn([ seg_h.rotate(1), seg_v, ], expected)
+    check_this_cnn([ seg_h.rotate(1), seg_v.rotate(1), ],expected)
+    check_this_cnn([ seg_h, seg_v.rotate(1), ], expected)
   end
 
+  def test_connect_nearby_nodes_along_edges
+    seg_h = [[0,0],[5,0]]
+    seg_v = [[3,1],[3,5]]
+
+    segs = [ seg_h, seg_v, ]
+
+    expected = [seg_h.sort, seg_v.sort, [[0,0],[3,1]], [[3,1], [5,0]] ]
+    check_this_cnn([ seg_h, seg_v, ], expected)
+
+    check_this_cnn([ seg_h.rotate(1), seg_v, ], expected)
+    check_this_cnn([ seg_h.rotate(1), seg_v.rotate(1), ], expected)
+    check_this_cnn([ seg_h, seg_v.rotate(1), ], expected)
+  end
+
+  def check_this_cnn(segs, expected)
+    canon = CanonicalLineSegList.new
+    canon.add_xy(segs)
+    assert_equal(expected, canon.to_a)
+  end
+    
   #    | |
   #  --------
   #    | |

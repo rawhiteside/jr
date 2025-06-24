@@ -33,19 +33,22 @@ class CanonicalLineSegList < MeshGraphUtils
 
   # [ [[x,y], [x,y]], ...]
   def add_xy(xysegs)
+    # Put sorted edges into a Set.
+    s = Set.new
+    xysegs.each {|xy| s << xy.sort}
     # Convert xy line segs into LineSeg, then add.
     # The add deals with all of the possible intersections.
-    xysegs.each {|xy| add(xy_to_ls(xy))}
+    s.each {|xy| add(xy_to_ls(xy))}
 
     # Now, connect nearby segments.
-    new_edges = Set.new
-    connect_nearby_segments new_edges
+    new_edges = connect_nearby_segments
     new_edges.each {|e| @segs << xy_to_ls(e)}
   end
 
 
-  def connect_nearby_segments(new_segs)
+  def connect_nearby_segments
     # Put the segs into a Set.
+    new_segs = Set.new
     seg_set = Set.new(to_a)
     node_set = Set.new
     seg_set.each {|xy| node_set << xy[1] << xy[0]}
@@ -69,6 +72,7 @@ class CanonicalLineSegList < MeshGraphUtils
         end
       end
     end
+    return new_segs
   end
 
   def xy_to_ls(xy)
