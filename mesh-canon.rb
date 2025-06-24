@@ -1,9 +1,10 @@
 require 'java'
 require 'yaml'
+require 'mesh-travel'
 java_import java.awt.Point
 
 
-class CanonicalLineSegList
+class CanonicalLineSegList < MeshGraphUtils
 
   FILE = "travel-mesh.yaml"
   def initialize
@@ -34,29 +35,46 @@ class CanonicalLineSegList
   def add_xy(xysegs)
     # Convert xy line segs into LineSeg, then add.
     # The add deals with all of the possible intersections.
-    xysegs.each do |xy|
-      pt1 = Point.new(xy[0][0], xy[0][1])
-      pt2 = Point.new(xy[1][0], xy[1][1])
-      add(LineSeg.new(pt1, pt2))
-    end
+    xysegs.each {|xy| add(xy_to_ls(xy))}
+
     # Now, connect nearby segments.
-    connect_nearby_segments
+    new_edges = Set.new
+    connect_nearby_segments new_edges
+    new_edges.each {|e| @segs << xy_to_ls(e)}
   end
 
-  def connect_nearby_segments
+
+  def connect_nearby_segments(new_segs)
     # Put the segs into a Set.
-    all_segs_xy = to_a
-    seg_set = Set.new
-    all_segs_xy.each do |xy|
-      seg_set << xy
-      seg_set << xy.rotate(1)
-    end
+    seg_set = Set.new(to_a)
     node_set = Set.new
-    all_segs_xy.each do |xy|
-      node_set << xy[1] << xy[0]
-    end
+    seg_set.each {|xy| node_set << xy[1] << xy[0]}
     
     # If two nearby nodes are not connected, connect them.
+    node_set.each do |node_pt|
+      seg_set.each do |seg|
+        unless (seg.include?(node_pt))
+          close_pt = closest_point_on_lineseg(seg[0], seg[1], node_pt)
+          d = dist(close_pt, node_pt)
+          if (d < 2)
+            if (close_pt == seg[0])
+              new_segs << [node_pt, seg[0] ].sort
+            elsif (close_pt == seg[1])
+              new_segs << [node_pt, seg[1] ].sort
+            else
+              new_segs << [node_pt, seg[0] ].sort
+              new_segs << [node_pt, seg[1] ].sort
+            end
+          end
+        end
+      end
+    end
+  end
+
+  def xy_to_ls(xy)
+      pt1 = Point.new(xy[0][0], xy[0][1])
+      pt2 = Point.new(xy[1][0], xy[1][1])
+      LineSeg.new(pt1, pt2)
   end
 
   # Add the new segement.  This can result in +new_seg+ being split

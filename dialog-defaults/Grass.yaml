@@ -4,8 +4,8 @@
 Parameter set 1:
   chest.x: '131'
   chest.y: '508'
-  chest-coords: "-154, -7115"
+  chest-coords: "-1497, -4615"
   count: '30'
   path: |
-    -153, -7115
-    -153, -7112
+    -1497, -4608
+    -1484, -4603

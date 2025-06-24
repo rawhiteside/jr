@@ -15,14 +15,14 @@ Grass: 1
 Casual Grass: 1
 Slate: 1
 Eat: 0
-Focus click: 0
+Focus click: 1
 Inverval tabs: 1
 Strength click: 0
 Grow onions: 1
 Flax Seeds: 1
 Read Window: 1
 Mine iron: 0
-Grow vegetables: 1
+Grow vegetables: 0
 Tree run: 1
 Test Build Gadget: 1
 Glazier: 0
@@ -34,10 +34,10 @@ Take from kettles: 1
 Plant Papyrus: 0
 Pottery Wheels: 0
 Pyramid push: 0
-Silt: 1
+Silt: 0
 Cactus run: 0
 Water mine: 0
-Kilns: 1
+Kilns: 0
 Stir: 0
 Raeli: 0
 Color Picker: 1
@@ -54,7 +54,7 @@ Casual Dowse: 0
 Walkto: 1
 Walk: 1
 Bullets: 0
-Barley: 1
+Barley: 0
 Run and do: 0
 serialize patch: 1
 Travel paths: 1
@@ -73,3 +73,5 @@ Travel mesh: 1
 'Mesh: Travel': 1
 'Mesh: Add Mesh Path': 1
 'Mesh: Add Mesh Destination': 1
+Loom: 1
+Capture ClockLoc background: 1

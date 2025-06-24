@@ -4,9 +4,9 @@
 Parameter set 1:
   chest.x: '210'
   chest.y: '740'
-  chest-coords: -1069, -6899
-  water-coords: -1069, -6899
-  jug_count: '300'
+  chest-coords: "-1471, -4711"
+  water-coords: "-1471, -4711"
+  jug_count: '2'
   path: |
-    -1069, -6899
-    -1070, -6915
+    -1469, -4711
+    -1473, -4711
