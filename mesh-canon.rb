@@ -89,7 +89,8 @@ class CanonicalLineSegList < MeshGraphUtils
 
     # If this is a duplicate, just don't add it.
     return nil if duplicate?(new_seg)
-
+    # Zero length?
+    return nil if new_seg.pt1 == new_seg.pt2
 
     # Seek and handle intersections.
     new_list = []
