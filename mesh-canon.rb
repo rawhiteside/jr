@@ -2,6 +2,7 @@ require 'java'
 require 'yaml'
 require 'mesh-travel'
 java_import java.awt.Point
+java_import java.awt.Rectangle
 
 
 class CanonicalLineSegList < MeshGraphUtils

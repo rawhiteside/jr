@@ -90,6 +90,7 @@ class RobotPauser
 	  wait_until_running
 	end
 	puts 'Robot resume...'
+        STDOUT.flush
         notify_listeners
       end
       ControllableThread.sleep_sec POLL_INTERVAL
