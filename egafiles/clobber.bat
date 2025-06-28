@@ -8,7 +8,7 @@ REM The named file gets replaced with a zero-length readonly file.
 REM 
 REM Make sure the egyptc directory define is correct for your install.
 REM 
-set EGYPTC="C:\Program Files (x86)\Desert Nomad Studios\A Tale In The Desert\egyptc"
+set EGYPTC="C:\ProgramData\Desert Nomad Studios\A Tale in the Desert\Data"
 if exist %EGYPTC%\%1 del /F %EGYPTC%\%1
 type nul > %EGYPTC%\%1
 attrib +R %EGYPTC%\%1
