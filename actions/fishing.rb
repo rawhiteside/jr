@@ -20,6 +20,7 @@ class Fishing < Action
     chat_win = ChatWindow.find
     
     lures = lure_list(lure_win)
+    puts lures
     loop do
       select_lure(lure_win, lures)
       send_string('9')
@@ -40,11 +41,13 @@ class Fishing < Action
         sleep FISHING_DELAY
         return
       end
+      puts "Last line: #{last_line}"
       if last_line && last_line.include?("The Fishing Lure")
         orig = current
       end
+
       if orig != current
-        if last_line.match(/Caught ?a ?[0-9]/)
+        if last_line.match(/Caught/)
           puts last_line
           puts @current_lure
         end
@@ -73,7 +76,7 @@ class Fishing < Action
   def select_cycled_lure(lure_win, lures)
     lures.size.times do |i|
       l = lures[0]
-      clicked = lure_win.click_on(l + '/Select')
+      clicked = lure_win.click_on(l)
       lures.rotate!
       if clicked
         @current_lure = l
@@ -85,7 +88,6 @@ class Fishing < Action
 
   def lure_list(win)
     lines = win.read_text.split("\n")
-    lines.shift
     lines = lines.collect do |l|
       paren = l.index('(')
       (paren.nil? ? l : l[0,paren]).strip
