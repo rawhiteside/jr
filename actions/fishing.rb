@@ -16,6 +16,7 @@ class Fishing < Action
 
   def act
     @specified_lure = @uvals['lure']
+    p @uvals
     lure_win = PinnableWindow.from_point(point_from_hash(@uvals, 'lure-win'))
     chat_win = ChatWindow.find
     
@@ -41,11 +42,10 @@ class Fishing < Action
         sleep FISHING_DELAY
         return
       end
-      puts "Last line: #{last_line}"
       if last_line && last_line.include?("The Fishing Lure")
         orig = current
       end
-
+ 
       if orig != current
         if last_line.match(/Caught/)
           puts last_line

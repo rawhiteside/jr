@@ -104,6 +104,7 @@ class GlazierWindow < PinnableWindow
         text = read_text
       end
       vals = parse_vals(text)
+      log "Data vals: #{vals}"
       return vals if vals
     end
   end
@@ -113,6 +114,7 @@ class GlazierWindow < PinnableWindow
     # Temp
     match = Regexp.new('Temperature: ([0-9]+)').match(text)
     unless match
+      puts "Temp failed**********************************************"
       puts text
       return nil
     end
@@ -120,6 +122,7 @@ class GlazierWindow < PinnableWindow
     # Glass type
     match = Regexp.new('(.*) Glass: ').match(text)
     unless match
+      puts "glass type  failed***************************************"
       puts text
       return nil
     end
@@ -127,10 +130,19 @@ class GlazierWindow < PinnableWindow
     # Glass Amount
     match = Regexp.new('.* Glass: (.*)').match(text)
     unless match
+      puts "glass aamount  failed************************************"
       puts text
       return nil
     end
     vals[:glass_amount] = match[1].strip
+    # CC avail:
+    match = Regexp.new('Charcoal Avail: (.*)').match(text)
+    unless match
+      puts "*********************************************************cc avail  failed"
+      puts text
+      return nil
+    end
+    vals[:cc_avail] = match[1].strip
 
     return vals
   end
@@ -145,7 +157,8 @@ class GlazierWindow < PinnableWindow
     sleep 5
 
     loop do
-      current = temperature
+      vals = data_vals
+      current = vals[:temperature]
       log "wait_for_tick: Tick check curr=#{current}, prev=#{orig}, delta=#{@last_delta}"
       if orig != current
         status = {
@@ -216,7 +229,7 @@ class GlazierWindow < PinnableWindow
           refresh until click_on('Add 2')
         end
       }
-      sleep 100
+      sleep 70
       log "rise checking stop. done=#{@done}, temp=#{temp}"
       break if temperature > 2050
     end
@@ -271,7 +284,7 @@ class Glazier < Action
   end
 
   def act
-    tiler = Tiler.new(0, 115, 0.4)
+    tiler = Tiler.new(0, 115)
     tiler.min_height = 400
     windows = []
     GridHelper.new(@vals, 'g').each_point do |p|
