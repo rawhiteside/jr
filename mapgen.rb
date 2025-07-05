@@ -30,7 +30,8 @@ def gen_map_annotations
     
     f << "|contentonly={{{contentonly|no}}}|{{{2}}}}}\n\n" <<
       "<noinclude>[[Category:Atlas|{{PAGENAME}}]]</noinclude>\n"
-    
+
+    puts "Wrote file: #{filename}"
   end
   
 end
