@@ -49,14 +49,8 @@ public class PanAndZoom implements ChangeListener {
         g2.setPaint(new Color(240,200,200));
         g2.fillRect(0,0,w,h);
         g2.setPaint(Color.blue);
-        g2.draw(new Rectangle2D.Double(w/16, h/16, w*7/8, h*7/8));
-        g2.setPaint(Color.green.darker());
-        g2.draw(new Line2D.Double(w/16, h*15/16, w*15/16, h/16));
-        Ellipse2D e = new Ellipse2D.Double(w/4, h/4, w/2, h/2);
-        g2.setPaint(new Color(240,240,200));
-        g2.fill(e);
-        g2.setPaint(Color.red);
-        g2.draw(e);
+        g2.draw(new Rectangle2D.Double(0,0,10,10));
+
         g2.dispose();
     }
   

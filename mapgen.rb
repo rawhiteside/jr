@@ -1,39 +1,45 @@
+require 'java'
 require 'mesh-canon'
 
-def gen_map_annotations
-  filename = "meshmap.wiki"
-  color_str = 'color:"#00FFFF"'
+java_import javax.imageio.ImageIO
+java_import java.awt.Color
+java_import java.awt.BasicStroke
 
-  node_opts = "#{color_str},opacity:1,fill:true,weight:1"
-  line_opts = "#{color_str}},opacity:1,fill:true,weight:1"
-  node_rad = 1
-  
+
+
+def map_gen
+  puts "lkj"  
+  bi = ImageIO.read(java.io.File.new("meshmap/AtitdFullMap.png"))
+  puts "lkj"
+  g = bi.create_graphics
+  g.set_color(Color.cyan)
+  g.set_stroke(BasicStroke.new(2))
+  g.draw_line(4000, 4000, 5000, 5000)
+
   c = CanonicalLineSegList.load
-  File.open(filename, "w") do |f|
-    f << "{{CondMap|\n"
+  c.to_a.each do |xy_t|
+    xy = [to_image_coords(xy_t[0]), to_image_coords(xy_t[1])]
+    g.draw_line(xy[0][0], xy[0][1], xy[1][0], xy[1][1])
+    g.fill_oval(xy[0][0]-2, xy[0][1]-2, 5, 5)
+    g.fill_oval(xy[1][0]-2, xy[1][1]-2, 5, 5)
+  end
 
-    # Write all the path segments.
-    c.to_a.each do |xy|
-      f << "circ #{xy[0][0]},#{xy[0][1]} #{node_rad} #{node_opts}\n"
-      f << "circ #{xy[1][0]},#{xy[1][1]} #{node_rad} #{node_opts}\n"
-      f << "line #{xy[0][0]},#{xy[0][1]}:#{xy[1][0]},#{xy[1][1]} #{node_opts} \n"
-    end
-    # Add the destinations.
-
-    file = "mesh-destinations.yaml"
-    name_map = {}
-    name_map = YAML.load_file(file) if File.exist?(file)
-    name_map.each do |k,v|
-      f << "(BallBl) #{v[0]},#{v[1]}, #{k}\n"
-    end
-    
-    
-    f << "|contentonly={{{contentonly|no}}}|{{{2}}}}}\n\n" <<
-      "<noinclude>[[Category:Atlas|{{PAGENAME}}]]</noinclude>\n"
-
-    puts "Wrote file: #{filename}"
+  file = "mesh-destinations.yaml"
+  name_map = {}
+  name_map = YAML.load_file(file) if File.exist?(file)
+  g.set_color(Color.pink)
+  name_map.each do |k,v|
+    xy = to_image_coords(v)
+    g.fill_oval(xy[0], xy[1], 20, 20)
   end
   
+  ImageIO.write(bi, 'png', java.io.File.new("meshmap/AnnotatedMap.png"))
+  puts "lkj"
 end
 
-gen_map_annotations
+def to_image_coords(xy)
+    [xy[0] + (2048 + 1024), -xy[1] + 8192]
+end
+
+map_gen
+
