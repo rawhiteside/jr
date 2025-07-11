@@ -1,2 +1,20 @@
 clobber.bat egaa55625e6a50e2e14b84697308879119dd13395bd.ega  # pearl dive animaion
 clobber.bat ega56c339a5047f277c8284651874d3854854c8b8ae.ega # pickup animation.
+
+# *******************************************************************
+# T11 things:
+
+A refresh in the desert with all map tiles ad 6/26/2025 8:47 am
+
+Cicada cage model:
+ega0e00af7c9c816e63f7b37d0b04061ec6da068498 (554kb)
+
+
+A refresh with basic stuff started at 6/25/2025 7:13 pm
+
+# One of these is grass harvest animation:
+ega6de72a3c41ae95ee99110770e5f8de43553e6597.ega (12kb)
+ega485cf0f426784238d89a3b5e9d47c8fd98fb2da6.ega (44kb)
+egaa7910b02c9cb6b3aaed85f23d37ed8aeb9d9068e.ega (16kb)
+
+
