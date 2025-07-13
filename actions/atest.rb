@@ -10,16 +10,13 @@ class PatchStats < Action
   def setup(parent)
     gadgets = [
       
-      {:type => :frame_with_button, :label => "Gather ranges.", :name => "gather",
-       :gadgets => [
-         {:type => :point, :label => 'Drag Top Left of rect', :name => 'origin'},
-         {:type => :number, :label => 'How many rows?', :name => 'rows'},
-         {:type => :number, :label => 'How many columns?', :name => 'cols'},
-         {:type => :number, :label => 'Widen range increment?', :name => 'widen'},
-         {:type => :text, :label => 'Ranges:', :name => 'ranges', :size => 30},
-       ],
-       :button_action => Proc.new {|data_gets, data_puts| gather_ranges(data_gets, data_puts)},
-       :button_text => 'Get ranges',
+      {:type => :point, :label => 'Drag Top Left of rect', :name => 'origin'},
+      {:type => :number, :label => 'How many rows?', :name => 'rows'},
+      {:type => :number, :label => 'How many columns?', :name => 'cols'},
+      {:type => :number, :label => 'Widen range increment?', :name => 'widen'},
+      {:type => :text, :label => 'Ranges:', :name => 'ranges', :size => 30},
+      {:type => :button, :label => 'Get ranges',
+       :action => Proc.new {|data_gets, data_puts| gather_ranges(data_gets, data_puts)},
       },
       
       {:type => :label, :label => "Patch detect."},
@@ -32,18 +29,21 @@ class PatchStats < Action
   end
 
   def gather_ranges(data_gets, data_puts)
-    stats_point = Point.new(data_gets['gather.origin.x'].call.to_i,
-                            data_gets['gather.origin.y'].call.to_i)
-    height = data_gets['gather.rows'].call.to_i
-    width = data_gets['gather.cols'].call.to_i
-    widen = data_gets['gather.widen'].call.to_i
+    stats_point = Point.new(data_gets['origin.x'].call.to_i,
+                            data_gets['origin.y'].call.to_i)
+    height = data_gets['rows'].call.to_i
+    width = data_gets['cols'].call.to_i
+    widen = data_gets['widen'].call.to_i
     patch = PixelBlock.new(Rectangle.new(stats_point.x, stats_point.y, width, height))
     rgb_ranges = patch_color_ranges_rgb(patch)
-    data_puts['gather.ranges'].call(rgb_ranges.to_s)
+    data_puts['ranges'].call(rgb_ranges.to_s)
   end
 
   def show_matches(data_gets, data_puts)
     puts data_puts.keys
+    ranges = eval(data_gets['ranges'].call)
+    match_size = data_gets['match_size'].call.to_i
+    display_matches(ranges, match_size, "RGB, #{match_size}: #{ranges}, ")
   end
 
   def act
@@ -66,7 +66,7 @@ class PatchStats < Action
     puts "RGB volume:#{color_volume(rgb_ranges)}"
     loop do
       show_matches(rgb_ranges, match_size, "RGB, #{match_size}: #{rgb_ranges}, ")
-      UserIO.info("Go again?")
+      val = UserIO.info("Go again?")
       check_for_pause
     end
   end
@@ -80,13 +80,16 @@ class PatchStats < Action
   end
 
   # Tag is either "RGB" or "HSB"
-  def old_show_matches(ranges, match_size, tag)
+  def display_matches(ranges, match_size, tag)
+    puts "Tag: #{tag}"
     dim = screen_size
     h3 = (dim.height/3).to_i
     w3 = (dim.width/3).to_i
     rect = Rectangle.new(w3, h3, w3, h3)
     pb = PixelBlock.new(rect)
-    pb_rv = PixelBlock.new(pb.rect)
+    pb_rv = PixelBlock.construct_blank(pb.rect, 0)
+    puts "match_size: #{match_size}"
+    puts pb.rect
     0.upto(pb.width - match_size) do |x|
       0.upto(pb.height - match_size) do |y|
 

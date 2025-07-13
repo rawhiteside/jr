@@ -560,8 +560,6 @@ class GadgetFactory
       parent.add(SetupCheckBox.new(prefix, h, data_gets, data_puts))
     when :frame
       parent.add(SetupFrameGadget.new(prefix, h, data_gets, data_puts))
-    when :frame_with_button
-      parent.add(SetupFrameWithButtonGadget.new(prefix, h, data_gets, data_puts))
     when :button
       parent.add(SetupButtonGadget.new(prefix, h, data_gets, data_puts))
     when :point
@@ -728,20 +726,6 @@ class SetupButtonGadget < Box
   end  
 end
 
-class SetupFrameWithButtonGadget < Box
-  def initialize(prefix, h, data_gets, data_puts)
-    super(BoxLayout::Y_AXIS)
-    border = TitledBorder.new(LineBorder.create_black_line_border, h[:label])
-    set_border(border)
-
-    GadgetFactory.add_gadget_list(self, prefix + h[:name] + '.', h[:gadgets], data_gets, data_puts)
-    button = JButton.new(h[:button_text])
-    button.add_action_listener do |e|
-      h[:button_action].call(data_gets, data_puts)
-    end
-    add(button)
-  end    
-end
 
 class DialogDefaultsManager < Box
   # These keys are non-strings, so that they can't conflict with
