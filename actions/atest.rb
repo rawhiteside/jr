@@ -14,6 +14,8 @@ class PatchStats < Action
       {:type => :number, :label => 'How many rows?', :name => 'rows'},
       {:type => :number, :label => 'How many columns?', :name => 'cols'},
       {:type => :number, :label => 'Widen range increment?', :name => 'widen'},
+      {:type => :checkbox, :label => "HSB? (Else RGB)", :name => 'hsb?'},
+      {:type => :checkbox, :label => "Add to existing range?", :name => 'add_patch?'},
       {:type => :text, :label => 'Ranges:', :name => 'ranges', :size => 30},
       {:type => :button, :label => 'Get ranges',
        :action => Proc.new {|data_gets, data_puts| gather_ranges(data_gets, data_puts)},
@@ -35,40 +37,44 @@ class PatchStats < Action
     width = data_gets['cols'].call.to_i
     widen = data_gets['widen'].call.to_i
     patch = PixelBlock.new(Rectangle.new(stats_point.x, stats_point.y, width, height))
-    rgb_ranges = patch_color_ranges_rgb(patch)
-    data_puts['ranges'].call(rgb_ranges.to_s)
+    new_ranges = []
+    if data_gets['hsb?'].call == 'true'
+      new_ranges = patch_color_ranges_hsb(patch)
+    else
+      new_ranges = patch_color_ranges_rgb(patch)
+    end
+
+    new_ranges = widen_range(new_ranges, widen) if widen > 0
+
+    if data_gets['add_patch?'].call == 'false'
+      data_puts['ranges'].call(new_ranges.to_s)
+    else
+      # Add this range to the existing one.
+      curr_ranges = data_gets['ranges'].call
+      if (!curr_ranges.nil? && curr_ranges != '')
+        curr_ranges = eval(curr_ranges)
+        3.times do |i|
+          puts "*****************************************************"
+          p new_ranges[i]
+          p curr_ranges[i]
+          new_ranges[i] =
+            [new_ranges[i].first, curr_ranges[i].first].min..[new_ranges[i].last, curr_ranges[i].last].max
+          p new_ranges[i]
+        end
+      end
+      data_puts['ranges'].call(new_ranges.to_s)
+    end
   end
 
   def show_matches(data_gets, data_puts)
-    puts data_puts.keys
     ranges = eval(data_gets['ranges'].call)
     match_size = data_gets['match_size'].call.to_i
-    display_matches(ranges, match_size, "RGB, #{match_size}: #{ranges}, ")
+    is_hsb = data_gets['hsb?'].call == 'true'
+    display_matches(ranges, is_hsb, match_size, "#{match_size}: #{ranges}, ")
   end
 
   def act
     return
-
-    stats_point = point_from_hash(@vals, 'origin')
-    height = @vals['rows'].to_i
-    width = @vals['cols'].to_i
-    widen = @vals['widen'].to_i
-    match_size = [@vals['match_size'].to_i, 1].max
-    
-    patch = PixelBlock.new(Rectangle.new(stats_point.x, stats_point.y, width, height))
-    rgb_ranges = patch_color_ranges_rgb(patch)
-    p "RGB: #{rgb_ranges}"
-    rgb_ranges = widen_range(rgb_ranges, widen)
-    p "RGB, widened: #{rgb_ranges}"
-    hsb_ranges = patch_color_ranges_hsb(patch)
-    p "HSB: #{hsb_ranges}"
-    puts "HSB volume:#{color_volume(hsb_ranges)}"
-    puts "RGB volume:#{color_volume(rgb_ranges)}"
-    loop do
-      show_matches(rgb_ranges, match_size, "RGB, #{match_size}: #{rgb_ranges}, ")
-      val = UserIO.info("Go again?")
-      check_for_pause
-    end
   end
     
   def widen_range(r, wide)
@@ -79,14 +85,17 @@ class PatchStats < Action
     ]
   end
 
-  # Tag is either "RGB" or "HSB"
-  def display_matches(ranges, match_size, tag)
+  # Tag is a title.
+  def display_matches(ranges, is_hsb, match_size, tag)
     puts "Tag: #{tag}"
     dim = screen_size
     h3 = (dim.height/3).to_i
     w3 = (dim.width/3).to_i
     rect = Rectangle.new(w3, h3, w3, h3)
     pb = PixelBlock.new(rect)
+    UserIO.show_image(pb, "Original image")
+    pb = to_HSB(pb) if is_hsb 
+    UserIO.show_image(pb, "HSB image")
     pb_rv = PixelBlock.construct_blank(pb.rect, 0)
     puts "match_size: #{match_size}"
     puts pb.rect
@@ -128,14 +137,16 @@ class PatchStats < Action
     
     0.upto(pb.width - 1) do|x|
       0.upto(pb.height - 1) do|y|
-        c = pb.color(x, y)
+        c = pb.get_color(x, y)
         hsb = Color.RGBtoHSB(c.red, c.green, c.blue, nil)
-        cred = hsb[0] * 255
-        c.green = hsb[1] * 255
-        c.blue = hsb[2] * 255
-        pn_new.set_pixel(x, y, c.rgb)
+        red = (hsb[0] * 255).to_i
+        green = (hsb[1] * 255).to_i
+        blue = (hsb[2] * 255).to_i
+        c = Color.new(red, green, blue)
+        pb_new.set_pixel(x, y, c.rgb)
       end
     end
+    return pb_new
   end
 
   def color_volume(cvec)
