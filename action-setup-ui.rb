@@ -112,7 +112,8 @@ class SetupDialog
 
     @mgr.initialize_dialog
     
-    dialog.set_modality_type(Java::java.awt.Dialog::ModalityType::APPLICATION_MODAL)
+    # dialog.set_modality_type(Java::java.awt.Dialog::ModalityType::APPLICATION_MODAL)
+    dialog.set_modality_type(Java::java.awt.Dialog::ModalityType::DOCUMENT_MODAL)
     dialog.pack
     dialog.set_location_relative_to(@parent_win)
     dialog.visible = true
@@ -719,9 +720,7 @@ class SetupButtonGadget < Box
   def initialize(prefix, h, data_gets, data_puts)
     super(BoxLayout::Y_AXIS)
     button = JButton.new(h[:label])
-    button.add_action_listener do |e|
-      h[:action].call(data_gets, data_puts)
-    end
+    button.add_action_listener {|e| h[:action].call(data_gets, data_puts)}
     add(button)
   end  
 end

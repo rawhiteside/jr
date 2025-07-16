@@ -1,12 +1,15 @@
 require 'action'
 require 'timer'
+require 'image_utils'
 require 'window'
 require 'actions/kettles'
 
 class PatchStats < Action
   def initialize(name = "Stats for patch")
     super(name, 'Test/Dev')
+    @pt = nil
   end
+
   def setup(parent)
     gadgets = [
       
@@ -23,11 +26,26 @@ class PatchStats < Action
       
       {:type => :label, :label => "Patch detect."},
       {:type => :number, :label => 'Match size', :name => 'match_size'},
-      {:type => :button, :label => 'Show results', 
-       :action => Proc.new {|data_gets, data_puts| show_matches(data_gets, data_puts)},
+      {:type => :button, :label => 'Show results (Update DB first)', 
+       :action => Proc.new {|data_gets, data_puts| show_matches(data_gets, data_puts)}},
+
+      {:type => :text, :label => 'DB entry name:', :name => 'db_entry_name'},
+      {:type => :button, :label => 'Update patch db', 
+       :action => Proc.new {|data_gets, data_puts| update_db(data_gets, data_puts)},
       }
     ]
     @vals = UserIO.prompt(parent, name, 'Define patch', gadgets)
+  end
+
+  def update_db(data_gets, data_puts)
+    name = data_gets['db_entry_name'].call
+    is_hsb = (data_gets['hsb?'].call == true)
+    ranges = eval(data_gets['ranges'].call)
+    match_size = data_gets['match_size'].call.to_i
+    
+    rm = RangeMatch.new(name)
+    rm.update_ranges(name, is_hsb, match_size, ranges)
+    rm.save_color_ranges
   end
 
   def gather_ranges(data_gets, data_puts)
@@ -54,12 +72,8 @@ class PatchStats < Action
       if (!curr_ranges.nil? && curr_ranges != '')
         curr_ranges = eval(curr_ranges)
         3.times do |i|
-          puts "*****************************************************"
-          p new_ranges[i]
-          p curr_ranges[i]
           new_ranges[i] =
             [new_ranges[i].first, curr_ranges[i].first].min..[new_ranges[i].last, curr_ranges[i].last].max
-          p new_ranges[i]
         end
       end
       data_puts['ranges'].call(new_ranges.to_s)
@@ -70,11 +84,13 @@ class PatchStats < Action
     ranges = eval(data_gets['ranges'].call)
     match_size = data_gets['match_size'].call.to_i
     is_hsb = data_gets['hsb?'].call == 'true'
-    display_matches(ranges, is_hsb, match_size, "#{match_size}: #{ranges}, ")
+    name = data_gets['db_entry_name'].call
+    rm = RangeMatch.new(name)
+    @pt = rm.click_point(true)
   end
 
   def act
-    return
+    mm @pt if @pt
   end
     
   def widen_range(r, wide)
@@ -85,69 +101,6 @@ class PatchStats < Action
     ]
   end
 
-  # Tag is a title.
-  def display_matches(ranges, is_hsb, match_size, tag)
-    puts "Tag: #{tag}"
-    dim = screen_size
-    h3 = (dim.height/3).to_i
-    w3 = (dim.width/3).to_i
-    rect = Rectangle.new(w3, h3, w3, h3)
-    pb = PixelBlock.new(rect)
-    UserIO.show_image(pb, "Original image")
-    pb = to_HSB(pb) if is_hsb 
-    UserIO.show_image(pb, "HSB image")
-    pb_rv = PixelBlock.construct_blank(pb.rect, 0)
-    puts "match_size: #{match_size}"
-    puts pb.rect
-    0.upto(pb.width - match_size) do |x|
-      0.upto(pb.height - match_size) do |y|
-
-        is_match = true
-        0.upto(match_size - 1) do |xoff|
-          0.upto(match_size - 1) do |yoff|
-            if !pixel_match_ranges?(pb.get_pixel(x + xoff, y + yoff), ranges)
-              is_match = false
-              break
-            end
-          end
-          break unless is_match
-        end
-        if is_match
-          pb_rv.set_pixel(x, y, 0xFFFFFF)
-        else
-          pb_rv.set_pixel(x, y, 0)
-        end
-      end
-    end
-    UserIO.show_image(pb_rv, tag)
-  end
-
-  def pixel_match_ranges?(pix, ranges)
-    c = Color.new(pix)
-    vals = [c.red, c.green, c.blue]
-    ranges.each do |r|
-      return nil unless r.include?(vals.shift)
-    end
-
-    return true
-  end
-
-  def to_HSB(pb)
-    pb_new = PixelBlock.new(pb.rect)
-    
-    0.upto(pb.width - 1) do|x|
-      0.upto(pb.height - 1) do|y|
-        c = pb.get_color(x, y)
-        hsb = Color.RGBtoHSB(c.red, c.green, c.blue, nil)
-        red = (hsb[0] * 255).to_i
-        green = (hsb[1] * 255).to_i
-        blue = (hsb[2] * 255).to_i
-        c = Color.new(red, green, blue)
-        pb_new.set_pixel(x, y, c.rgb)
-      end
-    end
-    return pb_new
-  end
 
   def color_volume(cvec)
     Math.sqrt((cvec[0].last - cvec[0].first + 1)**2 +
