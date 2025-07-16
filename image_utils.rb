@@ -7,28 +7,28 @@ class RangeMatch
 
   # +which+ is the name of the thing to be clicked:
   # Chariot, Apiariy, or Silt, for example.
-  def initialize(which, is_fullscreen = false)
+  def initialize
     @ranges = load_color_ranges
-    @which = which
-
-    # target_info:
-    # {:is_hsb => bool, :match_size => n, :ranges => [[r..r, g..g, b..b]}
-    @target_info = @ranges[which]
-    @is_fullscreen =  is_fullscreen
   end
 
-  def click_point(is_show_images = false)
-    return nil unless @target_info
-    pb = capture_pb(@is_fullscreen)
-    pb = to_HSB(pb) if @target_info[:is_hsb]
+  def click_point(which, is_fullscreen = false, is_show_images = false)
+    # target_info:
+    # {:is_hsb => bool, :match_size => n, :ranges => [[r..r, g..g, b..b]}
+    target_info = @ranges[which]
+    is_fullscreen =  is_fullscreen
+
+    return nil unless target_info
+
+    pb = capture_pb(is_fullscreen)
+    pb = to_HSB(pb) if target_info[:is_hsb]
 
     UserIO.show_image(pb, "Original") if is_show_images
 
     # Now, fill a pb with single-pixel matches
-    ranges = @target_info[:ranges]
+    ranges = target_info[:ranges]
     pb_match = mark_matching_pixels(pb, ranges, 1)
     UserIO.show_image(pb_match, "Single matches") if is_show_images
-    match_size = @target_info[:match_size]
+    match_size = target_info[:match_size]
     pb_match = mark_match_size(pb, ranges, match_size) if match_size > 1
     UserIO.show_image(pb_match, "After match_size") if is_show_images
     
@@ -91,6 +91,23 @@ class RangeMatch
     return pb_match
   end
 
+  def to_HSB(pb)
+    pb_new = PixelBlock.new(pb.rect)
+    
+    0.upto(pb.width - 1) do|x|
+      0.upto(pb.height - 1) do|y|
+        c = pb.get_color(x, y)
+        hsb = Color.RGBtoHSB(c.red, c.green, c.blue, nil)
+        red = (hsb[0] * 255).to_i
+        green = (hsb[1] * 255).to_i
+        blue = (hsb[2] * 255).to_i
+        c = Color.new(red, green, blue)
+        pb_new.set_pixel(x, y, c.rgb)
+      end
+    end
+    return pb_new
+  end
+
   def pixel_match_ranges?(pix, ranges)
     c = Color.new(pix)
     vals = [c.red, c.green, c.blue]
@@ -131,8 +148,6 @@ class RangeMatch
   def update_ranges(which, is_hsb, match_size, ranges)
     @ranges[which] =  {:is_hsb => is_hsb, :match_size => match_size, :ranges => ranges}
     save_color_ranges
-    # incase our target got updated. 
-    @info = @ranges[@which]
   end
 
   def save_color_ranges

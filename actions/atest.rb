@@ -39,11 +39,11 @@ class PatchStats < Action
 
   def update_db(data_gets, data_puts)
     name = data_gets['db_entry_name'].call
-    is_hsb = (data_gets['hsb?'].call == true)
+    is_hsb = (data_gets['hsb?'].call == "true")
     ranges = eval(data_gets['ranges'].call)
     match_size = data_gets['match_size'].call.to_i
     
-    rm = RangeMatch.new(name)
+    rm = RangeMatch.new
     rm.update_ranges(name, is_hsb, match_size, ranges)
     rm.save_color_ranges
   end
@@ -85,8 +85,8 @@ class PatchStats < Action
     match_size = data_gets['match_size'].call.to_i
     is_hsb = data_gets['hsb?'].call == 'true'
     name = data_gets['db_entry_name'].call
-    rm = RangeMatch.new(name)
-    @pt = rm.click_point(true)
+    rm = RangeMatch.new
+    @pt = rm.click_point(name, false, true)
   end
 
   def act
