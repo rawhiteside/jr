@@ -1,8 +1,8 @@
 ---
-2: Water mines
+2: Copy of Apiaries
 1: true
 Parameter set 1:
-  code.code: '# Type Ruby code here.'
+  code.code: "# Type Ruby code here."
   repeat: One time
   path: |
     travel 'Bricks CP'
@@ -16,57 +16,24 @@ Apiaries:
   code.code: "# Setup:\n# - Camera F7\n# - Face North as closely as you can.\n# -\
     \ Zoom all the way in, then back out 4 clicks.\n# Good luck!\n\ndef apiary\n \
     \ pb_subimage = PixelBlock.load_image('images/apiary-f8-zoom4.png')\n  sleep 0.8\
-    \  # Wait for running to stop.\n  height = screen_size.height\n  half = height\
-    \ / 2\n\n  width = screen_size.width\n  quarter_width = width / 4\n  search_rect\
-    \ = Rectangle.new(quarter_width, half, quarter_width * 2, height - half)\n  pt\
-    \ = find_template_best pb_subimage, 25, search_rect\n  \n  stat_wait :spd\n  if\
-    \ pt\n    mm pt\n    sleep 0.01\n    send_string 't', 0.2\n    send_string 'c'\n\
-    \  end\n  pw = PopupWindow.find\n  pw.dismiss if pw\nend\n\ndef stash\n  return\
-    \    # XXX Turn stashing off.\n  sleep 0.3\n  win = find_and_pin 'Warehouse'\n\
-    \  if win\n    HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max if win.click_on\
-    \ 'Stash/Beeswax'\n    win.unpin\n  else\n    puts \"Didn't find warehouse.\"\n\
-    \  end\nend\n\n"
+    \  # Wait for running to stop.\n  height = screen_size.height\n  quarter_height\
+    \ = height / 4\n\n  width = screen_size.width\n  quarter_width = width / 4\n \
+    \ search_rect = Rectangle.new(quarter_width, quarter_width, quarter_width * 2,\
+    \ quarter_height * 2)\n  pt = find_template_best pb_subimage, 25, search_rect\n\
+    \  \n  stat_wait :spd\n  if pt\n    mm pt\n    sleep 0.01\n    send_string 't',\
+    \ 0.2\n    send_string 'c'\n  end\n  pw = PopupWindow.find\n  pw.dismiss if pw\n\
+    end\n\ndef stash\n  return    # XXX Turn stashing off.\n  sleep 0.3\n  win = find_and_pin\
+    \ 'Warehouse'\n  if win\n    HowMuch.max if win.click_on 'Stash/Honey'\n    HowMuch.max\
+    \ if win.click_on 'Stash/Beeswax'\n    win.unpin\n  else\n    puts \"Didn't find\
+    \ warehouse.\"\n  end\nend\n\n"
   repeat: One time
-  path: "travel \"Apiaries\"\n-929, -6750\n\n# West desert line\n-929, -6748\napiary\t\
-    \n-929, -6745\napiary\t\n-929, -6742\napiary\t\n-929, -6739\napiary\t\n-929, -6736\n\
-    apiary\t\n-929, -6733\napiary\t\n-929, -6730\napiary\t\n-929, -6727\napiary\t\n\
-    -929, -6724\napiary\t\n-929, -6721\napiary\t\n-929, -6718\napiary\t\n-929, -6715\n\
-    apiary\t\n-929, -6712\napiary\t\n-929, -6709\napiary\t\n-929, -6706\napiary\t\n\
-    -929, -6703\napiary\t\n-929, -6700\napiary\t\n-929, -6697\napiary\t\n-929, -6694\n\
-    apiary\t\n-929, -6691\napiary\t\n-929, -6688\napiary\t\n-929, -6685\napiary\t\n\
-    -929, -6682\napiary\t\n-929, -6679\napiary\t\n-929, -6676\napiary\t\n-929, -6673\n\
-    apiary\t\n-929, -6670\napiary\t\n-929, -6667\napiary\t\n-929, -6664\napiary\t\n\
-    -929, -6661\napiary\t\n-929, -6658\napiary\t\n-929, -6655\napiary\t\n-929, -6652\n\
-    apiary\t\n-929, -6649\napiary\t\n-929, -6646\napiary\t\n-929, -6643\napiary\t\n\
-    -929, -6640\napiary\t\n-929, -6637\napiary\t\n-929, -6634\napiary\t\n-929, -6631\n\
-    apiary\t\n-929, -6628\napiary\t\n-929, -6625\napiary\t\n-929, -6622\napiary\t\n\
-    -929, -6619\napiary\t\n-929, -6616\napiary\t\n-929, -6613\napiary\t\n-929, -6610\n\
-    apiary\t\n-929, -6607\napiary\t\n-929, -6604\napiary\t\n-929, -6601\napiary\t\n\
-    \n\n# East desert line\n-919,-6602\napiary\n-919,-6605\napiary\n-919,-6608\napiary\n\
-    -919,-6611\napiary\n-919,-6614\napiary\n-919,-6617\napiary\n-919,-6620\napiary\n\
-    -919,-6623\napiary\n-919,-6626\napiary\n-919,-6629\napiary\n-919,-6632\napiary\n\
-    -919,-6635\napiary\n-919,-6638\napiary\n-919,-6641\napiary\n-919,-6644\napiary\n\
-    -919,-6647\napiary\n-919,-6650\napiary\n-919,-6653\napiary\n-919,-6656\napiary\n\
-    -919,-6659\napiary\n-919,-6662\napiary\n-919,-6665\napiary\n-919,-6668\napiary\n\
-    -919,-6671\napiary\n-919,-6674\napiary\n-919,-6677\napiary\n-919,-6680\napiary\n\
-    -919,-6683\napiary\n-919,-6686\napiary\n-919,-6689\napiary\n-919,-6692\napiary\n\
-    -919,-6695\napiary\n-919,-6698\napiary\n-919,-6701\napiary\n-919,-6704\napiary\n\
-    -919,-6707\napiary\n-919,-6710\napiary\n-919,-6713\napiary\n-919,-6716\napiary\n\
-    -919,-6719\napiary\n-919,-6722\napiary\n-919,-6725\napiary\n-919,-6728\napiary\n\
-    -919,-6731\napiary\n-919,-6734\napiary\n-919,-6737\napiary\n-919,-6740\napiary\n\
-    -919,-6743\napiary\n-919,-6746\napiary\n-919,-6749\napiary\n\n# Science desert\
-    \ line\n-912,-6745\napiary\n-912,-6748\napiary\n-912,-6751\napiary\n-913,-6754\n\
-    apiary\n-913,-6757\napiary\n-913,-6760\napiary\n-913,-6763\napiary\n-913,-6766\n\
-    apiary\n-913,-6769\napiary\n-912,-6772\napiary\n-912,-6775\napiary\n-912,-6778\n\
-    apiary\n-912,-6781\napiary\n-912,-6784\napiary\n-912,-6787\napiary\n-912,-6790\n\
-    apiary\n-912,-6793\napiary\n-912,-6796\napiary\n-912,-6799\napiary\n-912,-6802\n\
-    apiary\n-910,-6802\napiary\n-907,-6802\napiary\n-904,-6802\napiary\n-901,-6802\n\
-    apiary\n-898,-6802\napiary\n-895,-6802\napiary\n-892,-6802\napiary\n-889,-6802\n\
-    apiary\n-886,-6802\napiary\n-883,-6802\napiary\n-880,-6802\napiary\n-877,-6802\n\
-    apiary\n-874,-6802\napiary\n-871,-6802\napiary\n-868,-6802\napiary\n-865,-6802\n\
-    apiary\n-862,-6802\napiary\n-859,-6799\n-859,-6800\napiary\n-858, -6797\n-857,-6797\n\
-    -857,-6798\napiary\n-854,-6798\napiary\n# Back to stash\n-865, -6794\n-880, -6789\n\
-    -894, -6784\n-957, -6775\n"
+  path: |+
+    -921, -6732
+    -921, -6730
+    apiary
+    -921, -6726
+    apiary
+
   path.custom_text_0: apiary
   path.custom_text_1: ''
 Tree run:
@@ -141,7 +108,7 @@ Tree run:
   custom_text_0: resin
   custom_text_1: wood
 Fetch salt water:
-  code.code: '# Type Ruby code here.'
+  code.code: "# Type Ruby code here."
   repeat: One time
   path: |+
     travel 'Salt Water Lake'
@@ -212,8 +179,9 @@ Test:
     end
 
   repeat: One time
-  path: |
-    stash
+  path: 'stash
+
+    '
   custom_text_0: ''
   custom_text_1: ''
 Sheba Dowsing rods:
@@ -278,4 +246,45 @@ Sheba Dowsing rods:
 
 
   path.custom_text_0: collect
+  path.custom_text_1: ''
+Copy of Apiaries:
+  code.code: |+
+    # - Camera F8F8
+
+    def apiary
+      sleep 0.8  # Wait for running to stop.
+      pt = RangeMatch.new.click_point('apiary')
+
+      if pt
+        mm pt
+        sleep 0.01
+        send_string 't', 0.2
+        send_string 'c'
+      end
+      pw = PopupWindow.find
+      pw.dismiss if pw
+    end
+
+    def stash
+      return    # XXX Turn stashing off.
+      sleep 0.3
+      win = find_and_pin 'Warehouse'
+      if win
+        HowMuch.max if win.click_on 'Stash/Honey'
+        HowMuch.max if win.click_on 'Stash/Beeswax'
+        win.unpin
+      else
+        puts "Didn't find warehouse."
+      end
+    end
+
+  repeat: One time
+  path: |+
+    -921, -6732
+    -921, -6730
+    apiary
+    -921, -6726
+    apiary
+
+  path.custom_text_0: apiary
   path.custom_text_1: ''
