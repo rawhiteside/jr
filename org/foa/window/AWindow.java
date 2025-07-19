@@ -18,7 +18,7 @@ import java.awt.event.*;
  */
 
 public abstract class AWindow extends ARobot  {
-	private static boolean ALLOW_TEXT_READER_LOG = true;
+	private static boolean ALLOW_TEXT_READER_LOG = false;
 	private Rectangle m_rect;
 	private TextReader m_textReader = null;
 	private String m_defaultRefreshLoc = "tl"; 
